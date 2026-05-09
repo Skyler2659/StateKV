@@ -41,6 +41,9 @@ def llama_pos_shift_attention_forward(
     # Support both old transformers (past_key_value) and new (past_key_values)
     if past_key_value is None and "past_key_values" in kwargs:
         past_key_value = kwargs["past_key_values"]
+    # Polyfill for newer transformers (num_heads -> num_attention_heads)
+    if not hasattr(self, "num_heads"):
+        self.num_heads = self.num_attention_heads
     bsz, q_len, _ = hidden_states.size()
 
     if self.config.pretraining_tp > 1:
