@@ -24,7 +24,16 @@ def _to_legacy_cache(past_key_values):
     if past_key_values is None or isinstance(past_key_values, (list, tuple)):
         return past_key_values, None
     if hasattr(past_key_values, "to_legacy_cache"):
-        return past_key_values.to_legacy_cache(), past_key_values
+        try:
+            return past_key_values.to_legacy_cache(), past_key_values
+        except Exception:
+            pass
+    for key_name, val_name in (("key_cache", "value_cache"),
+                                ("_key_cache", "_value_cache")):
+        kc = getattr(past_key_values, key_name, None)
+        vc = getattr(past_key_values, val_name, None)
+        if isinstance(kc, (list, tuple)) and isinstance(vc, (list, tuple)) and len(kc) == len(vc):
+            return tuple((kc[i], vc[i]) for i in range(len(kc))), past_key_values
     return past_key_values, None
 
 

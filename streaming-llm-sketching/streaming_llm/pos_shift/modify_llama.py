@@ -13,27 +13,6 @@ _ACTIVE_ATTN_STACK = []
 _APPLY_PATCHED = False
 
 
-class RotaryEmbeddingWrapper(torch.nn.Module):
-    """Thin wrapper that preserves native rotary behavior.
-
-    We only record query-side position ids so the rotary helper can split
-    query/key positions later (Q uses shifted ids; K uses physical cache ids).
-    """
-
-    def __init__(self, attn_module, base_rotary):
-        super().__init__()
-        self.attn_module = attn_module
-        self.base_rotary = base_rotary
-
-    def forward(self, *args, **kwargs):
-        pos_ids = kwargs.get("position_ids")
-        if pos_ids is None and len(args) >= 2 and torch.is_tensor(args[1]):
-            pos_ids = args[1]
-        if pos_ids is not None and torch.is_tensor(pos_ids):
-            self.attn_module._pos_shift_query_position_ids = pos_ids
-        return self.base_rotary(*args, **kwargs)
-
-
 def _build_key_position_ids(query_position_ids: torch.Tensor, kv_len: int):
     bsz = int(query_position_ids.shape[0])
     return torch.arange(kv_len, device=query_position_ids.device).unsqueeze(0).expand(bsz, -1)
@@ -58,7 +37,6 @@ def _dispatch_apply_rotary(q, k, cos, sin, *args, **kwargs):
 
     sig = inspect.signature(_ORIG_APPLY_ROTARY)
     if "position_ids" in sig.parameters:
-        # Newer transformers: delegate via position_ids kwarg.
         q_kwargs = dict(kwargs)
         q_kwargs["position_ids"] = query_pos
         k_kwargs = dict(kwargs)
@@ -66,7 +44,6 @@ def _dispatch_apply_rotary(q, k, cos, sin, *args, **kwargs):
         q_rot, _ = _ORIG_APPLY_ROTARY(q, q, cos, sin, *args, **q_kwargs)
         k_rot, _ = _ORIG_APPLY_ROTARY(k, k, cos, sin, *args, **k_kwargs)
     else:
-        # Older transformers (≤4.33): manual cos/sin indexing.
         cos_q = cos.squeeze(1).squeeze(0)[query_pos].unsqueeze(1)
         sin_q = sin.squeeze(1).squeeze(0)[query_pos].unsqueeze(1)
         cos_k = cos.squeeze(1).squeeze(0)[key_pos].unsqueeze(1)
@@ -83,6 +60,11 @@ def _wrap_llama_attention_forward(attn_module):
     original_forward = attn_module.forward
 
     def wrapped_forward(self, *args, **kwargs):
+        # Capture position_ids from forward call (catches old rotary_emb API too)
+        if "position_ids" in kwargs:
+            self._pos_shift_query_position_ids = kwargs["position_ids"]
+        elif len(args) >= 3 and torch.is_tensor(args[2]):
+            self._pos_shift_query_position_ids = args[2]
         _ACTIVE_ATTN_STACK.append(self)
         try:
             return original_forward(*args, **kwargs)
@@ -103,9 +85,14 @@ def _patch_apply_rotary_once():
 
 
 def enable_llama_pos_shift_attention(model):
+    """Enable position-shifted RoPE for llama-family models.
+
+    Patches apply_rotary_pos_emb so that query tokens receive shifted position ids
+    while key tokens receive physical cache position ids.  The native attention
+    forward is NOT replaced — only the rotary helper and a thin stack tracker are
+    wrapped.
+    """
     _patch_apply_rotary_once()
     for module in model.modules():
         if isinstance(module, LlamaAttention):
-            if not isinstance(module.rotary_emb, RotaryEmbeddingWrapper):
-                module.rotary_emb = RotaryEmbeddingWrapper(module, module.rotary_emb)
             _wrap_llama_attention_forward(module)
