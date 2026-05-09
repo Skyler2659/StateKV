@@ -270,6 +270,17 @@ def build_wikitext_eval_text(dataset_name, task, split, min_chars, sample_limit)
     return "\n\n".join(chunks)
 
 
+def build_pg19_text(split, sample_idx, target_words):
+    from datasets import load_dataset
+
+    ds = load_dataset("pg19", split=split)
+    full_text = ds[int(sample_idx)]["text"]
+    words = full_text.split()
+    if len(words) > target_words:
+        full_text = " ".join(words[:target_words])
+    return full_text
+
+
 def build_needle_eval_input_ids(tokenizer, needle_pos, prefix_repeat=40):
     hay = (
         "The cat sat on the mat. "
@@ -335,13 +346,17 @@ def main():
         "--text_source",
         type=str,
         default="wikitext",
-        choices=["repeat", "wikitext", "needle"],
+        choices=["repeat", "wikitext", "needle", "pg19"],
     )
     parser.add_argument("--dataset_name", type=str, default="wikitext")
     parser.add_argument("--task", type=str, default="wikitext-2-raw-v1")
     parser.add_argument("--split", type=str, default="test")
     parser.add_argument("--wikitext_min_chars", type=int, default=12000)
     parser.add_argument("--wikitext_sample_limit", type=int, default=256)
+    parser.add_argument("--pg19_sample_idx", type=int, default=0,
+                        help="Which PG19 book to use (0-28602)")
+    parser.add_argument("--pg19_target_words", type=int, default=2000,
+                        help="Rough number of words to slice from a PG19 book")
     parser.add_argument("--max_steps", type=int, default=512)
     parser.add_argument("--cache_size", type=int, default=256)
     parser.add_argument("--start_size", type=int, default=4)
@@ -441,6 +456,17 @@ def main():
     if args.text_source == "repeat":
         text = build_eval_text(args.text_repeat)
         print(f"text_source=repeat repeat={args.text_repeat}")
+        input_ids = tokenizer(text, return_tensors="pt").input_ids.to(args.device)
+    elif args.text_source == "pg19":
+        text = build_pg19_text(
+            split=args.split,
+            sample_idx=args.pg19_sample_idx,
+            target_words=args.pg19_target_words,
+        )
+        print(
+            f"text_source=pg19 split={args.split} "
+            f"sample_idx={args.pg19_sample_idx} target_words={args.pg19_target_words}"
+        )
         input_ids = tokenizer(text, return_tensors="pt").input_ids.to(args.device)
     else:
         if args.text_source == "wikitext":
