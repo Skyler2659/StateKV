@@ -41,9 +41,17 @@ def llama_pos_shift_attention_forward(
     # Support both old transformers (past_key_value) and new (past_key_values)
     if past_key_value is None and "past_key_values" in kwargs:
         past_key_value = kwargs["past_key_values"]
-    # Polyfill for newer transformers (num_heads -> num_attention_heads)
-    if not hasattr(self, "num_heads"):
-        self.num_heads = self.num_attention_heads
+    # Polyfill: read everything from config to survive any transformers version
+    _cfg = self.config
+    self.num_heads = getattr(self, "num_heads",
+        getattr(self, "num_attention_heads", _cfg.num_attention_heads))
+    self.head_dim = getattr(self, "head_dim",
+        getattr(self, "attention_head_dim", _cfg.head_dim or _cfg.hidden_size // self.num_heads))
+    self.num_key_value_heads = getattr(self, "num_key_value_heads",
+        _cfg.num_key_value_heads)
+    self.num_key_value_groups = getattr(self, "num_key_value_groups",
+        self.num_heads // self.num_key_value_heads)
+    self.hidden_size = getattr(self, "hidden_size", _cfg.hidden_size)
     bsz, q_len, _ = hidden_states.size()
 
     if self.config.pretraining_tp > 1:
@@ -92,7 +100,12 @@ def llama_pos_shift_attention_forward(
     kv_seq_len = key_states.shape[-2]
     if past_key_value is not None:
         kv_seq_len += past_key_value[0].shape[-2]
-    cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
+    # rotary_emb API changed across transformers versions
+    try:
+        cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
+    except TypeError:
+        pos_for_rope = torch.arange(kv_seq_len, device=value_states.device).unsqueeze(0)
+        cos, sin = self.rotary_emb(value_states, pos_for_rope)
     ### Shift Pos: query pos is min(cache_size, idx)
     # query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin, position_ids)
     query_states = apply_rotary_pos_emb_single(query_states, cos, sin, position_ids)
