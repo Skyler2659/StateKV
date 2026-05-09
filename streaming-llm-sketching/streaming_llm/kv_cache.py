@@ -250,7 +250,7 @@ class L1RobustKVCache:
             self._estimators[layer_idx] = est
         return est
 
-    def _select_indices_for_layer(self, layer_idx, layer_v):
+    def _select_indices_for_layer(self, layer_idx, layer_v, layer_k=None):
         v_rows = self._get_layer_v_rows(layer_v)
         if v_rows is None:
             return None, None
@@ -260,6 +260,14 @@ class L1RobustKVCache:
         estimator = self._get_or_create_estimator(layer_idx, head_dim)
         force_refit = (self._steps % self.recompute_interval) == 0
         scores = estimator.scores(v_rows, force_refit=force_refit)
+
+        # Attention-weighted scoring: multiply ℓ₁ leverage by last-query relevance.
+        if layer_k is not None:
+            k_last = layer_k[0, :, -1, :].mean(dim=0)  # [D]  last-token key avg over heads
+            attn_logits = torch.matmul(v_rows, k_last) / max(head_dim**0.5, 1e-6)
+            attn_w = torch.softmax(attn_logits, dim=0)
+            scores = scores * attn_w
+
         keep = self._select_with_recency_mix(scores)
         rw = compute_reweight(scores, keep) if self.use_reweight else None
         return keep, rw
@@ -318,10 +326,10 @@ class L1RobustKVCache:
         items = []
         for layer_idx, (k, v) in enumerate(pkv):
             if self.per_layer:
-                keep, rw = self._select_indices_for_layer(layer_idx, v)
+                keep, rw = self._select_indices_for_layer(layer_idx, v, layer_k=k)
             else:
                 if shared_keep is None:
-                    shared_keep, shared_rw = self._select_indices_for_layer(0, v)
+                    shared_keep, shared_rw = self._select_indices_for_layer(0, v, layer_k=k)
                 keep, rw = shared_keep, shared_rw
             if keep is None:
                 items.append((k, v))
