@@ -1,4 +1,3 @@
-import inspect
 import types
 
 import torch
@@ -26,10 +25,12 @@ def _get_full_cos_sin(attn, kv_len, device, dtype):
     if rope is None:
         return None, None
     pos = torch.arange(kv_len, device=device).unsqueeze(0)
+    # Pass float dummy as `x` to prevent dtype truncation (rope casts to x.dtype)
+    x_dummy = torch.empty(1, 1, 1, 1, device=device, dtype=dtype)
     try:
-        c, s = rope(pos, position_ids=pos)
+        c, s = rope(x_dummy, position_ids=pos)
     except TypeError:
-        c, s = rope(pos, seq_len=kv_len)
+        c, s = rope(x_dummy, seq_len=kv_len)
     return c, s
 
 
