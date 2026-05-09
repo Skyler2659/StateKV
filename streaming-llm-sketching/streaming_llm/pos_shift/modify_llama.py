@@ -90,9 +90,6 @@ def llama_pos_shift_attention_forward(
     key_states = key_states.view(bsz, q_len, self.num_key_value_heads, self.head_dim).transpose(1, 2)
     value_states = value_states.view(bsz, q_len, self.num_key_value_heads, self.head_dim).transpose(1, 2)
 
-    # Save last-token query for L1RobustKVCache attention weighting
-    LAST_QUERY_STATES[layer_idx] = query_states[0, :, -1, :].detach()  # [H, D]
-
     kv_seq_len = key_states.shape[-2] + past_kv_len
     # Generate cos/sin for the full cache length (required for pos_shift)
     if hasattr(self, "rotary_emb"):
@@ -107,6 +104,8 @@ def llama_pos_shift_attention_forward(
     # Pos shift: Q uses shifted position_ids, K uses physical cache positions
     if cos is not None:
         query_states = apply_rotary_pos_emb_single(query_states, cos, sin, position_ids)
+    # Save RoPE'd last-token query for L1RobustKVCache attention weighting
+    LAST_QUERY_STATES[layer_idx] = query_states[0, :, -1, :].detach()
     if past_k is not None:
         key_states = torch.cat([past_k, key_states], dim=2)
         value_states = torch.cat([past_v, value_states], dim=2)
