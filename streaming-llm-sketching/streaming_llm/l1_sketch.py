@@ -81,8 +81,12 @@ class L1LeverageScoreEstimator:
         if n <= 1:
             self.r_inv = None
             return
-        sv = self.embedding.embed(v_rows)
-        sv = sv.float()  # QR not implemented for FP16
+        # If n is small relative to sketch_dim, most buckets are empty →
+        # sketch is rank-deficient.  Fall back to direct QR on V.
+        if n < self.embedding.count_sketch.sketch_dim:
+            sv = v_rows.float()
+        else:
+            sv = self.embedding.embed(v_rows).float()
         _, r = torch.linalg.qr(sv, mode="reduced")
         r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * 1e-6
         self.r_inv = torch.linalg.inv(r)
