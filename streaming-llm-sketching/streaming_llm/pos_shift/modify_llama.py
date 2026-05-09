@@ -66,6 +66,10 @@ def _dispatch_apply_rotary(q, k, cos, sin, *args, **kwargs):
 
     # Manual cos/sin indexing — universal across all HF versions once we
     # have full-range tables.
+    # Clamp positions to cos/sin bounds (defensive against any version skew)
+    max_idx = int(cos_flat.shape[0]) - 1
+    query_pos = query_pos.clamp(0, max_idx)
+    key_pos = key_pos.clamp(0, max_idx)
     cos_q = cos_flat[query_pos].unsqueeze(1)
     sin_q = sin_flat[query_pos].unsqueeze(1)
     cos_k = cos_flat[key_pos].unsqueeze(1)
