@@ -105,7 +105,15 @@ def llama_pos_shift_attention_forward(
         key_states = torch.cat([past_k, key_states], dim=2)
         value_states = torch.cat([past_v, value_states], dim=2)
 
-    past_key_value_out = (key_states, value_states) if use_cache else None
+    # Return cache in the same format the framework expects
+    if use_cache:
+        if past_key_value is not None and hasattr(past_key_value, "update"):
+            past_key_value.update(key_states, value_states, layer_idx)
+            past_key_value_out = past_key_value
+        else:
+            past_key_value_out = (key_states, value_states)
+    else:
+        past_key_value_out = None
 
     if cos is not None:
         key_position_ids = torch.arange(kv_seq_len, device=position_ids.device).unsqueeze(0)
