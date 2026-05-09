@@ -66,33 +66,48 @@ def get_kv_seq_len(past_key_values, k_seq_dim: int):
 
 
 def _to_legacy_cache(past_key_values):
+    """Convert any cache format to legacy tuple-of-tuples for eviction ops."""
     if past_key_values is None or isinstance(past_key_values, (list, tuple)):
         return past_key_values, None
-    # Official API (transformers >=4.45)
+    # 4.45-4.50: official to_legacy_cache() method
     if hasattr(past_key_values, "to_legacy_cache"):
         try:
             return past_key_values.to_legacy_cache(), past_key_values
         except Exception:
             pass
-    # Internal attribute access (multiple possible names across versions)
-    for key_name, val_name in (("key_cache", "value_cache"),
-                                ("_key_cache", "_value_cache")):
-        kc = getattr(past_key_values, key_name, None)
-        vc = getattr(past_key_values, val_name, None)
+    # 4.51+: .layers list of DynamicLayer objects with .keys/.values
+    lyrs = getattr(past_key_values, "layers", None)
+    if isinstance(lyrs, (list, tuple)) and len(lyrs) > 0:
+        return tuple((lyr.keys, lyr.values) for lyr in lyrs), past_key_values
+    # 4.45-4.50 fallback: .key_cache / .value_cache direct access
+    for k_name, v_name in (("key_cache", "value_cache"),
+                            ("_key_cache", "_value_cache")):
+        kc = getattr(past_key_values, k_name, None)
+        vc = getattr(past_key_values, v_name, None)
         if isinstance(kc, (list, tuple)) and isinstance(vc, (list, tuple)) and len(kc) == len(vc):
             return tuple((kc[i], vc[i]) for i in range(len(kc))), past_key_values
     return past_key_values, None
 
 
 def _restore_cache_type(original_cache, legacy_cache):
+    """Wrap evicted legacy tuple back into the original cache class."""
     if original_cache is None or isinstance(original_cache, (list, tuple)):
         return legacy_cache
-    cache_cls = type(original_cache)
-    if hasattr(cache_cls, "from_legacy_cache"):
+    # 4.45-4.50: from_legacy_cache class method
+    if hasattr(type(original_cache), "from_legacy_cache"):
         try:
-            return cache_cls.from_legacy_cache(legacy_cache)
+            return type(original_cache).from_legacy_cache(legacy_cache)
         except Exception:
-            return legacy_cache
+            pass
+    # 4.51+: rebuild via .layers in-place, then call update() per layer
+    if hasattr(original_cache, "layers"):
+        for i, (k, v) in enumerate(legacy_cache):
+            if i < len(original_cache.layers):
+                original_cache.layers[i].keys = k
+                original_cache.layers[i].values = v
+            else:
+                original_cache.update(k, v, i)
+        return original_cache
     return legacy_cache
 
 

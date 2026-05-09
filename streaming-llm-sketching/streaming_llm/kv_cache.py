@@ -33,10 +33,18 @@ def _to_legacy(past_key_values):
     if past_key_values is None:
         return None
     if _is_dynamic_cache(past_key_values):
-        return tuple(
-            (past_key_values.key_cache[i], past_key_values.value_cache[i])
-            for i in range(len(past_key_values.key_cache))
-        )
+        # 4.51+: .layers list of DynamicLayer
+        lyrs = getattr(past_key_values, "layers", None)
+        if isinstance(lyrs, (list, tuple)) and len(lyrs) > 0:
+            return tuple((lyr.keys, lyr.values) for lyr in lyrs)
+        # 4.45-4.50: .key_cache / .value_cache
+        kc = getattr(past_key_values, "key_cache", None)
+        vc = getattr(past_key_values, "value_cache", None)
+        if isinstance(kc, list) and isinstance(vc, list):
+            return tuple((kc[i], vc[i]) for i in range(len(kc)))
+        # Legacy: to_legacy_cache method
+        if hasattr(past_key_values, "to_legacy_cache"):
+            return past_key_values.to_legacy_cache()
     return past_key_values
 
 
@@ -44,10 +52,24 @@ def _back_to_original(original, items):
     if original is None:
         return None
     if _is_dynamic_cache(original):
-        new_cache = type(original)()
-        new_cache.key_cache = [k for k, v in items]
-        new_cache.value_cache = [v for k, v in items]
-        return new_cache
+        # 4.51+: rebuild via .layers in-place
+        if hasattr(original, "layers"):
+            for i, (k, v) in enumerate(items):
+                if i < len(original.layers):
+                    original.layers[i].keys = k
+                    original.layers[i].values = v
+                else:
+                    original.update(k, v, i)
+            return original
+        # 4.45-4.50: .key_cache / .value_cache
+        if hasattr(original, "key_cache"):
+            new_cache = type(original)()
+            new_cache.key_cache = [k for k, v in items]
+            new_cache.value_cache = [v for k, v in items]
+            return new_cache
+        # Fallback: from_legacy_cache
+        if hasattr(type(original), "from_legacy_cache"):
+            return type(original).from_legacy_cache(items)
     if isinstance(original, tuple):
         return tuple(items)
     return items
