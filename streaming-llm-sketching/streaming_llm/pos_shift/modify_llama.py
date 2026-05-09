@@ -14,6 +14,9 @@ from transformers.models.llama.modeling_llama import (
 
 __all__ = ["enable_llama_pos_shift_attention"]
 
+# Shared store: last-query per layer, consumed by L1RobustKVCache for attention weighting.
+LAST_QUERY_STATES = {}
+
 
 def _resolve_past_kv_layer(layer_past, layer_idx):
     """Extract per-layer (past_k, past_v, kv_len) from past_key_value."""
@@ -86,6 +89,9 @@ def llama_pos_shift_attention_forward(
     query_states = query_states.view(bsz, q_len, self.num_heads, self.head_dim).transpose(1, 2)
     key_states = key_states.view(bsz, q_len, self.num_key_value_heads, self.head_dim).transpose(1, 2)
     value_states = value_states.view(bsz, q_len, self.num_key_value_heads, self.head_dim).transpose(1, 2)
+
+    # Save last-token query for L1RobustKVCache attention weighting
+    LAST_QUERY_STATES[layer_idx] = query_states[0, :, -1, :].detach()  # [H, D]
 
     kv_seq_len = key_states.shape[-2] + past_kv_len
     # Generate cos/sin for the full cache length (required for pos_shift)

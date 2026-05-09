@@ -261,12 +261,16 @@ class L1RobustKVCache:
         force_refit = (self._steps % self.recompute_interval) == 0
         scores = estimator.scores(v_rows, force_refit=force_refit)
 
-        # Attention-weighted scoring: multiply ℓ₁ leverage by last-query relevance.
+        # Attention-weighted scoring: multiply ℓ₁ leverage by real last-query relevance.
         if layer_k is not None:
-            k_last = layer_k[0, :, -1, :].mean(dim=0)  # [D]  last-token key avg over heads
-            attn_logits = torch.matmul(v_rows, k_last) / max(head_dim**0.5, 1e-6)
-            attn_w = torch.softmax(attn_logits, dim=0)
-            scores = scores * attn_w
+            from streaming_llm.pos_shift.modify_llama import LAST_QUERY_STATES
+
+            q_h = LAST_QUERY_STATES.get(layer_idx)  # [H, D]
+            if q_h is not None:
+                q_vec = q_h.mean(dim=0).to(v_rows.device)  # [D] avg over heads
+                attn_logits = torch.matmul(v_rows, q_vec) / max(head_dim**0.5, 1e-6)
+                attn_w = torch.softmax(attn_logits, dim=0)
+                scores = scores * attn_w
 
         keep = self._select_with_recency_mix(scores)
         rw = compute_reweight(scores, keep) if self.use_reweight else None
