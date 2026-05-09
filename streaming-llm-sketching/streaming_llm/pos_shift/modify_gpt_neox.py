@@ -25,22 +25,12 @@ def _resolve_past_kv_layer(layer_past, layer_idx):
     """
     if layer_past is None:
         return None, None, 0
-    if hasattr(layer_past, "key_cache"):
+    if hasattr(layer_past, "to_legacy_cache"):
+        legacy = layer_past.to_legacy_cache()
         idx = int(layer_idx or 0)
-        kc = getattr(layer_past, "key_cache", None) or []
-        vc = getattr(layer_past, "value_cache", None) or []
-        if idx < len(kc) and idx < len(vc):
-            pk, pv = kc[idx], vc[idx]
-            kv_len = int(pk.shape[-2])
-            if hasattr(layer_past, "get_seq_length"):
-                try:
-                    kv_len = int(layer_past.get_seq_length(idx))
-                except (TypeError, Exception):
-                    try:
-                        kv_len = int(layer_past.get_seq_length())
-                    except (TypeError, Exception):
-                        pass
-            return pk, pv, kv_len
+        if idx < len(legacy):
+            pk, pv = legacy[idx]
+            return pk, pv, int(pk.shape[-2])
         return None, None, 0
     return layer_past[0], layer_past[1], int(layer_past[0].shape[-2])
 

@@ -1,224 +1,111 @@
-import math
-from typing import Optional, Tuple
+import inspect
+import types
 
 import torch
-from torch import nn
-import torch.utils.checkpoint
 
-import torch.nn.functional as F
-
-from transformers.models.llama.modeling_llama import (
-    LlamaAttention,
-    rotate_half,
-    apply_rotary_pos_emb,
-    repeat_kv,
-)
-import types
+import transformers.models.llama.modeling_llama as modeling_llama
+from transformers.models.llama.modeling_llama import LlamaAttention, rotate_half
 
 __all__ = ["enable_llama_pos_shift_attention"]
 
+_ORIG_APPLY_ROTARY = modeling_llama.apply_rotary_pos_emb
+_ACTIVE_ATTN_STACK = []
+_APPLY_PATCHED = False
 
-def _resolve_past_kv_layer(layer_past, layer_idx):
-    """Extract per-layer (past_k, past_v, kv_len) from past_key_value.
 
-    Compatible with legacy per-layer (K,V) tuples (transformers ≤4.48) and the
-    full-DynamicCache pattern introduced in 4.50+ where each attention layer
-    receives the whole cache object.
+class RotaryEmbeddingWrapper(torch.nn.Module):
+    """Thin wrapper that preserves native rotary behavior.
+
+    We only record query-side position ids so the rotary helper can split
+    query/key positions later (Q uses shifted ids; K uses physical cache ids).
     """
-    if layer_past is None:
-        return None, None, 0
-    if hasattr(layer_past, "key_cache"):
-        idx = int(layer_idx or 0)
-        kc = getattr(layer_past, "key_cache", None) or []
-        vc = getattr(layer_past, "value_cache", None) or []
-        if idx < len(kc) and idx < len(vc):
-            pk, pv = kc[idx], vc[idx]
-            kv_len = int(pk.shape[-2])
-            if hasattr(layer_past, "get_seq_length"):
-                try:
-                    kv_len = int(layer_past.get_seq_length(idx))
-                except (TypeError, Exception):
-                    try:
-                        kv_len = int(layer_past.get_seq_length())
-                    except (TypeError, Exception):
-                        pass
-            return pk, pv, kv_len
-        return None, None, 0
-    # Legacy per-layer tuple: (K, V)
-    return layer_past[0], layer_past[1], int(layer_past[0].shape[-2])
+
+    def __init__(self, attn_module, base_rotary):
+        super().__init__()
+        self.attn_module = attn_module
+        self.base_rotary = base_rotary
+
+    def forward(self, *args, **kwargs):
+        pos_ids = kwargs.get("position_ids")
+        if pos_ids is None and len(args) >= 2 and torch.is_tensor(args[1]):
+            pos_ids = args[1]
+        if pos_ids is not None and torch.is_tensor(pos_ids):
+            self.attn_module._pos_shift_query_position_ids = pos_ids
+        return self.base_rotary(*args, **kwargs)
 
 
-def apply_rotary_pos_emb_single(x, cos, sin, position_ids):
-    # The first two dimensions of cos and sin are always 1, so we can `squeeze` them.
-    cos = cos.squeeze(1).squeeze(0)  # [seq_len, dim]
-    sin = sin.squeeze(1).squeeze(0)  # [seq_len, dim]
-    cos = cos[position_ids].unsqueeze(1)  # [bs, 1, seq_len, dim]
-    sin = sin[position_ids].unsqueeze(1)  # [bs, 1, seq_len, dim]
-    x_embed = (x * cos) + (rotate_half(x) * sin)
-    return x_embed
+def _build_key_position_ids(query_position_ids: torch.Tensor, kv_len: int):
+    bsz = int(query_position_ids.shape[0])
+    return torch.arange(kv_len, device=query_position_ids.device).unsqueeze(0).expand(bsz, -1)
 
 
-def llama_pos_shift_attention_forward(
-    self,
-    hidden_states: torch.Tensor,
-    attention_mask: Optional[torch.Tensor] = None,
-    position_ids: Optional[torch.LongTensor] = None,
-    past_key_value: Optional[Tuple[torch.Tensor]] = None,
-    output_attentions: bool = False,
-    use_cache: bool = False,
-    **kwargs,
-) -> Tuple[torch.Tensor, Optional[torch.Tensor], Optional[Tuple[torch.Tensor]]]:
-    # Support both old transformers (past_key_value) and new (past_key_values)
-    if past_key_value is None and "past_key_values" in kwargs:
-        past_key_value = kwargs["past_key_values"]
-    # Polyfill: read everything from config to survive any transformers version
-    _cfg = self.config
-    self.num_heads = getattr(self, "num_heads",
-        getattr(self, "num_attention_heads", _cfg.num_attention_heads))
-    self.head_dim = getattr(self, "head_dim",
-        getattr(self, "attention_head_dim", _cfg.head_dim or _cfg.hidden_size // self.num_heads))
-    self.num_key_value_heads = getattr(self, "num_key_value_heads",
-        _cfg.num_key_value_heads)
-    self.num_key_value_groups = getattr(self, "num_key_value_groups",
-        self.num_heads // self.num_key_value_heads)
-    self.hidden_size = getattr(self, "hidden_size", _cfg.hidden_size)
-    bsz, q_len, _ = hidden_states.size()
-    layer_idx = int(getattr(self, "layer_idx", 0) or 0)
+def _dispatch_apply_rotary(q, k, cos, sin, *args, **kwargs):
+    """Dispatcher around HF apply_rotary_pos_emb without replacing attention forward."""
+    if not _ACTIVE_ATTN_STACK:
+        return _ORIG_APPLY_ROTARY(q, k, cos, sin, *args, **kwargs)
 
-    if self.config.pretraining_tp > 1:
-        key_value_slicing = (
-            self.num_key_value_heads * self.head_dim
-        ) // self.config.pretraining_tp
-        query_slices = self.q_proj.weight.split(
-            (self.num_heads * self.head_dim) // self.config.pretraining_tp, dim=0
-        )
-        key_slices = self.k_proj.weight.split(key_value_slicing, dim=0)
-        value_slices = self.v_proj.weight.split(key_value_slicing, dim=0)
+    attn = _ACTIVE_ATTN_STACK[-1]
+    if not getattr(attn, "_pos_shift_enabled", False):
+        return _ORIG_APPLY_ROTARY(q, k, cos, sin, *args, **kwargs)
 
-        query_states = [
-            F.linear(hidden_states, query_slices[i])
-            for i in range(self.config.pretraining_tp)
-        ]
-        query_states = torch.cat(query_states, dim=-1)
+    query_pos = kwargs.get("position_ids")
+    if query_pos is None:
+        query_pos = getattr(attn, "_pos_shift_query_position_ids", None)
+    if query_pos is None or not torch.is_tensor(query_pos):
+        return _ORIG_APPLY_ROTARY(q, k, cos, sin, *args, **kwargs)
 
-        key_states = [
-            F.linear(hidden_states, key_slices[i])
-            for i in range(self.config.pretraining_tp)
-        ]
-        key_states = torch.cat(key_states, dim=-1)
+    key_pos = _build_key_position_ids(query_pos, kv_len=int(k.shape[-2]))
 
-        value_states = [
-            F.linear(hidden_states, value_slices[i])
-            for i in range(self.config.pretraining_tp)
-        ]
-        value_states = torch.cat(value_states, dim=-1)
-
+    sig = inspect.signature(_ORIG_APPLY_ROTARY)
+    if "position_ids" in sig.parameters:
+        # Newer transformers: delegate via position_ids kwarg.
+        q_kwargs = dict(kwargs)
+        q_kwargs["position_ids"] = query_pos
+        k_kwargs = dict(kwargs)
+        k_kwargs["position_ids"] = key_pos
+        q_rot, _ = _ORIG_APPLY_ROTARY(q, q, cos, sin, *args, **q_kwargs)
+        k_rot, _ = _ORIG_APPLY_ROTARY(k, k, cos, sin, *args, **k_kwargs)
     else:
-        query_states = self.q_proj(hidden_states)
-        key_states = self.k_proj(hidden_states)
-        value_states = self.v_proj(hidden_states)
+        # Older transformers (≤4.33): manual cos/sin indexing.
+        cos_q = cos.squeeze(1).squeeze(0)[query_pos].unsqueeze(1)
+        sin_q = sin.squeeze(1).squeeze(0)[query_pos].unsqueeze(1)
+        cos_k = cos.squeeze(1).squeeze(0)[key_pos].unsqueeze(1)
+        sin_k = sin.squeeze(1).squeeze(0)[key_pos].unsqueeze(1)
+        q_rot = (q * cos_q) + (rotate_half(q) * sin_q)
+        k_rot = (k * cos_k) + (rotate_half(k) * sin_k)
+    return q_rot, k_rot
 
-    query_states = query_states.view(
-        bsz, q_len, self.num_heads, self.head_dim
-    ).transpose(1, 2)
-    key_states = key_states.view(
-        bsz, q_len, self.num_key_value_heads, self.head_dim
-    ).transpose(1, 2)
-    value_states = value_states.view(
-        bsz, q_len, self.num_key_value_heads, self.head_dim
-    ).transpose(1, 2)
 
-    past_k, past_v, past_kv_len = _resolve_past_kv_layer(past_key_value, layer_idx)
-    kv_seq_len = key_states.shape[-2] + past_kv_len
-    # rotary_emb API changed across transformers versions
-    try:
-        cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
-    except TypeError:
-        pos_for_rope = torch.arange(kv_seq_len, device=value_states.device).unsqueeze(0)
-        cos, sin = self.rotary_emb(value_states, pos_for_rope)
-    ### Shift Pos: query pos is min(cache_size, idx)
-    # query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin, position_ids)
-    query_states = apply_rotary_pos_emb_single(query_states, cos, sin, position_ids)
-    ###
+def _wrap_llama_attention_forward(attn_module):
+    if getattr(attn_module, "_pos_shift_forward_wrapped", False):
+        return
 
-    if past_k is not None and past_v is not None:
-        # reuse k, v, self_attention
-        key_states = torch.cat([past_k, key_states], dim=2)
-        value_states = torch.cat([past_v, value_states], dim=2)
+    original_forward = attn_module.forward
 
-    past_key_value = (key_states, value_states) if use_cache else None
+    def wrapped_forward(self, *args, **kwargs):
+        _ACTIVE_ATTN_STACK.append(self)
+        try:
+            return original_forward(*args, **kwargs)
+        finally:
+            _ACTIVE_ATTN_STACK.pop()
 
-    ### Shift Pos: key pos is the pos in cache
-    key_position_ids = torch.arange(kv_seq_len, device=position_ids.device).unsqueeze(0)
-    key_states = apply_rotary_pos_emb_single(key_states, cos, sin, key_position_ids)
-    ###
+    attn_module.forward = types.MethodType(wrapped_forward, attn_module)
+    attn_module._pos_shift_forward_wrapped = True
+    attn_module._pos_shift_enabled = True
 
-    # repeat k/v heads if n_kv_heads < n_heads
-    key_states = repeat_kv(key_states, self.num_key_value_groups)
-    value_states = repeat_kv(value_states, self.num_key_value_groups)
 
-    attn_weights = torch.matmul(query_states, key_states.transpose(2, 3)) / math.sqrt(
-        self.head_dim
-    )
-
-    if attn_weights.size() != (bsz, self.num_heads, q_len, kv_seq_len):
-        raise ValueError(
-            f"Attention weights should be of size {(bsz, self.num_heads, q_len, kv_seq_len)}, but is"
-            f" {attn_weights.size()}"
-        )
-
-    if attention_mask is not None:
-        if attention_mask.size() != (bsz, 1, q_len, kv_seq_len):
-            raise ValueError(
-                f"Attention mask should be of size {(bsz, 1, q_len, kv_seq_len)}, but is {attention_mask.size()}"
-            )
-        attn_weights = attn_weights + attention_mask
-
-    # upcast attention to fp32
-    attn_weights = nn.functional.softmax(attn_weights, dim=-1, dtype=torch.float32).to(
-        query_states.dtype
-    )
-    attn_output = torch.matmul(attn_weights, value_states)
-
-    if attn_output.size() != (bsz, self.num_heads, q_len, self.head_dim):
-        raise ValueError(
-            f"`attn_output` should be of size {(bsz, self.num_heads, q_len, self.head_dim)}, but is"
-            f" {attn_output.size()}"
-        )
-
-    attn_output = attn_output.transpose(1, 2).contiguous()
-    attn_output = attn_output.reshape(bsz, q_len, self.hidden_size)
-
-    if self.config.pretraining_tp > 1:
-        attn_output = attn_output.split(
-            self.hidden_size // self.config.pretraining_tp, dim=2
-        )
-        o_proj_slices = self.o_proj.weight.split(
-            self.hidden_size // self.config.pretraining_tp, dim=1
-        )
-        attn_output = sum(
-            [
-                F.linear(attn_output[i], o_proj_slices[i])
-                for i in range(self.config.pretraining_tp)
-            ]
-        )
-    else:
-        attn_output = self.o_proj(attn_output)
-
-    if not output_attentions:
-        attn_weights = None
-
-    return attn_output, attn_weights, past_key_value
+def _patch_apply_rotary_once():
+    global _APPLY_PATCHED
+    if _APPLY_PATCHED:
+        return
+    modeling_llama.apply_rotary_pos_emb = _dispatch_apply_rotary
+    _APPLY_PATCHED = True
 
 
 def enable_llama_pos_shift_attention(model):
-    for name, module in reversed(model._modules.items()):
-        if len(list(module.children())) > 0:
-            enable_llama_pos_shift_attention(
-                module,
-            )
-
+    _patch_apply_rotary_once()
+    for module in model.modules():
         if isinstance(module, LlamaAttention):
-            model._modules[name].forward = types.MethodType(
-                llama_pos_shift_attention_forward, model._modules[name]
-            )
+            if not isinstance(module.rotary_emb, RotaryEmbeddingWrapper):
+                module.rotary_emb = RotaryEmbeddingWrapper(module, module.rotary_emb)
+            _wrap_llama_attention_forward(module)
