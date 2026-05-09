@@ -18,6 +18,21 @@ def _build_key_position_ids(query_position_ids: torch.Tensor, kv_len: int):
     return torch.arange(kv_len, device=query_position_ids.device).unsqueeze(0).expand(bsz, -1)
 
 
+def _get_full_cos_sin(attn, kv_len, device, dtype):
+    """Generate cos/sin tables covering positions [0, kv_len) using the attention
+    module's native rotary embedding.  Works for all transformers versions that
+    keep ``rotary_emb`` on the attention module."""
+    rope = getattr(attn, "rotary_emb", None)
+    if rope is None:
+        return None, None
+    pos = torch.arange(kv_len, device=device).unsqueeze(0)
+    try:
+        c, s = rope(pos, position_ids=pos)
+    except TypeError:
+        c, s = rope(pos, seq_len=kv_len)
+    return c, s
+
+
 def _dispatch_apply_rotary(q, k, cos, sin, *args, **kwargs):
     """Dispatcher around HF apply_rotary_pos_emb without replacing attention forward."""
     if not _ACTIVE_ATTN_STACK:
@@ -33,23 +48,29 @@ def _dispatch_apply_rotary(q, k, cos, sin, *args, **kwargs):
     if query_pos is None or not torch.is_tensor(query_pos):
         return _ORIG_APPLY_ROTARY(q, k, cos, sin, *args, **kwargs)
 
-    key_pos = _build_key_position_ids(query_pos, kv_len=int(k.shape[-2]))
+    kv_len = int(k.shape[-2])
+    key_pos = _build_key_position_ids(query_pos, kv_len=kv_len)
 
-    sig = inspect.signature(_ORIG_APPLY_ROTARY)
-    if "position_ids" in sig.parameters:
-        q_kwargs = dict(kwargs)
-        q_kwargs["position_ids"] = query_pos
-        k_kwargs = dict(kwargs)
-        k_kwargs["position_ids"] = key_pos
-        q_rot, _ = _ORIG_APPLY_ROTARY(q, q, cos, sin, *args, **q_kwargs)
-        k_rot, _ = _ORIG_APPLY_ROTARY(k, k, cos, sin, *args, **k_kwargs)
+    # Native cos/sin may only cover new token positions (HF >=4.45).
+    # If too small, regenerate full-range tables from the rotary embedding.
+    cos_flat = cos.squeeze(1).squeeze(0)
+    if int(cos_flat.shape[0]) < kv_len:
+        cos, sin = _get_full_cos_sin(attn, kv_len, k.device, k.dtype)
+        if cos is None:
+            return _ORIG_APPLY_ROTARY(q, k, cos, sin, *args, **kwargs)
+        cos_flat = cos.squeeze(1).squeeze(0)
+        sin_flat = sin.squeeze(1).squeeze(0)
     else:
-        cos_q = cos.squeeze(1).squeeze(0)[query_pos].unsqueeze(1)
-        sin_q = sin.squeeze(1).squeeze(0)[query_pos].unsqueeze(1)
-        cos_k = cos.squeeze(1).squeeze(0)[key_pos].unsqueeze(1)
-        sin_k = sin.squeeze(1).squeeze(0)[key_pos].unsqueeze(1)
-        q_rot = (q * cos_q) + (rotate_half(q) * sin_q)
-        k_rot = (k * cos_k) + (rotate_half(k) * sin_k)
+        sin_flat = sin.squeeze(1).squeeze(0)
+
+    # Manual cos/sin indexing — universal across all HF versions once we
+    # have full-range tables.
+    cos_q = cos_flat[query_pos].unsqueeze(1)
+    sin_q = sin_flat[query_pos].unsqueeze(1)
+    cos_k = cos_flat[key_pos].unsqueeze(1)
+    sin_k = sin_flat[key_pos].unsqueeze(1)
+    q_rot = (q * cos_q) + (rotate_half(q) * sin_q)
+    k_rot = (k * cos_k) + (rotate_half(k) * sin_k)
     return q_rot, k_rot
 
 
