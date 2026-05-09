@@ -241,7 +241,7 @@ class L1RobustKVCache:
 
     def _get_or_create_estimator(self, layer_idx, head_dim):
         est = self._estimators.get(layer_idx)
-        target_sketch_dim = max(self.sketch_dim, min(head_dim * head_dim, 16384))
+        target_sketch_dim = max(self.sketch_dim, min(head_dim * head_dim, 4096))
         if est is None:
             est = L1LeverageScoreEstimator(
                 sketch_dim=target_sketch_dim,
