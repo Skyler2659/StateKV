@@ -65,6 +65,26 @@ def get_kv_seq_len(past_key_values, k_seq_dim: int):
     return int(past_key_values[0][0].size(k_seq_dim))
 
 
+def _to_legacy_cache(past_key_values):
+    if past_key_values is None or isinstance(past_key_values, (list, tuple)):
+        return past_key_values, None
+    if hasattr(past_key_values, "to_legacy_cache"):
+        return past_key_values.to_legacy_cache(), past_key_values
+    return past_key_values, None
+
+
+def _restore_cache_type(original_cache, legacy_cache):
+    if original_cache is None or isinstance(original_cache, (list, tuple)):
+        return legacy_cache
+    cache_cls = type(original_cache)
+    if hasattr(cache_cls, "from_legacy_cache"):
+        try:
+            return cache_cls.from_legacy_cache(legacy_cache)
+        except Exception:
+            return legacy_cache
+    return legacy_cache
+
+
 def slice_tensor_by_dim(x: torch.Tensor, dim: int, start: int, end: int):
     idx = [slice(None)] * x.dim()
     idx[dim] = slice(start, end)
@@ -82,36 +102,38 @@ class SlidingWindowKVCache:
     def __call__(self, past_key_values):
         if past_key_values is None:
             return None
-        seq_len = get_kv_seq_len(past_key_values, self.k_seq_dim)
+        legacy_cache, original_cache = _to_legacy_cache(past_key_values)
+        seq_len = get_kv_seq_len(legacy_cache, self.k_seq_dim)
         if seq_len <= self.cache_size:
             return past_key_values
         keep_from = seq_len - self.cache_size
         items = []
-        for k, v in past_key_values:
+        for k, v in legacy_cache:
             items.append(
                 (
                     slice_tensor_by_dim(k, self.k_seq_dim, keep_from, seq_len),
                     slice_tensor_by_dim(v, self.v_seq_dim, keep_from, seq_len),
                 )
             )
-        return tuple(items)
+        return _restore_cache_type(original_cache, tuple(items))
 
     def evict_for_space(self, past_key_values, num_coming):
         if past_key_values is None:
             return None
-        seq_len = get_kv_seq_len(past_key_values, self.k_seq_dim)
+        legacy_cache, original_cache = _to_legacy_cache(past_key_values)
+        seq_len = get_kv_seq_len(legacy_cache, self.k_seq_dim)
         if seq_len + num_coming <= self.cache_size:
             return past_key_values
         keep_from = max(0, seq_len - self.cache_size + num_coming)
         items = []
-        for k, v in past_key_values:
+        for k, v in legacy_cache:
             items.append(
                 (
                     slice_tensor_by_dim(k, self.k_seq_dim, keep_from, seq_len),
                     slice_tensor_by_dim(v, self.v_seq_dim, keep_from, seq_len),
                 )
             )
-        return tuple(items)
+        return _restore_cache_type(original_cache, tuple(items))
 
 
 @torch.no_grad()
