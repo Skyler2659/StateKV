@@ -62,6 +62,8 @@ def infer_kv_seq_dims(model_type: str):
 
 
 def get_kv_seq_len(past_key_values, k_seq_dim: int):
+    if hasattr(past_key_values, "get_seq_length"):
+        return int(past_key_values.get_seq_length())
     return int(past_key_values[0][0].size(k_seq_dim))
 
 
