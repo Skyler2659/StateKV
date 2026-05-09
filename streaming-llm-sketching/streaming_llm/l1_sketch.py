@@ -81,13 +81,14 @@ class L1LeverageScoreEstimator:
         if n <= 1:
             self.r_inv = None
             return
-        # If n is small relative to sketch_dim, most buckets are empty →
-        # sketch is rank-deficient.  Fall back to direct QR on V.
-        if n < self.embedding.count_sketch.sketch_dim:
-            sv = v_rows.float()
+        # For small n (relative to sketch_dim or d), skip CountSketch to avoid
+        # rank-deficient empty buckets, but keep exponential weights for ℓ₁ guarantee.
+        if n < max(self.embedding.count_sketch.sketch_dim, d * 4):
+            weighted = v_rows.float() / _safe_exp_samples((n, 1), v_rows.device, v_rows.dtype)
+            _, r = torch.linalg.qr(weighted, mode="reduced")
         else:
             sv = self.embedding.embed(v_rows).float()
-        _, r = torch.linalg.qr(sv, mode="reduced")
+            _, r = torch.linalg.qr(sv, mode="reduced")
         r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * 1e-6
         self.r_inv = torch.linalg.inv(r)
         self.last_dim = d
