@@ -16,6 +16,34 @@ import types
 __all__ = ["enable_falcon_pos_shift_attention"]
 
 
+def _resolve_past_kv_layer(layer_past, layer_idx):
+    """Extract per-layer (past_k, past_v, kv_len) from past_key_value.
+
+    Compatible with legacy per-layer (K,V) tuples (transformers ≤4.48) and the
+    full-DynamicCache pattern introduced in 4.50+.
+    """
+    if layer_past is None:
+        return None, None, 0
+    if hasattr(layer_past, "key_cache"):
+        idx = int(layer_idx or 0)
+        kc = getattr(layer_past, "key_cache", None) or []
+        vc = getattr(layer_past, "value_cache", None) or []
+        if idx < len(kc) and idx < len(vc):
+            pk, pv = kc[idx], vc[idx]
+            kv_len = int(pk.shape[-2])
+            if hasattr(layer_past, "get_seq_length"):
+                try:
+                    kv_len = int(layer_past.get_seq_length(idx))
+                except (TypeError, Exception):
+                    try:
+                        kv_len = int(layer_past.get_seq_length())
+                    except (TypeError, Exception):
+                        pass
+            return pk, pv, kv_len
+        return None, None, 0
+    return layer_past[0], layer_past[1], int(layer_past[0].shape[-2])
+
+
 def falcon_pos_shift_attention_forward(
     self,
     hidden_states: torch.Tensor,
@@ -27,6 +55,23 @@ def falcon_pos_shift_attention_forward(
     output_attentions: bool = False,
     **kwargs,
 ):
+    # Polyfill: read from config to survive any transformers version
+    _cfg = self.config
+    self.num_heads = getattr(self, "num_heads",
+        getattr(self, "num_attention_heads", _cfg.num_attention_heads))
+    self.head_dim = getattr(self, "head_dim",
+        getattr(self, "attention_head_dim",
+            getattr(_cfg, "head_dim", _cfg.hidden_size // self.num_heads)))
+    num_kv_heads = getattr(self, "num_kv",
+        getattr(self, "num_key_value_heads",
+            getattr(_cfg, "num_kv", getattr(_cfg, "num_key_value_heads", self.num_heads))))
+    layer_idx = int(getattr(self, "layer_idx", 0) or 0)
+
+    past_kv = layer_past
+    if past_kv is None:
+        past_kv = kwargs.get("past_key_value", kwargs.get("past_key_values"))
+    past_k, past_v, past_kv_len = _resolve_past_kv_layer(past_kv, layer_idx)
+
     fused_qkv = self.query_key_value(
         hidden_states
     )  # [batch_size, seq_length, 3 x hidden_size]
@@ -41,7 +86,7 @@ def falcon_pos_shift_attention_forward(
     )
 
     # dirty hack to fix the inconsistency between falcon-40b and falcon-7b
-    num_kv = self.num_heads if self.num_heads == 128 else self.num_kv
+    num_kv = self.num_heads if self.num_heads == 128 else num_kv_heads
     key_layer = key_layer.transpose(1, 2).reshape(
         batch_size * num_kv,
         q_length,
@@ -51,19 +96,13 @@ def falcon_pos_shift_attention_forward(
         batch_size * num_kv, q_length, self.head_dim
     )
 
-    past_len = 0
-    if layer_past is not None:
-        past_len = layer_past[0].shape[1]
+    past_len = past_kv_len
 
     query_layer_copy = query_layer.clone()
     query_layer, _ = self.maybe_rotary(query_layer, query_layer_copy, past_len)
-    if layer_past is not None:
-        past_key, past_value = layer_past
-        # concatenate along seq_length dimension:
-        #  - key: [batch_size * self.num_heads, head_dim, kv_length]
-        #  - value: [batch_size * self.num_heads, kv_length, head_dim]
-        key_layer = torch.cat((past_key, key_layer), dim=1)
-        value_layer = torch.cat((past_value, value_layer), dim=1)
+    if past_k is not None:
+        key_layer = torch.cat((past_k, key_layer), dim=1)
+        value_layer = torch.cat((past_v, value_layer), dim=1)
 
     if use_cache is True:
         present = (key_layer, value_layer)
@@ -82,7 +121,7 @@ def falcon_pos_shift_attention_forward(
         key_layer_ = key_layer.reshape(batch_size, num_kv, -1, self.head_dim)
         value_layer_ = value_layer.reshape(batch_size, num_kv, -1, self.head_dim)
 
-        if layer_past is not None:
+        if past_k is not None:
             attn_output = F.scaled_dot_product_attention(
                 query_layer_, key_layer_, value_layer_, None, 0.0, is_causal=False
             )

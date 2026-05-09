@@ -18,6 +18,36 @@ import types
 __all__ = ["enable_llama_pos_shift_attention"]
 
 
+def _resolve_past_kv_layer(layer_past, layer_idx):
+    """Extract per-layer (past_k, past_v, kv_len) from past_key_value.
+
+    Compatible with legacy per-layer (K,V) tuples (transformers ≤4.48) and the
+    full-DynamicCache pattern introduced in 4.50+ where each attention layer
+    receives the whole cache object.
+    """
+    if layer_past is None:
+        return None, None, 0
+    if hasattr(layer_past, "key_cache"):
+        idx = int(layer_idx or 0)
+        kc = getattr(layer_past, "key_cache", None) or []
+        vc = getattr(layer_past, "value_cache", None) or []
+        if idx < len(kc) and idx < len(vc):
+            pk, pv = kc[idx], vc[idx]
+            kv_len = int(pk.shape[-2])
+            if hasattr(layer_past, "get_seq_length"):
+                try:
+                    kv_len = int(layer_past.get_seq_length(idx))
+                except (TypeError, Exception):
+                    try:
+                        kv_len = int(layer_past.get_seq_length())
+                    except (TypeError, Exception):
+                        pass
+            return pk, pv, kv_len
+        return None, None, 0
+    # Legacy per-layer tuple: (K, V)
+    return layer_past[0], layer_past[1], int(layer_past[0].shape[-2])
+
+
 def apply_rotary_pos_emb_single(x, cos, sin, position_ids):
     # The first two dimensions of cos and sin are always 1, so we can `squeeze` them.
     cos = cos.squeeze(1).squeeze(0)  # [seq_len, dim]
@@ -53,6 +83,7 @@ def llama_pos_shift_attention_forward(
         self.num_heads // self.num_key_value_heads)
     self.hidden_size = getattr(self, "hidden_size", _cfg.hidden_size)
     bsz, q_len, _ = hidden_states.size()
+    layer_idx = int(getattr(self, "layer_idx", 0) or 0)
 
     if self.config.pretraining_tp > 1:
         key_value_slicing = (
@@ -97,9 +128,8 @@ def llama_pos_shift_attention_forward(
         bsz, q_len, self.num_key_value_heads, self.head_dim
     ).transpose(1, 2)
 
-    kv_seq_len = key_states.shape[-2]
-    if past_key_value is not None:
-        kv_seq_len += past_key_value[0].shape[-2]
+    past_k, past_v, past_kv_len = _resolve_past_kv_layer(past_key_value, layer_idx)
+    kv_seq_len = key_states.shape[-2] + past_kv_len
     # rotary_emb API changed across transformers versions
     try:
         cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
@@ -111,10 +141,10 @@ def llama_pos_shift_attention_forward(
     query_states = apply_rotary_pos_emb_single(query_states, cos, sin, position_ids)
     ###
 
-    if past_key_value is not None:
+    if past_k is not None and past_v is not None:
         # reuse k, v, self_attention
-        key_states = torch.cat([past_key_value[0], key_states], dim=2)
-        value_states = torch.cat([past_key_value[1], value_states], dim=2)
+        key_states = torch.cat([past_k, key_states], dim=2)
+        value_states = torch.cat([past_v, value_states], dim=2)
 
     past_key_value = (key_states, value_states) if use_cache else None
 

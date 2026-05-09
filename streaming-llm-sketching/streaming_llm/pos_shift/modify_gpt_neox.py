@@ -17,6 +17,34 @@ import types
 __all__ = ["enable_gpt_neox_pos_shift_attention"]
 
 
+def _resolve_past_kv_layer(layer_past, layer_idx):
+    """Extract per-layer (past_k, past_v, kv_len) from past_key_value.
+
+    Compatible with legacy per-layer (K,V) tuples (transformers ≤4.48) and the
+    full-DynamicCache pattern introduced in 4.50+.
+    """
+    if layer_past is None:
+        return None, None, 0
+    if hasattr(layer_past, "key_cache"):
+        idx = int(layer_idx or 0)
+        kc = getattr(layer_past, "key_cache", None) or []
+        vc = getattr(layer_past, "value_cache", None) or []
+        if idx < len(kc) and idx < len(vc):
+            pk, pv = kc[idx], vc[idx]
+            kv_len = int(pk.shape[-2])
+            if hasattr(layer_past, "get_seq_length"):
+                try:
+                    kv_len = int(layer_past.get_seq_length(idx))
+                except (TypeError, Exception):
+                    try:
+                        kv_len = int(layer_past.get_seq_length())
+                    except (TypeError, Exception):
+                        pass
+            return pk, pv, kv_len
+        return None, None, 0
+    return layer_past[0], layer_past[1], int(layer_past[0].shape[-2])
+
+
 def apply_rotary_pos_emb_single(x, cos, sin, position_ids):
     gather_indices = position_ids[:, None, :, None]  # [bs, 1, seq_len, 1]
     gather_indices = gather_indices.repeat(1, cos.shape[1], 1, cos.shape[3])
@@ -37,19 +65,31 @@ def gpt_neox_pos_shift_attention_forward(
     output_attentions: Optional[bool] = False,
     **kwargs,
 ):
-    has_layer_past = layer_past is not None
+    # Polyfill: read everything from config to survive any transformers version
+    _cfg = self.config
+    self.num_attention_heads = getattr(self, "num_attention_heads",
+        _cfg.num_attention_heads)
+    self.head_size = getattr(self, "head_size",
+        getattr(self, "head_dim",
+            getattr(_cfg, "head_dim", _cfg.hidden_size // self.num_attention_heads)))
+    self.rotary_ndims = getattr(self, "rotary_ndims",
+        getattr(self, "rotary_dim", int(self.head_size * 0.25)))
+    self.hidden_size = getattr(self, "hidden_size", _cfg.hidden_size)
+    layer_idx = int(getattr(self, "layer_idx", 0) or 0)
+
+    # Support both old param name (layer_past) and new (past_key_value / past_key_values)
+    past_key_value = layer_past
+    if past_key_value is None:
+        past_key_value = kwargs.get("past_key_value", kwargs.get("past_key_values"))
+    past_k, past_v, past_kv_len = _resolve_past_kv_layer(past_key_value, layer_idx)
+    has_layer_past = past_k is not None
 
     # Compute QKV
-    # Attention heads [batch, seq_len, hidden_size]
-    #   --> [batch, seq_len, (np * 3 * head_size)]
     qkv = self.query_key_value(hidden_states)
 
-    # [batch, seq_len, (num_heads * 3 * head_size)]
-    #   --> [batch, seq_len, num_heads, 3 * head_size]
     new_qkv_shape = qkv.size()[:-1] + (self.num_attention_heads, 3 * self.head_size)
     qkv = qkv.view(*new_qkv_shape)
 
-    # [batch, seq_len, num_attention_heads, 3 * head_size] --> 3 [batch, num_attention_heads, seq_len, head_size]
     query = qkv[..., : self.head_size].permute(0, 2, 1, 3)
     key = qkv[..., self.head_size : 2 * self.head_size].permute(0, 2, 1, 3)
     value = qkv[..., 2 * self.head_size :].permute(0, 2, 1, 3)
@@ -59,19 +99,20 @@ def gpt_neox_pos_shift_attention_forward(
     query_pass = query[..., self.rotary_ndims :]
 
     # Compute token offset for rotary embeddings (when decoding)
-    seq_len = key.shape[-2]
-    if has_layer_past:
-        seq_len += layer_past[0].shape[-2]
-    cos, sin = self.rotary_emb(value, seq_len=seq_len)
+    seq_len = key.shape[-2] + past_kv_len
+    # rotary_emb API changed across transformers versions
+    try:
+        cos, sin = self.rotary_emb(value, seq_len=seq_len)
+    except TypeError:
+        pos_for_rope = torch.arange(seq_len, device=value.device).unsqueeze(0)
+        cos, sin = self.rotary_emb(value, pos_for_rope)
     query = apply_rotary_pos_emb_single(query_rot, cos, sin, position_ids)
     query = torch.cat((query, query_pass), dim=-1)
 
     # Cache QKV values
     if has_layer_past:
-        past_key = layer_past[0]
-        past_value = layer_past[1]
-        key = torch.cat((past_key, key), dim=-2)
-        value = torch.cat((past_value, value), dim=-2)
+        key = torch.cat((past_k, key), dim=-2)
+        value = torch.cat((past_v, value), dim=-2)
 
     present = (key, value) if use_cache else None
 
