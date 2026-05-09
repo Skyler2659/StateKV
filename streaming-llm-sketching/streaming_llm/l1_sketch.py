@@ -89,7 +89,7 @@ class L1LeverageScoreEstimator:
         else:
             sv = self.embedding.embed(v_rows).float()
             _, r = torch.linalg.qr(sv, mode="reduced")
-        r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * 1e-6
+        r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * 1e-4
         self.r_inv = torch.linalg.inv(r)
         self.last_dim = d
 
