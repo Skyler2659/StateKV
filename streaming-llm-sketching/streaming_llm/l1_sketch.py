@@ -2,8 +2,9 @@ import torch
 
 
 def _safe_exp_samples(size, device, dtype):
-    u = torch.rand(size, device=device, dtype=dtype).clamp_(1e-8, 1 - 1e-8)
-    return -torch.log(1.0 - u)
+    # Always generate in float32 — 1e-8 clamp is subnormal in float16
+    u = torch.rand(size, device=device, dtype=torch.float32).clamp_(1e-8, 1 - 1e-8)
+    return -torch.log(1.0 - u).to(dtype)
 
 
 class CountSketch:
@@ -23,16 +24,10 @@ class CountSketch:
         old_n = 0 if self.hash_buckets is None else int(self.hash_buckets.numel())
         grow_n = int(n - old_n)
         new_buckets = torch.randint(
-            0,
-            self.sketch_dim,
-            (grow_n,),
-            generator=self._generator,
-        )
+            0, self.sketch_dim, (grow_n,), generator=self._generator)
         new_signs = (
             torch.randint(0, 2, (grow_n,), generator=self._generator, dtype=torch.int64)
-            * 2
-            - 1
-        )
+            * 2 - 1)
         new_buckets = new_buckets.to(device)
         new_signs = new_signs.to(device=device, dtype=torch.float32)
         if self.hash_buckets is None:
@@ -50,10 +45,8 @@ class CountSketch:
         signs = self.signs[:n].to(rows_x_d.dtype)
         sketch = torch.zeros(self.sketch_dim, d, device=device, dtype=rows_x_d.dtype)
         sketch.scatter_add_(
-            0,
-            buckets.unsqueeze(-1).expand(-1, d),
-            rows_x_d * signs.unsqueeze(-1),
-        )
+            0, buckets.unsqueeze(-1).expand(-1, d),
+            rows_x_d * signs.unsqueeze(-1))
         return sketch
 
 
@@ -81,16 +74,19 @@ class L1LeverageScoreEstimator:
         if n <= 1:
             self.r_inv = None
             return
-        # For small n (relative to sketch_dim or d), skip CountSketch to avoid
-        # rank-deficient empty buckets, but keep exponential weights for ℓ₁ guarantee.
-        if n < max(self.embedding.count_sketch.sketch_dim, d * 4):
-            weighted = v_rows.float() / _safe_exp_samples((n, 1), v_rows.device, v_rows.dtype)
-            _, r = torch.linalg.qr(weighted, mode="reduced")
+        # When n < sketch_dim most sketch buckets are empty → rank-deficient.
+        # Skip CountSketch and directly weight V with Exp(1) for exact ℓ₁ basis.
+        if n < self.embedding.count_sketch.sketch_dim:
+            # Force float32 for Exp samples — 1e-8 is subnormal in float16
+            w = v_rows.float() / _safe_exp_samples((n, 1), v_rows.device, torch.float32)
         else:
-            sv = self.embedding.embed(v_rows).float()
-            _, r = torch.linalg.qr(sv, mode="reduced")
+            w = self.embedding.embed(v_rows).float()
+        _, r = torch.linalg.qr(w, mode="reduced")
         r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * 1e-4
-        self.r_inv = torch.linalg.inv(r)
+        try:
+            self.r_inv = torch.linalg.inv(r)
+        except torch._C._LinAlgError:
+            self.r_inv = torch.linalg.pinv(r)
         self.last_dim = d
 
     def scores(self, v_rows, force_refit=False):
@@ -99,7 +95,6 @@ class L1LeverageScoreEstimator:
             self.update_basis(v_rows)
         if self.r_inv is None:
             return torch.norm(v_rows, p=1, dim=1)
-        # Exact l1 leverage-style score proxy on the well-conditioned basis.
         proj = v_rows.float() @ self.r_inv
         return torch.norm(proj, p=1, dim=1).to(v_rows.dtype)
 
@@ -108,4 +103,3 @@ def compute_reweight(scores, keep_indices):
     probs = scores / (scores.sum() + 1e-8)
     picked = probs[keep_indices].clamp_min(1e-8)
     return 1.0 / picked
-
