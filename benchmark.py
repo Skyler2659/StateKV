@@ -212,7 +212,10 @@ def main():
 
     print(f"Loading model: {args.model} on {args.device}")
     tokenizer = AutoTokenizer.from_pretrained(args.model)
-    model = AutoModelForCausalLM.from_pretrained(args.model).to(args.device).eval()
+    load_kwargs = {}
+    if args.device == "cuda":
+        load_kwargs["torch_dtype"] = torch.float16
+    model = AutoModelForCausalLM.from_pretrained(args.model, **load_kwargs).to(args.device).eval()
     torch.manual_seed(args.seed)
     maybe_enable_pos_shift(model, sketching_root=root / "streaming-llm-sketching",
                            enabled=args.enable_pos_shift)
