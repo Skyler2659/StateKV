@@ -273,12 +273,22 @@ def build_wikitext_eval_text(dataset_name, task, split, min_chars, sample_limit)
 def build_pg19_text(split, sample_idx, target_words):
     from datasets import load_dataset
 
-    ds = load_dataset("pg19", split=split)
-    full_text = ds[int(sample_idx)]["text"]
-    words = full_text.split()
-    if len(words) > target_words:
-        full_text = " ".join(words[:target_words])
-    return full_text
+    # wiki40b: Wikipedia long documents, HF-native format, no script needed
+    try:
+        ds = load_dataset("wiki40b", "en", split="validation")
+    except Exception:
+        # Fallback: wikitext-103 (longer articles than wikitext-2)
+        ds = load_dataset("wikitext", "wikitext-103-raw-v1", split="test")
+    # Concatenate articles until we reach target_words
+    words = []
+    for i in range(len(ds)):
+        text = (ds[i]["text"] or "").strip()
+        if not text:
+            continue
+        words.extend(text.split())
+        if len(words) >= target_words:
+            break
+    return " ".join(words[:target_words])
 
 
 def build_needle_eval_input_ids(tokenizer, needle_pos, prefix_repeat=40):
