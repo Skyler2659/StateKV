@@ -82,6 +82,7 @@ class L1LeverageScoreEstimator:
             self.r_inv = None
             return
         sv = self.embedding.embed(v_rows)
+        sv = sv.float()  # QR not implemented for FP16
         _, r = torch.linalg.qr(sv, mode="reduced")
         r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * 1e-6
         self.r_inv = torch.linalg.inv(r)
@@ -94,8 +95,8 @@ class L1LeverageScoreEstimator:
         if self.r_inv is None:
             return torch.norm(v_rows, p=1, dim=1)
         # Exact l1 leverage-style score proxy on the well-conditioned basis.
-        proj = v_rows @ self.r_inv
-        return torch.norm(proj, p=1, dim=1)
+        proj = v_rows.float() @ self.r_inv
+        return torch.norm(proj, p=1, dim=1).to(v_rows.dtype)
 
 
 def compute_reweight(scores, keep_indices):
