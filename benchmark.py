@@ -11,7 +11,7 @@ from torch.nn import CrossEntropyLoss
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from data_sources import (build_eval_text, build_long_text, build_needle_eval_input_ids,
-                          build_wikitext_eval_text)
+                          build_needle_std_input_ids, build_wikitext_eval_text)
 from cache_baselines import SlidingWindowKVCache, get_kv_seq_len
 
 
@@ -176,7 +176,7 @@ def main():
     parser.add_argument("--model", type=str, default="gpt2")
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--text_source", type=str, default="wikitext",
-                        choices=["repeat", "wikitext", "needle", "long"])
+                        choices=["repeat", "wikitext", "needle", "needle_std", "long"])
     parser.add_argument("--dataset_name", type=str, default="wikitext")
     parser.add_argument("--task", type=str, default="wikitext-2-raw-v1")
     parser.add_argument("--split", type=str, default="test")
@@ -245,6 +245,13 @@ def main():
                                         args.wikitext_min_chars, args.wikitext_sample_limit)
         print(f"text_source=wikitext dataset={args.dataset_name}/{args.task}"
               f" split={args.split} min_chars={args.wikitext_min_chars}")
+    elif args.text_source == "needle_std":
+        input_ids, eval_target_positions = build_needle_std_input_ids(
+            tokenizer, needle_pos=args.needle_pos)
+        print(f"text_source=needle_std needle_pos={args.needle_pos}")
+        print(f"needle_eval_target_tokens={len(eval_target_positions)}"
+              f" target_start={eval_target_positions[0] if eval_target_positions else 'NA'}")
+        text = None
     else:
         input_ids, eval_target_positions = build_needle_eval_input_ids(
             tokenizer, needle_pos=args.needle_pos, prefix_repeat=args.needle_prefix_repeat)
