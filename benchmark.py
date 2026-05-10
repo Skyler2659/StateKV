@@ -168,6 +168,8 @@ COMPARISON_HELP = {
                "- main: start+recent baseline.",
                "- l1_mixed: mixed strategy (recent+historical l1).",
                "- In needle mode, ppl is computed only on answer tokens."],
+    "grid":   ["- recency_only + main (once), then l1_mixed for each RK.",
+               "- Specify RK list via --mixed_recent_keeps 32,48,64,80,96"],
 }
 
 
@@ -195,8 +197,10 @@ def main():
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--l1_recent_keep", type=int, default=0)
     parser.add_argument("--mixed_recent_keep", type=int, default=64)
+    parser.add_argument("--mixed_recent_keeps", type=str, default=None,
+                        help="Comma-separated recent_keep values for grid mode")
     parser.add_argument("--comparison_mode", type=str, default="full",
-                        choices=["full", "three", "needle"])
+                        choices=["full", "three", "needle", "grid"])
     parser.add_argument("--needle_pos", type=int, default=400)
     parser.add_argument("--needle_depth", type=float, default=0.5,
                         help="Needle depth fraction for needle_std (0.0-1.0)")
@@ -292,7 +296,10 @@ def main():
           f" | cache_size: {args.cache_size} | start_size: {args.start_size}")
 
     # Run strategies
-    if args.comparison_mode == "three":
+    if args.comparison_mode == "grid":
+        rk_list = [int(x.strip()) for x in args.mixed_recent_keeps.split(",")]
+        print(f"comparison_mode=grid: recency + main + l1_mixed × {rk_list}")
+    elif args.comparison_mode == "three":
         print("comparison_mode=three: recency(sliding_window), sink_l1_last(recent_keep=0),"
               " sink_recent_l1_last(mixed_recent_keep)")
     elif args.comparison_mode == "needle":
@@ -300,15 +307,41 @@ def main():
               " l1_mixed(mixed recent+l1)")
 
     results = []
-    for label in COMPARISON_SPEC[args.comparison_mode]:
-        results.append(run_decode_eval(model, input_ids, caches[label], label=label,
-                                       k_seq_dim=k_seq_dim, max_steps=args.max_steps,
+    if args.comparison_mode == "grid":
+        # Run recency + main ONCE, then l1_mixed for each RK — all in one table
+        results.append(run_decode_eval(model, input_ids, caches["recency_only"],
+                                       label="recency_only", k_seq_dim=k_seq_dim,
+                                       max_steps=args.max_steps,
                                        progress_every=args.progress_every,
                                        eval_target_positions=eval_target_positions))
+        results.append(run_decode_eval(model, input_ids, caches["main"],
+                                       label="main", k_seq_dim=k_seq_dim,
+                                       max_steps=args.max_steps,
+                                       progress_every=args.progress_every,
+                                       eval_target_positions=eval_target_positions))
+        for rk in rk_list:
+            rk_cache = sketch_mod.L1RobustKVCache(
+                cache_size=args.cache_size, num_sink_tokens=args.start_size,
+                sketch_dim=args.sketch_dim, recompute_interval=args.recompute_interval,
+                seed=args.seed, recent_keep=rk,
+                k_seq_dim=k_seq_dim, v_seq_dim=v_seq_dim)
+            results.append(run_decode_eval(model, input_ids, rk_cache,
+                                           label=f"l1_rk{rk}", k_seq_dim=k_seq_dim,
+                                           max_steps=args.max_steps,
+                                           progress_every=args.progress_every,
+                                           eval_target_positions=eval_target_positions))
+    else:
+        for label in COMPARISON_SPEC[args.comparison_mode]:
+            results.append(run_decode_eval(model, input_ids, caches[label], label=label,
+                                           k_seq_dim=k_seq_dim, max_steps=args.max_steps,
+                                           progress_every=args.progress_every,
+                                           eval_target_positions=eval_target_positions))
 
     print_table(results)
     print("\n=== How to read ===")
-    for line in COMPARISON_HELP[args.comparison_mode]:
+    help_lines = COMPARISON_HELP.get(args.comparison_mode,
+        [f"- Custom mode: {args.comparison_mode}"])
+    for line in help_lines:
         print(line)
 
 
