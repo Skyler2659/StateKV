@@ -81,7 +81,14 @@ class L1LeverageScoreEstimator:
             w = v_rows.float() / _safe_exp_samples((n, 1), v_rows.device, torch.float32)
         else:
             w = self.embedding.embed(v_rows).float()
+        # Guard against NaN from upstream FP16 operations
+        if torch.isnan(w).any():
+            self.r_inv = None
+            return
         _, r = torch.linalg.qr(w, mode="reduced")
+        if torch.isnan(r).any():
+            self.r_inv = None
+            return
         # Adaptive jitter — strong enough for near-square matrices
         jit = max(1e-4, r.diag().abs().max().item() * 1e-6)
         r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * jit
