@@ -263,9 +263,15 @@ class L1RobustKVCache:
 
         # Attention-weighted scoring: Q·K^T (real attention) × ℓ₁ leverage.
         if layer_k is not None:
-            from streaming_llm.pos_shift.modify_llama import LAST_QUERY_STATES
-
-            q_h = LAST_QUERY_STATES.get(layer_idx)  # [H, D]
+            q_h = None
+            for mod_name in ("modify_llama", "modify_qwen2"):
+                try:
+                    mod = __import__(f"streaming_llm.pos_shift.{mod_name}", fromlist=["LAST_QUERY_STATES"])
+                    q_h = mod.LAST_QUERY_STATES.get(layer_idx)
+                    if q_h is not None:
+                        break
+                except Exception:
+                    continue
             if q_h is not None:
                 q_vec = q_h.mean(dim=0).to(v_rows.device)  # [D]
                 k_rows = layer_k[0].mean(dim=0)  # [S, D]  K from cache

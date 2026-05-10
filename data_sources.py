@@ -82,8 +82,6 @@ def build_needle_std_input_ids(tokenizer, needle_depth_pct=0.5, max_words=1000):
 
     # Locate answer positions by encoding the answer alone and scanning
     answer_tokens = tokenizer.encode(answer, add_special_tokens=False)
-    question_tokens_bare = tokenizer.encode(question.strip(), add_special_tokens=False)
-    needle_tokens_bare = tokenizer.encode(needle.strip(), add_special_tokens=False)
 
     # Find the answer span at the end of the tokenized sequence
     ans_start = len(full_tokens) - len(answer_tokens)
