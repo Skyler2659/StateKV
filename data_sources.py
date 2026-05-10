@@ -125,6 +125,29 @@ def build_narrativeqa_input_ids(tokenizer, split="test", sample_idx=0, max_words
     return torch.tensor([full_tokens], dtype=torch.long), answer_positions
 
 
+def build_hotpotqa_input_ids(tokenizer, split="validation", sample_idx=0):
+    """HotpotQA distractor — multi-doc, multi-hop QA.  ℓ₁'s primary strength."""
+    from datasets import load_dataset
+
+    ds = load_dataset("hotpotqa", "distractor", split=split)
+    row = ds[int(sample_idx)]
+    question = row["question"]
+    answer = row["answer"]
+    # Concatenate all context docs (supporting + distractors)
+    ctx_parts = []
+    for title, sentences in zip(row["context"]["title"], row["context"]["sentences"]):
+        ctx_parts.append(title + ". " + " ".join(sentences))
+    context = "\n\n".join(ctx_parts)
+
+    prompt = f"{context}\n\nQuestion: {question}\nAnswer: {answer}"
+    prompt_no_answer = f"{context}\n\nQuestion: {question}\nAnswer:"
+    full_tokens = tokenizer.encode(prompt, add_special_tokens=False)
+    prefix_tokens = tokenizer.encode(prompt_no_answer, add_special_tokens=False)
+    ans_start = len(prefix_tokens)
+    answer_positions = list(range(ans_start, len(full_tokens)))
+    return torch.tensor([full_tokens], dtype=torch.long), answer_positions
+
+
 def build_needle_eval_input_ids(tokenizer, needle_pos, prefix_repeat=40):
     hay = (
         "The cat sat on the mat. "
