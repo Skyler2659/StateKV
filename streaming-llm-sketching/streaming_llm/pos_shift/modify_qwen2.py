@@ -76,16 +76,19 @@ def qwen2_pos_shift_attention_forward(
     value_states = value_states.view(bsz, q_len, self.num_key_value_heads, self.head_dim).transpose(1, 2)
 
     kv_seq_len = key_states.shape[-2] + past_kv_len
-    # Pos shift via native Qwen2 rotary_emb + apply_rotary_pos_emb
+    # Generate cos/sin for full cache — exact same pattern as modify_llama.py
     if hasattr(self, "rotary_emb"):
-        # Q: shifted position_ids (already provided by caller)
-        cos_q, sin_q = self.rotary_emb(value_states, position_ids=position_ids)
-        query_states, _ = apply_rotary_pos_emb(query_states, query_states, cos_q, sin_q)
-        # K: physical cache positions
-        key_pos = torch.arange(kv_seq_len, device=position_ids.device).unsqueeze(0)
-        cos_k, sin_k = self.rotary_emb(value_states, position_ids=key_pos)
-        _, key_states = apply_rotary_pos_emb(key_states, key_states, cos_k, sin_k)
-    # Save last-token query for L1RobustKVCache attention weighting
+        pos_for_rope = torch.arange(kv_seq_len, device=value_states.device).unsqueeze(0)
+        try:
+            cos, sin = self.rotary_emb(value_states, position_ids=pos_for_rope)
+        except TypeError:
+            cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
+    else:
+        cos, sin = None, None
+
+    # Pos shift: Q uses shifted position_ids, K uses physical cache positions
+    if cos is not None:
+        query_states = apply_rotary_pos_emb_single(query_states, cos, sin, position_ids)
     LAST_QUERY_STATES[layer_idx] = query_states[0, :, -1, :].detach()
     if past_k is not None:
         key_states = torch.cat([past_k, key_states], dim=2)
@@ -99,6 +102,10 @@ def qwen2_pos_shift_attention_forward(
             past_key_value_out = (key_states, value_states)
     else:
         past_key_value_out = None
+
+    if cos is not None:
+        key_position_ids = torch.arange(kv_seq_len, device=position_ids.device).unsqueeze(0)
+        key_states = apply_rotary_pos_emb_single(key_states, cos, sin, key_position_ids)
 
     key_states = repeat_kv(key_states, self.num_key_value_groups)
     value_states = repeat_kv(value_states, self.num_key_value_groups)
