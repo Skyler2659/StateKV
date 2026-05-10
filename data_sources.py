@@ -129,7 +129,7 @@ def build_hotpotqa_input_ids(tokenizer, split="validation", sample_idx=0):
     """HotpotQA distractor — multi-doc, multi-hop QA.  ℓ₁'s primary strength."""
     from datasets import load_dataset
 
-    ds = load_dataset("hotpotqa", "distractor", split=split)
+    ds = load_dataset("hotpot_qa", "distractor", split=split)
     row = ds[int(sample_idx)]
     question = row["question"]
     answer = row["answer"]
