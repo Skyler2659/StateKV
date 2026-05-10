@@ -61,7 +61,7 @@ def gpt_neox_pos_shift_attention_forward(
         _cfg.num_attention_heads)
     self.head_size = getattr(self, "head_size",
         getattr(self, "head_dim",
-            getattr(_cfg, "head_dim", _cfg.hidden_size // self.num_attention_heads)))
+            getattr(_cfg, "head_dim", None) or _cfg.hidden_size // self.num_attention_heads))
     self.rotary_ndims = getattr(self, "rotary_ndims",
         getattr(self, "rotary_dim", int(self.head_size * 0.25)))
     self.hidden_size = getattr(self, "hidden_size", _cfg.hidden_size)

@@ -58,7 +58,8 @@ def llama_pos_shift_attention_forward(
     self.num_heads = getattr(self, "num_heads",
         getattr(self, "num_attention_heads", _cfg.num_attention_heads))
     self.head_dim = getattr(self, "head_dim",
-        getattr(self, "attention_head_dim", _cfg.head_dim or _cfg.hidden_size // self.num_heads))
+        getattr(self, "attention_head_dim",
+            getattr(_cfg, "head_dim", None) or _cfg.hidden_size // self.num_heads))
     self.num_key_value_heads = getattr(self, "num_key_value_heads",
         _cfg.num_key_value_heads)
     self.num_key_value_groups = getattr(self, "num_key_value_groups",
