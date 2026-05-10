@@ -45,7 +45,7 @@ def build_long_text(split, sample_idx, target_words):
     return " ".join(words[:target_words])
 
 
-def build_needle_std_input_ids(tokenizer, needle_depth_pct=0.5, max_words=8000):
+def build_needle_std_input_ids(tokenizer, needle_depth_pct=0.5, max_words=1000):
     """Standard Needle-in-a-Haystack: long natural text + OOV needle.
 
     Uses wikitext-103 as the haystack.  The needle is an out-of-vocabulary
