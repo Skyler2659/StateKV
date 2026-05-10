@@ -31,9 +31,10 @@ def maybe_enable_pos_shift(model, sketching_root: Path, enabled: bool = True):
     model_type = (getattr(model.config, "model_type", "") or "").lower()
     try:
         file_map = {"llama": "modify_llama.py", "gpt_neox": "modify_gpt_neox.py",
-                     "falcon": "modify_falcon.py"}
+                     "qwen2": "modify_qwen2.py", "falcon": "modify_falcon.py"}
         func_map = {"llama": "enable_llama_pos_shift_attention",
                      "gpt_neox": "enable_gpt_neox_pos_shift_attention",
+                     "qwen2": "enable_qwen2_pos_shift_attention",
                      "falcon": "enable_falcon_pos_shift_attention"}
         key = next((k for k in file_map if k in model_type), None)
         if key is None:
@@ -49,7 +50,7 @@ def maybe_enable_pos_shift(model, sketching_root: Path, enabled: bool = True):
 
 def infer_kv_seq_dims(model_type: str):
     model_type = (model_type or "").lower()
-    if "llama" in model_type or "gpt_neox" in model_type:
+    if "llama" in model_type or "gpt_neox" in model_type or "qwen2" in model_type:
         return 2, 2
     if "mpt" in model_type:
         return 3, 2
