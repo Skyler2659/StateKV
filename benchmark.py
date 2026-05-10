@@ -195,6 +195,8 @@ def main():
     parser.add_argument("--comparison_mode", type=str, default="full",
                         choices=["full", "three", "needle"])
     parser.add_argument("--needle_pos", type=int, default=400)
+    parser.add_argument("--needle_depth", type=float, default=0.5,
+                        help="Needle depth fraction for needle_std (0.0-1.0)")
     parser.add_argument("--needle_prefix_repeat", type=int, default=40)
     parser.add_argument("--progress_every", type=int, default=100)
     parser.add_argument("--enable_pos_shift", action="store_true", default=True)
@@ -247,8 +249,8 @@ def main():
               f" split={args.split} min_chars={args.wikitext_min_chars}")
     elif args.text_source == "needle_std":
         input_ids, eval_target_positions = build_needle_std_input_ids(
-            tokenizer, needle_pos=args.needle_pos)
-        print(f"text_source=needle_std needle_pos={args.needle_pos}")
+            tokenizer, needle_depth_pct=args.needle_depth)
+        print(f"text_source=needle_std needle_depth={args.needle_depth}")
         print(f"needle_eval_target_tokens={len(eval_target_positions)}"
               f" target_start={eval_target_positions[0] if eval_target_positions else 'NA'}")
         text = None

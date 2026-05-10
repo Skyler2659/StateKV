@@ -45,7 +45,7 @@ def build_long_text(split, sample_idx, target_words):
     return " ".join(words[:target_words])
 
 
-def build_needle_std_input_ids(tokenizer, needle_pos, needle_depth_pct=0.5):
+def build_needle_std_input_ids(tokenizer, needle_depth_pct=0.5, max_words=8000):
     """Standard Needle-in-a-Haystack: long natural text + OOV needle.
 
     Uses wikitext-103 as the haystack.  The needle is an out-of-vocabulary
@@ -63,9 +63,9 @@ def build_needle_std_input_ids(tokenizer, needle_pos, needle_depth_pct=0.5):
         if not t:
             continue
         words.extend(t.split())
-        if len(words) >= 12000:
+        if len(words) >= max_words + 2000:
             break
-    haystack_words = words[:10000]
+    haystack_words = words[:max_words]
 
     needle = "\n\nThe secret passcode is ZEBRA-8842. Remember this passcode.\n\n"
     question = "\nWhat is the secret passcode? The passcode is"
