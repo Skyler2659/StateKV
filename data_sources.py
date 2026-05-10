@@ -104,6 +104,27 @@ def build_needle_std_input_ids(tokenizer, needle_depth_pct=0.5, max_words=1000):
     return torch.tensor([full_tokens], dtype=torch.long), answer_positions
 
 
+def build_narrativeqa_input_ids(tokenizer, split="test", sample_idx=0, max_words=2000):
+    """NarrativeQA: long-document QA — ℓ₁'s natural strength (sparse key facts)."""
+    from datasets import load_dataset
+
+    ds = load_dataset("narrativeqa", split=split)
+    row = ds[int(sample_idx)]
+    doc = " ".join(row["document"]["text"].split()[:max_words])
+    question = row["question"]["text"]
+    answer = row["answers"][0]["text"]
+
+    prompt = f"{doc}\n\nQuestion: {question}\nAnswer: {answer}"
+    # Build prompt without answer to locate answer tokens
+    prompt_no_answer = f"{doc}\n\nQuestion: {question}\nAnswer:"
+    full_tokens = tokenizer.encode(prompt, add_special_tokens=False)
+    prefix_tokens = tokenizer.encode(prompt_no_answer, add_special_tokens=False)
+    ans_start = len(prefix_tokens)
+    ans_end = len(full_tokens)
+    answer_positions = list(range(ans_start, ans_end))
+    return torch.tensor([full_tokens], dtype=torch.long), answer_positions
+
+
 def build_needle_eval_input_ids(tokenizer, needle_pos, prefix_repeat=40):
     hay = (
         "The cat sat on the mat. "
