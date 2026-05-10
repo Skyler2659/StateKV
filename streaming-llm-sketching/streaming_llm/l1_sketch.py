@@ -82,11 +82,14 @@ class L1LeverageScoreEstimator:
         else:
             w = self.embedding.embed(v_rows).float()
         _, r = torch.linalg.qr(w, mode="reduced")
-        r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * 1e-4
+        # Adaptive jitter — strong enough for near-square matrices
+        jit = max(1e-4, r.diag().abs().max().item() * 1e-6)
+        r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * jit
         try:
             self.r_inv = torch.linalg.inv(r)
         except torch._C._LinAlgError:
-            self.r_inv = torch.linalg.pinv(r)
+            r = r + torch.eye(r.shape[0], device=r.device, dtype=r.dtype) * 1e-2
+            self.r_inv = torch.linalg.inv(r)
         self.last_dim = d
 
     def scores(self, v_rows, force_refit=False):
