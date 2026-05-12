@@ -1,6 +1,6 @@
 import torch
 
-from streaming_llm.l1_sketch import (
+from l1_llm.l1_sketch import (
     L1LeverageScoreEstimator,
     compute_reweight,
 )

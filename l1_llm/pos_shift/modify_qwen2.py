@@ -15,7 +15,6 @@ from transformers.models.qwen2.modeling_qwen2 import (
 
 __all__ = ["enable_qwen2_pos_shift_attention"]
 
-# Shared store: last-query per layer, consumed by L1RobustKVCache for attention weighting.
 LAST_QUERY_STATES = {}
 
 
@@ -76,7 +75,6 @@ def qwen2_pos_shift_attention_forward(
     value_states = value_states.view(bsz, q_len, self.num_key_value_heads, self.head_dim).transpose(1, 2)
 
     kv_seq_len = key_states.shape[-2] + past_kv_len
-    # Generate cos/sin for full cache — exact same pattern as modify_llama.py
     if hasattr(self, "rotary_emb"):
         pos_for_rope = torch.arange(kv_seq_len, device=value_states.device).unsqueeze(0)
         try:
@@ -86,7 +84,6 @@ def qwen2_pos_shift_attention_forward(
     else:
         cos, sin = None, None
 
-    # Pos shift: Q uses shifted position_ids, K uses physical cache positions
     if cos is not None:
         query_states = apply_rotary_pos_emb_single(query_states, cos, sin, position_ids)
     LAST_QUERY_STATES[layer_idx] = query_states[0, :, -1, :].detach()

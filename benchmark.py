@@ -42,7 +42,7 @@ def maybe_enable_pos_shift(model, sketching_root: Path, enabled: bool = True):
             print(f"pos_shift: skipped (model_type={model_type})")
             return
         mod = load_module_from_file(f"sketch_pos_{key}",
-                                    sketching_root / "streaming_llm" / "pos_shift" / file_map[key])
+                                    sketching_root / "l1_llm" / "pos_shift" / file_map[key])
         getattr(mod, func_map[key])(model)
         print(f"pos_shift: enabled for {key}")
     except Exception as exc:
@@ -213,13 +213,11 @@ def main():
     args = parser.parse_args()
 
     root = Path(__file__).resolve().parent
-    sys.path.insert(0, str(root / "streaming-llm-sketching"))
-    sys.path.append(str(root / "streaming-llm-main"))
-    sys.path.append(str(root / "streaming-llm-plain"))
+    sys.path.insert(0, str(root))
 
-    plain_mod = load_module_from_file("plain_kv", root / "streaming-llm-plain" / "streaming_llm" / "kv_cache.py")
-    main_mod  = load_module_from_file("main_kv",  root / "streaming-llm-main" / "streaming_llm" / "kv_cache.py")
-    sketch_mod = load_module_from_file("sketch_kv", root / "streaming-llm-sketching" / "streaming_llm" / "kv_cache.py")
+    plain_mod = load_module_from_file("plain_kv", root / "plain_llm" / "kv_cache.py")
+    main_mod  = load_module_from_file("main_kv",  root / "streaming_llm" / "kv_cache.py")
+    sketch_mod = load_module_from_file("sketch_kv", root / "l1_llm" / "kv_cache.py")
 
     print(f"Loading model: {args.model} on {args.device}")
     tokenizer = AutoTokenizer.from_pretrained(args.model)
@@ -228,7 +226,7 @@ def main():
         load_kwargs["torch_dtype"] = torch.float16
     model = AutoModelForCausalLM.from_pretrained(args.model, **load_kwargs).to(args.device).eval()
     torch.manual_seed(args.seed)
-    maybe_enable_pos_shift(model, sketching_root=root / "streaming-llm-sketching",
+    maybe_enable_pos_shift(model, sketching_root=root,
                            enabled=args.enable_pos_shift)
     k_seq_dim, v_seq_dim = infer_kv_seq_dims(model.config.model_type)
 
