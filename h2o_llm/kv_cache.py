@@ -65,7 +65,7 @@ class H2OKVCache:
         import math
 
         q_h = None
-        for mod_name in ("modify_llama", "modify_qwen2"):
+        for mod_name in ("modify_llama", "modify_qwen2", "modify_gpt_neox"):
             try:
                 mod = __import__(f"l1_llm.pos_shift.{mod_name}",
                                  fromlist=["LAST_QUERY_STATES"])

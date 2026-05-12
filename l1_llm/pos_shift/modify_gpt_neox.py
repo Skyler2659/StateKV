@@ -16,6 +16,8 @@ import types
 
 __all__ = ["enable_gpt_neox_pos_shift_attention"]
 
+LAST_QUERY_STATES = {}
+
 
 def _resolve_past_kv_layer(layer_past, layer_idx):
     """Extract per-layer (past_k, past_v, kv_len) from past_key_value.
@@ -98,6 +100,7 @@ def gpt_neox_pos_shift_attention_forward(
         cos, sin = self.rotary_emb(value, pos_for_rope)
     query = apply_rotary_pos_emb_single(query_rot, cos, sin, position_ids)
     query = torch.cat((query, query_pass), dim=-1)
+    LAST_QUERY_STATES[layer_idx] = query[0, :, -1, :].detach()  # [H, D]
 
     # Cache QKV values
     if has_layer_past:
