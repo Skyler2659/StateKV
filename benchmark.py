@@ -41,8 +41,7 @@ def maybe_enable_pos_shift(model, sketching_root: Path, enabled: bool = True):
         if key is None:
             print(f"pos_shift: skipped (model_type={model_type})")
             return
-        mod = load_module_from_file(f"sketch_pos_{key}",
-                                    sketching_root / "l1_llm" / "pos_shift" / file_map[key])
+        mod = importlib.import_module(f"l1_llm.pos_shift.{key}")
         getattr(mod, func_map[key])(model)
         print(f"pos_shift: enabled for {key}")
     except Exception as exc:
