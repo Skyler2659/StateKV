@@ -257,34 +257,9 @@ class L1RobustKVCache:
         seq_len, head_dim = v_rows.shape
         if seq_len <= self.cache_size:
             return None, None
-        # K-V joint scoring: concat [K|V] for ℓ₁ leverage in joint space
-        if layer_k is not None and layer_k.dim() == 4:
-            k_rows = layer_k[0].mean(dim=0)       # [S, D]
-            score_rows = torch.cat([k_rows, v_rows], dim=1)  # [S, 2D]
-        else:
-            score_rows = v_rows
-        eff_dim = score_rows.shape[1]
-        estimator = self._get_or_create_estimator(layer_idx, eff_dim)
+        estimator = self._get_or_create_estimator(layer_idx, head_dim)
         force_refit = (self._steps % self.recompute_interval) == 0
-        scores = estimator.scores(score_rows, force_refit=force_refit)
-
-        # Attention-weighted scoring: Q·K^T (real attention) × ℓ₁ leverage.
-        if layer_k is not None:
-            q_h = None
-            for mod_name in ("modify_llama", "modify_qwen2"):
-                try:
-                    mod = __import__(f"l1_llm.pos_shift.{mod_name}", fromlist=["LAST_QUERY_STATES"])
-                    q_h = mod.LAST_QUERY_STATES.get(layer_idx)
-                    if q_h is not None:
-                        break
-                except Exception:
-                    continue
-            if q_h is not None:
-                q_vec = q_h.mean(dim=0).to(v_rows.device)  # [D]
-                k_rows = layer_k[0].mean(dim=0)  # [S, D]  K from cache
-                attn_logits = torch.matmul(q_vec, k_rows.T) / max(head_dim**0.5, 1e-6)
-                attn_w = torch.softmax(attn_logits, dim=0)
-                scores = scores * attn_w
+        scores = estimator.scores(v_rows, force_refit=force_refit)
 
         keep = self._select_with_recency_mix(scores)
         rw = compute_reweight(scores, keep) if self.use_reweight else None
