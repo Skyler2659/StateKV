@@ -127,7 +127,7 @@ def print_table(results):
 
 # ── Strategy dispatch table (eliminates 150+ lines of repetition) ───────
 
-def _build_strategies(args, plain_mod, main_mod, sketch_mod, k_seq_dim, v_seq_dim):
+def _build_strategies(args, plain_mod, main_mod, sketch_mod, h2o_mod, k_seq_dim, v_seq_dim):
     recent_size = max(1, args.cache_size - args.start_size)
     base = dict(k_seq_dim=k_seq_dim, v_seq_dim=v_seq_dim)
 
@@ -147,13 +147,14 @@ def _build_strategies(args, plain_mod, main_mod, sketch_mod, k_seq_dim, v_seq_di
         "sink_l1_last":    _l1(args.l1_recent_keep),
         "l1_mixed":        _l1(args.mixed_recent_keep),
         "sink_recent_l1_last": _l1(args.mixed_recent_keep),
+        "h2o":              h2o_mod.H2OKVCache(cache_size=args.cache_size, **base),
     }
 
 
 COMPARISON_SPEC = {
     "full":   ["plain", "sketching", "main", "sliding_window"],
     "three":  ["recency_only", "sink_l1_last", "sink_recent_l1_last"],
-    "needle": ["recency_only", "main", "l1_mixed"],
+    "needle": ["recency_only", "main", "l1_mixed", "h2o"],
 }
 
 COMPARISON_HELP = {
@@ -167,6 +168,7 @@ COMPARISON_HELP = {
     "needle": ["- recency_only: pure recent window baseline.",
                "- main: start+recent baseline.",
                "- l1_mixed: mixed strategy (recent+historical l1).",
+               "- h2o: cumulative attention score (Zhang et al., NeurIPS 2023).",
                "- In needle mode, ppl is computed only on answer tokens."],
     "grid":   ["- recency_only + main (once), then l1_mixed for each RK.",
                "- Specify RK list via --mixed_recent_keeps 32,48,64,80,96"],
@@ -218,6 +220,7 @@ def main():
     plain_mod = load_module_from_file("plain_kv", root / "plain_llm" / "kv_cache.py")
     main_mod  = load_module_from_file("main_kv",  root / "streaming_llm" / "kv_cache.py")
     sketch_mod = load_module_from_file("sketch_kv", root / "l1_llm" / "kv_cache.py")
+    h2o_mod    = load_module_from_file("h2o_kv",   root / "h2o_llm" / "kv_cache.py")
 
     print(f"Loading model: {args.model} on {args.device}")
     tokenizer = AutoTokenizer.from_pretrained(args.model)
@@ -238,7 +241,7 @@ def main():
     print(f"KV cache format: {fmt}")
 
     # Build caches
-    caches = _build_strategies(args, plain_mod, main_mod, sketch_mod, k_seq_dim, v_seq_dim)
+    caches = _build_strategies(args, plain_mod, main_mod, sketch_mod, h2o_mod, k_seq_dim, v_seq_dim)
 
     # Load text
     eval_target_positions = None
