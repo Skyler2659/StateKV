@@ -257,16 +257,23 @@ class L1RobustKVCache:
         seq_len, head_dim = v_rows.shape
         if seq_len <= self.cache_size:
             return None, None
-        estimator = self._get_or_create_estimator(layer_idx, head_dim)
+        # K-V joint scoring: concat [K|V] for ℓ₁ leverage in joint space
+        if layer_k is not None and layer_k.dim() == 4:
+            k_rows = layer_k[0].mean(dim=0)       # [S, D]
+            score_rows = torch.cat([k_rows, v_rows], dim=1)  # [S, 2D]
+        else:
+            score_rows = v_rows
+        eff_dim = score_rows.shape[1]
+        estimator = self._get_or_create_estimator(layer_idx, eff_dim)
         force_refit = (self._steps % self.recompute_interval) == 0
-        scores = estimator.scores(v_rows, force_refit=force_refit)
+        scores = estimator.scores(score_rows, force_refit=force_refit)
 
         # Attention-weighted scoring: Q·K^T (real attention) × ℓ₁ leverage.
         if layer_k is not None:
             q_h = None
             for mod_name in ("modify_llama", "modify_qwen2"):
                 try:
-                    mod = __import__(f"streaming_llm.pos_shift.{mod_name}", fromlist=["LAST_QUERY_STATES"])
+                    mod = __import__(f"l1_llm.pos_shift.{mod_name}", fromlist=["LAST_QUERY_STATES"])
                     q_h = mod.LAST_QUERY_STATES.get(layer_idx)
                     if q_h is not None:
                         break
