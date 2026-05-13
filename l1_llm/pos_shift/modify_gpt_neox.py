@@ -131,7 +131,7 @@ def gpt_neox_pos_shift_attention_forward(
     return outputs
 
 
-def enable_gpt_neox_pos_shift_attention(model):
+def enable_gpt_neox_pos_shift_attention(model, _counter=[0]):
     for name, module in reversed(model._modules.items()):
         if len(list(module.children())) > 0:
             enable_gpt_neox_pos_shift_attention(
@@ -139,6 +139,8 @@ def enable_gpt_neox_pos_shift_attention(model):
             )
 
         if isinstance(module, GPTNeoXAttention):
+            module.layer_idx = _counter[0]
+            _counter[0] += 1
             module.forward = types.MethodType(
                 gpt_neox_pos_shift_attention_forward, module
             )
