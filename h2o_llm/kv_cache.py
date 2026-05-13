@@ -60,18 +60,13 @@ class H2OKVCache:
         self._acc_scores = {}
         self._steps = 0
 
-    def _compute_attn_weights(self, layer_k, layer_v):
+    def _compute_attn_weights(self, layer_k, layer_v, layer_idx):
         """Compute current-step attention weights from Q_last (if available)."""
         import math
 
         import shared_q
-        if self._steps <= 2:  # print once to avoid spam
-            print(f"DEBUG _compute: steps={self._steps} n_acc={len(self._acc_scores)}"
-                  f" q_keys={list(shared_q.LAST_QUERY_STATES.keys())}")
-        q_h = shared_q.LAST_QUERY_STATES.get(len(self._acc_scores))
+        q_h = shared_q.LAST_QUERY_STATES.get(layer_idx)
         if q_h is None:
-            if self._steps <= 2:
-                print(f"DEBUG q_h is None for idx={len(self._acc_scores)}")
             return None
         head_dim = layer_v.shape[-1]
         q_vec = q_h.mean(dim=0).to(layer_v.device)       # [D]
@@ -88,7 +83,7 @@ class H2OKVCache:
         for layer_idx, (k, v) in enumerate(pkv):
             seq_len = k.size(self.k_seq_dim)
             # Accumulate attention weights for this layer
-            attn = self._compute_attn_weights(k, v)
+            attn = self._compute_attn_weights(k, v, layer_idx)
             if attn is not None:
                 prev = self._acc_scores.get(layer_idx)
                 if prev is None or prev.numel() < seq_len:
