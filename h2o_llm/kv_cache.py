@@ -2,6 +2,7 @@
 
 Zhang et al., NeurIPS 2023.
 """
+import importlib
 import torch
 
 
@@ -67,8 +68,7 @@ class H2OKVCache:
         q_h = None
         for mod_name in ("modify_llama", "modify_qwen2", "modify_gpt_neox"):
             try:
-                mod = __import__(f"l1_llm.pos_shift.{mod_name}",
-                                 fromlist=["LAST_QUERY_STATES"])
+                mod = importlib.import_module(f"l1_llm.pos_shift.{mod_name}")
                 q_h = mod.LAST_QUERY_STATES.get(len(self._acc_scores))
                 if q_h is not None:
                     break
