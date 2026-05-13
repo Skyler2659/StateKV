@@ -2,7 +2,6 @@
 
 Zhang et al., NeurIPS 2023.
 """
-import importlib
 import torch
 
 
@@ -65,8 +64,8 @@ class H2OKVCache:
         """Compute current-step attention weights from Q_last (if available)."""
         import math
 
-        mod = importlib.import_module("l1_llm.pos_shift.modify_gpt_neox")
-        q_h = mod.LAST_QUERY_STATES.get(len(self._acc_scores))
+        import shared_q
+        q_h = shared_q.LAST_QUERY_STATES.get(len(self._acc_scores))
         if q_h is None:
             return None
         head_dim = layer_v.shape[-1]

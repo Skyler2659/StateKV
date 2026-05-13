@@ -14,8 +14,7 @@ from transformers.models.llama.modeling_llama import (
 
 __all__ = ["enable_llama_pos_shift_attention"]
 
-# Shared store: last-query per layer, consumed by L1RobustKVCache for attention weighting.
-LAST_QUERY_STATES = {}
+import shared_q
 
 
 def _resolve_past_kv_layer(layer_past, layer_idx):
@@ -106,7 +105,7 @@ def llama_pos_shift_attention_forward(
     if cos is not None:
         query_states = apply_rotary_pos_emb_single(query_states, cos, sin, position_ids)
     # Save RoPE'd last-token query for L1RobustKVCache attention weighting
-    LAST_QUERY_STATES[layer_idx] = query_states[0, :, -1, :].detach()
+    shared_q.LAST_QUERY_STATES[layer_idx] = query_states[0, :, -1, :].detach()
     if past_k is not None:
         key_states = torch.cat([past_k, key_states], dim=2)
         value_states = torch.cat([past_v, value_states], dim=2)
