@@ -52,10 +52,11 @@ def _back_to_original(original, items):
 class H2OKVCache:
     """Heavy-Hitter Oracle: accumulated attention score per token per layer."""
 
-    def __init__(self, cache_size=512, k_seq_dim=2, v_seq_dim=2):
+    def __init__(self, cache_size=512, k_seq_dim=2, v_seq_dim=2, recent_size=1):
         self.cache_size = int(cache_size)
         self.k_seq_dim = int(k_seq_dim)
         self.v_seq_dim = int(v_seq_dim)
+        self.recent_size = int(recent_size)
         # Per-layer accumulated attention scores: layer_idx -> torch.Tensor [numel]
         self._acc_scores = {}
         self._steps = 0
@@ -97,12 +98,20 @@ class H2OKVCache:
             if seq_len <= self.cache_size:
                 items.append((k, v))
                 continue
-            # Use accumulated scores to select top-k
+            # Use accumulated scores to select top-k, reserving recency window
             scores = self._acc_scores.get(layer_idx)
             if scores is None or scores.numel() < seq_len:
                 items.append((k, v))
                 continue
-            keep = torch.topk(scores[:seq_len], self.cache_size).indices
+            recent_size = min(self.recent_size, self.cache_size)
+            heavy_budget = self.cache_size - recent_size
+            # Recent tokens are the last `recent_size` positions
+            recent_idx = torch.arange(seq_len - recent_size, seq_len, device=k.device)
+            # Mask out recent tokens from heavy-hitter selection
+            masked = scores[:seq_len].clone()
+            masked[recent_idx] = -float("inf")
+            heavy_keep = torch.topk(masked, heavy_budget).indices
+            keep = torch.cat([heavy_keep, recent_idx])
             keep = keep.sort().values
             keep_k = keep.to(k.device)
             keep_v = keep.to(v.device)

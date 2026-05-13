@@ -147,7 +147,8 @@ def _build_strategies(args, plain_mod, main_mod, sketch_mod, h2o_mod, k_seq_dim,
         "sink_l1_last":    _l1(args.l1_recent_keep),
         "l1_mixed":        _l1(args.mixed_recent_keep),
         "sink_recent_l1_last": _l1(args.mixed_recent_keep),
-        "h2o":              h2o_mod.H2OKVCache(cache_size=args.cache_size, **base),
+        "h2o":              h2o_mod.H2OKVCache(cache_size=args.cache_size,
+                                             recent_size=args.h2o_recent_size, **base),
     }
 
 
@@ -199,6 +200,8 @@ def main():
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--l1_recent_keep", type=int, default=0)
     parser.add_argument("--mixed_recent_keep", type=int, default=64)
+    parser.add_argument("--h2o_recent_size", type=int, default=4,
+                        help="Number of recent tokens H2O reserves from eviction")
     parser.add_argument("--mixed_recent_keeps", type=str, default=None,
                         help="Comma-separated recent_keep values for grid mode")
     parser.add_argument("--comparison_mode", type=str, default="full",
