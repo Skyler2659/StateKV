@@ -31,7 +31,9 @@ V_{\text{cache}} &\leftarrow [V_{\text{cache}} \parallel V_{\text{new}}]
 
 这使得单步计算复杂度从 $O(L^2)$ 降至 $O(L)$。然而，缓存大小随序列长度**线性增长**。对于一个 $H$ 层、$h$ 个注意力头的 $d$ 维模型，每生成 $L$ 个 token 需要存储：
 
-$$M_{\text{KV}} = 2 \times H \times h \times d \times L \times \text{bytes\_per\_element}$$
+$$
+M_{\text{KV}} = 2 \times H \times h \times d \times L \times \text{bytes\_per\_element}
+$$
 
 以 LLaMA-7B（32 层，32 头，128 维）在半精度（2 字节）下生成 2048 token 为例：$2 \times 32 \times 32 \times 128 \times 2048 \times 2 \approx 1\text{GB}$。当上下文扩展到 128K 乃至 1M token 时，KV Cache 会远超 GPU 显存容量。
 
@@ -68,7 +70,7 @@ $$\mathcal{S}: \mathbb{R}^{L \times d} \to \{0, 1\}^L, \quad \|\mathcal{S}(V)\|_
 
 设 $A \in \mathbb{R}^{n \times d}$（$n \gg d$）为数据矩阵，其 $n$ 行对应 $n$ 个样本，$d$ 列对应特征维度。第 $i$ 行的 **ℓ₁ leverage score** 定义为：
 
-$$\boxed{\tau_i(A) = \sup_{x \in \mathbb{R}^d,\; Ax \neq 0} \frac{|(Ax)_i|}{\|Ax\|_1}}$$
+$$\tau_i(A) = \sup_{x \in \mathbb{R}^d,\; Ax \neq 0} \frac{|(Ax)_i|}{\lVert Ax \rVert_1}$$
 
 其中 $(Ax)_i = a_i^\top x$ 是 $Ax$ 的第 $i$ 个分量（$a_i$ 为 $A$ 的第 $i$ 行转置为列向量），$\|\cdot\|_1$ 为向量的 ℓ₁ 范数。
 
@@ -111,7 +113,7 @@ $$S = \Phi \cdot D \in \mathbb{R}^{m \times n}$$
 
 其中：
 
-- **$D \in \mathbb{R}^{n \times n}$** 是对角矩阵，其对角元 $D_{ii} = 1/E_i$，且 $E_1, \ldots, E_n \stackrel{\text{i.i.d.}}{\sim} \text{Exp}(1)$（均值为 1 的指数分布）。
+- **$D \in \mathbb{R}^{n \times n}$** 是对角矩阵，其对角元 $D_{ii} = 1/E_i$，且 `$E_1, \ldots, E_n \overset{\mathrm{i.i.d.}}{\sim} \mathrm{Exp}(1)$`（均值为 1 的指数分布）。
 
 - **$\Phi \in \mathbb{R}^{m \times n}$** 是 CountSketch 矩阵，每列恰好有一个非零元素（位置随机），取值为 $\pm 1$（等概率）。
 
@@ -186,7 +188,7 @@ $$S\tilde{A} = Q \cdot R, \quad Q \in \mathbb{R}^{m \times d}, \; R \in \mathbb{
 
 对原始矩阵 $A$ 的每一行 $a_i \in \mathbb{R}^d$，计算：
 
-$$\boxed{\tilde{\tau}_i(A) = \left\|a_i^\top \cdot R^{-1}\right\|_1}$$
+$$\tilde{\tau}_i(A) = \left\lVert a_i^\top \cdot R^{-1} \right\rVert_1$$
 
 其中 $R^{-1} \in \mathbb{R}^{d \times d}$ 为 $R$ 的逆矩阵。$\tilde{\tau}_i(A)$ 即为 $\tau_i(A)$ 的近似值。
 
