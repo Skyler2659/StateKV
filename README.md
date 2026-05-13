@@ -32,7 +32,7 @@ V_{\text{cache}} &\leftarrow [V_{\text{cache}} \parallel V_{\text{new}}]
 这使得单步计算复杂度从 $O(L^2)$ 降至 $O(L)$。然而，缓存大小随序列长度**线性增长**。对于一个 $H$ 层、$h$ 个注意力头的 $d$ 维模型，每生成 $L$ 个 token 需要存储：
 
 $$
-M_{\text{KV}} = 2 \times H \times h \times d \times L \times \text{bytes\_per\_element}
+M_{\text{KV}} = 2 \times H \times h \times d \times L \times \text{bytes\\_per\\_element}
 $$
 
 以 LLaMA-7B（32 层，32 头，128 维）在半精度（2 字节）下生成 2048 token 为例：$2 \times 32 \times 32 \times 128 \times 2048 \times 2 \approx 1\text{GB}$。当上下文扩展到 128K 乃至 1M token 时，KV Cache 会远超 GPU 显存容量。
