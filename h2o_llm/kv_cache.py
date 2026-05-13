@@ -65,8 +65,13 @@ class H2OKVCache:
         import math
 
         import shared_q
+        if self._steps <= 2:  # print once to avoid spam
+            print(f"DEBUG _compute: steps={self._steps} n_acc={len(self._acc_scores)}"
+                  f" q_keys={list(shared_q.LAST_QUERY_STATES.keys())}")
         q_h = shared_q.LAST_QUERY_STATES.get(len(self._acc_scores))
         if q_h is None:
+            if self._steps <= 2:
+                print(f"DEBUG q_h is None for idx={len(self._acc_scores)}")
             return None
         head_dim = layer_v.shape[-1]
         q_vec = q_h.mean(dim=0).to(layer_v.device)       # [D]
