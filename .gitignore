@@ -1,5 +1,46 @@
-.venv_38/
-.venv/
+# Python cache
 __pycache__/
 *.pyc
-.claude/
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+.venv_38/
+venv/
+env/
+
+# Experiment outputs / logs
+results/
+outputs/
+runs/
+logs/
+wandb/
+
+# Large artifacts / model files
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.npy
+*.npz
+*.pkl
+*.pickle
+
+# HuggingFace / caches / checkpoints
+.cache/
+huggingface/
+models/
+checkpoints/
+
+# Secrets
+.env
+.env.*
+
+# Exclude document drafts
+*.docx
+
+# Exclude markdown notes except README.md
+*.md
+!README.md
+!**/README.md
