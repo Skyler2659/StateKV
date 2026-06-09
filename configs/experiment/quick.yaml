@@ -10,7 +10,7 @@ model:
   attn_implementation: null
   enable_pos_shift: false
   output_attentions: true
-  local_files_only: true
+  local_files_only: false
 
 eviction:
   method: "l1_leverage"

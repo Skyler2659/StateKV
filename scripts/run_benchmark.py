@@ -383,6 +383,8 @@ def parse_args():
     p.add_argument("--budget_ratio", type=float, default=None, nargs="+",
                     help="Cache budget ratio(s) of context length")
     p.add_argument("--context_length", type=int, default=None)
+    p.add_argument("--max_words", type=int, default=None,
+                   help="Max haystack words for NIAH benchmark")
     p.add_argument("--max_steps", type=int, default=None)
     p.add_argument("--num_samples", type=int, default=None)
     p.add_argument("--sink_size", type=int, default=None)
@@ -419,6 +421,8 @@ def main():
         cfg.benchmark.context_length = args.context_length
     if args.max_steps:
         cfg.benchmark.max_steps = args.max_steps
+    if args.max_words:
+        cfg.benchmark.max_words = args.max_words
     if args.num_samples:
         cfg.benchmark.num_samples = args.num_samples
     if args.sink_size is not None:
@@ -454,6 +458,18 @@ def main():
     logger.info(f"Loading benchmark: {cfg.benchmark.name}")
     bench, samples = load_benchmark(cfg, tokenizer)
     logger.info(f"Loaded {len(samples)} samples")
+
+    # Auto-adjust max_steps to cover answer tokens in all samples
+    max_answer_pos = 0
+    for sample in samples:
+        positions = sample.get("answer_positions") or sample.get("eval_positions") or []
+        if positions:
+            max_answer_pos = max(max_answer_pos, max(positions))
+    if max_answer_pos > 0 and cfg.benchmark.max_steps < max_answer_pos:
+        seq_cap = max(s["input_ids"].size(1) for s in samples) - 1
+        needed = min(max_answer_pos, seq_cap)
+        logger.info(f"max_steps: {cfg.benchmark.max_steps} -> {needed} (to reach eval targets)")
+        cfg.benchmark.max_steps = needed
 
     # Prepare output directory
     out_dir = make_run_dir(cfg)
