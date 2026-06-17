@@ -17,6 +17,12 @@ class PyramidKVEviction(BaseEviction):
     - ``uniform``: equal budget (degenerates to attention-only)
     """
     name = "pyramidkv"
+    method_family = "attention"
+    requires_attention = True
+    requires_scores = True
+    supports_layerwise = True
+    score_source = "accumulated_attention"
+    experimental = True
 
     def __init__(self, pyramid_mode="funnel", **kwargs):
         super().__init__(**kwargs)
@@ -66,7 +72,7 @@ class PyramidKVEviction(BaseEviction):
             return [self.cache_size] * num_layers
         weights = weights / weights.sum()
         raw = (weights * total).int()
-        raw = raw.clamp(min=4)
+        raw = raw.clamp(min=4, max=self.cache_size)
         return raw.tolist()
 
     def _compute_and_accumulate(self, k, v, layer_idx, seq_len):

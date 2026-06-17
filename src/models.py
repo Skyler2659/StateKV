@@ -8,6 +8,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from src.config import ModelConfig
 from src.eviction.kv_utils import infer_kv_dims
+from src.model_adapters import build_model_adapter
 
 
 _DTYPE_MAP = {
@@ -70,6 +71,7 @@ def load_model_and_tokenizer(
     model = AutoModelForCausalLM.from_pretrained(cfg.name, **load_kwargs)
     model = model.to(device).eval()
     model.config.output_attentions = bool(cfg.output_attentions)
+    model.config.output_hidden_states = bool(cfg.output_hidden_states)
 
     info = {
         "model_name": cfg.name,
@@ -104,6 +106,13 @@ def load_model_and_tokenizer(
         if not isinstance(probe.past_key_values, tuple)
         else "legacy"
     )
+    adapter = build_model_adapter(
+        cfg,
+        raw_config=model.config.to_dict() if hasattr(model.config, "to_dict") else {},
+        tokenizer=tokenizer,
+        cache_format=info["cache_format"],
+    )
+    info.update(adapter.to_dict())
 
     # Enable pos-shift if requested
     if cfg.enable_pos_shift:

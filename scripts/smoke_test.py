@@ -10,6 +10,8 @@ import torch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+DEV_CONFIG = "configs/experiments/dev/tiny_niah_cpu.yaml"
+TMP_OUTPUT = Path("/tmp/l1_robust_kv_cache_smoke")
 
 
 def run(cmd):
@@ -29,7 +31,7 @@ def core_assertions():
     from src.eviction.l2_leverage import l2_row_leverage_scores
     from src.eviction.registry import create_eviction
 
-    cfg = ExperimentConfig.from_yaml(ROOT / "configs/experiment/quick.yaml")
+    cfg = ExperimentConfig.from_yaml(ROOT / DEV_CONFIG)
     assert instantiate_benchmark(cfg).name == "niah"
 
     for method in ["recency", "sink_recent", "attention", "l1_leverage", "l2_leverage", "attention+l1"]:
@@ -57,10 +59,23 @@ def core_assertions():
 def main():
     core_assertions()
     py = sys.executable
-    run([py, "scripts/run_benchmark.py", "--config", "configs/experiment/quick.yaml", "--num_samples", "1", "--progress_every", "120", "--skip_analysis"])
-    latest = sorted((ROOT / "results/quick_test").glob("20*"))[-1]
+    run([py, "scripts/run_benchmark.py", "--config", DEV_CONFIG, "--num_samples", "1", "--progress_every", "120", "--skip_analysis"])
+    latest = sorted((TMP_OUTPUT / "tiny_niah_cpu").glob("20*"))[-1]
     run([py, "scripts/run_analysis.py", "--input", str(latest), "--config", "configs/analysis/basic.yaml"])
-    run([py, "scripts/run_profile.py", "--config", "configs/experiment/quick.yaml", "--max_steps", "32", "--warmup", "1", "--repeats", "1", "--output_dir", "results/profile_smoke"])
+    run([
+        py,
+        "scripts/run_profile.py",
+        "--config",
+        DEV_CONFIG,
+        "--max_steps",
+        "32",
+        "--warmup",
+        "1",
+        "--repeats",
+        "1",
+        "--output_dir",
+        str(TMP_OUTPUT / "profile"),
+    ])
     print("smoke test ok")
 
 

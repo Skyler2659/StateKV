@@ -12,6 +12,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import torch
 
+from src.eviction.score_normalization import merge_score_stats
+
 
 def validate_selected_indices(
     selected: torch.Tensor,
@@ -62,6 +64,19 @@ class BaseEviction(ABC):
         * ``k_seq_dim`` / ``v_seq_dim`` indicate which tensor axis is the
           sequence dimension for K / V respectively.
     """
+
+    name = "base"
+    method_family = "unknown"
+    supports_backends = ("torch",)
+    requires_attention = False
+    requires_scores = False
+    supports_layerwise = True
+    supports_headwise = False
+    score_source = None
+    score_normalization = "none"
+    approximate = False
+    experimental = False
+    oracle = False
 
     def __init__(
         self,
@@ -137,6 +152,12 @@ class BaseEviction(ABC):
         self.last_scores.clear()
         for key in self.profile_times:
             self.profile_times[key] = 0.0
+
+    def set_sample_metadata(self, sample: Dict[str, Any]) -> None:
+        """Optional hook for methods that use benchmark metadata.
+
+        Oracle methods override this. Regular baselines intentionally ignore it.
+        """
 
     # ── Main eviction entry point ───────────────────────────────────────
 
@@ -364,9 +385,34 @@ class BaseEviction(ABC):
     def get_info(self) -> Dict[str, Any]:
         """Return diagnostic info for logging."""
         return {
-            "method": self.__class__.__name__,
+            "method": getattr(self, "name", self.__class__.__name__),
+            "class": self.__class__.__name__,
+            "method_family": getattr(self, "method_family", "unknown"),
             "cache_size": self.cache_size,
             "sink_size": self.sink_size,
             "recent_size": self.recent_size,
             "steps": self._steps,
+            "requires_attention": bool(getattr(self, "requires_attention", False)),
+            "requires_scores": bool(getattr(self, "requires_scores", False)),
+            "supports_layerwise": bool(getattr(self, "supports_layerwise", True)),
+            "supports_headwise": bool(getattr(self, "supports_headwise", False)),
+            "score_source": getattr(self, "score_source", None),
+            "score_normalization": getattr(self, "score_normalization", "none"),
+            "approximate": bool(getattr(self, "approximate", False)),
+            "experimental": bool(getattr(self, "experimental", False)),
+            "oracle": bool(getattr(self, "oracle", False)),
         }
+
+    def get_debug_info(self) -> Dict[str, Any]:
+        """Return method metadata and timing counters."""
+        info = self.get_info()
+        info["profile_times"] = dict(self.profile_times)
+        info["score_update_count"] = getattr(self, "score_update_count", None)
+        return info
+
+    def get_score_stats(self) -> Dict[str, Any]:
+        """Return raw/normalized score diagnostics for the latest eviction."""
+        return merge_score_stats(
+            self.last_scores,
+            normalization=getattr(self, "score_normalization", "none"),
+        )

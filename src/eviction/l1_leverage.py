@@ -14,6 +14,11 @@ class L1LeverageEviction(BaseEviction):
     ``update_interval`` for amortized sketch cost.
     """
     name = "l1_mixed"
+    method_family = "geometry"
+    supports_backends = ("torch", "mlx")
+    requires_scores = True
+    score_source = "value"
+    approximate = True
 
     def __init__(
         self,

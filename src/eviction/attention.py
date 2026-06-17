@@ -1,6 +1,6 @@
 """Attention-based eviction — accumulate attention scores across steps."""
 from __future__ import annotations
-from typing import Optional
+from typing import Dict, List, Optional
 import torch
 from src.eviction.base import BaseEviction
 from src.eviction.kv_utils import mean_heads
@@ -13,6 +13,10 @@ class AttentionEviction(BaseEviction):
     and accumulates it across decoding steps.
     """
     name = "attention"
+    method_family = "attention"
+    requires_attention = True
+    requires_scores = True
+    score_source = "attention"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -109,3 +113,119 @@ class AttentionEviction(BaseEviction):
     def reset(self):
         super().reset()
         self._acc_scores.clear()
+
+
+class AccumulatedAttentionEviction(AttentionEviction):
+    """Explicit accumulated-attention alias for H2O-style saliency."""
+
+    name = "accumulated_attention"
+
+
+class LastTokenAttentionEviction(AttentionEviction):
+    """Use only the most recent query-token attention distribution."""
+
+    name = "last_token_attention"
+
+    def update_attention(self, layer_idx: int, attention_weights: torch.Tensor) -> None:
+        if attention_weights is None:
+            return
+        attn = attention_weights.detach()
+        if attn.dim() == 4:
+            pooled = attn[:, :, -1, :].mean(dim=(0, 1))
+        elif attn.dim() == 3:
+            pooled = attn[:, -1, :].mean(dim=0)
+        else:
+            return
+        self._acc_scores[layer_idx] = pooled
+
+    def _accumulate(self, layer_k, layer_v, layer_idx, seq_len):
+        attn = self._compute_attn(layer_k, layer_v, layer_idx)
+        if attn is not None:
+            self._acc_scores[layer_idx] = attn[:seq_len]
+
+
+class WindowedAttentionEviction(AttentionEviction):
+    """Accumulate attention over the most recent W decode steps."""
+
+    name = "windowed_attention"
+
+    def __init__(self, attention_window: int = 32, window_size: Optional[int] = None, **kwargs):
+        super().__init__(**kwargs)
+        self.attention_window = max(1, int(window_size or attention_window))
+        self._windows: Dict[int, List[torch.Tensor]] = {}
+
+    def update_attention(self, layer_idx: int, attention_weights: torch.Tensor) -> None:
+        if attention_weights is None:
+            return
+        attn = attention_weights.detach()
+        if attn.dim() == 4:
+            pooled = attn[:, :, -1, :].mean(dim=(0, 1))
+        elif attn.dim() == 3:
+            pooled = attn[:, -1, :].mean(dim=0)
+        else:
+            return
+        buf = self._windows.setdefault(layer_idx, [])
+        buf.append(pooled)
+        if len(buf) > self.attention_window:
+            del buf[:-self.attention_window]
+        self._acc_scores[layer_idx] = self._sum_window(buf)
+
+    def _accumulate(self, layer_k, layer_v, layer_idx, seq_len):
+        attn = self._compute_attn(layer_k, layer_v, layer_idx)
+        if attn is None:
+            return
+        buf = self._windows.setdefault(layer_idx, [])
+        buf.append(attn)
+        if len(buf) > self.attention_window:
+            del buf[:-self.attention_window]
+        self._acc_scores[layer_idx] = self._sum_window(buf)
+
+    @staticmethod
+    def _sum_window(buf: List[torch.Tensor]) -> torch.Tensor:
+        max_len = max(t.numel() for t in buf)
+        out = torch.zeros(max_len, device=buf[-1].device, dtype=buf[-1].dtype)
+        for tensor in buf:
+            out[: tensor.numel()] += tensor.to(out.device, dtype=out.dtype)
+        return out
+
+    def reset(self):
+        super().reset()
+        self._windows.clear()
+
+
+class AttentionDecayEviction(AttentionEviction):
+    """Accumulated attention with exponential time decay."""
+
+    name = "attention_decay"
+
+    def __init__(self, decay_gamma: float = 0.95, **kwargs):
+        super().__init__(**kwargs)
+        self.decay_gamma = float(decay_gamma)
+
+    def update_attention(self, layer_idx: int, attention_weights: torch.Tensor) -> None:
+        if attention_weights is None:
+            return
+        attn = attention_weights.detach()
+        if attn.dim() == 4:
+            pooled = attn[:, :, -1, :].mean(dim=(0, 1))
+        elif attn.dim() == 3:
+            pooled = attn[:, -1, :].mean(dim=0)
+        else:
+            return
+        self._decayed_update(layer_idx, pooled)
+
+    def _accumulate(self, layer_k, layer_v, layer_idx, seq_len):
+        attn = self._compute_attn(layer_k, layer_v, layer_idx)
+        if attn is not None:
+            self._decayed_update(layer_idx, attn)
+
+    def _decayed_update(self, layer_idx: int, values: torch.Tensor) -> None:
+        seq_len = values.numel()
+        prev = self._acc_scores.get(layer_idx)
+        if prev is None or prev.numel() < seq_len:
+            new_prev = torch.zeros(seq_len, device=values.device, dtype=values.dtype)
+            if prev is not None:
+                new_prev[: prev.numel()] = prev.to(new_prev.device, dtype=new_prev.dtype)
+            prev = new_prev
+        prev[:seq_len] = prev[:seq_len] * self.decay_gamma + values.to(prev.device)
+        self._acc_scores[layer_idx] = prev

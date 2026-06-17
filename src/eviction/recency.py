@@ -8,6 +8,8 @@ from src.eviction.base import BaseEviction
 class FullKVCache(BaseEviction):
     """No eviction — keep full cache (upper bound baseline)."""
     name = "full"
+    method_family = "recency"
+    supports_backends = ("torch", "mlx")
 
     def __init__(self, **kwargs):
         kwargs.setdefault("cache_size", 10**9)
@@ -29,6 +31,8 @@ class FullKVCache(BaseEviction):
 class RecencyEviction(BaseEviction):
     """Sliding window: keep last ``cache_size`` tokens."""
     name = "recency"
+    method_family = "recency"
+    supports_backends = ("torch", "mlx")
 
     def compute_scores(self, layer_k, layer_v, layer_idx, **kw):
         return None

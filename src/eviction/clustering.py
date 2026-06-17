@@ -16,6 +16,10 @@ def _cosine_dist_matrix(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
 class FarthestPointEviction(BaseEviction):
     """Farthest-point sampling: greedily pick diverse key vectors."""
     name = "farthest_point"
+    method_family = "geometry"
+    requires_scores = True
+    score_source = "key"
+    approximate = True
 
     def __init__(self, seed=0, **kwargs):
         super().__init__(**kwargs)
@@ -91,6 +95,10 @@ class KCenterEviction(FarthestPointEviction):
 class KMeansMedoidEviction(BaseEviction):
     """K-means medoid: run k-means, pick closest point to each centroid."""
     name = "kmeans_medoid"
+    method_family = "geometry"
+    requires_scores = True
+    score_source = "key"
+    approximate = True
 
     def __init__(self, n_clusters=64, n_iters=5, seed=0, **kwargs):
         super().__init__(**kwargs)
@@ -149,6 +157,61 @@ class KMeansMedoidEviction(BaseEviction):
         if topk <= 0:
             return self._fill_budget(reserved, seq_len, budget, device)
         idx = torch.topk(s_copy, topk).indices
+        return self._ensure_budget(
+            torch.cat([reserved, idx]),
+            seq_len,
+            budget,
+            device,
+            scores=scores,
+            reserved=reserved,
+        )
+
+
+class ApproxFacilityLocationEviction(BaseEviction):
+    """Approximate facility-location coverage via top average cosine similarity."""
+
+    name = "approximate_facility_location"
+    method_family = "geometry"
+    requires_scores = True
+    score_source = "key"
+    approximate = True
+
+    def __init__(self, max_points: int = 512, seed: int = 0, **kwargs):
+        super().__init__(**kwargs)
+        self.max_points = int(max_points)
+        self.seed = int(seed)
+
+    def compute_scores(self, layer_k, layer_v, layer_idx, **kw):
+        rows = mean_heads(layer_k, self.k_seq_dim)
+        if rows is None:
+            return None
+        rows = torch.nn.functional.normalize(rows.float(), dim=-1)
+        n = rows.shape[0]
+        if n <= self.max_points:
+            refs = rows
+        else:
+            generator = torch.Generator(device="cpu").manual_seed(self.seed + layer_idx)
+            idx = torch.randperm(n, generator=generator)[: self.max_points].to(rows.device)
+            refs = rows[idx]
+        sim = rows @ refs.T
+        return sim.clamp_min(0).mean(dim=1)
+
+    def select_indices(self, scores, seq_len, budget, device):
+        if seq_len <= budget:
+            return torch.arange(seq_len, dtype=torch.long, device=device)
+        reserved = self._reserved_indices(seq_len, budget, device)
+        if scores is None:
+            return self._fill_budget(reserved, seq_len, budget, device)
+        fill = budget - int(reserved.numel())
+        if fill <= 0:
+            return self._ensure_budget(reserved, seq_len, budget, device, reserved=reserved)
+        masked = scores[:seq_len].clone().to(device)
+        if reserved.numel() > 0:
+            masked[reserved] = -float("inf")
+        valid = torch.isfinite(masked)
+        if not valid.any():
+            return self._fill_budget(reserved, seq_len, budget, device)
+        idx = torch.topk(masked, min(fill, int(valid.sum().item()))).indices
         return self._ensure_budget(
             torch.cat([reserved, idx]),
             seq_len,

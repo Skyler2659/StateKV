@@ -10,6 +10,11 @@ from src.eviction.kv_utils import mean_heads
 class SnapKVEviction(BaseEviction):
     """SnapKV: observation window attention + max-pool selection."""
     name = "snapkv"
+    method_family = "attention"
+    requires_attention = True
+    requires_scores = True
+    score_source = "observation_window_attention"
+    approximate = True
 
     def __init__(self, window_size=32, kernel_size=63, **kwargs):
         super().__init__(**kwargs)

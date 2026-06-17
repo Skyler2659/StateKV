@@ -19,7 +19,7 @@ sys.path.insert(0, str(_PROJECT_ROOT))
 from scripts.run_benchmark import eviction_kwargs_from_config, method_needs_attentions
 from src.config import ExperimentConfig
 from src.eviction.kv_utils import get_kv_seq_len, to_legacy_cache
-from src.eviction.registry import create_eviction
+from src.eviction.registry import create_eviction, get_method_spec, unsupported_reason
 from src.models import load_model_and_tokenizer
 from src.profiling.memory import MemoryTracker
 from src.utils.io import save_results
@@ -242,6 +242,19 @@ def main():
     for method_name in methods:
         logger.info("Profiling %s", method_name)
         try:
+            reason = unsupported_reason(method_name, cfg.model.backend)
+            if reason:
+                spec = get_method_spec(method_name)
+                profile_results.append(
+                    {
+                        "method": method_name,
+                        "method_family": spec.family,
+                        "budget": budget,
+                        "skipped": True,
+                        "unsupported_reason": reason,
+                    }
+                )
+                continue
             profile_results.append(
                 profile_method(
                     model,
@@ -266,6 +279,9 @@ def main():
     for row in profile_results:
         if "error" in row:
             print(f"{row['method']:<18} ERROR {row['error'][:60]}")
+            continue
+        if row.get("skipped"):
+            print(f"{row['method']:<18} SKIPPED {row.get('unsupported_reason', '')[:60]}")
             continue
         print(
             f"{row['method']:<18} "

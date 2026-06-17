@@ -7,6 +7,8 @@ from src.eviction.base import BaseEviction
 class SinkRecentEviction(BaseEviction):
     """Keep first ``sink_size`` tokens + last ``recent_size`` tokens."""
     name = "sink_recent"
+    method_family = "recency"
+    supports_backends = ("torch", "mlx")
 
     def compute_scores(self, layer_k, layer_v, layer_idx, **kw):
         return None

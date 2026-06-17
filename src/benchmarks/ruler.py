@@ -17,6 +17,8 @@ import string
 import torch
 
 from src.benchmarks.base import BaseBenchmark, BenchmarkResult
+from src.benchmarks.niah import _token_span_from_char_span
+from src.evaluation.official_metrics import parse_references, ruler_metric_name, ruler_task_family
 
 
 def _random_word(rng: random.Random, length: int = 6) -> str:
@@ -39,10 +41,12 @@ def _generate_variable_tracking_sample(
     query_var = rng.choice(list(variables.keys()))
     query = f"\nWhat is the value of {query_var}? The value is"
     answer = f" {variables[query_var]}"
-
-    text = " ".join(filler) + query + answer
+    prompt = " ".join(filler) + query
+    text = prompt + answer
     return {
         "text": text,
+        "prompt": prompt,
+        "answer_text": answer,
         "answer": answer.strip(),
         "query_var": query_var,
         "n_variables": n_variables,
@@ -72,9 +76,12 @@ def _generate_common_words_sample(
     actual_common = sorted(w for w, c in counts.items() if c >= threshold)
     answer = " " + ", ".join(actual_common)
 
-    text = " ".join(words) + query + answer
+    prompt = " ".join(words) + query
+    text = prompt + answer
     return {
         "text": text,
+        "prompt": prompt,
+        "answer_text": answer,
         "answer": answer.strip(),
         "threshold": threshold,
         "expected_words": actual_common,
@@ -101,9 +108,12 @@ def _generate_multi_hop_sample(
     query = f"\nWhat does {entities[0]} ultimately point to? It points to"
     answer = f" {entities[-1]}"
 
-    text = " ".join(filler) + query + answer
+    prompt = " ".join(filler) + query
+    text = prompt + answer
     return {
         "text": text,
+        "prompt": prompt,
+        "answer_text": answer,
         "answer": answer.strip(),
         "chain": chain,
         "n_hops": n_hops,
@@ -112,10 +122,46 @@ def _generate_multi_hop_sample(
     }
 
 
+def _generate_niah_single_sample(
+    rng: random.Random, seq_words: int = 2000,
+) -> Dict[str, Any]:
+    """Generate a RULER-style single needle retrieval sample."""
+    key = f"{_random_word(rng, 6)}-{_random_word(rng, 5)}"
+    value = "".join(rng.choice(string.digits) for _ in range(7))
+    filler = ["The grass is green. The sky is blue. The sun is yellow."] * max(1, seq_words // 10)
+    insert_pos = rng.randrange(0, len(filler))
+    needle = f"The special magic number for {key} is {value}."
+    filler.insert(insert_pos, needle)
+    context = " ".join(filler)
+    question = f"What is the special magic number for {key} mentioned in the provided text? "
+    answer_prefix = f"The special magic number for {key} mentioned in the provided text is"
+    prompt = f"{context}\n\n{question}{answer_prefix}"
+    answer_text = f" {value}"
+    return {
+        "text": prompt + answer_text,
+        "prompt": prompt,
+        "answer_text": answer_text,
+        "answer": value,
+        "answers": [value],
+        "key": key,
+        "needle": needle,
+        "dataset_official": False,
+    }
+
+
 RULER_TASK_GENERATORS = {
+    "niah_single": _generate_niah_single_sample,
+    "niah_single_1": _generate_niah_single_sample,
     "variable_tracking": _generate_variable_tracking_sample,
+    "vt": _generate_variable_tracking_sample,
     "common_words": _generate_common_words_sample,
     "multi_hop": _generate_multi_hop_sample,
+}
+
+RULER_OFFICIAL_TASK_ALIASES = {
+    "niah_single": "niah_single_1",
+    "niah": "niah_single_1",
+    "variable_tracking": "vt",
 }
 
 
@@ -135,13 +181,108 @@ class RULERBenchmark(BaseBenchmark):
         seq_words: int = 2000,
         seed: int = 0,
         max_samples: Optional[int] = None,
+        use_official_dataset: bool = False,
+        require_official_dataset: bool = False,
+        hf_dataset_name: Optional[str] = None,
+        hf_dataset_config: Optional[str] = None,
+        hf_split: Optional[str] = None,
     ):
         super().__init__(seed=seed, max_samples=max_samples)
         self.tasks = tasks or ["variable_tracking", "common_words", "multi_hop"]
         self.n_samples_per_task = n_samples_per_task
         self.seq_words = seq_words
+        self.use_official_dataset = use_official_dataset
+        self.require_official_dataset = require_official_dataset
+        self.hf_dataset_name = hf_dataset_name or "xAlg-AI/att-hub-ruler-16k"
+        self.hf_dataset_config = hf_dataset_config
+        self.hf_split = hf_split
+
+    def _official_task_name(self, task_name: str) -> str:
+        return RULER_OFFICIAL_TASK_ALIASES.get(task_name, task_name)
+
+    def _load_official_rows(self, task_name: str) -> List[Dict[str, Any]]:
+        from datasets import load_dataset
+
+        hf_task = self.hf_dataset_config or self._official_task_name(task_name)
+        split_name = self.hf_split or hf_task
+        if self.n_samples_per_task:
+            split_name = f"{split_name}[:{self.n_samples_per_task}]"
+        ds = load_dataset(
+            self.hf_dataset_name,
+            hf_task,
+            split=split_name,
+            trust_remote_code=True,
+        )
+        return [dict(row) for row in ds]
+
+    def _official_row_to_sample(self, tokenizer, row: Dict[str, Any], task_name: str) -> Dict[str, Any]:
+        context = row.get("context", "") or ""
+        question = row.get("question", "") or ""
+        answer_prefix = row.get("answer_prefix", "") or ""
+        answers = parse_references(row.get("answer"))
+        prompt = f"{context}\n\n{question}{answer_prefix}"
+        if prompt and not prompt.endswith((" ", "\n")):
+            prompt += " "
+        answer_text = " ".join(answers) if len(answers) > 1 else (answers[0] if answers else "")
+        answer_text = f" {answer_text}".rstrip() if answer_text else " unknown"
+        text = prompt + answer_text
+
+        ids = tokenizer(text, return_tensors="pt").input_ids
+        answer_char_start = len(prompt)
+        answer_char_end = answer_char_start + len(answer_text)
+        answer_token_start, answer_token_end, eval_positions = _token_span_from_char_span(
+            tokenizer, text, answer_char_start, answer_char_end
+        )
+        official_task = row.get("task") or self._official_task_name(task_name)
+        return {
+            "input_ids": ids,
+            "eval_positions": eval_positions,
+            "answer_positions": eval_positions,
+            "ground_truth": answers[0] if answers else answer_text.strip(),
+            "answers": answers,
+            "outputs": answers,
+            "prompt": prompt,
+            "full_text": text,
+            "answer_text": answer_text,
+            "metadata": {
+                "task": official_task,
+                "requested_task": task_name,
+                "answer": answers[0] if answers else answer_text.strip(),
+                "answers": answers,
+                "outputs": answers,
+                "answer_char_start": answer_char_start,
+                "answer_char_end": answer_char_end,
+                "answer_token_start": answer_token_start,
+                "answer_token_end": answer_token_end,
+                "seq_len": ids.size(1),
+                "dataset_official": True,
+                "official_dataset_name": self.hf_dataset_name,
+                "official_dataset_config": self.hf_dataset_config or self._official_task_name(task_name),
+                "official_metric_name": ruler_metric_name(official_task),
+                "official_task_family": ruler_task_family(official_task),
+                "official_max_new_tokens": row.get("max_new_tokens"),
+            },
+        }
+
+    def _prepare_official_samples(self, tokenizer) -> List[Dict[str, Any]]:
+        samples: List[Dict[str, Any]] = []
+        for task_name in self.tasks:
+            rows = self._load_official_rows(task_name)
+            for row in rows:
+                samples.append(self._official_row_to_sample(tokenizer, row, task_name))
+        return samples
 
     def prepare_samples(self, tokenizer) -> List[Dict[str, Any]]:
+        if self.use_official_dataset:
+            try:
+                samples = self._prepare_official_samples(tokenizer)
+                if samples:
+                    return samples
+            except Exception as exc:
+                if self.require_official_dataset:
+                    raise
+                print(f"[RULER] failed to load official dataset; using synthetic fallback: {exc}")
+
         rng = random.Random(self.seed)
         samples: List[Dict[str, Any]] = []
 
@@ -154,23 +295,46 @@ class RULERBenchmark(BaseBenchmark):
             for si in range(self.n_samples_per_task):
                 raw = gen_fn(rng, seq_words=self.seq_words)
                 text = raw["text"]
+                prompt = raw["prompt"]
+                answer_text = raw["answer_text"]
                 answer = raw["answer"]
 
-                # Find answer position
-                prefix_text = text[:text.rfind(answer)]
                 ids = tokenizer(text, return_tensors="pt").input_ids
-                prefix_ids = tokenizer(prefix_text, return_tensors="pt").input_ids
-                prefix_len = prefix_ids.size(1)
-                eval_positions = list(range(prefix_len, ids.size(1)))
+                answer_char_start = len(prompt)
+                answer_char_end = answer_char_start + len(answer_text)
+                answer_token_start, answer_token_end, eval_positions = _token_span_from_char_span(
+                    tokenizer, text, answer_char_start, answer_char_end
+                )
 
                 samples.append({
                     "input_ids": ids,
                     "eval_positions": eval_positions,
+                    "answer_positions": eval_positions,
+                    "ground_truth": answer,
+                    "answers": raw.get("answers", [answer]),
+                    "outputs": raw.get("answers", [answer]),
+                    "prompt": prompt,
+                    "full_text": text,
+                    "answer_text": answer_text,
                     "metadata": {
                         "task": task_name,
                         "answer": answer,
+                        "answers": raw.get("answers", [answer]),
+                        "outputs": raw.get("answers", [answer]),
+                        "answer_text": answer_text,
+                        "answer_char_start": answer_char_start,
+                        "answer_char_end": answer_char_end,
+                        "answer_token_start": answer_token_start,
+                        "answer_token_end": answer_token_end,
                         "seq_len": ids.size(1),
-                        **{k: v for k, v in raw.items() if k not in ("text", "answer")},
+                        "dataset_official": raw.get("dataset_official", False),
+                        "official_metric_name": ruler_metric_name(task_name),
+                        "official_task_family": ruler_task_family(task_name),
+                        **{
+                            k: v
+                            for k, v in raw.items()
+                            if k not in ("text", "prompt", "answer_text", "answer")
+                        },
                     },
                 })
 

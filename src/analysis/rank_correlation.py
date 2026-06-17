@@ -49,7 +49,7 @@ def _spearman(a: torch.Tensor, b: torch.Tensor) -> float:
     return (num / den).item()
 
 
-def _kendall_tau(a: torch.Tensor, b: torch.Tensor, max_n: int = 2000) -> float:
+def _kendall_tau(a: torch.Tensor, b: torch.Tensor, max_n: int = 256) -> float:
     """Kendall tau-b (approximation for large n via subsampling)."""
     min_len = min(a.numel(), b.numel())
     if min_len < 3:

@@ -7,6 +7,8 @@ from src.eviction.base import BaseEviction
 class RandomEviction(BaseEviction):
     """Keep ``budget`` random indices (with optional sink+recent reserved)."""
     name = "random"
+    method_family = "random"
+    supports_backends = ("torch", "mlx")
 
     def __init__(self, seed=0, **kwargs):
         super().__init__(**kwargs)

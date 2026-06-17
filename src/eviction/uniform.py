@@ -7,6 +7,7 @@ from src.eviction.base import BaseEviction
 class UniformEviction(BaseEviction):
     """Keep tokens at uniform intervals across the sequence."""
     name = "uniform"
+    method_family = "geometry"
 
     def compute_scores(self, layer_k, layer_v, layer_idx, **kw):
         return None

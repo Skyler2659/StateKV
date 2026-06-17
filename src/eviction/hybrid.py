@@ -9,6 +9,7 @@ from typing import Any, List, Optional, Tuple
 import time
 import torch
 from src.eviction.base import BaseEviction
+from src.eviction.score_normalization import normalize_scores
 from src.eviction.kv_utils import (
     to_legacy_cache, back_to_original, get_kv_seq_len,
     gather_by_dim, mean_heads,
@@ -36,6 +37,10 @@ class HybridEviction(BaseEviction):
         attention_method: "accumulated"
     """
     name = "hybrid"
+    method_family = "hybrid"
+    requires_attention = True
+    requires_scores = True
+    score_source = "hybrid"
 
     def __init__(
         self,
@@ -47,6 +52,8 @@ class HybridEviction(BaseEviction):
         sink_budget_ratio=0.1,
         geometry_method="l1",
         attention_method="accumulated",
+        score_normalization="rank",
+        components=None,
         score_source="v",
         sketch_dim=1024,
         update_interval=32,
@@ -63,6 +70,8 @@ class HybridEviction(BaseEviction):
         self.sink_budget_ratio = float(sink_budget_ratio)
         self.geometry_method = geometry_method
         self.attention_method = attention_method
+        self.score_normalization = str(score_normalization or "rank").lower()
+        self.components = components or []
         self.score_source = score_source
         self.sketch_dim = sketch_dim
         self.update_interval = max(0, int(update_interval))
@@ -74,10 +83,14 @@ class HybridEviction(BaseEviction):
         self._geom_estimators: dict[int, object] = {}
         self._last_geom_scores: dict[int, torch.Tensor] = {}
         self._fit_layers: set[int] = set()
+        self._component_sources_current: dict[int, dict[int, list[str]]] = {}
+        self.last_component_sources: dict[int, dict[str, list[str]]] = {}
         self.score_update_count = 0
 
     def compute_scores(self, layer_k, layer_v, layer_idx, **kw):
         seq_len = layer_k.size(self.k_seq_dim)
+        if self.components:
+            return self._compute_weighted_components(layer_k, layer_v, layer_idx, seq_len)
         attn_scores = self._compute_attn_scores(layer_k, layer_v, layer_idx, seq_len)
         geom_scores = self._compute_geom_scores(layer_k, layer_v, layer_idx, seq_len)
         if geom_scores is not None:
@@ -85,6 +98,45 @@ class HybridEviction(BaseEviction):
         if self.hybrid_mode == "interpolation":
             return self._interpolate(attn_scores, geom_scores, seq_len)
         return geom_scores  # budget_split uses geom scores directly
+
+    def _compute_weighted_components(self, k, v, layer_idx, seq_len):
+        merged = None
+        total_weight = 0.0
+        for component in self.components:
+            name = str(component.get("name", "")).lower()
+            weight = float(component.get("weight", 1.0))
+            score = self._component_score(name, k, v, layer_idx, seq_len)
+            if score is None or weight == 0:
+                continue
+            normed = normalize_scores(score[:seq_len].float(), self.score_normalization)
+            merged = normed * weight if merged is None else merged + normed * weight
+            total_weight += abs(weight)
+        if merged is None:
+            return None
+        return merged / max(total_weight, 1e-8)
+
+    def _component_score(self, name, k, v, layer_idx, seq_len):
+        if name in ("attention", "accumulated_attention", "h2o"):
+            return self._compute_attn_scores(k, v, layer_idx, seq_len)
+        if name in ("recency", "position"):
+            return torch.arange(seq_len, device=v.device, dtype=torch.float32)
+        old = self.geometry_method
+        try:
+            if name in ("l1", "l1_leverage"):
+                self.geometry_method = "l1"
+                return self._compute_geom_scores(k, v, layer_idx, seq_len)
+            if name in ("l2", "l2_leverage"):
+                self.geometry_method = "l2"
+                return self._compute_geom_scores(k, v, layer_idx, seq_len)
+            if name in ("key_l2_norm", "key_norm"):
+                self.geometry_method = "key_norm"
+                return self._compute_geom_scores(k, v, layer_idx, seq_len)
+            if name in ("value_l2_norm", "value_norm", "norm"):
+                self.geometry_method = "value_norm"
+                return self._compute_geom_scores(k, v, layer_idx, seq_len)
+        finally:
+            self.geometry_method = old
+        return None
 
     def update_attention(self, layer_idx: int, attention_weights: torch.Tensor) -> None:
         if attention_weights is None:
@@ -143,9 +195,16 @@ class HybridEviction(BaseEviction):
             if self.debug_budget:
                 from src.eviction.base import validate_selected_indices
                 validate_selected_indices(keep.detach().cpu(), seq_len, self.cache_size)
-            self.last_selected[layer_idx] = self._record_selected_positions(
+            selected_positions = self._record_selected_positions(
                 layer_idx, keep, k.device
             ).detach().cpu()
+            self.last_selected[layer_idx] = selected_positions
+            current_sources = self._component_sources_current.get(layer_idx, {})
+            if current_sources:
+                self.last_component_sources[layer_idx] = {
+                    str(int(orig)): current_sources.get(int(cur), ["unknown"])
+                    for cur, orig in zip(keep.detach().cpu().tolist(), selected_positions.tolist())
+                }
             if scores is not None:
                 self.last_scores[layer_idx] = scores.detach().cpu()
             t0 = time.perf_counter()
@@ -245,11 +304,11 @@ class HybridEviction(BaseEviction):
         if attn is None and geom is None:
             return None
         if attn is None:
-            return geom
+            return normalize_scores(geom[:seq_len].float(), self.score_normalization)
         if geom is None:
-            return attn
-        a = _min_max_norm(attn[:seq_len].float())
-        g = _min_max_norm(geom[:seq_len].float())
+            return normalize_scores(attn[:seq_len].float(), self.score_normalization)
+        a = normalize_scores(attn[:seq_len].float(), self.score_normalization)
+        g = normalize_scores(geom[:seq_len].float(), self.score_normalization)
         min_len = min(a.numel(), g.numel())
         return self.lambda_attn * a[:min_len] + (1 - self.lambda_attn) * g[:min_len]
 
@@ -290,18 +349,25 @@ class HybridEviction(BaseEviction):
         geom_b = max(0, int(budget * self.geom_budget_ratio))
 
         parts = []
+        source_map: dict[int, list[str]] = {}
         # Sink
         if sink_b > 0:
-            parts.append(torch.arange(0, min(sink_b, seq_len), device=device))
+            sink_idx = torch.arange(0, min(sink_b, seq_len), device=device)
+            parts.append(sink_idx)
+            for idx in sink_idx.tolist():
+                source_map.setdefault(int(idx), []).append("sink")
         # Recent
         if recent_b > 0:
             start = max(0, seq_len - recent_b)
-            parts.append(torch.arange(start, seq_len, device=device))
+            recent_idx = torch.arange(start, seq_len, device=device)
+            parts.append(recent_idx)
+            for idx in recent_idx.tolist():
+                source_map.setdefault(int(idx), []).append("recent")
 
         reserved = torch.cat(parts).unique(sorted=True) if parts else torch.empty(0, dtype=torch.long, device=device)
         selected = reserved
 
-        def take_top(score_vec, take, current):
+        def take_top(score_vec, take, current, source_name):
             if score_vec is None or take <= 0:
                 return current
             if score_vec.numel() < seq_len:
@@ -314,18 +380,20 @@ class HybridEviction(BaseEviction):
                 return current
             topk = min(take, int(valid.sum().item()))
             idx = torch.topk(masked, topk).indices
+            for token_idx in idx.detach().cpu().tolist():
+                source_map.setdefault(int(token_idx), []).append(source_name)
             return torch.cat([current, idx]).unique(sorted=True)
 
         remaining = max(0, budget - int(selected.numel()))
         attn_take = min(attn_b, remaining)
         attn_scores = self._acc_scores.get(layer_idx) if layer_idx is not None else None
-        selected = take_top(attn_scores, attn_take, selected)
+        selected = take_top(attn_scores, attn_take, selected, "attention")
 
         remaining = max(0, budget - int(selected.numel()))
         geom_take = min(geom_b, remaining)
         if geom_scores is None and layer_idx is not None:
             geom_scores = self._last_geom_scores.get(layer_idx)
-        selected = take_top(geom_scores, geom_take, selected)
+        selected = take_top(geom_scores, geom_take, selected, "geometry")
 
         combined = None
         if attn_scores is not None and attn_scores.numel() >= seq_len:
@@ -334,7 +402,7 @@ class HybridEviction(BaseEviction):
             geom_norm = _min_max_norm(geom_scores[:seq_len].float().to(device))
             combined = geom_norm if combined is None else combined + geom_norm
 
-        return self._ensure_budget(
+        keep = self._ensure_budget(
             selected,
             seq_len,
             budget,
@@ -342,6 +410,11 @@ class HybridEviction(BaseEviction):
             scores=combined,
             reserved=reserved,
         )
+        if layer_idx is not None:
+            for idx in keep.detach().cpu().tolist():
+                source_map.setdefault(int(idx), ["fill"])
+            self._component_sources_current[int(layer_idx)] = source_map
+        return keep
 
     def reset(self):
         super().reset()
@@ -349,4 +422,6 @@ class HybridEviction(BaseEviction):
         self._geom_estimators.clear()
         self._last_geom_scores.clear()
         self._fit_layers.clear()
+        self._component_sources_current.clear()
+        self.last_component_sources.clear()
         self.score_update_count = 0
