@@ -41,20 +41,20 @@ This separates three roles that are easy to conflate:
 Compression history is represented at boundary $b$ by a functional
 displacement from a paired full-cache reference:
 
-$$
+```math
 \mathbf{s}_{t,b}
 =
 \mathbf{x}^{\mathrm{hist}}_{t,b}
 -
 \mathbf{x}^{\mathrm{ref}}_{t,b}.
-$$
+```
 
 For a retained set $C$, the teacher computes the exact local
 deletion-and-renormalization response, transports that finite action through the
 downstream network, and evaluates the second-order increment in reference KL at
 the current state:
 
-$$
+```math
 \widehat{\mathcal R}_{\mathbf s}(C)
 =
 \mathbf g_{\mathbf s}^{\top}\widehat{\Delta\mathbf z}(C)
@@ -63,17 +63,17 @@ $$
 \widehat{\Delta\mathbf z}(C)^{\top}
 \mathbf F_{\mathbf s}
 \widehat{\Delta\mathbf z}(C).
-$$
+```
 
 Selection and refresh share this risk object:
 
-$$
+```math
 C^{\star}_{\mathbf s}=\arg\min_{C\in\mathcal A_{t,\ell}(B)}
 \widehat{\mathcal R}_{\mathbf s}(C),
 \qquad
 \text{oracle refresh if }
 C^{\star}_{\mathbf s_t}\ne C^{\star}_{\mathbf s_{t-1}}.
-$$
+```
 
 The refresh rule above is an **oracle diagnostic**. A low-cost state-drift
 detector that works without the full-cache reference is a next-stage component,
