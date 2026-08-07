@@ -1,0 +1,164 @@
+file,field,dtype,shape,unit_or_semantics,missing
+reference_trajectories.parquet,config_hash,object,scalar,see implementation/findings,0
+reference_trajectories.parquet,generated_length,int64,scalar,tokens,0
+reference_trajectories.parquet,generation_stopped_on_eos,bool,scalar,see implementation/findings,0
+reference_trajectories.parquet,generation_time_s,float64,scalar,seconds,0
+reference_trajectories.parquet,git_commit,object,scalar,see implementation/findings,0
+reference_trajectories.parquet,model,object,scalar,see implementation/findings,0
+reference_trajectories.parquet,peak_accelerator_bytes,int64,scalar,bytes,0
+reference_trajectories.parquet,peak_rss_bytes,int64,scalar,bytes,0
+reference_trajectories.parquet,prompt_length,int64,scalar,tokens,0
+reference_trajectories.parquet,prompt_truncated,bool,scalar,see implementation/findings,0
+reference_trajectories.parquet,reference_npz_path,object,scalar,see implementation/findings,0
+reference_trajectories.parquet,run_id,object,scalar,see implementation/findings,0
+reference_trajectories.parquet,sample_id,object,scalar,see implementation/findings,0
+reference_trajectories.parquet,sample_metadata,object,JSON object; example keys 12,see implementation/findings,0
+reference_trajectories.parquet,seed,int64,scalar,see implementation/findings,0
+reference_trajectories.parquet,selected_diagnostic_heads,object,JSON object; example keys 3,see implementation/findings,0
+reference_trajectories.parquet,selected_diagnostic_layers,object,JSON list; example length 3,see implementation/findings,0
+reference_trajectories.parquet,task,object,scalar,see implementation/findings,0
+candidate_sets.parquet,anchor,int64,scalar,generated tokens already incorporated,0
+candidate_sets.parquet,config_hash,object,scalar,see implementation/findings,0
+candidate_sets.parquet,effective_core_size_max,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,effective_core_size_min,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,git_commit,object,scalar,see implementation/findings,0
+candidate_sets.parquet,horizon_condition,float64,scalar,see implementation/findings,135
+candidate_sets.parquet,invalid_reason,object,scalar/all-null,see implementation/findings,315
+candidate_sets.parquet,layers,object,JSON list; example length 28,see implementation/findings,0
+candidate_sets.parquet,model,object,scalar,see implementation/findings,0
+candidate_sets.parquet,overlaps,object,JSON object; example keys 6,see implementation/findings,0
+candidate_sets.parquet,recent_size,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,run_id,object,scalar,see implementation/findings,0
+candidate_sets.parquet,sample_id,object,scalar,see implementation/findings,0
+candidate_sets.parquet,seed,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,selected_core_budget,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,selected_token_age_max,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,selected_token_age_mean,float64,scalar,see implementation/findings,0
+candidate_sets.parquet,selected_token_age_median,float64,scalar,see implementation/findings,0
+candidate_sets.parquet,selected_token_age_min,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,selection_metadata,object,JSON object; example keys 2,see implementation/findings,0
+candidate_sets.parquet,sink_size,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,strategy,object,scalar,see implementation/findings,0
+candidate_sets.parquet,task,object,scalar,see implementation/findings,0
+candidate_sets.parquet,total_budget,int64,scalar,see implementation/findings,0
+candidate_sets.parquet,valid,bool,scalar,see implementation/findings,0
+step_losses.parquet,active_cache_tokens,int64,scalar,KV token slots/layer,0
+step_losses.parquet,anchor,int64,scalar,generated tokens already incorporated,0
+step_losses.parquet,approx_kl,float64,scalar,nats,0
+step_losses.parquet,attention_output_error_max,float64,scalar,dimensionless relative L2,0
+step_losses.parquet,attention_output_error_mean,float64,scalar,dimensionless relative L2,0
+step_losses.parquet,attention_output_errors,object,JSON list; example length 6,see implementation/findings,0
+step_losses.parquet,average_delta_nll,float64,scalar,see implementation/findings,0
+step_losses.parquet,change_point,float64,scalar,see implementation/findings,900
+step_losses.parquet,compressed_log_probability,float64,scalar,see implementation/findings,0
+step_losses.parquet,compressed_on_full_top_mass,float64,scalar,see implementation/findings,0
+step_losses.parquet,compressed_other_mass,float64,scalar,see implementation/findings,0
+step_losses.parquet,compressed_top_mass_rounding_correction,float64,scalar,see implementation/findings,0
+step_losses.parquet,config_hash,object,scalar,see implementation/findings,0
+step_losses.parquet,cumulative_delta_nll,float64,scalar,see implementation/findings,0
+step_losses.parquet,delta_nll,float64,scalar,nats/token,0
+step_losses.parquet,delta_nll_curvature,float64,scalar,see implementation/findings,0
+step_losses.parquet,delta_nll_slope,float64,scalar,see implementation/findings,0
+step_losses.parquet,first_large_loss_spike,float64,scalar,see implementation/findings,2519
+step_losses.parquet,forward_time_s,float64,scalar,seconds,0
+step_losses.parquet,full_other_mass,float64,scalar,see implementation/findings,0
+step_losses.parquet,full_top_mass,float64,scalar,see implementation/findings,0
+step_losses.parquet,full_top_mass_rounding_correction,float64,scalar,see implementation/findings,0
+step_losses.parquet,future_step,int64,scalar,1-indexed steps after anchor,0
+step_losses.parquet,git_commit,object,scalar,see implementation/findings,0
+step_losses.parquet,invalid_reason,object,scalar/all-null,see implementation/findings,15300
+step_losses.parquet,model,object,scalar,see implementation/findings,0
+step_losses.parquet,new_token_value_residual_mean,float64,scalar,see implementation/findings,3825
+step_losses.parquet,reference_log_probability,float64,scalar,see implementation/findings,0
+step_losses.parquet,reference_token_id,int64,scalar,see implementation/findings,0
+step_losses.parquet,reference_token_position,int64,scalar,see implementation/findings,0
+step_losses.parquet,run_id,object,scalar,see implementation/findings,0
+step_losses.parquet,running_max_delta_nll,float64,scalar,see implementation/findings,0
+step_losses.parquet,sample_id,object,scalar,see implementation/findings,0
+step_losses.parquet,seed,int64,scalar,see implementation/findings,0
+step_losses.parquet,strategy,object,scalar,see implementation/findings,0
+step_losses.parquet,target_horizon,int64,scalar,teacher-forced future steps,0
+step_losses.parquet,task,object,scalar,see implementation/findings,0
+step_losses.parquet,valid,bool,scalar,see implementation/findings,0
+horizon_losses.parquet,anchor,int64,scalar,generated tokens already incorporated,0
+horizon_losses.parquet,attention_output_error_max,float64,scalar,dimensionless relative L2,0
+horizon_losses.parquet,attention_output_error_mean,float64,scalar,dimensionless relative L2,0
+horizon_losses.parquet,avg_approx_kl,float64,scalar,nats/step,0
+horizon_losses.parquet,avg_delta_nll,float64,scalar,nats/token,0
+horizon_losses.parquet,config_hash,object,scalar,see implementation/findings,0
+horizon_losses.parquet,git_commit,object,scalar,see implementation/findings,0
+horizon_losses.parquet,horizon,int64,scalar,teacher-forced future steps,0
+horizon_losses.parquet,invalid_reason,object,scalar/all-null,see implementation/findings,720
+horizon_losses.parquet,max_active_cache_tokens,int64,scalar,KV token slots/layer,0
+horizon_losses.parquet,max_approx_kl,float64,scalar,nats,0
+horizon_losses.parquet,max_delta_nll,float64,scalar,nats/token,0
+horizon_losses.parquet,model,object,scalar,see implementation/findings,0
+horizon_losses.parquet,oracle_overlap,float64,scalar,"Jaccard, [0,1]",180
+horizon_losses.parquet,peak_accelerator_bytes,int64,scalar,bytes,0
+horizon_losses.parquet,peak_rss_bytes,int64,scalar,bytes,0
+horizon_losses.parquet,replay_time_s,float64,scalar,seconds,0
+horizon_losses.parquet,run_id,object,scalar,see implementation/findings,0
+horizon_losses.parquet,sample_id,object,scalar,see implementation/findings,0
+horizon_losses.parquet,seed,int64,scalar,see implementation/findings,0
+horizon_losses.parquet,selected_core_size_mean,float64,scalar,see implementation/findings,0
+horizon_losses.parquet,selection_boundary_margin_mean,float64,scalar,see implementation/findings,0
+horizon_losses.parquet,strategy,object,scalar,see implementation/findings,0
+horizon_losses.parquet,sum_approx_kl,float64,scalar,nats,0
+horizon_losses.parquet,sum_delta_nll,float64,scalar,nats,0
+horizon_losses.parquet,task,object,scalar,see implementation/findings,0
+horizon_losses.parquet,valid,bool,scalar,see implementation/findings,0
+horizon_losses.parquet,validity_horizons,object,JSON list; example length 12,see implementation/findings,0
+temporal_signals.parquet,anchor,int64,scalar,generated tokens already incorporated,0
+temporal_signals.parquet,average_delta_nll,object,JSON list; example length 1,see implementation/findings,93690
+temporal_signals.parquet,change_point,float64,scalar,see implementation/findings,94050
+temporal_signals.parquet,change_point_method,object,scalar,see implementation/findings,93690
+temporal_signals.parquet,config_hash,object,scalar,see implementation/findings,0
+temporal_signals.parquet,cumulative_delta_nll,object,JSON list; example length 1,see implementation/findings,93690
+temporal_signals.parquet,delta_nll_curvature,object,JSON list; example length 1,see implementation/findings,93690
+temporal_signals.parquet,delta_nll_slope,object,JSON list; example length 1,see implementation/findings,93690
+temporal_signals.parquet,first_large_loss_spike,float64,scalar,see implementation/findings,94127
+temporal_signals.parquet,git_commit,object,scalar,see implementation/findings,0
+temporal_signals.parquet,head,float64,scalar,see implementation/findings,3150
+temporal_signals.parquet,lag,int64,scalar,generated-token steps,0
+temporal_signals.parquet,layer,float64,scalar,see implementation/findings,720
+temporal_signals.parquet,model,object,scalar,see implementation/findings,0
+temporal_signals.parquet,run_id,object,scalar,see implementation/findings,0
+temporal_signals.parquet,running_max_delta_nll,object,JSON list; example length 1,see implementation/findings,93690
+temporal_signals.parquet,sample_id,object,scalar,see implementation/findings,0
+temporal_signals.parquet,seed,int64,scalar,see implementation/findings,0
+temporal_signals.parquet,signal_kind,object,scalar,see implementation/findings,0
+temporal_signals.parquet,strategy,object,scalar,see implementation/findings,0
+temporal_signals.parquet,target_horizon,float64,scalar,teacher-forced future steps,93690
+temporal_signals.parquet,task,object,scalar,see implementation/findings,0
+temporal_signals.parquet,cosine_similarity,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,normalized_l2_drift,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,score_autocorrelation,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,score_max,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,score_mean,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,score_min,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,score_std,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,selection_boundary_margin_anchor,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,selection_boundary_margin_future,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,spearman_rank_correlation,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,top_core_jaccard,float64,scalar,see implementation/findings,91980
+temporal_signals.parquet,attention_distribution_cosine,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,attention_entropy,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,attention_rank_correlation,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,attention_top1_mass,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,attention_top8_mass,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,attention_top_core_overlap,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,query_cosine_to_anchor,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,query_norm_change,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,selected_core_attention_mass,float64,scalar,see implementation/findings,89550
+temporal_signals.parquet,condition_clip_floor,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,condition_number_clipped,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,condition_warning,object,scalar,see implementation/findings,93600
+temporal_signals.parquet,effective_rank,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,leading_singular_values,object,"array object; example shape (8,)",see implementation/findings,93600
+temporal_signals.parquet,selected_core_diversity,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,selected_pairwise_cosine_mean,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,selected_pairwise_cosine_std,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,selected_span_reconstruction_residual_mean,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,stable_rank,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,unselected_residual_mean,float64,scalar,see implementation/findings,93600
+temporal_signals.parquet,future_new_token_residual,float64,scalar,see implementation/findings,8820

@@ -1,0 +1,2 @@
+availability,reason
+unavailable,Time-resolved V matrices or sufficient covariance sketches were not persisted.

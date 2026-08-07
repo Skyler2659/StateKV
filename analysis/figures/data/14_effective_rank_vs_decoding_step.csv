@@ -1,0 +1,10 @@
+strategy,anchor,metric,estimate,ci_low,ci_high,n_samples,n_rows,uncertainty
+attention_weighted_v_ridge_leverage,0,effective_rank,90.95626831054688,57.70882797241211,96.83717346191406,15,90,95% sample-cluster bootstrap CI
+attention_weighted_v_ridge_leverage,16,effective_rank,92.111572265625,61.267822265625,98.2323989868164,15,90,95% sample-cluster bootstrap CI
+attention_weighted_v_ridge_leverage,48,effective_rank,94.0984992980957,65.51148796081543,100.3025894165039,15,90,95% sample-cluster bootstrap CI
+snapkv,0,effective_rank,90.95626831054688,57.70882797241211,97.8762825012207,15,90,95% sample-cluster bootstrap CI
+snapkv,16,effective_rank,92.111572265625,61.267822265625,98.23574352264404,15,90,95% sample-cluster bootstrap CI
+snapkv,48,effective_rank,94.0984992980957,65.51148796081543,100.00400667190551,15,90,95% sample-cluster bootstrap CI
+v_ridge_leverage,0,effective_rank,90.95626831054688,58.907185363769536,97.8355712890625,15,90,95% sample-cluster bootstrap CI
+v_ridge_leverage,16,effective_rank,92.111572265625,61.267822265625,98.21160125732422,15,90,95% sample-cluster bootstrap CI
+v_ridge_leverage,48,effective_rank,94.0984992980957,65.51148796081543,100.3025894165039,15,90,95% sample-cluster bootstrap CI

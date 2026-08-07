@@ -1,0 +1,23 @@
+{
+  "integrity": {
+    "checks": {
+      "all_numeric_finite": true,
+      "all_row_finite": true,
+      "no_exact_kl_predictor_parameter": true,
+      "no_truth_predictor_parameter": true,
+      "only_frozen_backend": true,
+      "only_frozen_method": true
+    },
+    "passed": true
+  },
+  "no_method_or_threshold_tuning": true,
+  "passed": true,
+  "predictor_preselected": true,
+  "row_counts": {
+    "directions": 192,
+    "response": 192,
+    "vectors": 4
+  },
+  "stage": "calibration",
+  "stage_metadata_sha256": "71f4db72edc96fcb33bd615f36fdb8fb2414baaaf9b42b99af6c3c9d0f59170b"
+}

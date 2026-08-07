@@ -1,0 +1,8 @@
+{
+  "calibration_or_test_loaded": false,
+  "errors": [],
+  "integrity_passed": true,
+  "is_primary_gate": false,
+  "stage": "formal_l3_secondary_diagnostic",
+  "state": "complete"
+}

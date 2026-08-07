@@ -1,0 +1,244 @@
+{
+  "analysis_seed": 20260724,
+  "bootstrap_draws": 2000,
+  "files": [
+    {
+      "bytes": 989,
+      "path": "david_addendum.md",
+      "sha256": "ffc6aa8fa478cb9bbf57743cd9f9d02d235a6e2548e7481f50556c8d44ef5ba1"
+    },
+    {
+      "bytes": 143047,
+      "path": "figures/01_online_leverage_core_entry_calibration.png",
+      "sha256": "185fa046d09c813eae56e76b23c0062b73c5f1c3c108846fd3078a466bf7ee9e"
+    },
+    {
+      "bytes": 133364,
+      "path": "figures/02_dense_refresh_benefit_curve.png",
+      "sha256": "1d554b9997ac6654b7c52f2affa5ac8c225e907798321fc9a9dec5a398cbe063"
+    },
+    {
+      "bytes": 79837,
+      "path": "figures/03_online_leverage_vs_refresh_benefit.png",
+      "sha256": "bb9fe6b90884c48629aaac6469287eaf22b5a5d29beb061e372b916827111292"
+    },
+    {
+      "bytes": 81375,
+      "path": "figures/04_online_leverage_vs_stale_loss.png",
+      "sha256": "bc47729b2fe3e7aa3258be24c12bebf01e68d3ea6113935e15e59b35ecf00d26"
+    },
+    {
+      "bytes": 106581,
+      "path": "figures/05_online_leverage_vs_rank_change.png",
+      "sha256": "b5fcd79b55daab3d4177725f7b269ee1fe9eab03365c5dbe0dc14e623c7a5d11"
+    },
+    {
+      "bytes": 93148,
+      "path": "figures/06_recent_window_exit_refresh_benefit.png",
+      "sha256": "548dfb797d488ba556b6211ee131d6b32bcebcfbc80ca8b7bf3f8305cb56494f"
+    },
+    {
+      "bytes": 138169,
+      "path": "figures/07_recent_window_exit_core_entry.png",
+      "sha256": "ae2b4c7c4af82f746842594e2f2a8585cfd3d415b925befe79246099c9cc4240"
+    },
+    {
+      "bytes": 73789,
+      "path": "figures/08_online_leverage_entry_auc.png",
+      "sha256": "ac874540e611bd6afbd148174818fd57797f40276bcec2d549bf7ae494583c70"
+    },
+    {
+      "bytes": 1804,
+      "path": "figures/data/01_online_leverage_core_entry_calibration.csv",
+      "sha256": "312d5a0eb7f6600060ac3410fc3245a81e565fb01a79fa8e4fdc6d615800e11c"
+    },
+    {
+      "bytes": 6485,
+      "path": "figures/data/01_online_leverage_core_entry_calibration.parquet",
+      "sha256": "00db9d7a613720cee3d747288be39ae3fa685796971b008334ab5228edc42f96"
+    },
+    {
+      "bytes": 3886,
+      "path": "figures/data/02_dense_refresh_benefit_curve.csv",
+      "sha256": "c544764d1503db85de02d6fbbc3bf0af8384fd9cf3ebf2c5d753691f27f0e476"
+    },
+    {
+      "bytes": 6995,
+      "path": "figures/data/02_dense_refresh_benefit_curve.parquet",
+      "sha256": "ce5facd0615644eccda1c3d81079fd7ffd5f6376891d2c8ae22dd78c7742e467"
+    },
+    {
+      "bytes": 671441,
+      "path": "figures/data/03_online_leverage_vs_refresh_benefit.csv",
+      "sha256": "c4b566b2a59d2f21a907062bdac4329bc1e4b61a2966643d1626b457f76ada1d"
+    },
+    {
+      "bytes": 132909,
+      "path": "figures/data/03_online_leverage_vs_refresh_benefit.parquet",
+      "sha256": "825ea4e02fda56d90333bc603be9f391869cbca97b00ea420be9f62e9b00e272"
+    },
+    {
+      "bytes": 671436,
+      "path": "figures/data/04_online_leverage_vs_stale_loss.csv",
+      "sha256": "d4b9b1952764936a71d0bc58122588a14ef0cc4052ee9aca8e39d8db0d5eb878"
+    },
+    {
+      "bytes": 132915,
+      "path": "figures/data/04_online_leverage_vs_stale_loss.parquet",
+      "sha256": "4beb4e85ae3d89e6f93fc5356f6b5a2b87c3b87a280177f3bc96a503a78c7bc9"
+    },
+    {
+      "bytes": 223296,
+      "path": "figures/data/05_online_leverage_vs_rank_change.csv",
+      "sha256": "dc4677ef05d43816d4e4d9e9bde9509b46e161dd1a53880152d9c8fa139bbe59"
+    },
+    {
+      "bytes": 65623,
+      "path": "figures/data/05_online_leverage_vs_rank_change.parquet",
+      "sha256": "85817321b248079a7d00d847993ff5489516bf99fb034a3a4c3b779842955aa7"
+    },
+    {
+      "bytes": 1507,
+      "path": "figures/data/06_recent_window_exit_refresh_benefit.csv",
+      "sha256": "7bd655a51e47e188292e1ca5c7571c396e30951099feaf3647eb9135500554e4"
+    },
+    {
+      "bytes": 6689,
+      "path": "figures/data/06_recent_window_exit_refresh_benefit.parquet",
+      "sha256": "d9aec755fdf39d9cc69252f872ba78de855aa46216d74b78428784b867808e83"
+    },
+    {
+      "bytes": 1410,
+      "path": "figures/data/07_recent_window_exit_core_entry.csv",
+      "sha256": "6ff1976e5c4eb9523e373b64c40da5882d0306be9f873f6ecd6750cb6faeb74a"
+    },
+    {
+      "bytes": 6680,
+      "path": "figures/data/07_recent_window_exit_core_entry.parquet",
+      "sha256": "1239e0c00eb11acf647d9a3b4609c058f46ca83d37579f90cf29a631e52c0324"
+    },
+    {
+      "bytes": 1320,
+      "path": "figures/data/08_online_leverage_entry_auc.csv",
+      "sha256": "344f95b8089c445c46e3983e8bd6bd7e34480d2cda455efe9a96ed7b2476acfa"
+    },
+    {
+      "bytes": 8370,
+      "path": "figures/data/08_online_leverage_entry_auc.parquet",
+      "sha256": "8a9f56ebb997b271233c5ab4835eccfb8a68cf8d3f042f3086c315e30e6c645f"
+    },
+    {
+      "bytes": 1418,
+      "path": "final_report_addendum.md",
+      "sha256": "2e2fc68184cfcbbccf421235ac59065e2b4b7f1e69106be23be056934037dcd5"
+    },
+    {
+      "bytes": 1150,
+      "path": "hypothesis_evidence_updates.csv",
+      "sha256": "8e23b39d45912a5173a53713f51923700bebb75143ae2c51c4ec5223a4b64dd3"
+    },
+    {
+      "bytes": 5782,
+      "path": "hypothesis_evidence_updates.parquet",
+      "sha256": "99114d82a44d027619a7cc7d7946304144ba931278a98070cd9dbe8e3c347237"
+    },
+    {
+      "bytes": 5790,
+      "path": "mechanism_targeted_report.md",
+      "sha256": "712ded46ca4613500619d003601c80751f93ddea916a7925597ba09e37138313"
+    },
+    {
+      "bytes": 14438,
+      "path": "tables/dense_refresh_summaries.csv",
+      "sha256": "dea22780cb00c2c251f5f67ee2f224b492f1a9a74d823aa2333cc28ab13fa168"
+    },
+    {
+      "bytes": 9054,
+      "path": "tables/dense_refresh_summaries.parquet",
+      "sha256": "70728e9a0a9d2aa8387899924b31a58ebc11aaac322134ad7781349cc270e763"
+    },
+    {
+      "bytes": 320,
+      "path": "tables/mechanism_data_quality.csv",
+      "sha256": "561154a4670c0e96cd621af0acb2b981499a32ad108c246d86c3c0f3f1945605"
+    },
+    {
+      "bytes": 3010,
+      "path": "tables/mechanism_data_quality.parquet",
+      "sha256": "2509566a2149a06c71fd9565ea6a363783c8958a06a594a50f97db9752ffac83"
+    },
+    {
+      "bytes": 79376,
+      "path": "tables/old_sparse_boundary_reproduction.csv",
+      "sha256": "3fbaacd5662c7ebcc4d3914a3a3f8ec8fc20c32dd6b71ad1224f9009ab62579b"
+    },
+    {
+      "bytes": 35060,
+      "path": "tables/old_sparse_boundary_reproduction.parquet",
+      "sha256": "311aa855610adee7e8cc757b61c4a734601bd86729de21c751fe8e1d03fb12f5"
+    },
+    {
+      "bytes": 1804,
+      "path": "tables/online_leverage_entry_calibration.csv",
+      "sha256": "312d5a0eb7f6600060ac3410fc3245a81e565fb01a79fa8e4fdc6d615800e11c"
+    },
+    {
+      "bytes": 6485,
+      "path": "tables/online_leverage_entry_calibration.parquet",
+      "sha256": "00db9d7a613720cee3d747288be39ae3fa685796971b008334ab5228edc42f96"
+    },
+    {
+      "bytes": 1320,
+      "path": "tables/online_leverage_entry_prediction.csv",
+      "sha256": "344f95b8089c445c46e3983e8bd6bd7e34480d2cda455efe9a96ed7b2476acfa"
+    },
+    {
+      "bytes": 8370,
+      "path": "tables/online_leverage_entry_prediction.parquet",
+      "sha256": "8a9f56ebb997b271233c5ab4835eccfb8a68cf8d3f042f3086c315e30e6c645f"
+    },
+    {
+      "bytes": 8055,
+      "path": "tables/online_leverage_mechanism_links.csv",
+      "sha256": "d4230d9143e5e1b58c7ec4febc93f591eb23f4a6123693e675aa8ba2704ca82f"
+    },
+    {
+      "bytes": 11959,
+      "path": "tables/online_leverage_mechanism_links.parquet",
+      "sha256": "967733ade0e49d05a46db37bc42e85af4e8b0fdbe6397fdba3deba3d943429e6"
+    },
+    {
+      "bytes": 1507,
+      "path": "tables/recent_exit_aligned_summary.csv",
+      "sha256": "7bd655a51e47e188292e1ca5c7571c396e30951099feaf3647eb9135500554e4"
+    },
+    {
+      "bytes": 6689,
+      "path": "tables/recent_exit_aligned_summary.parquet",
+      "sha256": "d9aec755fdf39d9cc69252f872ba78de855aa46216d74b78428784b867808e83"
+    },
+    {
+      "bytes": 4629,
+      "path": "tables/recent_exit_paired_effects.csv",
+      "sha256": "fd0cb57d78eeaaf396aa5dd4d56b223fa8aa49fd1f6b4f7ef0554f7ff9fcd2e9"
+    },
+    {
+      "bytes": 6117,
+      "path": "tables/recent_exit_paired_effects.parquet",
+      "sha256": "a199127fdf9acaa66e4412634b5e81a4d5acc6700390bf13d0f409914c59f5a3"
+    },
+    {
+      "bytes": 14372,
+      "path": "tables/recent_exit_paired_observations.csv",
+      "sha256": "62852dbc34d311d415bb973807f4d82308061398d4b3f49c8e7d72679ed14203"
+    },
+    {
+      "bytes": 18466,
+      "path": "tables/recent_exit_paired_observations.parquet",
+      "sha256": "fe982ca60ebe37c0fc3443cf70c0b16d893d04442303862e0c7a66f6d0fc61a1"
+    }
+  ],
+  "input_run": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/mechanism_targeted_4bit_seed42_v1",
+  "n_files": 47,
+  "n_samples": 15
+}

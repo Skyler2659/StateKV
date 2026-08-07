@@ -1,0 +1,31 @@
+include:
+  - ../runtime/cuda_3090.yaml
+  - ../models/qwen25_7b_instruct.yaml
+  - ../benchmarks/scbench.yaml
+  - ../protocols/query_agnostic_single.yaml
+  - ../methods/v_leverage_l2.yaml
+
+model:
+  prompt_format: plain
+
+budget:
+  cache_budget: 256
+  sink_size: 4
+  recent_size: 64
+  protect_current: true
+  scope: total_kv
+  unit: shared_token_positions
+
+generation:
+  max_new_tokens: 64
+  do_sample: false
+  temperature: 0.0
+  top_p: 1.0
+  stop_on_eos: true
+  compute_teacher_forced_ppl: false
+
+output:
+  root: results
+  experiment_name: scbench_query_agnostic_single
+  run_id: null
+  overwrite: false

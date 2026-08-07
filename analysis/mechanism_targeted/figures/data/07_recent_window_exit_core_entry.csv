@@ -1,0 +1,10 @@
+strategy,relative_to_exit,metric,statistic,estimate,ci_low,ci_high,n_samples,n_rows,uncertainty
+attention_weighted_v_ridge_leverage,-1,selected_in_refreshed_core_layer_fraction,mean,0.0,0.0,0.0,15,15,95% sample-cluster bootstrap CI
+attention_weighted_v_ridge_leverage,0,selected_in_refreshed_core_layer_fraction,mean,0.6214285714285714,0.4379761904761904,0.8048214285714284,15,15,95% sample-cluster bootstrap CI
+attention_weighted_v_ridge_leverage,1,selected_in_refreshed_core_layer_fraction,mean,0.6071428571428572,0.4142857142857143,0.7857738095238093,15,15,95% sample-cluster bootstrap CI
+snapkv,-1,selected_in_refreshed_core_layer_fraction,mean,0.0,0.0,0.0,15,15,95% sample-cluster bootstrap CI
+snapkv,0,selected_in_refreshed_core_layer_fraction,mean,0.9976190476190475,0.9928571428571427,1.0,15,15,95% sample-cluster bootstrap CI
+snapkv,1,selected_in_refreshed_core_layer_fraction,mean,0.9976190476190475,0.9928571428571428,1.0,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,-1,selected_in_refreshed_core_layer_fraction,mean,0.0,0.0,0.0,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,0,selected_in_refreshed_core_layer_fraction,mean,0.8523809523809525,0.7095238095238094,0.9761904761904762,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,1,selected_in_refreshed_core_layer_fraction,mean,0.8238095238095239,0.6642857142857145,0.9523809523809523,15,15,95% sample-cluster bootstrap CI

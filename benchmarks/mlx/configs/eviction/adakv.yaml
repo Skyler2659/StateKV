@@ -1,0 +1,12 @@
+method: "adakv"
+cache_size: 256
+sink_size: 0
+recent_size: 0
+update_policy: "prefill_only"
+update_interval: 0
+observation_window: 32
+window_size: 32
+pooling_kernel: 5
+pooling_method: "maxpool"
+adakv_safeguard_alpha: 0.2
+score_normalization: "none"

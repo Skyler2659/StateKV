@@ -1,0 +1,5 @@
+method: "vnorml2"
+cache_size: 256
+sink_size: 0
+recent_size: 0
+score_normalization: "none"

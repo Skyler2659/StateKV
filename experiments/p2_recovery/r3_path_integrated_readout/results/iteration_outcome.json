@@ -1,0 +1,9 @@
+{
+  "iteration": "r3_path_integrated_readout",
+  "outcome": "C",
+  "formal_all_gates_passed": true,
+  "replication_decision_passed": true,
+  "replication_vector_passed": false,
+  "full_vector_closure": false,
+  "next_iteration": "r4_scalar_decision_risk"
+}

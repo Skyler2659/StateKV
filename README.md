@@ -1,270 +1,239 @@
-# L1 Robust KV Cache
+# StateKV
 
-Research code for KV cache eviction experiments on long-context language-model
-inference, with a focus on geometric token importance signals such as L1/L2
-leverage scores and their complementarity with attention-based selection.
+**State-conditioned physical risk for KV-cache selection and refresh.**
 
-The current main backend is MLX/MLX-LM 4-bit inference on Apple Silicon. The
-project is organized for reproducible paper-style benchmarking rather than one
-off demos: methods are registered through a central eviction registry, models
-are described through model configs/adapters, and benchmark outputs share a
-common result schema.
+StateKV studies how a concrete KV-cache action changes model-output risk under
+the observed compressed state created by earlier cache decisions. Selection
+chooses among candidate actions in that state; refresh decides when state
+evolution makes an earlier choice unreliable. L1/L2 leverage, attention,
+SnapKV, H2O, value norm, age, Fisher and related geometry are retained as
+baselines, candidate generators or diagnostics, not as StateKV itself.
 
-## Research Question
+This is the repository's only Markdown document. Detailed machine-readable
+evidence remains in manifests, ledgers, YAML, JSON, CSV and Parquet artifacts.
 
-The working hypothesis is:
+## Scientific scope
 
-> KV cache importance is not fully explained by accumulated attention. Some
-> semantically critical or evidence-bearing tokens are better captured by
-> geometric structure in the key/value cache matrix, and L1/L2 leverage-style
-> scores can be combined with attention to improve tight-budget retention.
-
-The codebase is built to test this through:
-
-- controlled retrieval tasks such as RULER NIAH,
-- state-tracking tasks such as RULER variable tracking,
-- real long-context QA/summarization tasks from LongBench,
-- overlap, rank-correlation, evidence recall, latency, and case-study analyses.
-
-## Main Entry Points
+Repeated cache compression is a sequential intervention:
 
 ```text
-scripts/run_benchmark.py        main benchmark runner
-scripts/run_analysis.py         post-hoc tables, overlap, rank correlation, cases
-scripts/plot_results.py         standard figures from a completed run directory
-scripts/run_profile.py          latency and cache-overhead profiling
-scripts/run_paper_qwen25_7b_8subsets.sh
-                                official 8-subset experiment plan
-scripts/run_ruler_niah_qwen25_7b.sh
-                                official RULER NIAH diagnostic
-scripts/run_ruler_vt_qwen25_7b.sh
-                                official RULER variable-tracking diagnostic
-scripts/run_longbench_hotpotqa_qwen25_7b.sh
-                                LongBench HotpotQA diagnostic
+compression history
+  -> observed compressed state
+  -> candidate retained/deletion action
+  -> state-conditioned physical risk
+  -> selection validity
+  -> refresh decision
 ```
 
-`benchmark.py` and the top-level legacy cache folders are preserved for
-historical comparison, but the paper path should use `scripts/run_benchmark.py`.
+A static token score omits the first term. Earlier evictions can change later
+queries, attention, residual streams and KV contents, so the same candidate can
+have different risk in different compressed states. StateKV separates:
 
-## Install
+1. candidate generation using attention, leverage, age or other selectors;
+2. risk evaluation under the current functional or physical state;
+3. selection and refresh policy driven by that risk object.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+The strongest current positive results are deliberately narrow:
 
-For Apple Silicon experiments, verify MLX/MLX-LM is installed in the same
-environment. The local scripts default to `.venv/bin/python`.
+- A controlled reference-dependent evaluator closes scalar ranking for frozen
+  retained-set candidate pools after exact deletion injection, finite-action
+  transport and state-local KL/Fisher readout.
+- A same-state physical evaluator closes candidate ranking for an observed
+  compressed prequery state under the frozen singleton-deletion protocol.
+- Dense all-layer mechanism evidence transfers across the limited tested
+  model/task scope, while the successful candidate-specific teacher remains too
+  expensive to be an online policy.
 
-## Repository Layout
+The repository does not yet establish a deployable low-cost controller,
+subset-level physical closure, free-generation quality preservation, or full
+latency/memory/throughput gains. Same-step KL is an evaluator target, not a
+substitute for downstream generation quality.
+
+Important negative results are preserved as scientific evidence:
+
+- controlled single-boundary risk does not directly transfer across propagated
+  all-layer physical histories;
+- full-vector reconstruction did not replicate where scalar ranking did;
+- static single-/multi-boundary geometry and low-dimensional summaries did not
+  replace candidate-conditioned deep response;
+- the successful late boundary on one model is not a universal rule.
+
+## Repository layout
 
 ```text
-configs/
-  experiments/
-    paper/qwen25_7b/          final 8-subset Qwen2.5-7B plan
-    diagnostics/ruler/        focused official RULER configs
-    diagnostics/longbench/    focused LongBench configs
-    ablations/niah/           decode/prefill and NIAH ablations
-    matrix/                   model x benchmark x method matrix configs
-    dev/                      small sanity configs used by tests
-    archive/legacy/           old exploratory configs, kept out of main path
-  eviction/                   one YAML per single eviction method
-  eviction/groups/            method-group templates
-  models/                     MLX model adapter/config fragments
-  models/hf/                  legacy HuggingFace/Torch model fragments
-src/
-  eviction/                   registry and method implementations
-  runners/mlx_runner.py       MLX 4-bit generation, cache editing, scoring
-  benchmarks/                 NIAH, RULER, LongBench adapters
-  evaluation/                 official-style RULER and LongBench metrics
-  analysis/                   overlap, rank correlation, evidence recall, cases
-  visualization/              plots and heatmaps
-results/
-  mlx_qwen25_7b_inst_4bit/ruler/20260611_225910
-  mlx_qwen25_7b_inst_4bit/ruler/20260615_223853
+statekv/               canonical StateKV implementation
+statekv/io/            artifact, schema and provenance interfaces
+configs/               active, staged and frozen StateKV configurations
+scripts/               StateKV experiment, validation and analysis entrypoints
+experiments/           frozen phase code, manifests, ledgers and result data
+benchmarks/mlx/        Apple-Silicon benchmark and baseline harness
+benchmarks/torch/      protocol-aware PyTorch/CUDA benchmark
+analysis/              structured StateKV analysis pipeline and tables
+results/               StateKV discovery and mechanism artifacts
+artifacts/             run-registry schema and artifact governance
+tests/                 unit, architecture, provenance and golden tests
 ```
 
-Only two completed research runs are currently kept in `results/`:
+The benchmark projects are supporting infrastructure. They must not import
+phase-specific experiment code or define the StateKV research claim. New shared
+research logic belongs under `statekv/`; new backend-specific execution logic
+belongs under `benchmarks/<backend>/`.
 
-- `20260611_225910`: official RULER NIAH single-needle, 900 rows.
-- `20260615_223853`: official RULER variable tracking, 240 rows.
+The repository has no compatibility symlinks. Code uses canonical paths such as
+`benchmarks/torch`, `configs/frozen` and `experiments/<phase>` directly.
 
-All temporary smoke, partial LongBench, and exploratory result folders were
-removed to keep the workspace clean.
+## Installation
 
-## Eviction Methods
-
-Methods are registered in `src/eviction/registry.py`. Each method carries
-metadata for method family, backend support, attention requirements, score
-requirements, approximate/experimental status, and oracle status.
-
-Core paper methods:
-
-```text
-full
-random
-recency
-sink_recent
-attention
-snapkv
-compactor
-pyramidkv
-l2_prefill_only
-l2_key_prefill_only
-l2_leverage
-l1_prefill_only
-l1_leverage
-attention_l2
-attention_l1
-```
-
-Additional supported or scaffolded baselines include windowed/decayed attention,
-H2O-style attention, key/value L1/L2 norm, ridge/approximate leverage, clustering
-and outlier baselines, weighted hybrids, budget-split hybrids, and oracle
-sanity-check methods. Unsupported methods must skip explicitly with an
-`unsupported_reason`; they should not silently fall back to another signal.
-
-## Running Checks
-
-Fast unit tests:
+The current local environment is Python 3.9 based and uses both backend
+projects. Install in this order:
 
 ```bash
-PYTHONPATH=. .venv/bin/python -m pytest tests/test_p0.py -q
+python -m venv .venv
+.venv/bin/python -m pip install -e benchmarks/torch
+.venv/bin/python -m pip install -e benchmarks/mlx
+.venv/bin/python -m pip install -e .
 ```
 
-Framework smoke test with temporary output under `/tmp`:
+Backend requirements are declared separately in:
+
+- `pyproject.toml`
+- `benchmarks/mlx/pyproject.toml`
+- `benchmarks/torch/pyproject.toml`
+
+Model-scale work additionally requires local model weights, dataset access and
+appropriate MPS or CUDA hardware. Unit-test success alone does not validate a
+full model run.
+
+## Verification
+
+Run all automated suites without writing pytest caches into the repository:
 
 ```bash
-PYTHONPATH=. .venv/bin/python scripts/smoke_test.py
+PYTHONPYCACHEPREFIX=/tmp/statekv-pycache \
+  .venv/bin/python -m pytest -q -p no:cacheprovider
+
+cd benchmarks/mlx
+PYTHONPYCACHEPREFIX=/tmp/statekv-mlx-pycache \
+  ../../.venv/bin/python -m pytest -q -p no:cacheprovider
+
+cd ../torch
+PYTHONPYCACHEPREFIX=/tmp/statekv-torch-pycache \
+  ../../.venv/bin/python -m pytest -q -p no:cacheprovider
 ```
 
-MLX 15-method sanity test on Qwen2.5-0.5B 4-bit:
+Static syntax and dependency checks:
 
 ```bash
-TOKENIZERS_PARALLELISM=false PYTHONPATH=. .venv/bin/python scripts/run_benchmark.py \
-  --config configs/experiments/dev/qwen25_05b_mlx_method_sanity.yaml \
-  --skip_analysis
+PYTHONPYCACHEPREFIX=/tmp/statekv-compile \
+  .venv/bin/python -m compileall -q statekv scripts tests experiments benchmarks
+.venv/bin/python -m pip check
 ```
 
-This sanity config writes to `/tmp/l1_robust_kv_cache_smoke` and does not
-pollute `results/`.
+Five golden tests are intentionally skipped until a researcher exports audited
+`frozen_v1` fixtures. No cache tensor, logit, risk value or ranking is fabricated
+to make those tests pass.
 
-## Running Experiments
+## Main StateKV entrypoints
 
-Official RULER NIAH diagnostic:
+Mechanism-discovery and state-evolution runs:
 
-```bash
-bash scripts/run_ruler_niah_qwen25_7b.sh
-```
+| Purpose | Entrypoint | Configuration |
+|---|---|---|
+| Temporal discovery | `scripts/run_temporal_discovery.py` | `configs/discovery/discovery_small.yaml` |
+| Functional probe | `scripts/run_functional_probe.py` | `configs/discovery/functional_probe_stage1_4bit.yaml` |
+| Mechanism-targeted analysis | `scripts/run_mechanism_targeted.py` | `configs/discovery/mechanism_targeted_4bit.yaml` |
+| Gauge geometry | `scripts/run_gauge_geometry.py` | `configs/stages/gauge_geometry_config.yaml` |
+| Independent Fisher | `scripts/run_independent_fisher.py` | `configs/stages/independent_fisher_config.yaml` |
+| Output sensitivity | `scripts/run_output_sensitivity.py` | `configs/stages/output_sensitivity_config.yaml` |
+| Robust envelope | `scripts/run_robust_envelope.py` | `configs/stages/robust_envelope_config.yaml` |
+| Trajectory model | `scripts/run_trajectory_model.py` | `configs/stages/trajectory_model_config.yaml` |
+| Theory closing | `scripts/run_theory_closing.py` | `configs/stages/theory_closing_config.yaml` |
 
-Official RULER variable tracking diagnostic:
+Reusable logic is implemented in `statekv/backend.py`, `backend_mlx.py`,
+`mechanism.py`, `selectors.py`, `signals.py`, `metrics.py`,
+`functional_probe.py`, `gauge_geometry.py`, `independent_fisher.py`,
+`output_sensitivity.py`, `robust_envelope.py`, `trajectory_model.py` and
+`theory_closing.py`.
 
-```bash
-bash scripts/run_ruler_vt_qwen25_7b.sh
-```
+Backend benchmark entrypoints remain under `benchmarks/mlx/scripts` and
+`benchmarks/torch/scripts`. Historical MLX benchmark outputs were removed from
+the working tree; StateKV result data remains under
+`results/temporal_cache_discovery`.
 
-LongBench HotpotQA diagnostic:
+## Frozen evidence registry
 
-```bash
-bash scripts/run_longbench_hotpotqa_qwen25_7b.sh
-```
+`experiments/frozen_registry.yaml` is the repository-level inventory. Each
+phase manifest remains authoritative for the exact evaluation-time protocol,
+checksums and bounded claim.
 
-Full 8-subset Qwen2.5-7B plan:
+| Phase | Status | Manifest |
+|---|---|---|
+| Predictive closure | frozen negative evidence | `experiments/predictive_closure/experiment_manifest.yaml` |
+| Local truncated Jacobian | frozen boundary evidence | `experiments/local_truncated_jacobian/EXPERIMENT_MANIFEST.yaml` |
+| P0-v2 fixed boundary | frozen positive evidence | `experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml` |
+| P1 state-conditioned | frozen boundary evidence | `experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml` |
+| P2 state-local risk | frozen negative evidence | `experiments/p2_state_local_risk/P2_STATE_LOCAL_MANIFEST.yaml` |
+| P2 recovery | frozen recovery evidence | `experiments/p2_recovery/P2_RECOVERY_MANIFEST.yaml` |
+| P3 decision validity | frozen negative evidence | `experiments/p3_decision_validity/P3_DECISION_VALIDITY_MANIFEST.yaml` |
+| P3 physical recovery | frozen recovery evidence | `experiments/p3_physical_recovery/P3_PHYSICAL_RECOVERY_MANIFEST.yaml` |
+| P3PR generalization | frozen generalization evidence | `experiments/p3pr_generalization/P3PR_GENERALIZATION_MANIFEST.yaml` |
 
-```bash
-bash scripts/run_paper_qwen25_7b_8subsets.sh
-```
+Negative evidence is not a failed run. Failed, interrupted, smoke and obsolete
+protocol artifacts remain distinct statuses.
 
-The 8-subset plan is expensive. Run focused diagnostics before launching the
-whole script.
+Historical Markdown reports have been retired from the checkout. Their paths
+and SHA-256 values are recorded in `experiments/retired_documents.yaml`.
+Evaluation-time filenames and hashes remain unchanged inside phase manifests;
+`statekv/repository_layout.py` distinguishes an intentionally retired document
+from an unrecorded missing source. Path-only source migrations are separately
+bound in `experiments/layout_migrations.yaml`.
 
-## Results and Analysis
+## Reproducibility rules
 
-A completed run directory contains:
+Do not rerun a frozen experiment into its original results directory. For a new
+run:
 
-```text
-config.yaml
-env.json
-model_info.json
-results.jsonl
-summary.json
-metrics.csv
-samples/
-selected_tokens/
-scores/
-analysis/
-figures/
-```
+1. copy the relevant frozen configuration into a new experiment/config ID;
+2. choose a new output directory;
+3. record random seeds and deterministic settings;
+4. record model and tokenizer identifiers plus immutable revisions;
+5. record dataset identifiers, revisions and exact sample IDs;
+6. record the Git commit and dirty-diff hash;
+7. save the executed command and resolved configuration;
+8. write structured JSON/CSV/Parquet artifacts and a run record conforming to
+   `artifacts/registry.schema.yaml`;
+9. classify the result as complete, negative-result, failed-run,
+   interrupted-run, obsolete-protocol, smoke or in-progress.
 
-Generate or refresh figures:
+The frozen P0/P1/P2 inputs live under `configs/frozen`. New discovery configs
+belong under `configs/discovery`; later risk-model stages belong under
+`configs/stages`. Generic cache-method/model/task benchmark configs belong under
+their backend project, not under the StateKV config root.
 
-```bash
-PYTHONPATH=. .venv/bin/python scripts/plot_results.py --run-dir <run_dir>
-```
+## Data and output policy
 
-Run post-hoc analysis:
+- `results/temporal_cache_discovery` contains StateKV raw and derived mechanism
+  artifacts. Large Parquet/CSV candidate, trajectory, Fisher and sensitivity
+  tables are research data, not source code.
+- `analysis/tables` and `analysis/figures` contain derived paper-analysis
+  material.
+- `experiments/<phase>/results` contains frozen phase artifacts.
+- Generic benchmark outputs belong under `benchmarks/<backend>/results` and are
+  disposable when reproducible and not selected as paper evidence.
+- Future raw, derived and failed payloads should follow the schemas under
+  `artifacts/` or live in an external artifact store.
 
-```bash
-PYTHONPATH=. .venv/bin/python scripts/run_analysis.py --input <run_dir> --config configs/analysis/basic.yaml
-```
+The repository intentionally keeps exactly one Markdown file: this README.
+Intermediate explanations, meeting notes, duplicated reports, figure indexes,
+backend mini-READMEs and generated Markdown summaries must not be added. Put
+machine-consumable results in JSON, YAML, CSV or Parquet and update this README
+only when repository-wide guidance changes.
 
-The plotting script supports arbitrary method names and produces accuracy,
-official-score, latency, overlap, position-distribution, and model-method
-heatmaps when the corresponding data exists.
+## Citation and license
 
-## Current Completed Results
+The StateKV paper is in preparation and has no archival citation identifier.
+Until one is published, cite the repository commit and the relevant frozen
+experiment manifest. Do not cite the earlier L1/geometry project title as the
+StateKV method name.
 
-RULER NIAH, `results/mlx_qwen25_7b_inst_4bit/ruler/20260611_225910`:
-
-- 15 methods x 3 budgets x 20 samples = 900 rows.
-- Official dataset flag is true for all rows.
-- No skipped rows or hook errors.
-- L1/L2 leverage and attention hybrids achieve 100 across budgets in this
-  diagnostic; attention improves with budget; recency and random are weak.
-
-RULER variable tracking, `results/mlx_qwen25_7b_inst_4bit/ruler/20260615_223853`:
-
-- 8 methods x 3 budgets x 10 samples = 240 rows.
-- Official dataset flag is true for all rows.
-- No skipped rows or hook errors.
-- At budget 256, geometric prefill methods and attention hybrids are strong;
-  by 512/1024, attention catches up.
-
-These runs are useful evidence for mechanism analysis and method comparison, but
-paper main tables should use fixed-seed random or stratified sampling rather
-than always taking the first N official samples.
-
-## Important Semantics
-
-- For standard eviction methods, `budget` is a total live KV budget.
-- For `snapkv`, `pyramidkv`, and `compactor`, `cache_budget_scope` is
-  `prompt_prefill`: the prompt cache is compressed during prefill, then generated
-  decode tokens can append. This is recorded in results and sanity checks.
-- LongBench HotpotQA with Qwen Instruct should use `prompt_format.mode:
-  chat_template` while keeping `use_official_prompt: true`. This avoids verbose
-  answer dilution without changing the official prompt text.
-- LongBench tasks generally do not provide gold evidence token spans, so
-  evidence recall is meaningful for NIAH/RULER-style evidence-tracked tasks but
-  not for most LongBench tasks.
-
-## Known Limitations
-
-- MLX manual cache editing is a research runner path, not a production cache
-  kernel.
-- Some geometric baselines are scaffolded but marked unsupported on MLX if the
-  required signal is unavailable or too expensive.
-- `hidden_l2_norm` is unsupported on MLX because hidden states are not exposed
-  through the current cache-editing interface.
-- Oracle methods are for upper bounds and sanity checks only; exclude them from
-  fair comparison tables unless explicitly requested.
-- The existing kept RULER runs are strong diagnostics, not the final full paper
-  benchmark suite.
-
-## Development Notes
-
-Use `rg` for code search, keep configs in the organized experiment folders, and
-write new methods through the registry rather than adding special cases in the
-benchmark loop. New methods should expose consistent score stats, selected
-tokens, unsupported reasons, and method metadata.
+The project license is in `LICENSE`.

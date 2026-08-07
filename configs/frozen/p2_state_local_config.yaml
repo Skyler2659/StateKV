@@ -1,0 +1,285 @@
+schema_version: 1
+experiment: p2_state_local_risk_closure_and_geometry_attribution
+protocol_status: design_data_gates_and_numeric_calibration_frozen
+design_frozen_at: "2026-07-27T00:00:00+08:00"
+numeric_calibration_status: frozen
+numeric_calibration_frozen_at: "2026-07-27T22:23:59+08:00"
+
+scope:
+  observed_history_state: true
+  fixed_current_step: true
+  boundary: "b=(layer+1,input)"
+  isolated_current_single_layer_action: true
+  controlled_full_downstream_context: true
+  same_step_output_risk: true
+  state_local_geometry_attribution: true
+  prohibited:
+    - state_prediction
+    - temporal_transition
+    - horizon_risk
+    - future_query
+    - future_attention
+    - refresh_controller
+    - detector
+    - low_rank_update
+    - candidate_subspace_method
+    - free_generation
+    - joint_multilayer_action
+    - physical_history_transfer
+    - new_selector
+    - task_level_benchmark
+    - online_policy
+    - post_formal_threshold_tuning
+
+source_integrity:
+  p0:
+    outcome: A
+    manifest_path: experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml
+    manifest_sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
+    manifest_entry_count: 53
+    config_sha256: bbf03214f9af4074ff541966f3f5f2a8ea13b589f146bc2517a285ed3a3469d8
+    results_sha256: 9b2280b531e61c13be016a6b0934d3016399852e8cac5f92f5b65bf17fc165ed
+    core_sha256: db945e8d27c30b63f245068c708aa0600a4f6112ad1054b00afc4514eaeb92c9
+    runner_sha256: c48f81439eb83245ca460ff4690d0a5e6b128c64a89ba7bcbfabeebecb4eb21c
+  p1:
+    outcome: C
+    manifest_path: experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml
+    manifest_sha256: e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1
+    manifest_entry_count: 74
+    config_sha256: 21ca1590606d7bcd135635122c347f46eec4232e06e293a76bf82bf458533226
+    results_sha256: b3f8f62e43e6ed6c8e0ef1b784f91d26c46403c18a05874e0383ef8294bcb4b7
+    core_sha256: 31d9938b48c79f521cb3723e613e51d8ac9dc01e4e41afd18eacfdee327f05d7
+    runner_sha256: 8a35f9547a45f115b93e6d10481de7aa26d4e655c3f8468949bbe8e8ee69d7d1
+    analyzer_sha256: ae636ab598f90953365dd27c43056028ea9260a346024caed2a28abaa59348ca
+    state_operating_rows_sha256: 9a0a350825250039f3e17965b2bfd43a5c1c1b9d42c80b18ead6b625cabac90e
+    state_operating_summary_sha256: b943c89d738e7e0a32a94110303135e089054b88da9278e2749ac263e6608bcf
+
+model:
+  source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  revision: 8b403126fc14f14cfc99bb4cfa72ecbc129ea677
+  checkpoint_storage: 4bit
+  execution_weights: dequantized_float32
+  activations: float32
+  anchor_kv: float32
+  replay_kv: float32
+  local_files_only: true
+  prompt_format: chat_template
+
+data:
+  tasks: [gov_report, ruler_niah]
+  gov_report:
+    dataset_name: THUDM/LongBench
+    dataset_config: gov_report
+    split: test
+    max_words: 700
+  ruler_niah:
+    context_length: 768
+  scan:
+    rule: smallest_four_successful_ids_strictly_greater_than_81
+    scanned_ids: [82, 83, 84, 85]
+    required_generated_tokens: 66
+    required_anchors: [16, 24, 32, 40, 48, 56, 64]
+    all_constructed: true
+  smoke:
+    gov_report_indices: [80]
+    niah_offsets: [80]
+    target_anchors: [48]
+    layers: [14]
+    candidate_sources: [attention_only, random_reference]
+    candidate_run_id: p1_state_conditioned_qwen25_15b_fp32_seed20260727_v1
+  calibration:
+    gov_report_indices: [82, 83]
+    niah_offsets: [82, 83]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidate_sources: [attention_only, random_reference]
+    expected_directions: 192
+    expected_radius_rows: 1728
+  evaluation:
+    gov_report_indices: [84, 85]
+    niah_offsets: [84, 85]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidates_per_unit: 8
+    expected_candidate_history_rows: 768
+  max_prompt_tokens: 1536
+  max_new_tokens: 66
+  stop_on_eos: false
+  forbidden_ids:
+    - gov_report:24
+    - gov_report:25
+    - gov_report:44
+    - gov_report:45
+    - gov_report:56
+    - gov_report:57
+    - gov_report:68
+    - gov_report:69
+    - gov_report:80
+    - gov_report:81
+    - synthetic_niah_24
+    - synthetic_niah_25
+    - synthetic_niah_44
+    - synthetic_niah_45
+    - synthetic_niah_56
+    - synthetic_niah_57
+    - synthetic_niah_68
+    - synthetic_niah_69
+    - synthetic_niah_80
+    - synthetic_niah_81
+
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+  history_compresses_all_layers: true
+  current_action_applies_to_one_layer_only: true
+
+history_conditions:
+  H0:
+    history_length: 0
+    initial_source: full_reference
+    refresh_interval: null
+    refresh_source: null
+    expected_refresh_count: 0
+  H1:
+    history_length: 8
+    initial_source: old_stale_core
+    refresh_interval: null
+    refresh_source: null
+    expected_refresh_count: 0
+  H2:
+    history_length: 32
+    initial_source: old_stale_core
+    refresh_interval: null
+    refresh_source: null
+    expected_refresh_count: 0
+  H3:
+    history_length: 32
+    initial_source: old_stale_core
+    refresh_interval: 8
+    refresh_source: fresh_core
+    expected_refresh_count: 3
+  periodic_refresh_semantics: matched_full_reference_anchor_reset
+  current_target_capture_steps_beyond_history: 1
+  state_hash_dtype: float32
+
+candidates:
+  sources:
+    - attention_only
+    - aov
+    - aor
+    - v_ridge
+    - snapkv
+    - old_stale_core
+    - fresh_core
+    - random_reference
+  generation_operating_point: target_full_reference
+  shared_across_histories: true
+  shared_across_layers: true
+  deduplication: pre_action_seeded_uniform
+
+geometry:
+  exact_gradient: p_state_minus_p_reference
+  reference_linear_gradient: fisher_reference_times_reference_state_jvp
+  score_formula: gradient_dot_action_plus_half_fisher_action_quadratic
+  factorial_scores:
+    p1_reference_state_fisher: [reference_linear, reference, reference]
+    gradient_updated_only: [state_local, reference, reference]
+    jacobian_updated_only: [reference_linear, state_local, reference]
+    fisher_updated_only: [reference_linear, reference, state_local]
+    gradient_jacobian_updated: [state_local, state_local, reference]
+    gradient_fisher_updated: [state_local, reference, state_local]
+    jacobian_fisher_updated: [reference_linear, state_local, state_local]
+    full_state_local: [state_local, state_local, state_local]
+  baselines:
+    reference_action_fisher: [zero, reference, reference]
+  retrospective:
+    nonlinear_direction_quadratic: [state_local, nonlinear_exact, state_local]
+  explicit_fisher_matrix_forbidden: true
+  explicit_vocab_jacobian_forbidden: true
+  exact_kl_not_score_input: true
+
+numeric:
+  seed: 20260727
+  deterministic: true
+  prefill_chunk_size: 128
+  probability_floor: 1.0e-12
+  vector_norm_floor: 1.0e-12
+  low_norm_threshold: 1.0e-8
+  identity_norm_floors: [1.0e-12, 1.0e-10, 1.0e-8, 1.0e-6]
+  h0_jvp_cosine_min: 0.999999
+  h0_jvp_relative_l2_max: 1.0e-5
+  baseline_max_absolute_error_max: 1.0e-6
+  fd_relative_radius_grid:
+    - 1.0e-2
+    - 3.0e-3
+    - 1.0e-3
+    - 3.0e-4
+    - 1.0e-4
+    - 3.0e-5
+    - 1.0e-5
+    - 3.0e-6
+    - 1.0e-6
+  fd_selected_relative_radius: 3.0e-3
+  fd_selection_rule:
+    finite_rate_min: 1.0
+    nonzero_fd_norm_rate_min: 1.0
+    median_cosine_min: 0.999
+    median_relative_l2_max: 0.05
+    median_symmetric_norm_ratio_min: 0.95
+    objective: minimum_median_relative_l2
+    tie_break: larger_radius
+
+metrics:
+  top_k: 2
+  sequence_first: true
+  primary_histories: [H1, H2, H3]
+  readout_row_cosine_threshold: 0.99
+  retrospective_scores_enter_method_claim: false
+
+gates:
+  integrity:
+    p0_outcome: A
+    p1_outcome: C
+    p0_manifest_entries: 53
+    p1_manifest_entries: 74
+    p1_smoke_metric_absolute_tolerance: 1.0e-6
+    h0_delta_norm_max: 0.0
+    h0_probability_max_absolute_error: 0.0
+    h0_gradient_norm_max: 0.0
+    h0_score_max_absolute_error: 1.0e-12
+  state_local_readout:
+    overall_sequence_first_cosine_min: 0.99
+    each_task_median_cosine_min: 0.98
+    overall_sequence_first_relative_l2_max: 0.05
+    row_cosine_threshold: 0.99
+    row_pass_fraction_min: 0.95
+  full_state_local_risk:
+    overall_sequence_first_spearman_min: 0.90
+    each_task_median_spearman_min: 0.85
+    overall_action_delta_spearman_min: 0.05
+    each_task_action_delta_strict_min: 0.0
+    positive_sequence_fraction_min: 0.75
+    pairwise_accuracy_gain_min: 0.02
+    secondary_metric_max_degradation: 0.02
+    p1_reference_spearman_strict_improvement: true
+    both_tasks_contribute: true
+  reduced_geometry:
+    full_spearman_gap_max: 0.02
+    full_gain_retention_min: 0.80
+    each_task_action_delta_strict_min: 0.0
+    normalized_regret_max_degradation: 0.02
+
+outcomes:
+  N: integrity_calibration_or_protocol_failure
+  D: state_local_action_readout_failure
+  C: readout_pass_full_state_local_risk_failure
+  B: full_state_local_risk_pass_no_reduced_geometry
+  A: full_state_local_risk_and_reduced_geometry_pass
+
+runtime:
+  resume: true
+  atomic_writes: true
+  output_dir: experiments/p2_state_local_risk/results
+  run_id: p2_state_local_qwen25_15b_fp32_seed20260727_v1

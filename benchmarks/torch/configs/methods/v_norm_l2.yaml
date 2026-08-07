@@ -1,0 +1,5 @@
+method:
+  name: v_norm_l2
+  score_source: v
+  leverage_estimator: l2_norm
+  normalization: rank

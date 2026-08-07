@@ -1,0 +1,8 @@
+{
+  "candidate_row_count": 168,
+  "event_row_count": 21,
+  "sample_id": "gov_report:109",
+  "stage": "physical_replication",
+  "state": "complete",
+  "wall_seconds": 191.96129933299997
+}

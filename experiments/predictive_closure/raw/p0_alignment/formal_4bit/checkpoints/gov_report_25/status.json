@@ -1,0 +1,19 @@
+{
+  "anchors": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "candidate_count_per_anchor": 8,
+  "formal_p0": true,
+  "generation_stopped_on_eos": false,
+  "heldout_touched": false,
+  "prompt_length": 933,
+  "prompt_truncated": false,
+  "sample_id": "gov_report:25",
+  "split": "train",
+  "state": "complete",
+  "task": "gov_report",
+  "wall_seconds": 105.742849958
+}

@@ -1,0 +1,78 @@
+experiment_name: qwen25_7b_hotpotqa_snap_weighted_s8_b256
+
+model:
+  name: mlx-community/Qwen2.5-7B-Instruct-4bit
+  family: qwen
+  backend: mlx
+  dtype: auto
+  device: mps
+  quant_bits: 4
+  quant_group_size: 64
+  mlx_weight_quantize: false
+  mlx_cache_type: kv
+  prefill_step_size: 32768
+  trust_remote_code: false
+  local_files_only: false
+  prompt_format:
+    mode: chat_template
+    system_prompt: null
+
+eviction:
+  method: snapkv
+  cache_size: 256
+  sink_size: 0
+  recent_size: 0
+  score_source: v
+  update_policy: prefill_only
+  update_interval: 0
+  head_strategy: shared
+  observation_window: 64
+  window_size: 64
+  pooling_kernel: 5
+  pooling_method: avgpool
+  attention_weighted_ridge_lambda: 0.001
+  attention_weight_epsilon: 0.0001
+  seed: 42
+
+benchmark:
+  name: longbench
+  tasks:
+    - hotpotqa
+  max_words: 0
+  n_samples_per_task: 8
+  num_samples: 8
+  max_steps: 32768
+  max_new_tokens: 32
+  eval_target_only: true
+  evaluation: official
+  use_official_prompt: true
+  use_official_dataset: true
+  require_official_dataset: true
+  longbench_max_length: 32768
+
+methods:
+  - snapkv
+  - window_weighted_v_leverage
+
+cache_budgets:
+  - 256
+
+analysis:
+  overlap: false
+  rank_correlation: false
+  evidence_recall: false
+  counterfactual_deletion: false
+  restoration: false
+  leave_one_out: false
+  residual_explanation: false
+  case_study: true
+  case_study_count: 8
+  include_oracle: false
+
+output_dir: results/hotpotqa_snap_weighted_s8_b256
+save_selected_tokens: true
+save_scores: true
+save_prompt_text: true
+progress_every: 1
+seed: 42
+overwrite: false

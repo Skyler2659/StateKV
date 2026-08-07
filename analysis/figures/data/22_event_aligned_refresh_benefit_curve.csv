@@ -1,0 +1,6 @@
+event_signal,metric,estimate,ci_low,ci_high,n_samples,n_rows,uncertainty
+attention_distribution_shift,refresh_benefit,0.09261558127950377,-0.013368914479635615,0.23885315520610065,11,42,95% sample-cluster bootstrap CI
+query_direction_shift,refresh_benefit,0.1832021838256768,0.012013291088658522,0.41646702977261224,9,33,95% sample-cluster bootstrap CI
+selected_core_new_token_residual_spike,refresh_benefit,0.15462880420814795,-0.005164571870266129,0.29674767868634233,12,35,95% sample-cluster bootstrap CI
+selected_core_turnover,refresh_benefit,0.1853323679159219,0.03652531237023236,0.3601544455590669,11,19,95% sample-cluster bootstrap CI
+selection_margin_collapse,refresh_benefit,0.23982200557980426,0.011422625667571337,0.5515351041475676,6,9,95% sample-cluster bootstrap CI

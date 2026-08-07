@@ -1,0 +1,14 @@
+method: "compactor"
+cache_size: 256
+sink_size: 0
+recent_size: 0
+update_policy: "prefill_only"
+update_interval: 0
+score_source: "k"
+compactor_sketch_dim: 48
+compactor_chunk_size: 0
+compactor_attention_chunk_size: 128
+compactor_accum_blending: 0.5
+compactor_protected_first_tokens: 0
+compactor_protected_last_tokens: 0
+score_normalization: "zscore"

@@ -1,0 +1,9 @@
+{
+  "iteration": "r4_scalar_decision_risk",
+  "outcome": "A",
+  "claim": "scalar_decision_risk_closure",
+  "formal_passed": true,
+  "replication_passed": true,
+  "reduced_predictor": "midpoint_k2_state_local_scalar_risk",
+  "full_vector_closure_claimed": false
+}

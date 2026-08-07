@@ -1,0 +1,101 @@
+schema_version: 1
+program: p3_physical_recovery
+status: finalized_terminal_success_all_roles_permanently_locked
+canonical_config: experiments/p3_physical_recovery/p3pr_config.yaml
+automatic_exclusion_scan:
+  status: passed
+  old_experiment_roots:
+    - experiments/p0_v2_fixed_boundary
+    - experiments/p1_state_conditioned
+    - experiments/p2_state_local_risk
+    - experiments/p2_recovery
+    - experiments/p3_decision_validity
+  discovered_count_before_run: 38
+  discovered_min: 24
+  discovered_max: 109
+  scan_artifact: experiments/p3_physical_recovery/results/data_scan_all_allocated.json
+  new_old_overlap: []
+  frozen_sequence_count: 48
+  all_sequences_constructed: true
+allocations:
+  diagnostic: [gov_report:110, gov_report:111, synthetic_niah_110, synthetic_niah_111]
+  calibration: [gov_report:112, gov_report:113, synthetic_niah_112, synthetic_niah_113]
+  formal: [gov_report:114, gov_report:115, synthetic_niah_114, synthetic_niah_115]
+  replication: [gov_report:116, gov_report:117, synthetic_niah_116, synthetic_niah_117]
+  recovery_formal: [gov_report:118, gov_report:119, synthetic_niah_118, synthetic_niah_119]
+  recovery_replication: [gov_report:120, gov_report:121, synthetic_niah_120, synthetic_niah_121]
+  scope_budget: [gov_report:122, gov_report:123, synthetic_niah_122, synthetic_niah_123]
+  scope_history_anchor: [gov_report:124, gov_report:125, synthetic_niah_124, synthetic_niah_125]
+  scope_candidate_pool: [gov_report:126, gov_report:127, synthetic_niah_126, synthetic_niah_127]
+  disagreement_calibration: [gov_report:128, gov_report:129, synthetic_niah_128, synthetic_niah_129]
+  disagreement_formal: [gov_report:130, gov_report:131, synthetic_niah_130, synthetic_niah_131]
+  disagreement_replication: [gov_report:132, gov_report:133, synthetic_niah_132, synthetic_niah_133]
+lock_rule: opened_formal_ids_are_permanent_and_never_enter_representation_selection
+terminal_outcome:
+  code: P3PR-S
+  condition: Terminal Success
+  formal_ids: [gov_report:130, gov_report:131, synthetic_niah_130, synthetic_niah_131]
+  replication_ids: [gov_report:132, gov_report:133, synthetic_niah_132, synthetic_niah_133]
+  representation: boundary_27_candidate_specific_probe_path_k1
+  candidate_generator: mechanism_disagreement_pool_v1
+opened_roles:
+  diagnostic:
+    opened: true
+    result_path: experiments/p3_physical_recovery/results/diagnostic
+    use: M0_M1_and_schema_diagnostic_only
+  calibration:
+    opened: true
+    result_path: experiments/p3_physical_recovery/results/calibration
+    use: representation_boundary_readout_path_and_candidate_selection
+  formal:
+    opened: true
+    opened_after_frozen_model_sha256: da241e26dd057cc635b95967ca0dea9ea497be6a5c8ae7342a68313e2b63c257
+    result_path: experiments/p3_physical_recovery/results/formal
+    use: frozen_candidate_specific_physical_probe_b18_path_k1_only
+  replication:
+    opened: true
+    frozen_model_sha256: da241e26dd057cc635b95967ca0dea9ea497be6a5c8ae7342a68313e2b63c257
+    result_path: experiments/p3_physical_recovery/results/replication
+    use: frozen_candidate_specific_physical_probe_b18_path_k1_replication
+  recovery_formal:
+    opened: true
+    model: dense_mechanistic_all28_current_physical_injection
+    result_path: experiments/p3_physical_recovery/results/recovery_formal
+  recovery_replication:
+    opened: true
+    frozen_model_sha256: 220bf582598630a416b587ba8cc24e661446ddca3105b41e2fe171b35b116763
+    result_path: experiments/p3_physical_recovery/results/recovery_replication
+  scope_budget:
+    opened: true
+    role: attribution_only_not_primary_model_selection
+    total_budget: 96
+    target_anchor: 64
+  scope_history_anchor:
+    opened: true
+    role: attribution_only_not_primary_model_selection
+    history_length: 16
+    target_anchor: 48
+  scope_candidate_pool:
+    opened: true
+    role: attribution_only_not_primary_model_selection
+    pool: high_importance_stress_deletions
+    target_anchor: 64
+  disagreement_calibration:
+    opened: true
+    role: candidate_generator_selection_only
+    pool: mechanism_disagreement_pool_v1
+    target_anchor: 64
+    scan_artifact: experiments/p3_physical_recovery/results/data_scan_all_allocated.json
+  disagreement_formal:
+    opened: true
+    role: frozen_candidate_generator_fresh_formal
+    pool: mechanism_disagreement_pool_v1
+    target_anchor: 64
+    opened_after_frozen_model: experiments/p3_physical_recovery/results/frozen_disagreement_model.json
+  disagreement_replication:
+    opened: true
+    role: frozen_candidate_generator_replication
+    pool: mechanism_disagreement_pool_v1
+    target_anchor: 64
+    execution_rule: run_only_after_disagreement_formal_gate_passes
+    frozen_model: experiments/p3_physical_recovery/results/frozen_disagreement_model.json

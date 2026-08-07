@@ -1,0 +1,11 @@
+model:
+  name: sshleifer/tiny-gpt2
+  revision: null
+  dtype: float32
+  quantization: none
+  trust_remote_code: false
+  attn_implementation: eager
+  max_context: 512
+  prompt_format: plain
+  system_prompt: null
+

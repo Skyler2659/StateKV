@@ -1,0 +1,60 @@
+{
+  "decision": {
+    "checks": {
+      "each_task_action_gain": true,
+      "each_task_spearman": true,
+      "overall_spearman": true,
+      "pairwise_gain": true,
+      "positive_sequence_fraction": true,
+      "secondary_not_degraded": true,
+      "top1_or_regret_improves": true
+    },
+    "metrics": {
+      "action_spearman": 0.630952380952381,
+      "normalized_regret_gain": 0.019839191357641648,
+      "overall_action_gain": 0.36904761904761896,
+      "overall_spearman": 1.0,
+      "pairwise_gain": 0.2678571428571429,
+      "positive_sequence_fraction": 1.0,
+      "task_action_gain": {
+        "gov_report": 0.33333333333333326,
+        "niah_single_1": 0.36904761904761896
+      },
+      "task_spearman": {
+        "gov_report": 1.0,
+        "niah_single_1": 1.0
+      },
+      "top1_gain": 1.0
+    },
+    "passed": true
+  },
+  "passed": true,
+  "predictor": "midpoint_k2_state_local_scalar_risk",
+  "reduced": {
+    "not_recomputed": "Frozen R3 oracle evidence and R4 formal cost evidence remain applicable.",
+    "passed": true
+  },
+  "row_counts": {
+    "directions": 768,
+    "response": 768,
+    "vectors": 4
+  },
+  "scalar_mechanism": {
+    "claim": "scalar_decision_risk_only",
+    "full_vector_closure_claimed": false,
+    "integrity": {
+      "checks": {
+        "all_numeric_finite": true,
+        "all_row_finite": true,
+        "no_exact_kl_predictor_parameter": true,
+        "no_truth_predictor_parameter": true,
+        "only_frozen_backend": true,
+        "only_frozen_method": true
+      },
+      "passed": true
+    },
+    "passed": true
+  },
+  "stage": "replication",
+  "stage_metadata_sha256": "beddfc66987b43a44d1050232d2d21ebbd1fea6cc60ae927de646d9149c0dd25"
+}

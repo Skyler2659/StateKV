@@ -1,0 +1,77 @@
+experiment_name: temporal_cache_discovery_smoke
+
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  dtype: 4bit
+  backend: mlx
+  quant_bits: 4
+  deterministic: true
+  temperature: 0.0
+  do_sample: false
+  local_files_only: true
+  attn_implementation: eager
+  prompt_format: chat_template
+
+tasks:
+  ruler_niah:
+    num_samples: 1
+    context_length: 384
+
+generation:
+  max_new_tokens: 24
+  temperature: 0.0
+  do_sample: false
+  stop_on_eos: true
+
+cache:
+  total_budget: 256
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 220
+
+anchor_steps: [0, 16]
+horizons: [1, 4]
+strategies:
+  - snapkv
+  - v_ridge_leverage
+  - attention_weighted_v_ridge_leverage
+  - future_attention_oracle
+signal_lags: [1, 4, 8, 16]
+
+diagnostics:
+  num_layers: 3
+  heads_per_layer: 2
+  layer_selection: evenly_spaced
+
+metrics:
+  logits_top_k: 128
+  probability_floor: 1.0e-12
+  attention_error_epsilon: 1.0e-8
+  large_loss_spike_threshold: 0.25
+
+selectors:
+  observation_window: 32
+  snapkv_pooling_kernel: 63
+  snapkv_pooling: max
+  ridge_lambda: 0.001
+  ridge_lambda_mode: relative
+  attention_weighted_ridge_lambda: 0.001
+  attention_weight_epsilon: 0.0001
+  shared_token_selection: true
+
+validity_thresholds:
+  avg_delta_nll: [0.01, 0.05, 0.1, 0.25]
+  max_delta_nll: [0.05, 0.1, 0.25, 0.5]
+  avg_approx_kl: [0.001, 0.005, 0.01, 0.05]
+
+runtime:
+  device: auto
+  seed: 42
+  deterministic: true
+  prefill_chunk_size: 32
+  resume: true
+  fail_on_error: false
+  max_prompt_tokens: 512
+  output_root: results/temporal_cache_discovery
+  run_id: smoke_4bit_seed42_protocol_v5
+  bootstrap_samples: 200

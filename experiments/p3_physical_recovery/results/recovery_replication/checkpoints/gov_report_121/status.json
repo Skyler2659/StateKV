@@ -1,0 +1,14 @@
+{
+  "row_counts": {
+    "candidate_registry": 8,
+    "candidate_rows": 8,
+    "layer_rows": 224,
+    "unit_rows": 1
+  },
+  "sample_id": "gov_report:121",
+  "stage": "recovery_replication",
+  "state": "complete",
+  "targets": [
+    64
+  ]
+}

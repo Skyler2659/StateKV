@@ -1,0 +1,157 @@
+schema_version: 1
+program: p3_decision_validity
+protocol_status: master_design_data_roles_and_branch_rules_frozen
+design_frozen_at: "2026-07-28T04:00:00+08:00"
+source:
+  p0_manifest_sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
+  p1_manifest_sha256: e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1
+  p2_manifest_sha256: 768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51
+  p2_recovery_manifest_sha256: 353aa54aa3fb912f907337769864a510102f9a429d7013a92ca9d277b72ce4dd
+  inherited_outcome: A
+  inherited_claim: reproducible_scalar_decision_risk_closure
+  full_vector_closure: false
+data:
+  diagnostic:
+    gov_report_indices: [98, 99]
+    niah_offsets: [98, 99]
+  calibration:
+    gov_report_indices: [100, 101]
+    niah_offsets: [100, 101]
+  evaluation:
+    gov_report_indices: [102, 103]
+    niah_offsets: [102, 103]
+  replication:
+    gov_report_indices: [104, 105]
+    niah_offsets: [104, 105]
+  physical_evaluation:
+    gov_report_indices: [106, 107]
+    niah_offsets: [106, 107]
+  physical_replication:
+    gov_report_indices: [108, 109]
+    niah_offsets: [108, 109]
+trajectory:
+  calibration_anchor: 32
+  horizons: [0, 1, 2, 4, 8, 16, 32]
+  target_anchors: [32, 33, 34, 36, 40, 48, 64]
+  layers: [0, 14, 26]
+  history_source: old_stale_core
+  history_id: fixed_tau_old_core
+  candidate_count: 8
+  cache_budget: 128
+  teacher_forcing: true
+  free_generation_forbidden: true
+predictor:
+  name: midpoint_k2_state_local_scalar_risk
+  midpoint_nodes: [0.25, 0.75]
+  directional_derivative_backend: symmetric_central_fd
+  fd_relative_radius: 3.0e-3
+  full_refresh_forward_cost_per_candidate: 4
+  exact_kl_as_input: false
+observables:
+  random_projection_seed: 2026072803
+  random_projection_dimension: 32
+  zero_cost:
+    - retained_overlap
+    - core_turnover
+    - token_age_mean
+    - token_age_std
+    - recent_window_exits
+    - retained_attention_mass
+    - cache_occupancy
+    - selector_score_drift
+    - selected_core_score_margin
+    - compressed_residual_norm_drift
+    - compressed_sketch_l2
+    - query_norm_drift
+    - key_query_alignment_mean
+    - key_query_alignment_std
+    - attention_entropy
+    - attention_concentration
+    - sink_attention_mass
+    - recent_attention_mass
+    - core_attention_mass
+    - layer_attention_summary_drift
+  low_cost: []
+  diagnostic_only_not_detector_inputs:
+    - action_norm_median
+    - action_norm_spread
+    - action_to_compressed_state_ratio
+    - reused_margin
+    - action_only_margin
+    - cheap_rank_disagreement
+    - top_reused_one_midpoint_shift
+  diagnostic_only_reason: current_metric_only_candidates_are_constructed_from_the_controlled_reference_view
+  forbidden:
+    - full_reference_state
+    - history_minus_full_state
+    - exact_kl
+    - fresh_two_midpoint_risk
+    - endpoint_nonlinear_logits
+    - future_token
+    - future_attention
+staleness:
+  harmful_regret_epsilon_grid: [0.01, 0.02, 0.05, 0.10]
+  harmful_regret_epsilon: 0.10
+  epsilon_frozen_from: diagnostic_ids_98_99
+  epsilon_frozen_at: "2026-07-28T05:10:00+08:00"
+  epsilon_selection_rule: smallest_grid_value_with_nonzero_rate_between_0.10_and_0.60_else_nearest_to_0.30
+  auxiliary_label: top1_fresh_mismatch
+detector:
+  lambdas: [0.1, 0.25, 0.5, 1.0]
+  harmful_recall_min: 0.90
+  each_task_recall_min: 0.85
+  missed_normalized_regret_max: 0.02
+  refresh_coverage_max: 0.75
+  model_order: [single_threshold, two_threshold_or, two_threshold_and, logistic, depth3_tree, one_midpoint_plus_zero_cost]
+  selection_rule: recall_then_missed_regret_then_coverage_then_simplicity
+  calibration_gate_passed: false
+  recovery_branch: R2_E_no_detector_signal
+  selected_model: query_norm_drift_gt_0.00057923663
+  selected_features: [query_norm_drift]
+  selected_parameters:
+    family: single_threshold
+    direction: gt
+    threshold: 0.0005792366292015205
+  selection_status: frozen_pareto_fallback_for_formal_failure_measurement
+refresh:
+  full_fresh_gain_retention_min: 0.90
+  each_task_strict_gain_min: 0.0
+  normalized_regret_gap_max: 0.02
+  maximum_average_forward_cost: 3.0
+  calibration_gate_passed: false
+  selected_primitive: update_g
+  selection_status: frozen_best_zero_forward_fallback_for_formal_failure_measurement
+prefilter:
+  top_k_grid: [2, 3, 4]
+  exact_optimum_coverage_min: 0.95
+  fresh_optimum_coverage_min: 0.95
+  calibration_gate_passed: false
+  selected_method: action_only
+  selected_k: 4
+  selection_status: frozen_best_coverage_fallback_for_formal_failure_measurement
+physical_transfer:
+  overall_spearman_min: 0.85
+  each_task_spearman_min: 0.80
+  positive_sequence_fraction_min: 0.75
+  action_only_gain_strict_min: 0.0
+  recovery_descriptor: physical_boundary_effect_norm_no_fitted_weight
+  recovery_descriptor_fitted_parameters: false
+  primary_formal_passed: false
+  recovery_formal_passed: false
+  formal_transfer_outcome: Transfer_C
+  replication_primary_passed: false
+  replication_recovery_passed: false
+  replication_transfer_outcome: Transfer_C
+adjudication:
+  cumulative_outcome: D1
+  iteration_count: 8
+  gate_a: true
+  gate_b: false
+  gate_c: false
+  gate_d: false
+  gate_e_completed: true
+  p4_allowed: false
+runtime:
+  seed: 20260728
+  run_id: p3_decision_validity_qwen25_15b_fp32_v1
+  resume: true

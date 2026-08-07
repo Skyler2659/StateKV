@@ -1,0 +1,21 @@
+{
+  "mathml_node_count": 258,
+  "pandoc_version": "pandoc 3.9.0.2",
+  "passed": true,
+  "raw_math_leftover_count": 0,
+  "raw_math_leftovers": {
+    "display_backslash_close": 0,
+    "display_backslash_open": 0,
+    "double_dollar": 0,
+    "inline_backslash_close": 0,
+    "inline_backslash_open": 0,
+    "inline_dollar": 0
+  },
+  "renderer": "pandoc --to html5 --mathml",
+  "report": "P3PR_CROSS_MODEL_TASK_GENERALIZATION_REPORT_ZH.md",
+  "return_code": 0,
+  "schema_version": 1,
+  "source_math_delimiter_count": 287,
+  "warning_count": 0,
+  "warnings": []
+}

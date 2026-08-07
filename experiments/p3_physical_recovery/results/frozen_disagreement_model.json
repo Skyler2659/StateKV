@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_disagreement_formal",
+  "model_name": "mechanism_disagreement_pool_v1_candidate_probe_b27_path_k1",
+  "model_class": "M7_plus_M9_candidate_generation_and_specific_probe",
+  "candidate_generator": {
+    "name": "mechanism_disagreement_pool_v1",
+    "seed_pool_variants": [
+      "low",
+      "high",
+      "median"
+    ],
+    "seed_pool_size": 24,
+    "selected_count": 8,
+    "selection_inputs": [
+      "all_layer_state_conditioned_action_energy",
+      "dense_mechanistic_current_state_risk"
+    ],
+    "exact_physical_kl_used": false,
+    "candidate_endpoint_logits_used": false,
+    "task_id_used": false,
+    "future_token_used": false,
+    "future_attention_used": false
+  },
+  "representation": "actual candidate-conditioned residual response at boundary 27 plus current physical downstream KV readout",
+  "score_column": "probe_b27_path_k1_risk",
+  "boundary": 27,
+  "probe_layer": 26,
+  "boundary_count": 1,
+  "kv_descriptor_dimension": 0,
+  "candidate_probe_count": 1,
+  "path_midpoint_count": 1,
+  "parameter_count": 0,
+  "calibration_ids": [
+    "gov_report:128",
+    "gov_report:129",
+    "synthetic_niah_128",
+    "synthetic_niah_129"
+  ],
+  "formal_ids": [
+    "gov_report:130",
+    "gov_report:131",
+    "synthetic_niah_130",
+    "synthetic_niah_131"
+  ],
+  "replication_ids": [
+    "gov_report:132",
+    "gov_report:133",
+    "synthetic_niah_132",
+    "synthetic_niah_133"
+  ],
+  "selection_rule": "first tested single candidate-specific boundary within 0.02 overall Spearman of the dense oracle; then lowest midpoint count with identical metrics",
+  "calibration_metrics": {
+    "overall_spearman": 0.9702380952380953,
+    "task_spearman": {
+      "gov_report": 0.9523809523809526,
+      "niah_single_1": 0.9880952380952381
+    },
+    "pairwise_accuracy": 0.9642857142857143,
+    "positive_sequence_fraction": 1.0,
+    "top1_accuracy": 0.75,
+    "normalized_regret": 0.00419567304415213,
+    "task_normalized_regret": {
+      "gov_report": 0.00839134608830426,
+      "niah_single_1": 0.0
+    }
+  },
+  "action_only_calibration": {
+    "overall_spearman": 0.16666666666666669,
+    "task_normalized_regret": {
+      "gov_report": 0.9880715263139002,
+      "niah_single_1": 0.2443167924169188
+    }
+  },
+  "dense_oracle_calibration": {
+    "overall_spearman": 0.9880952380952381,
+    "task_normalized_regret": {
+      "gov_report": 0.0,
+      "niah_single_1": 0.0
+    }
+  },
+  "dense_oracle_spearman_gap": 0.017857142857142794,
+  "path_k1_k2_k4_k8_metrics_identical": true,
+  "calibration_config_sha256": "aba40e945f2400cffd169925aa1a536a1dc30b4e42a2542f57cd94a13d5d38f9",
+  "formal_and_replication_config_sha256": "3c5b530f77ca76bfac50c2eeb9a352d9f145a18eac75084f5133b6250d467b04",
+  "calibration_candidate_rows_sha256": "d45a79b0ee2c8ee96dc3f43a3e9dfc6c8dc6348141c74b82f2ac802e369adc37",
+  "formal_fit_allowed": false
+}

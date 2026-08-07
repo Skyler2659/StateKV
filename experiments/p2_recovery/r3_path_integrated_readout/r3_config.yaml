@@ -1,0 +1,132 @@
+schema_version: 1
+iteration: r3_path_integrated_readout
+protocol_status: numeric_backend_amended_before_formal_results
+design_frozen_at: "2026-07-28T00:00:00+08:00"
+numeric_calibration_status: frozen
+numeric_calibration_frozen_at: "2026-07-28T02:05:00+08:00"
+source:
+  p0_manifest_sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
+  p1_manifest_sha256: e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1
+  p2_manifest_sha256: 768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51
+  p2_config_sha256: 2d27f2877ae2588e9f41582c30f4a74bb3a3bef3fb6f551eba438a32aa8b4b6a
+  r1_config_sha256: a73633c9899980b3c56f0ac72a2435cbcc1a715f3290ff679937b4ed7e1dccdb
+  r1_summary_sha256: 4e183d26a3380aa51b6b081b81d6b88fc13ffb05cf2924ef109cd3bce6ff08a6
+  r1_branch: R1-A
+  mechanism_outcome: D2
+data:
+  scan_path: experiments/p2_recovery/results/data_scan_86_91.json
+  scan_rule: smallest_six_successful_ids_per_task_strictly_greater_than_85
+  calibration:
+    gov_report_indices: [86, 87]
+    niah_offsets: [86, 87]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidate_sources: [attention_only, random_reference]
+    expected_directions: 192
+    expected_method_rows: 1152
+  evaluation:
+    gov_report_indices: [88, 89]
+    niah_offsets: [88, 89]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidates_per_unit: 8
+    expected_directions: 768
+    expected_method_rows: 4608
+  replication:
+    gov_report_indices: [90, 91]
+    niah_offsets: [90, 91]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidates_per_unit: 8
+    expected_directions: 768
+  histories: [H0, H1, H2, H3]
+methods:
+  selection_order: [midpoint, trapezoidal, midpoint_k2, midpoint_k4, midpoint_k8]
+  single_jvp:
+    nodes: [0.0]
+    weights: [1.0]
+    jvp_cost: 1
+    selectable: false
+  midpoint:
+    nodes: [0.5]
+    weights: [1.0]
+    jvp_cost: 1
+    selectable: true
+  trapezoidal:
+    nodes: [0.0, 1.0]
+    weights: [0.5, 0.5]
+    jvp_cost: 2
+    selectable: true
+  midpoint_k2:
+    nodes: [0.25, 0.75]
+    weights: [0.5, 0.5]
+    jvp_cost: 2
+    selectable: true
+  midpoint_k4:
+    nodes: [0.125, 0.375, 0.625, 0.875]
+    weights: [0.25, 0.25, 0.25, 0.25]
+    jvp_cost: 4
+    selectable: true
+  midpoint_k8:
+    nodes: [0.0625, 0.1875, 0.3125, 0.4375, 0.5625, 0.6875, 0.8125, 0.9375]
+    weights: [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]
+    jvp_cost: 8
+    selectable: true
+numeric_backend:
+  name: symmetric_central_fd
+  relative_radius: 3.0e-3
+  forward_probes_per_derivative: 2
+  inherited_from: p2_state_local_frozen_calibration
+  inherited_validation_cosine: 0.9999999549937799
+  inherited_validation_relative_l2: 0.0003028887255327149
+  amendment_reason: mlx_vjp_of_vjp_single_graph_resource_limit_on_gov_report_88
+  amendment_scope: numerical_directional_derivative_backend_only
+  calibration_bridge_required: true
+calibration_selection:
+  vector_gate:
+    overall_sequence_first_cosine_min: 0.99
+    each_task_cosine_min: 0.98
+    overall_sequence_first_relative_l2_max: 0.05
+    row_cosine_min: 0.99
+    row_pass_fraction_min: 0.95
+    all_finite: true
+  rule: minimum_jvp_cost_then_minimum_median_relative_l2_then_selection_order
+  selected_method: midpoint_k2
+  selected_jvp_cost: 2
+formal_gates:
+  mechanism:
+    overall_sequence_first_cosine_min: 0.99
+    each_task_cosine_min: 0.98
+    overall_sequence_first_relative_l2_max: 0.05
+    row_cosine_min: 0.99
+    row_pass_fraction_min: 0.95
+    all_finite: true
+  decision:
+    overall_sequence_first_spearman_min: 0.90
+    each_task_spearman_min: 0.85
+    each_task_action_gain_strict_min: 0.0
+    positive_sequence_fraction_min: 0.75
+    pairwise_gain_min: 0.02
+    secondary_max_degradation: 0.02
+  reduced:
+    maximum_jvp_cost: 2
+    oracle_method: midpoint_k8
+    gain_retention_min: 0.80
+    oracle_spearman_gap_max: 0.02
+replication:
+  required: true
+  reuse_frozen_method_and_gates: true
+  selected_method_only: true
+prohibited:
+  - exact_endpoint_kl_as_predictor_input
+  - exact_endpoint_logits_as_predictor
+  - future_token
+  - future_attention
+  - formal_threshold_tuning
+  - formal_method_reselection
+  - state_conditioned_injection
+  - physical_history_transfer
+runtime:
+  seed: 20260727
+  run_id: p2_recovery_r3_qwen25_15b_fp32_seed20260727_v1
+  resume: true

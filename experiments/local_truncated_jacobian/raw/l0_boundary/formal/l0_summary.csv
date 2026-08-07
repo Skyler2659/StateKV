@@ -1,0 +1,2 @@
+formal_l0_passed,stop_l1_plus,stop_reason,native_boundary_pooled_median_cosine,jvp_fd_pooled_median_cosine,jvp_fd_pooled_median_relative_l2
+True,False,,0.9998632868447923,0.9996417188544067,0.02680454577318011

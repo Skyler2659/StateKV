@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "statekv-mlx-benchmark"
+version = "0.1.0"
+description = "Preserved MLX-first KV-cache eviction benchmark"
+requires-python = ">=3.9"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools]
+py-modules = ["benchmark", "cache_baselines", "data_sources", "shared_q"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "src*",
+  "h2o_llm*",
+  "l1_llm*",
+  "plain_llm*",
+  "rocketkv*",
+  "snapkv*",
+  "streaming_llm*",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+pythonpath = ["."]

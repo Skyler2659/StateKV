@@ -1,0 +1,103 @@
+# Requested comparison panel. See METHOD_FIDELITY.md before treating every
+# entry as an exact reproduction of its paper's full systems implementation.
+methods:
+  full:
+    method: "full"
+    cache_size: 0
+
+  random:
+    method: "random"
+    cache_size: 256
+    seed: 42
+
+  streamingllm:
+    method: "streamingllm"
+    cache_size: 256
+    sink_size: 4
+    recent_size: 252
+
+  h2o:
+    method: "h2o"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 128
+    h2o_recent_size: 128
+
+  snapkv:
+    method: "snapkv"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 0
+    observation_window: 32
+    window_size: 32
+    pooling_kernel: 5
+    pooling_method: "avgpool"
+
+  tova:
+    method: "tova"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 0
+
+  knorm:
+    method: "knorm"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 0
+
+  keydiff:
+    method: "keydiff"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 0
+    keydiff_recent_ratio: 0.0
+
+  compactor:
+    method: "compactor"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 0
+    compactor_sketch_dim: 48
+    compactor_chunk_size: 0
+    compactor_attention_chunk_size: 128
+    compactor_accum_blending: 0.5
+    compactor_protected_first_tokens: 0
+    compactor_protected_last_tokens: 0
+
+  vnorml1:
+    method: "vnorml1"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 0
+
+  vnorml2:
+    method: "vnorml2"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 0
+
+  vatp:
+    method: "vatp"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 128
+    h2o_recent_size: 128
+
+  curdkv:
+    method: "curdkv"
+    cache_size: 256
+    sink_size: 4
+    recent_size: 0
+    curdkv_projection_dim: 20
+    curdkv_num_sink: 4
+
+  adakv:
+    method: "adakv"
+    cache_size: 256
+    sink_size: 0
+    recent_size: 0
+    observation_window: 32
+    window_size: 32
+    pooling_kernel: 5
+    pooling_method: "maxpool"
+    adakv_safeguard_alpha: 0.2

@@ -1,0 +1,139 @@
+{
+  "eligible_methods": [
+    "midpoint_k2",
+    "midpoint_k4",
+    "midpoint_k8"
+  ],
+  "method_gates": {
+    "midpoint": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": true,
+        "overall_relative_l2": false,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.995345007003271,
+        "overall_sequence_first_relative_l2": 0.09305740275201799,
+        "row_pass_fraction": 0.9722222222222222,
+        "task_cosine": {
+          "gov_report": 0.995345007003271,
+          "niah_single_1": 0.9796272608310294
+        }
+      },
+      "passed": false
+    },
+    "midpoint_k2": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9997146675497661,
+        "overall_sequence_first_relative_l2": 0.02280600479154036,
+        "row_pass_fraction": 1.0,
+        "task_cosine": {
+          "gov_report": 0.9997146675497661,
+          "niah_single_1": 0.9991463066910422
+        }
+      },
+      "passed": true
+    },
+    "midpoint_k4": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9999838685975311,
+        "overall_sequence_first_relative_l2": 0.005454887118223347,
+        "row_pass_fraction": 1.0,
+        "task_cosine": {
+          "gov_report": 0.9999838685975311,
+          "niah_single_1": 0.9999685989610214
+        }
+      },
+      "passed": true
+    },
+    "midpoint_k8": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9999990470472138,
+        "overall_sequence_first_relative_l2": 0.0013267424499299268,
+        "row_pass_fraction": 1.0,
+        "task_cosine": {
+          "gov_report": 0.9999990470472138,
+          "niah_single_1": 0.9999982764241416
+        }
+      },
+      "passed": true
+    },
+    "single_jvp": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": false,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.925841330312796,
+        "overall_sequence_first_relative_l2": 0.3880096284058986,
+        "row_pass_fraction": 0.8194444444444444,
+        "task_cosine": {
+          "gov_report": 0.925841330312796,
+          "niah_single_1": 0.8495810216556007
+        }
+      },
+      "passed": false
+    },
+    "trapezoidal": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": false,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9844684705950053,
+        "overall_sequence_first_relative_l2": 0.17620692118658082,
+        "row_pass_fraction": 0.9375,
+        "task_cosine": {
+          "gov_report": 0.9844684705950053,
+          "niah_single_1": 0.9305189875873578
+        }
+      },
+      "passed": false
+    }
+  },
+  "row_counts": {
+    "directions": 192,
+    "response": 1152,
+    "vectors": 24
+  },
+  "selected_jvp_cost": 2,
+  "selected_method": "midpoint_k2",
+  "selection_rule": "minimum_jvp_cost_then_minimum_median_relative_l2_then_selection_order",
+  "stage": "calibration",
+  "stage_metadata_sha256": "bbff0e94fe7655f0b6c0772493d6bd76bba764edfec48bcdeaf5e09b01a2a576"
+}

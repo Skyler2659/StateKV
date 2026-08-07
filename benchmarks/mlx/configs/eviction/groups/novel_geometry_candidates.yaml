@@ -1,0 +1,40 @@
+# Project prototypes. These are not claimed as published baselines.
+methods:
+  conditional_v_leverage:
+    method: conditional_v_leverage
+    conditional_ridge_lambda: 0.001
+    conditional_leverage_lambda: 0.001
+  conditional_k_leverage:
+    method: conditional_k_leverage
+    conditional_ridge_lambda: 0.001
+    conditional_leverage_lambda: 0.001
+  attention_residual_v_leverage:
+    method: attention_residual_v_leverage
+    attention_residual_budget_ratio: 0.5
+    attention_residual_ridge_lambda: 0.001
+  window_residual_v_leverage:
+    method: window_residual_v_leverage
+    observation_window: 32
+    window_size: 32
+    pooling_kernel: 5
+    pooling_method: avgpool
+    attention_residual_budget_ratio: 0.5
+    attention_residual_ridge_lambda: 0.001
+  attention_weighted_v_leverage:
+    method: attention_weighted_v_leverage
+    attention_weighted_ridge_lambda: 0.001
+    attention_weight_epsilon: 0.0001
+  joint_kv_leverage:
+    method: joint_kv_leverage
+    joint_kv_gamma: 0.5
+    joint_kv_ridge_lambda: 0.000001
+  ridge_v_allocation:
+    method: ridge_v_allocation
+    ridge_budget_lambda_floor: 0.0001
+  ridge_v_fixed:
+    method: ridge_v_fixed
+    ridge_budget_lambda_floor: 0.0001
+  diversity_v_leverage:
+    method: diversity_v_leverage
+    diversity_ridge_lambda: 0.001
+    diversity_candidate_multiplier: 4

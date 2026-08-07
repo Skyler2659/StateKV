@@ -1,0 +1,146 @@
+schema_version: 1
+program: p2_recovery
+updated_at: "2026-07-28T03:35:00+08:00"
+immutable_sources:
+  p0_manifest:
+    path: experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml
+    sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
+    outcome: A
+  p1_manifest:
+    path: experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml
+    sha256: e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1
+    outcome: C
+  p2_manifest:
+    path: experiments/p2_state_local_risk/P2_STATE_LOCAL_MANIFEST.yaml
+    sha256: 768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51
+    outcome: D
+exclusion_ledger:
+  - ids: [gov_report:24, gov_report:25, synthetic_niah_24, synthetic_niah_25]
+    source: historical_pre_p0
+    exclusion_reason: prior diagnostic or test use
+  - ids: [gov_report:44, gov_report:45, synthetic_niah_44, synthetic_niah_45]
+    source: p0_v2
+    exclusion_reason: P0-v2 smoke or calibration use
+  - ids: [gov_report:56, gov_report:57, synthetic_niah_56, synthetic_niah_57]
+    source: p0_v2
+    exclusion_reason: P0-v2 formal viewed
+  - ids: [gov_report:68, gov_report:69, synthetic_niah_68, synthetic_niah_69]
+    source: p1
+    exclusion_reason: P1 smoke or calibration use
+  - ids: [gov_report:80, gov_report:81, synthetic_niah_80, synthetic_niah_81]
+    source: p1
+    exclusion_reason: P1 formal viewed; 80 also P2 smoke
+  - ids: [gov_report:82, gov_report:83, synthetic_niah_82, synthetic_niah_83]
+    source: p2
+    exclusion_reason: P2 calibration use
+  - ids: [gov_report:84, gov_report:85, synthetic_niah_84, synthetic_niah_85]
+    source: p2
+    exclusion_reason: P2 formal viewed; retrospective R0/R1 diagnosis only
+iterations:
+  r0_failure_map:
+    hypothesis: map P2 finite-action failure without a new positive claim
+    data_role: retrospective_diagnosis
+    ids: [gov_report:84, gov_report:85, synthetic_niah_84, synthetic_niah_85]
+    formal_already_viewed: true
+    enters_tuning: false
+    config_path: experiments/p2_recovery/r0_failure_map/r0_config.yaml
+    config_sha256: a8ec683bb1b54236813a138328c26f8c331eccb865c3d4e35b9aaac5a8712aa6
+    result_path: experiments/p2_recovery/r0_failure_map/results/r0_summary.json
+    status: completed_retrospective
+    outcome: failure_concentrates_with_action_to_workpoint_ratio
+  r1_amplitude_trust_region:
+    hypothesis: test whether natural action amplitude exceeds the local trust region
+    data_role: retrospective_diagnosis
+    ids: [gov_report:84, gov_report:85, synthetic_niah_84, synthetic_niah_85]
+    formal_already_viewed: true
+    enters_tuning: false
+    config_path: experiments/p2_recovery/r1_amplitude_trust_region/r1_config.yaml
+    config_sha256: a73633c9899980b3c56f0ac72a2435cbcc1a715f3290ff679937b4ed7e1dccdb
+    result_path: experiments/p2_recovery/r1_amplitude_trust_region/results/r1_summary.json
+    status: completed_retrospective
+    outcome: D2
+    branch: R1-A_to_R3
+  r3_path_integrated_readout:
+    hypothesis: finite-action path integration closes natural-amplitude vector readout and decision risk
+    data_role: fresh_calibration_formal_replication
+    config_path: experiments/p2_recovery/r3_path_integrated_readout/r3_config.yaml
+    design_config_sha256: 5d797741a8418bd903fe43e36071dcce7d0d32f69ecf05a9a53a5bf994103ca6
+    frozen_post_calibration_config_sha256: b52f52d3bbfb41e52299b861cda62ff8e02015c79ea43beadec99302fc1d02dc
+    numeric_backend_amendment_config_sha256: be974ea6be76f548b656708e5c4d538f7195b82132a0fe933d44938d4dfcef9f
+    final_frozen_config_sha256: dc709a0526a7b6e41a1b46d8a9b49403b4bf4ae46f3ff0a20ad66d56c98b1e85
+    numeric_bridge_analysis_sha256: bdd87cdad5d3283d9e89ab2d57498c8e0d5861a69acd04d7853a0ca3f229726e
+    numeric_backend_amendment: inherited_p2_symmetric_central_fd_radius_0.003
+    amendment_trigger: mlx_vjp_of_vjp_resource_limit_before_any_formal_checkpoint
+    hook_disable_equivalence_audit_sha256: 3c37bd9490133283047dbc635a79931a0176cc351b9cf5115666e8577f39af0c
+    hook_disable_output_max_absolute_error: 0.0
+    hook_disable_derivative_max_absolute_error: 0.0
+    selected_method_before_bridge: midpoint_k2
+    selected_jvp_cost_before_bridge: 2
+    selected_method: midpoint_k2
+    selected_directional_derivative_cost: 2
+    selected_forward_probe_cost: 4
+    calibration:
+      ids: [gov_report:86, gov_report:87, synthetic_niah_86, synthetic_niah_87]
+      formal_already_viewed: true
+      enters_tuning: true
+      status: autodiff_archived_numeric_bridge_completed_selection_refrozen
+    formal:
+      ids: [gov_report:88, gov_report:89, synthetic_niah_88, synthetic_niah_89]
+      formal_already_viewed: true
+      enters_tuning: false
+      execution_attempted: true
+      result_checkpoint_created: true
+      failed_attempts:
+        - backend: mlx_vjp_of_vjp
+          reason: single_autodiff_graph_metal_resource_limit
+          result_checkpoint_created: false
+        - backend: symmetric_central_fd
+          reason: diagnostic_attention_capture_single_forward_metal_resource_limit
+          result_checkpoint_created: false
+      status: completed_provisional_all_gates_passed
+    replication:
+      ids: [gov_report:90, gov_report:91, synthetic_niah_90, synthetic_niah_91]
+      formal_already_viewed: true
+      enters_tuning: false
+      status: completed_decision_passed_vector_failed
+    outcome: C_provisional_decision_replication_vector_nonclosure
+    next_iteration: r4_scalar_decision_risk
+  r4_scalar_decision_risk:
+    hypothesis: candidate decision risk can close without full-vector reconstruction
+    data_role: fresh_calibration_formal_replication
+    config_path: experiments/p2_recovery/r4_scalar_decision_risk/r4_config.yaml
+    config_sha256: 8a9de821a36aa1823a6d387a2014f59d2fb36127da45ba794438d82e60a29c4b
+    predictor: midpoint_k2_state_local_scalar_risk
+    directional_derivative_cost: 2
+    forward_probe_cost: 4
+    calibration:
+      ids: [gov_report:92, gov_report:93, synthetic_niah_92, synthetic_niah_93]
+      formal_already_viewed: true
+      enters_tuning: false
+      status: completed_integrity_passed
+    formal:
+      ids: [gov_report:94, gov_report:95, synthetic_niah_94, synthetic_niah_95]
+      formal_already_viewed: true
+      enters_tuning: false
+      status: completed_all_scalar_decision_gates_passed
+    replication:
+      ids: [gov_report:96, gov_report:97, synthetic_niah_96, synthetic_niah_97]
+      formal_already_viewed: true
+      enters_tuning: false
+      status: completed_all_scalar_decision_gates_passed
+    outcome: A_scalar_decision_risk_closure
+    full_vector_closure_claimed: false
+    p3_eligible: true
+reserved_new_ids:
+  - ids: [gov_report:86, gov_report:87, synthetic_niah_86, synthetic_niah_87]
+    role: r3_calibration
+  - ids: [gov_report:88, gov_report:89, synthetic_niah_88, synthetic_niah_89]
+    role: r3_formal
+  - ids: [gov_report:90, gov_report:91, synthetic_niah_90, synthetic_niah_91]
+    role: r3_replication
+  - ids: [gov_report:92, gov_report:93, synthetic_niah_92, synthetic_niah_93]
+    role: r4_calibration
+  - ids: [gov_report:94, gov_report:95, synthetic_niah_94, synthetic_niah_95]
+    role: r4_formal
+  - ids: [gov_report:96, gov_report:97, synthetic_niah_96, synthetic_niah_97]
+    role: r4_replication

@@ -1,0 +1,5 @@
+strategy,metric,estimate,ci_low,ci_high,n_samples,n_rows,uncertainty
+attention_weighted_v_ridge_leverage,observed_horizon,38.0,25.0,64.0,15,45,95% sample-cluster bootstrap CI
+future_attention_oracle,observed_horizon,64.0,49.475,64.0,15,45,95% sample-cluster bootstrap CI
+snapkv,observed_horizon,40.0,30.0,64.0,15,45,95% sample-cluster bootstrap CI
+v_ridge_leverage,observed_horizon,33.0,7.0,64.0,15,45,95% sample-cluster bootstrap CI

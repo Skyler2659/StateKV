@@ -1,0 +1,7 @@
+method: "curdkv"
+cache_size: 256
+sink_size: 4
+recent_size: 0
+curdkv_projection_dim: 20
+curdkv_num_sink: 4
+score_normalization: "none"

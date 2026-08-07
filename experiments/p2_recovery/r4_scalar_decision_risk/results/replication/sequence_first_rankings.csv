@@ -1,0 +1,9 @@
+sample_id,task,score_type,spearman,pairwise_sign_accuracy,top1_accuracy,topk_overlap,normalized_regret,symmetric_scale_ratio
+gov_report:96,gov_report,midpoint_k2,1.0,1.0,1.0,1.0,0.0,0.8099807006197679
+gov_report:96,gov_report,reference_action_fisher,0.7857142857142858,0.8214285714285714,0.5,0.75,0.0012451406549661378,0.0357430529398348
+gov_report:97,gov_report,midpoint_k2,1.0,1.0,1.0,1.0,0.0,0.7154860356074391
+gov_report:97,gov_report,reference_action_fisher,0.5476190476190477,0.6785714285714286,0.0,0.5,0.012985107585727317,0.1494250250224775
+synthetic_niah_96,niah_single_1,midpoint_k2,1.0,1.0,1.0,1.0,0.0,0.30792535881340544
+synthetic_niah_96,niah_single_1,reference_action_fisher,0.7142857142857144,0.7678571428571428,0.0,0.5,0.07411987955904312,0.07239985176901555
+synthetic_niah_97,niah_single_1,midpoint_k2,1.0,1.0,1.0,1.0,0.0,0.39105607124552755
+synthetic_niah_97,niah_single_1,reference_action_fisher,0.5476190476190477,0.6964285714285714,0.0,0.5,0.02669327512955598,0.27442270554466064

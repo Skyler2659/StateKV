@@ -1,0 +1,146 @@
+schema_version: 1
+program: p3pr_cross_model_task_generalization
+protocol_status: design_models_tasks_splits_mechanisms_and_gates_frozen_before_measurement
+design_frozen_at: "2026-07-28T21:30:00+08:00"
+
+question:
+  primary: whether_current_physical_deletion_risk_closure_extends_beyond_qwen25_15b_govreport_niah
+  claims_under_test:
+    - exact_current_deletion_identity_is_architecture_portable
+    - dense_all_layer_mechanistic_risk_is_model_and_task_portable
+    - original_absolute_boundary_27_should_be_replaced_by_relative_penultimate_boundary_L_minus_1
+  explicitly_not_claimed:
+    - universal_across_all_transformers
+    - free_generation_closure
+    - multi_step_controller_validity
+    - deployment_ready_pre_action_selector
+
+models:
+  qwen25_05b:
+    source: mlx-community/Qwen2.5-0.5B-Instruct-4bit
+    family: qwen
+    prompt_format: chat_template
+    local_files_only: true
+  llama32_1b:
+    source: mlx-community/Llama-3.2-1B-Instruct-4bit
+    family: llama
+    prompt_format: chat_template
+    local_files_only: false
+
+data:
+  role_isolation:
+    calibration_ids: [140, 141]
+    formal_ids: [142, 143]
+    replication_ids: [144, 145]
+    same_raw_samples_paired_across_models: true
+    no_sample_shared_across_roles: true
+  tasks:
+    qmsum:
+      source: THUDM/LongBench
+      dataset_config: qmsum
+      split: test
+      max_words: 700
+      official_prompt: true
+    variable_tracking:
+      source: repository_deterministic_synthetic_vt
+      context_length: 768
+  max_prompt_tokens: 1536
+  max_new_tokens: 66
+  stop_on_eos: false
+
+physical_protocol:
+  teacher_forcing: true
+  history_start_anchor: 32
+  target_anchor: 64
+  history_length: 32
+  history_source: old_stale_core
+  cache_total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+  baseline: same_prequery_compressed_physical_state_without_current_deletion
+  candidate: delete_one_shared_eligible_cache_position_from_every_layer_before_same_query
+  target: KL_softmax_baseline_to_candidate
+  future_tokens_as_features: false
+  future_attention_as_features: false
+  free_generation: false
+
+candidates:
+  selected_count: 8
+  seed_count: 24
+  source_order:
+    - attention
+    - value_norm
+    - aov
+    - aor
+    - v_ridge
+    - key_query
+    - age
+    - random
+  seed_variants: [low, high, median]
+  generator: mechanism_disagreement_pool_v1
+  allowed_generator_inputs:
+    - all_layer_deletion_identity_action_energy
+    - dense_all_layer_mechanistic_risk
+  forbidden_generator_inputs:
+    - exact_physical_kl
+    - candidate_endpoint_logits
+    - task_id
+    - formal_or_replication_label
+    - future_token
+    - future_attention
+
+boundaries:
+  primary_rule: relative_penultimate_boundary
+  primary_formula: b_star_equals_L_minus_1
+  original_qwen25_15b_mapping:
+    num_layers_L: 28
+    boundary_b_star: 27
+    probe_layer_zero_based: 26
+  calibration_grid_fractions: [0.25, 0.50, 0.75]
+  include_primary_penultimate: true
+  exclude_terminal_boundary_as_tautological: true
+  path_midpoint_count: 1
+  finite_difference_relative_radius: 0.003
+
+metrics:
+  sequence_first: true
+  primary_score: relative_penultimate_path_k1_risk
+  comparators:
+    - action_only_risk
+    - dense_all_layer_mechanistic_risk
+    - relative_penultimate_exact_map_risk
+  ranking:
+    - spearman
+    - pairwise_accuracy
+    - top1_accuracy
+    - positive_sequence_fraction
+    - normalized_regret
+
+gates:
+  integrity:
+    hook_coverage_fraction_min: 1.0
+    no_op_kl_max: 1.0e-10
+    replay_logit_max_abs_error: 1.0e-6
+    identity_relative_l2_max: 1.0e-4
+    finite_candidates_min: 8
+  formal_and_replication:
+    overall_spearman_min: 0.90
+    each_model_spearman_min: 0.85
+    each_task_spearman_min: 0.85
+    each_model_task_spearman_min: 0.80
+    pairwise_accuracy_min: 0.90
+    top1_accuracy_min: 0.75
+    positive_sequence_fraction_min: 0.75
+    normalized_regret_max: 0.10
+  mechanism:
+    dense_over_action_spearman_gain_strict_min: 0.0
+    penultimate_over_action_spearman_gain_strict_min: 0.0
+
+runtime:
+  seed: 2026072817
+  prefill_chunk_size: 128
+  deterministic: true
+  resume: true
+  stage_order: [calibration, formal, replication]
+  model_order: [qwen25_05b, llama32_1b]

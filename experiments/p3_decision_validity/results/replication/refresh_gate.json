@@ -1,0 +1,23 @@
+{
+  "feasible_count": 0,
+  "passed": false,
+  "primitive_count": 11,
+  "selected": {
+    "full_refresh_forward_cost": 0,
+    "gain_retention": 0.5624034048671879,
+    "joint_normalized_regret": 0.1507006194704602,
+    "mean_forward_cost": 0.0,
+    "normalized_regret_gap": 0.21214499290577551,
+    "pairwise_accuracy": 0.7453231292517006,
+    "passes": false,
+    "primitive": "update_g",
+    "spearman": 0.5428004535147394,
+    "stale_unit_count": 34,
+    "task_gain": {
+      "gov_report": 0.25827743836481065,
+      "niah_single_1": 0.28542714128999447
+    },
+    "top1_accuracy": 0.4523809523809524
+  },
+  "stage": "replication"
+}

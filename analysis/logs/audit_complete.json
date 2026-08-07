@@ -1,0 +1,6 @@
+{
+  "input_dir": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4",
+  "schema_rows": 163,
+  "npz_rows": 480,
+  "quality_issue_rows": 7
+}

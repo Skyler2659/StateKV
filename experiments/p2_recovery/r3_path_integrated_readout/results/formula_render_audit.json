@@ -1,0 +1,79 @@
+{
+  "document_count": 6,
+  "documents": [
+    {
+      "has_math_input": true,
+      "mathml_node_count": 14,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r3_path_integrated_readout/R3_CALIBRATION_REPORT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "a4eff4e42c9556accda53bbd0af45ec9c1d7761a37e6932c09a50c45a90687ab",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 2,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r3_path_integrated_readout/R3_CODE_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "b821c08de491398258651e80ed672d1cec71118c9678f758e2ec449c4f779d09",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 1,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r3_path_integrated_readout/R3_FAILURE_ANALYSIS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "74a273a0fd4dec26004e178635a55af1f4f86cca53081df3b7e7079c11a82fc2",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r3_path_integrated_readout/R3_FORMAL_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "3dfc147a2129c71c7a013e807c873d5a4ff2bf67b058ef34a131dd858c833ead",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 5,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r3_path_integrated_readout/R3_NUMERIC_BACKEND_AMENDMENT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "51902a0826c42750296c76af15415a25928bb7e64b41682b3379f57098f2918d",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 10,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r3_path_integrated_readout/R3_PREREGISTRATION.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "433815744aa7a460d64356c9e1d13317d19069d522cf028b65d99ab6a0b0f5af",
+      "warning_count": 0
+    }
+  ],
+  "input_format": "gfm+tex_math_dollars",
+  "iteration": "r3_path_integrated_readout",
+  "output_math": "MathML",
+  "passed": true,
+  "renderer": "pandoc 3.9.0.2",
+  "total_mathml_node_count": 32,
+  "total_raw_math_leftover_count": 0,
+  "total_warning_count": 0
+}

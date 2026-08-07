@@ -1,0 +1,15 @@
+{
+  "row_counts": {
+    "candidate_registry": 16,
+    "candidate_rows": 16,
+    "layer_rows": 448,
+    "unit_rows": 2
+  },
+  "sample_id": "synthetic_niah_111",
+  "stage": "diagnostic",
+  "state": "complete",
+  "targets": [
+    40,
+    64
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "calibration_summary_sha256": "947f9ffbea5a5756e72f63a900c716a02a28e7aa98d072c45d5f1bf4232798cd",
+  "config_sha256": "bbf03214f9af4074ff541966f3f5f2a8ea13b589f146bc2517a285ed3a3469d8",
+  "evaluation_started_at_unix": 1785132041.9791281,
+  "git": {
+    "commit": "1d64abc8839e31ee1a0615e19a3b3b1809ca5618",
+    "worktree_dirty": true
+  },
+  "selected_relative_radius": 0.003,
+  "split_audit": {
+    "calibration_ids": [
+      "gov_report:44",
+      "gov_report:45",
+      "synthetic_niah_44",
+      "synthetic_niah_45"
+    ],
+    "checks": {
+      "calibration_evaluation_disjoint": true,
+      "evaluation_historical_disjoint": true,
+      "multiple_sequences_per_task": true,
+      "two_tasks_in_evaluation": true
+    },
+    "evaluation_ids": [
+      "gov_report:56",
+      "gov_report:57",
+      "synthetic_niah_56",
+      "synthetic_niah_57"
+    ],
+    "historical_forbidden_ids": [
+      "gov_report:24",
+      "gov_report:25",
+      "synthetic_niah_24",
+      "synthetic_niah_25"
+    ]
+  }
+}

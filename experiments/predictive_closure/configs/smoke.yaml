@@ -1,0 +1,20 @@
+run_id: predictive_closure_p0_smoke_mlx4bit_seed20260726
+seed: 20260726
+model:
+  source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  dtype: 4bit
+  device: mlx_metal
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  core_size: 92
+p0:
+  prompt_repetitions: 80
+  candidates: 2
+  single_layer_checks: [7, 14, 21, 27]
+  jvp_radius: 0.0001
+  relative_epsilon: 1.0e-12
+runtime:
+  output_dir: experiments/predictive_closure/raw/p0_alignment/smoke
+  deterministic: true

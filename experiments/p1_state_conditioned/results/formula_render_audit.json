@@ -1,0 +1,54 @@
+{
+  "documents": [
+    {
+      "mathml_node_count": 25,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P1_CODE_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "f7ca0ce3faedde227d56946b65a4871d5dd9c6f81bd97349a153543136d4e326"
+    },
+    {
+      "mathml_node_count": 33,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P1_STATE_CONDITIONED_EXPERIMENT_PLAN.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "66fa619e921b8b0fa74c9381a8830fd1c4c2648eecf963341803c75d4d8f5cc0"
+    },
+    {
+      "mathml_node_count": 25,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P1_CALIBRATION_REPORT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "dd8d8cca318ceb81c84dc133b847153a212e0148801e92f6f3168a6640e3a787"
+    },
+    {
+      "mathml_node_count": 44,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P1_STATE_CONDITIONED_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "b3f8f62e43e6ed6c8e0ef1b784f91d26c46403c18a05874e0383ef8294bcb4b7"
+    },
+    {
+      "mathml_node_count": 14,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P1_STATE_CONDITIONED_FAILURE_ANALYSIS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "e4ea1f4dac1b32878f68ebe8d72cf41dd191fee54d92982584adcbc4fe94e0cc"
+    }
+  ],
+  "input_format": "gfm+tex_math_dollars",
+  "output_math": "MathML",
+  "passed": true,
+  "renderer": "pandoc 3.9.0.2",
+  "total_mathml_node_count": 141
+}

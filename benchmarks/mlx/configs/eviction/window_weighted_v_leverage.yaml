@@ -1,0 +1,12 @@
+method: window_weighted_v_leverage
+cache_size: 256
+sink_size: 0
+recent_size: 0
+observation_window: 32
+window_size: 32
+pooling_kernel: 5
+pooling_method: avgpool
+attention_weighted_ridge_lambda: 0.001
+attention_weight_epsilon: 0.0001
+update_policy: prefill_only
+update_interval: 0

@@ -1,0 +1,481 @@
+sample_id,array,shape,dtype,bytes
+gov_report:0,prompt_token_ids,[920],int32,3680
+gov_report:0,generated_token_ids,[128],int32,512
+gov_report:0,reference_log_probabilities,[128],float32,512
+gov_report:0,top_ids,"[128, 128]",int32,65536
+gov_report:0,top_probabilities,"[128, 128]",float32,65536
+gov_report:0,oracle_attention,"[129, 28, 2, 1048]",float16,15141504
+gov_report:0,oracle_attention_lengths,[129],int32,516
+gov_report:0,query_positions,[129],int32,516
+gov_report:0,query_0_0,"[129, 128]",float32,66048
+gov_report:0,attention_output_0_0,"[129, 128]",float32,66048
+gov_report:0,attention_distribution_0_0,"[129, 1048]",float16,270384
+gov_report:0,attention_distribution_lengths_0_0,[129],int32,516
+gov_report:0,query_0_11,"[129, 128]",float32,66048
+gov_report:0,attention_output_0_11,"[129, 128]",float32,66048
+gov_report:0,attention_distribution_0_11,"[129, 1048]",float16,270384
+gov_report:0,attention_distribution_lengths_0_11,[129],int32,516
+gov_report:0,query_14_0,"[129, 128]",float32,66048
+gov_report:0,attention_output_14_0,"[129, 128]",float32,66048
+gov_report:0,attention_distribution_14_0,"[129, 1048]",float16,270384
+gov_report:0,attention_distribution_lengths_14_0,[129],int32,516
+gov_report:0,query_14_11,"[129, 128]",float32,66048
+gov_report:0,attention_output_14_11,"[129, 128]",float32,66048
+gov_report:0,attention_distribution_14_11,"[129, 1048]",float16,270384
+gov_report:0,attention_distribution_lengths_14_11,[129],int32,516
+gov_report:0,query_27_0,"[129, 128]",float32,66048
+gov_report:0,attention_output_27_0,"[129, 128]",float32,66048
+gov_report:0,attention_distribution_27_0,"[129, 1048]",float16,270384
+gov_report:0,attention_distribution_lengths_27_0,[129],int32,516
+gov_report:0,query_27_11,"[129, 128]",float32,66048
+gov_report:0,attention_output_27_11,"[129, 128]",float32,66048
+gov_report:0,attention_distribution_27_11,"[129, 1048]",float16,270384
+gov_report:0,attention_distribution_lengths_27_11,[129],int32,516
+gov_report:1,prompt_token_ids,[961],int32,3844
+gov_report:1,generated_token_ids,[128],int32,512
+gov_report:1,reference_log_probabilities,[128],float32,512
+gov_report:1,top_ids,"[128, 128]",int32,65536
+gov_report:1,top_probabilities,"[128, 128]",float32,65536
+gov_report:1,oracle_attention,"[129, 28, 2, 1089]",float16,15733872
+gov_report:1,oracle_attention_lengths,[129],int32,516
+gov_report:1,query_positions,[129],int32,516
+gov_report:1,query_0_0,"[129, 128]",float32,66048
+gov_report:1,attention_output_0_0,"[129, 128]",float32,66048
+gov_report:1,attention_distribution_0_0,"[129, 1089]",float16,280962
+gov_report:1,attention_distribution_lengths_0_0,[129],int32,516
+gov_report:1,query_0_11,"[129, 128]",float32,66048
+gov_report:1,attention_output_0_11,"[129, 128]",float32,66048
+gov_report:1,attention_distribution_0_11,"[129, 1089]",float16,280962
+gov_report:1,attention_distribution_lengths_0_11,[129],int32,516
+gov_report:1,query_14_0,"[129, 128]",float32,66048
+gov_report:1,attention_output_14_0,"[129, 128]",float32,66048
+gov_report:1,attention_distribution_14_0,"[129, 1089]",float16,280962
+gov_report:1,attention_distribution_lengths_14_0,[129],int32,516
+gov_report:1,query_14_11,"[129, 128]",float32,66048
+gov_report:1,attention_output_14_11,"[129, 128]",float32,66048
+gov_report:1,attention_distribution_14_11,"[129, 1089]",float16,280962
+gov_report:1,attention_distribution_lengths_14_11,[129],int32,516
+gov_report:1,query_27_0,"[129, 128]",float32,66048
+gov_report:1,attention_output_27_0,"[129, 128]",float32,66048
+gov_report:1,attention_distribution_27_0,"[129, 1089]",float16,280962
+gov_report:1,attention_distribution_lengths_27_0,[129],int32,516
+gov_report:1,query_27_11,"[129, 128]",float32,66048
+gov_report:1,attention_output_27_11,"[129, 128]",float32,66048
+gov_report:1,attention_distribution_27_11,"[129, 1089]",float16,280962
+gov_report:1,attention_distribution_lengths_27_11,[129],int32,516
+gov_report:2,prompt_token_ids,[1022],int32,4088
+gov_report:2,generated_token_ids,[128],int32,512
+gov_report:2,reference_log_probabilities,[128],float32,512
+gov_report:2,top_ids,"[128, 128]",int32,65536
+gov_report:2,top_probabilities,"[128, 128]",float32,65536
+gov_report:2,oracle_attention,"[129, 28, 2, 1150]",float16,16615200
+gov_report:2,oracle_attention_lengths,[129],int32,516
+gov_report:2,query_positions,[129],int32,516
+gov_report:2,query_0_0,"[129, 128]",float32,66048
+gov_report:2,attention_output_0_0,"[129, 128]",float32,66048
+gov_report:2,attention_distribution_0_0,"[129, 1150]",float16,296700
+gov_report:2,attention_distribution_lengths_0_0,[129],int32,516
+gov_report:2,query_0_11,"[129, 128]",float32,66048
+gov_report:2,attention_output_0_11,"[129, 128]",float32,66048
+gov_report:2,attention_distribution_0_11,"[129, 1150]",float16,296700
+gov_report:2,attention_distribution_lengths_0_11,[129],int32,516
+gov_report:2,query_14_0,"[129, 128]",float32,66048
+gov_report:2,attention_output_14_0,"[129, 128]",float32,66048
+gov_report:2,attention_distribution_14_0,"[129, 1150]",float16,296700
+gov_report:2,attention_distribution_lengths_14_0,[129],int32,516
+gov_report:2,query_14_11,"[129, 128]",float32,66048
+gov_report:2,attention_output_14_11,"[129, 128]",float32,66048
+gov_report:2,attention_distribution_14_11,"[129, 1150]",float16,296700
+gov_report:2,attention_distribution_lengths_14_11,[129],int32,516
+gov_report:2,query_27_0,"[129, 128]",float32,66048
+gov_report:2,attention_output_27_0,"[129, 128]",float32,66048
+gov_report:2,attention_distribution_27_0,"[129, 1150]",float16,296700
+gov_report:2,attention_distribution_lengths_27_0,[129],int32,516
+gov_report:2,query_27_11,"[129, 128]",float32,66048
+gov_report:2,attention_output_27_11,"[129, 128]",float32,66048
+gov_report:2,attention_distribution_27_11,"[129, 1150]",float16,296700
+gov_report:2,attention_distribution_lengths_27_11,[129],int32,516
+gov_report:3,prompt_token_ids,[895],int32,3580
+gov_report:3,generated_token_ids,[128],int32,512
+gov_report:3,reference_log_probabilities,[128],float32,512
+gov_report:3,top_ids,"[128, 128]",int32,65536
+gov_report:3,top_probabilities,"[128, 128]",float32,65536
+gov_report:3,oracle_attention,"[129, 28, 2, 1023]",float16,14780304
+gov_report:3,oracle_attention_lengths,[129],int32,516
+gov_report:3,query_positions,[129],int32,516
+gov_report:3,query_0_0,"[129, 128]",float32,66048
+gov_report:3,attention_output_0_0,"[129, 128]",float32,66048
+gov_report:3,attention_distribution_0_0,"[129, 1023]",float16,263934
+gov_report:3,attention_distribution_lengths_0_0,[129],int32,516
+gov_report:3,query_0_11,"[129, 128]",float32,66048
+gov_report:3,attention_output_0_11,"[129, 128]",float32,66048
+gov_report:3,attention_distribution_0_11,"[129, 1023]",float16,263934
+gov_report:3,attention_distribution_lengths_0_11,[129],int32,516
+gov_report:3,query_14_0,"[129, 128]",float32,66048
+gov_report:3,attention_output_14_0,"[129, 128]",float32,66048
+gov_report:3,attention_distribution_14_0,"[129, 1023]",float16,263934
+gov_report:3,attention_distribution_lengths_14_0,[129],int32,516
+gov_report:3,query_14_11,"[129, 128]",float32,66048
+gov_report:3,attention_output_14_11,"[129, 128]",float32,66048
+gov_report:3,attention_distribution_14_11,"[129, 1023]",float16,263934
+gov_report:3,attention_distribution_lengths_14_11,[129],int32,516
+gov_report:3,query_27_0,"[129, 128]",float32,66048
+gov_report:3,attention_output_27_0,"[129, 128]",float32,66048
+gov_report:3,attention_distribution_27_0,"[129, 1023]",float16,263934
+gov_report:3,attention_distribution_lengths_27_0,[129],int32,516
+gov_report:3,query_27_11,"[129, 128]",float32,66048
+gov_report:3,attention_output_27_11,"[129, 128]",float32,66048
+gov_report:3,attention_distribution_27_11,"[129, 1023]",float16,263934
+gov_report:3,attention_distribution_lengths_27_11,[129],int32,516
+gov_report:4,prompt_token_ids,[981],int32,3924
+gov_report:4,generated_token_ids,[128],int32,512
+gov_report:4,reference_log_probabilities,[128],float32,512
+gov_report:4,top_ids,"[128, 128]",int32,65536
+gov_report:4,top_probabilities,"[128, 128]",float32,65536
+gov_report:4,oracle_attention,"[129, 28, 2, 1109]",float16,16022832
+gov_report:4,oracle_attention_lengths,[129],int32,516
+gov_report:4,query_positions,[129],int32,516
+gov_report:4,query_0_0,"[129, 128]",float32,66048
+gov_report:4,attention_output_0_0,"[129, 128]",float32,66048
+gov_report:4,attention_distribution_0_0,"[129, 1109]",float16,286122
+gov_report:4,attention_distribution_lengths_0_0,[129],int32,516
+gov_report:4,query_0_11,"[129, 128]",float32,66048
+gov_report:4,attention_output_0_11,"[129, 128]",float32,66048
+gov_report:4,attention_distribution_0_11,"[129, 1109]",float16,286122
+gov_report:4,attention_distribution_lengths_0_11,[129],int32,516
+gov_report:4,query_14_0,"[129, 128]",float32,66048
+gov_report:4,attention_output_14_0,"[129, 128]",float32,66048
+gov_report:4,attention_distribution_14_0,"[129, 1109]",float16,286122
+gov_report:4,attention_distribution_lengths_14_0,[129],int32,516
+gov_report:4,query_14_11,"[129, 128]",float32,66048
+gov_report:4,attention_output_14_11,"[129, 128]",float32,66048
+gov_report:4,attention_distribution_14_11,"[129, 1109]",float16,286122
+gov_report:4,attention_distribution_lengths_14_11,[129],int32,516
+gov_report:4,query_27_0,"[129, 128]",float32,66048
+gov_report:4,attention_output_27_0,"[129, 128]",float32,66048
+gov_report:4,attention_distribution_27_0,"[129, 1109]",float16,286122
+gov_report:4,attention_distribution_lengths_27_0,[129],int32,516
+gov_report:4,query_27_11,"[129, 128]",float32,66048
+gov_report:4,attention_output_27_11,"[129, 128]",float32,66048
+gov_report:4,attention_distribution_27_11,"[129, 1109]",float16,286122
+gov_report:4,attention_distribution_lengths_27_11,[129],int32,516
+reasoning_long_generation_0,prompt_token_ids,[488],int32,1952
+reasoning_long_generation_0,generated_token_ids,[128],int32,512
+reasoning_long_generation_0,reference_log_probabilities,[128],float32,512
+reasoning_long_generation_0,top_ids,"[128, 128]",int32,65536
+reasoning_long_generation_0,top_probabilities,"[128, 128]",float32,65536
+reasoning_long_generation_0,oracle_attention,"[129, 28, 2, 616]",float16,8899968
+reasoning_long_generation_0,oracle_attention_lengths,[129],int32,516
+reasoning_long_generation_0,query_positions,[129],int32,516
+reasoning_long_generation_0,query_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_output_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_distribution_0_0,"[129, 616]",float16,158928
+reasoning_long_generation_0,attention_distribution_lengths_0_0,[129],int32,516
+reasoning_long_generation_0,query_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_output_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_distribution_0_11,"[129, 616]",float16,158928
+reasoning_long_generation_0,attention_distribution_lengths_0_11,[129],int32,516
+reasoning_long_generation_0,query_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_output_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_distribution_14_0,"[129, 616]",float16,158928
+reasoning_long_generation_0,attention_distribution_lengths_14_0,[129],int32,516
+reasoning_long_generation_0,query_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_output_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_distribution_14_11,"[129, 616]",float16,158928
+reasoning_long_generation_0,attention_distribution_lengths_14_11,[129],int32,516
+reasoning_long_generation_0,query_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_output_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_distribution_27_0,"[129, 616]",float16,158928
+reasoning_long_generation_0,attention_distribution_lengths_27_0,[129],int32,516
+reasoning_long_generation_0,query_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_output_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_0,attention_distribution_27_11,"[129, 616]",float16,158928
+reasoning_long_generation_0,attention_distribution_lengths_27_11,[129],int32,516
+reasoning_long_generation_1,prompt_token_ids,[485],int32,1940
+reasoning_long_generation_1,generated_token_ids,[128],int32,512
+reasoning_long_generation_1,reference_log_probabilities,[128],float32,512
+reasoning_long_generation_1,top_ids,"[128, 128]",int32,65536
+reasoning_long_generation_1,top_probabilities,"[128, 128]",float32,65536
+reasoning_long_generation_1,oracle_attention,"[129, 28, 2, 613]",float16,8856624
+reasoning_long_generation_1,oracle_attention_lengths,[129],int32,516
+reasoning_long_generation_1,query_positions,[129],int32,516
+reasoning_long_generation_1,query_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_output_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_distribution_0_0,"[129, 613]",float16,158154
+reasoning_long_generation_1,attention_distribution_lengths_0_0,[129],int32,516
+reasoning_long_generation_1,query_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_output_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_distribution_0_11,"[129, 613]",float16,158154
+reasoning_long_generation_1,attention_distribution_lengths_0_11,[129],int32,516
+reasoning_long_generation_1,query_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_output_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_distribution_14_0,"[129, 613]",float16,158154
+reasoning_long_generation_1,attention_distribution_lengths_14_0,[129],int32,516
+reasoning_long_generation_1,query_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_output_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_distribution_14_11,"[129, 613]",float16,158154
+reasoning_long_generation_1,attention_distribution_lengths_14_11,[129],int32,516
+reasoning_long_generation_1,query_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_output_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_distribution_27_0,"[129, 613]",float16,158154
+reasoning_long_generation_1,attention_distribution_lengths_27_0,[129],int32,516
+reasoning_long_generation_1,query_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_output_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_1,attention_distribution_27_11,"[129, 613]",float16,158154
+reasoning_long_generation_1,attention_distribution_lengths_27_11,[129],int32,516
+reasoning_long_generation_2,prompt_token_ids,[487],int32,1948
+reasoning_long_generation_2,generated_token_ids,[128],int32,512
+reasoning_long_generation_2,reference_log_probabilities,[128],float32,512
+reasoning_long_generation_2,top_ids,"[128, 128]",int32,65536
+reasoning_long_generation_2,top_probabilities,"[128, 128]",float32,65536
+reasoning_long_generation_2,oracle_attention,"[129, 28, 2, 615]",float16,8885520
+reasoning_long_generation_2,oracle_attention_lengths,[129],int32,516
+reasoning_long_generation_2,query_positions,[129],int32,516
+reasoning_long_generation_2,query_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_output_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_distribution_0_0,"[129, 615]",float16,158670
+reasoning_long_generation_2,attention_distribution_lengths_0_0,[129],int32,516
+reasoning_long_generation_2,query_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_output_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_distribution_0_11,"[129, 615]",float16,158670
+reasoning_long_generation_2,attention_distribution_lengths_0_11,[129],int32,516
+reasoning_long_generation_2,query_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_output_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_distribution_14_0,"[129, 615]",float16,158670
+reasoning_long_generation_2,attention_distribution_lengths_14_0,[129],int32,516
+reasoning_long_generation_2,query_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_output_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_distribution_14_11,"[129, 615]",float16,158670
+reasoning_long_generation_2,attention_distribution_lengths_14_11,[129],int32,516
+reasoning_long_generation_2,query_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_output_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_distribution_27_0,"[129, 615]",float16,158670
+reasoning_long_generation_2,attention_distribution_lengths_27_0,[129],int32,516
+reasoning_long_generation_2,query_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_output_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_2,attention_distribution_27_11,"[129, 615]",float16,158670
+reasoning_long_generation_2,attention_distribution_lengths_27_11,[129],int32,516
+reasoning_long_generation_3,prompt_token_ids,[497],int32,1988
+reasoning_long_generation_3,generated_token_ids,[128],int32,512
+reasoning_long_generation_3,reference_log_probabilities,[128],float32,512
+reasoning_long_generation_3,top_ids,"[128, 128]",int32,65536
+reasoning_long_generation_3,top_probabilities,"[128, 128]",float32,65536
+reasoning_long_generation_3,oracle_attention,"[129, 28, 2, 625]",float16,9030000
+reasoning_long_generation_3,oracle_attention_lengths,[129],int32,516
+reasoning_long_generation_3,query_positions,[129],int32,516
+reasoning_long_generation_3,query_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_output_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_distribution_0_0,"[129, 625]",float16,161250
+reasoning_long_generation_3,attention_distribution_lengths_0_0,[129],int32,516
+reasoning_long_generation_3,query_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_output_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_distribution_0_11,"[129, 625]",float16,161250
+reasoning_long_generation_3,attention_distribution_lengths_0_11,[129],int32,516
+reasoning_long_generation_3,query_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_output_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_distribution_14_0,"[129, 625]",float16,161250
+reasoning_long_generation_3,attention_distribution_lengths_14_0,[129],int32,516
+reasoning_long_generation_3,query_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_output_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_distribution_14_11,"[129, 625]",float16,161250
+reasoning_long_generation_3,attention_distribution_lengths_14_11,[129],int32,516
+reasoning_long_generation_3,query_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_output_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_distribution_27_0,"[129, 625]",float16,161250
+reasoning_long_generation_3,attention_distribution_lengths_27_0,[129],int32,516
+reasoning_long_generation_3,query_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_output_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_3,attention_distribution_27_11,"[129, 625]",float16,161250
+reasoning_long_generation_3,attention_distribution_lengths_27_11,[129],int32,516
+reasoning_long_generation_4,prompt_token_ids,[495],int32,1980
+reasoning_long_generation_4,generated_token_ids,[128],int32,512
+reasoning_long_generation_4,reference_log_probabilities,[128],float32,512
+reasoning_long_generation_4,top_ids,"[128, 128]",int32,65536
+reasoning_long_generation_4,top_probabilities,"[128, 128]",float32,65536
+reasoning_long_generation_4,oracle_attention,"[129, 28, 2, 623]",float16,9001104
+reasoning_long_generation_4,oracle_attention_lengths,[129],int32,516
+reasoning_long_generation_4,query_positions,[129],int32,516
+reasoning_long_generation_4,query_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_output_0_0,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_distribution_0_0,"[129, 623]",float16,160734
+reasoning_long_generation_4,attention_distribution_lengths_0_0,[129],int32,516
+reasoning_long_generation_4,query_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_output_0_11,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_distribution_0_11,"[129, 623]",float16,160734
+reasoning_long_generation_4,attention_distribution_lengths_0_11,[129],int32,516
+reasoning_long_generation_4,query_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_output_14_0,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_distribution_14_0,"[129, 623]",float16,160734
+reasoning_long_generation_4,attention_distribution_lengths_14_0,[129],int32,516
+reasoning_long_generation_4,query_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_output_14_11,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_distribution_14_11,"[129, 623]",float16,160734
+reasoning_long_generation_4,attention_distribution_lengths_14_11,[129],int32,516
+reasoning_long_generation_4,query_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_output_27_0,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_distribution_27_0,"[129, 623]",float16,160734
+reasoning_long_generation_4,attention_distribution_lengths_27_0,[129],int32,516
+reasoning_long_generation_4,query_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_output_27_11,"[129, 128]",float32,66048
+reasoning_long_generation_4,attention_distribution_27_11,"[129, 623]",float16,160734
+reasoning_long_generation_4,attention_distribution_lengths_27_11,[129],int32,516
+synthetic_niah_0,prompt_token_ids,[1262],int32,5048
+synthetic_niah_0,generated_token_ids,[128],int32,512
+synthetic_niah_0,reference_log_probabilities,[128],float32,512
+synthetic_niah_0,top_ids,"[128, 128]",int32,65536
+synthetic_niah_0,top_probabilities,"[128, 128]",float32,65536
+synthetic_niah_0,oracle_attention,"[129, 28, 2, 1390]",float16,20082720
+synthetic_niah_0,oracle_attention_lengths,[129],int32,516
+synthetic_niah_0,query_positions,[129],int32,516
+synthetic_niah_0,query_0_0,"[129, 128]",float32,66048
+synthetic_niah_0,attention_output_0_0,"[129, 128]",float32,66048
+synthetic_niah_0,attention_distribution_0_0,"[129, 1390]",float16,358620
+synthetic_niah_0,attention_distribution_lengths_0_0,[129],int32,516
+synthetic_niah_0,query_0_11,"[129, 128]",float32,66048
+synthetic_niah_0,attention_output_0_11,"[129, 128]",float32,66048
+synthetic_niah_0,attention_distribution_0_11,"[129, 1390]",float16,358620
+synthetic_niah_0,attention_distribution_lengths_0_11,[129],int32,516
+synthetic_niah_0,query_14_0,"[129, 128]",float32,66048
+synthetic_niah_0,attention_output_14_0,"[129, 128]",float32,66048
+synthetic_niah_0,attention_distribution_14_0,"[129, 1390]",float16,358620
+synthetic_niah_0,attention_distribution_lengths_14_0,[129],int32,516
+synthetic_niah_0,query_14_11,"[129, 128]",float32,66048
+synthetic_niah_0,attention_output_14_11,"[129, 128]",float32,66048
+synthetic_niah_0,attention_distribution_14_11,"[129, 1390]",float16,358620
+synthetic_niah_0,attention_distribution_lengths_14_11,[129],int32,516
+synthetic_niah_0,query_27_0,"[129, 128]",float32,66048
+synthetic_niah_0,attention_output_27_0,"[129, 128]",float32,66048
+synthetic_niah_0,attention_distribution_27_0,"[129, 1390]",float16,358620
+synthetic_niah_0,attention_distribution_lengths_27_0,[129],int32,516
+synthetic_niah_0,query_27_11,"[129, 128]",float32,66048
+synthetic_niah_0,attention_output_27_11,"[129, 128]",float32,66048
+synthetic_niah_0,attention_distribution_27_11,"[129, 1390]",float16,358620
+synthetic_niah_0,attention_distribution_lengths_27_11,[129],int32,516
+synthetic_niah_1,prompt_token_ids,[1264],int32,5056
+synthetic_niah_1,generated_token_ids,[128],int32,512
+synthetic_niah_1,reference_log_probabilities,[128],float32,512
+synthetic_niah_1,top_ids,"[128, 128]",int32,65536
+synthetic_niah_1,top_probabilities,"[128, 128]",float32,65536
+synthetic_niah_1,oracle_attention,"[129, 28, 2, 1392]",float16,20111616
+synthetic_niah_1,oracle_attention_lengths,[129],int32,516
+synthetic_niah_1,query_positions,[129],int32,516
+synthetic_niah_1,query_0_0,"[129, 128]",float32,66048
+synthetic_niah_1,attention_output_0_0,"[129, 128]",float32,66048
+synthetic_niah_1,attention_distribution_0_0,"[129, 1392]",float16,359136
+synthetic_niah_1,attention_distribution_lengths_0_0,[129],int32,516
+synthetic_niah_1,query_0_11,"[129, 128]",float32,66048
+synthetic_niah_1,attention_output_0_11,"[129, 128]",float32,66048
+synthetic_niah_1,attention_distribution_0_11,"[129, 1392]",float16,359136
+synthetic_niah_1,attention_distribution_lengths_0_11,[129],int32,516
+synthetic_niah_1,query_14_0,"[129, 128]",float32,66048
+synthetic_niah_1,attention_output_14_0,"[129, 128]",float32,66048
+synthetic_niah_1,attention_distribution_14_0,"[129, 1392]",float16,359136
+synthetic_niah_1,attention_distribution_lengths_14_0,[129],int32,516
+synthetic_niah_1,query_14_11,"[129, 128]",float32,66048
+synthetic_niah_1,attention_output_14_11,"[129, 128]",float32,66048
+synthetic_niah_1,attention_distribution_14_11,"[129, 1392]",float16,359136
+synthetic_niah_1,attention_distribution_lengths_14_11,[129],int32,516
+synthetic_niah_1,query_27_0,"[129, 128]",float32,66048
+synthetic_niah_1,attention_output_27_0,"[129, 128]",float32,66048
+synthetic_niah_1,attention_distribution_27_0,"[129, 1392]",float16,359136
+synthetic_niah_1,attention_distribution_lengths_27_0,[129],int32,516
+synthetic_niah_1,query_27_11,"[129, 128]",float32,66048
+synthetic_niah_1,attention_output_27_11,"[129, 128]",float32,66048
+synthetic_niah_1,attention_distribution_27_11,"[129, 1392]",float16,359136
+synthetic_niah_1,attention_distribution_lengths_27_11,[129],int32,516
+synthetic_niah_2,prompt_token_ids,[1262],int32,5048
+synthetic_niah_2,generated_token_ids,[126],int32,504
+synthetic_niah_2,reference_log_probabilities,[126],float32,504
+synthetic_niah_2,top_ids,"[126, 128]",int32,64512
+synthetic_niah_2,top_probabilities,"[126, 128]",float32,64512
+synthetic_niah_2,oracle_attention,"[127, 28, 2, 1388]",float16,19742912
+synthetic_niah_2,oracle_attention_lengths,[127],int32,508
+synthetic_niah_2,query_positions,[127],int32,508
+synthetic_niah_2,query_0_0,"[127, 128]",float32,65024
+synthetic_niah_2,attention_output_0_0,"[127, 128]",float32,65024
+synthetic_niah_2,attention_distribution_0_0,"[127, 1388]",float16,352552
+synthetic_niah_2,attention_distribution_lengths_0_0,[127],int32,508
+synthetic_niah_2,query_0_11,"[127, 128]",float32,65024
+synthetic_niah_2,attention_output_0_11,"[127, 128]",float32,65024
+synthetic_niah_2,attention_distribution_0_11,"[127, 1388]",float16,352552
+synthetic_niah_2,attention_distribution_lengths_0_11,[127],int32,508
+synthetic_niah_2,query_14_0,"[127, 128]",float32,65024
+synthetic_niah_2,attention_output_14_0,"[127, 128]",float32,65024
+synthetic_niah_2,attention_distribution_14_0,"[127, 1388]",float16,352552
+synthetic_niah_2,attention_distribution_lengths_14_0,[127],int32,508
+synthetic_niah_2,query_14_11,"[127, 128]",float32,65024
+synthetic_niah_2,attention_output_14_11,"[127, 128]",float32,65024
+synthetic_niah_2,attention_distribution_14_11,"[127, 1388]",float16,352552
+synthetic_niah_2,attention_distribution_lengths_14_11,[127],int32,508
+synthetic_niah_2,query_27_0,"[127, 128]",float32,65024
+synthetic_niah_2,attention_output_27_0,"[127, 128]",float32,65024
+synthetic_niah_2,attention_distribution_27_0,"[127, 1388]",float16,352552
+synthetic_niah_2,attention_distribution_lengths_27_0,[127],int32,508
+synthetic_niah_2,query_27_11,"[127, 128]",float32,65024
+synthetic_niah_2,attention_output_27_11,"[127, 128]",float32,65024
+synthetic_niah_2,attention_distribution_27_11,"[127, 1388]",float16,352552
+synthetic_niah_2,attention_distribution_lengths_27_11,[127],int32,508
+synthetic_niah_3,prompt_token_ids,[1262],int32,5048
+synthetic_niah_3,generated_token_ids,[115],int32,460
+synthetic_niah_3,reference_log_probabilities,[115],float32,460
+synthetic_niah_3,top_ids,"[115, 128]",int32,58880
+synthetic_niah_3,top_probabilities,"[115, 128]",float32,58880
+synthetic_niah_3,oracle_attention,"[116, 28, 2, 1377]",float16,17889984
+synthetic_niah_3,oracle_attention_lengths,[116],int32,464
+synthetic_niah_3,query_positions,[116],int32,464
+synthetic_niah_3,query_0_0,"[116, 128]",float32,59392
+synthetic_niah_3,attention_output_0_0,"[116, 128]",float32,59392
+synthetic_niah_3,attention_distribution_0_0,"[116, 1377]",float16,319464
+synthetic_niah_3,attention_distribution_lengths_0_0,[116],int32,464
+synthetic_niah_3,query_0_11,"[116, 128]",float32,59392
+synthetic_niah_3,attention_output_0_11,"[116, 128]",float32,59392
+synthetic_niah_3,attention_distribution_0_11,"[116, 1377]",float16,319464
+synthetic_niah_3,attention_distribution_lengths_0_11,[116],int32,464
+synthetic_niah_3,query_14_0,"[116, 128]",float32,59392
+synthetic_niah_3,attention_output_14_0,"[116, 128]",float32,59392
+synthetic_niah_3,attention_distribution_14_0,"[116, 1377]",float16,319464
+synthetic_niah_3,attention_distribution_lengths_14_0,[116],int32,464
+synthetic_niah_3,query_14_11,"[116, 128]",float32,59392
+synthetic_niah_3,attention_output_14_11,"[116, 128]",float32,59392
+synthetic_niah_3,attention_distribution_14_11,"[116, 1377]",float16,319464
+synthetic_niah_3,attention_distribution_lengths_14_11,[116],int32,464
+synthetic_niah_3,query_27_0,"[116, 128]",float32,59392
+synthetic_niah_3,attention_output_27_0,"[116, 128]",float32,59392
+synthetic_niah_3,attention_distribution_27_0,"[116, 1377]",float16,319464
+synthetic_niah_3,attention_distribution_lengths_27_0,[116],int32,464
+synthetic_niah_3,query_27_11,"[116, 128]",float32,59392
+synthetic_niah_3,attention_output_27_11,"[116, 128]",float32,59392
+synthetic_niah_3,attention_distribution_27_11,"[116, 1377]",float16,319464
+synthetic_niah_3,attention_distribution_lengths_27_11,[116],int32,464
+synthetic_niah_4,prompt_token_ids,[1264],int32,5056
+synthetic_niah_4,generated_token_ids,[128],int32,512
+synthetic_niah_4,reference_log_probabilities,[128],float32,512
+synthetic_niah_4,top_ids,"[128, 128]",int32,65536
+synthetic_niah_4,top_probabilities,"[128, 128]",float32,65536
+synthetic_niah_4,oracle_attention,"[129, 28, 2, 1392]",float16,20111616
+synthetic_niah_4,oracle_attention_lengths,[129],int32,516
+synthetic_niah_4,query_positions,[129],int32,516
+synthetic_niah_4,query_0_0,"[129, 128]",float32,66048
+synthetic_niah_4,attention_output_0_0,"[129, 128]",float32,66048
+synthetic_niah_4,attention_distribution_0_0,"[129, 1392]",float16,359136
+synthetic_niah_4,attention_distribution_lengths_0_0,[129],int32,516
+synthetic_niah_4,query_0_11,"[129, 128]",float32,66048
+synthetic_niah_4,attention_output_0_11,"[129, 128]",float32,66048
+synthetic_niah_4,attention_distribution_0_11,"[129, 1392]",float16,359136
+synthetic_niah_4,attention_distribution_lengths_0_11,[129],int32,516
+synthetic_niah_4,query_14_0,"[129, 128]",float32,66048
+synthetic_niah_4,attention_output_14_0,"[129, 128]",float32,66048
+synthetic_niah_4,attention_distribution_14_0,"[129, 1392]",float16,359136
+synthetic_niah_4,attention_distribution_lengths_14_0,[129],int32,516
+synthetic_niah_4,query_14_11,"[129, 128]",float32,66048
+synthetic_niah_4,attention_output_14_11,"[129, 128]",float32,66048
+synthetic_niah_4,attention_distribution_14_11,"[129, 1392]",float16,359136
+synthetic_niah_4,attention_distribution_lengths_14_11,[129],int32,516
+synthetic_niah_4,query_27_0,"[129, 128]",float32,66048
+synthetic_niah_4,attention_output_27_0,"[129, 128]",float32,66048
+synthetic_niah_4,attention_distribution_27_0,"[129, 1392]",float16,359136
+synthetic_niah_4,attention_distribution_lengths_27_0,[129],int32,516
+synthetic_niah_4,query_27_11,"[129, 128]",float32,66048
+synthetic_niah_4,attention_output_27_11,"[129, 128]",float32,66048
+synthetic_niah_4,attention_distribution_27_11,"[129, 1392]",float16,359136
+synthetic_niah_4,attention_distribution_lengths_27_11,[129],int32,516

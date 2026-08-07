@@ -1,0 +1,839 @@
+{
+  "all_old_manifests_unchanged": true,
+  "calibration_model_instance_count": 77,
+  "candidate_generator": {
+    "calibration": {
+      "action_only_risk": {
+        "minimum_sequence_spearman": -0.3333333333333334,
+        "normalized_regret": 0.6161941593654094,
+        "overall_spearman": 0.16666666666666669,
+        "pairwise_accuracy": 0.5625,
+        "positive_sequence_fraction": 0.75,
+        "score": "action_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.9880715263139002,
+          "niah_single_1": 0.2443167924169188
+        },
+        "task_spearman": {
+          "gov_report": -0.1428571428571429,
+          "niah_single_1": 0.4761904761904763
+        },
+        "top1_accuracy": 0.0
+      },
+      "adjacent_only_risk": {
+        "minimum_sequence_spearman": -0.30952380952380953,
+        "normalized_regret": 0.25244009000846435,
+        "overall_spearman": 0.29166666666666674,
+        "pairwise_accuracy": 0.6071428571428571,
+        "positive_sequence_fraction": 0.75,
+        "score": "adjacent_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.5,
+          "niah_single_1": 0.004880180016928693
+        },
+        "task_spearman": {
+          "gov_report": -0.09523809523809523,
+          "niah_single_1": 0.6785714285714287
+        },
+        "top1_accuracy": 0.5
+      },
+      "multi_all_endpoint_risk": {
+        "minimum_sequence_spearman": 0.9761904761904763,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.9880952380952381,
+        "pairwise_accuracy": 0.9821428571428572,
+        "positive_sequence_fraction": 1.0,
+        "score": "multi_all_endpoint_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9880952380952381,
+          "niah_single_1": 0.9880952380952381
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b27_path_k1_risk": {
+        "minimum_sequence_spearman": 0.9285714285714287,
+        "normalized_regret": 0.00419567304415213,
+        "overall_spearman": 0.9702380952380953,
+        "pairwise_accuracy": 0.9642857142857143,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_path_k1_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.00839134608830426,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9523809523809526,
+          "niah_single_1": 0.9880952380952381
+        },
+        "top1_accuracy": 0.75
+      },
+      "probe_b27_risk": {
+        "minimum_sequence_spearman": 0.9285714285714287,
+        "normalized_regret": 0.00419567304415213,
+        "overall_spearman": 0.9702380952380953,
+        "pairwise_accuracy": 0.9642857142857143,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.00839134608830426,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9523809523809526,
+          "niah_single_1": 0.9880952380952381
+        },
+        "top1_accuracy": 0.75
+      }
+    },
+    "formal": {
+      "action_only_risk": {
+        "minimum_sequence_spearman": 0.4285714285714286,
+        "normalized_regret": 0.24688729180614205,
+        "overall_spearman": 0.7142857142857143,
+        "pairwise_accuracy": 0.8035714285714286,
+        "positive_sequence_fraction": 1.0,
+        "score": "action_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.38928567154935756,
+          "niah_single_1": 0.10448891206292651
+        },
+        "task_spearman": {
+          "gov_report": 0.5595238095238095,
+          "niah_single_1": 0.8690476190476191
+        },
+        "top1_accuracy": 0.0
+      },
+      "adjacent_only_risk": {
+        "minimum_sequence_spearman": 0.4285714285714286,
+        "normalized_regret": 0.28984353305618227,
+        "overall_spearman": 0.6904761904761905,
+        "pairwise_accuracy": 0.7857142857142857,
+        "positive_sequence_fraction": 1.0,
+        "score": "adjacent_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.38928567154935756,
+          "niah_single_1": 0.190401394563007
+        },
+        "task_spearman": {
+          "gov_report": 0.5595238095238095,
+          "niah_single_1": 0.8214285714285715
+        },
+        "top1_accuracy": 0.0
+      },
+      "multi_all_endpoint_risk": {
+        "minimum_sequence_spearman": 1.0,
+        "normalized_regret": 0.0,
+        "overall_spearman": 1.0,
+        "pairwise_accuracy": 1.0,
+        "positive_sequence_fraction": 1.0,
+        "score": "multi_all_endpoint_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 1.0,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b27_path_k1_risk": {
+        "minimum_sequence_spearman": 0.9285714285714287,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.9821428571428572,
+        "pairwise_accuracy": 0.9821428571428572,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_path_k1_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9642857142857144,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b27_risk": {
+        "minimum_sequence_spearman": 0.9285714285714287,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.9821428571428572,
+        "pairwise_accuracy": 0.9821428571428572,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9642857142857144,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      }
+    },
+    "name": "mechanism_disagreement_pool_v1",
+    "replication": {
+      "action_only_risk": {
+        "minimum_sequence_spearman": 0.3333333333333334,
+        "normalized_regret": 0.13279686773971694,
+        "overall_spearman": 0.630952380952381,
+        "pairwise_accuracy": 0.732142857142857,
+        "positive_sequence_fraction": 1.0,
+        "score": "action_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.13082327222498757,
+          "niah_single_1": 0.1347704632544463
+        },
+        "task_spearman": {
+          "gov_report": 0.6666666666666667,
+          "niah_single_1": 0.5952380952380953
+        },
+        "top1_accuracy": 0.0
+      },
+      "adjacent_only_risk": {
+        "minimum_sequence_spearman": 0.19047619047619052,
+        "normalized_regret": 0.1134765851717246,
+        "overall_spearman": 0.5892857142857144,
+        "pairwise_accuracy": 0.7232142857142857,
+        "positive_sequence_fraction": 1.0,
+        "score": "adjacent_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.13082327222498757,
+          "niah_single_1": 0.09612989811846163
+        },
+        "task_spearman": {
+          "gov_report": 0.6666666666666667,
+          "niah_single_1": 0.511904761904762
+        },
+        "top1_accuracy": 0.25
+      },
+      "multi_all_endpoint_risk": {
+        "minimum_sequence_spearman": 0.9761904761904763,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.9880952380952381,
+        "pairwise_accuracy": 0.9821428571428572,
+        "positive_sequence_fraction": 1.0,
+        "score": "multi_all_endpoint_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9880952380952381,
+          "niah_single_1": 0.9880952380952381
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b27_path_k1_risk": {
+        "minimum_sequence_spearman": 0.9523809523809524,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.9880952380952381,
+        "pairwise_accuracy": 0.9821428571428572,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_path_k1_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9761904761904763,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b27_risk": {
+        "minimum_sequence_spearman": 0.9523809523809524,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.9880952380952381,
+        "pairwise_accuracy": 0.9821428571428572,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9761904761904763,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      }
+    },
+    "uses_candidate_endpoint_logits": false,
+    "uses_exact_physical_kl": false
+  },
+  "config_sha256": "3c5b530f77ca76bfac50c2eeb9a352d9f145a18eac75084f5133b6250d467b04",
+  "discrepancy": {
+    "all_layer_adjacent_cosine_mean": 0.29641000822499536,
+    "all_layer_adjacent_relative_l2_mean": 0.8686521686103916,
+    "all_layer_injection_cosine_mean": 0.5585484686382047,
+    "all_layer_injection_relative_l2_mean": 0.6842402038789973,
+    "layer0_injection_cosine_mean": 0.9984399069776575,
+    "layer0_injection_relative_l2_median": 0.017493648790222617
+  },
+  "formal": {
+    "minimum_sequence_spearman": 0.9285714285714287,
+    "normalized_regret": 0.0,
+    "overall_spearman": 0.9821428571428572,
+    "pairwise_accuracy": 0.9821428571428572,
+    "positive_sequence_fraction": 1.0,
+    "score": "probe_b27_path_k1_risk",
+    "sequence_count": 4,
+    "task_normalized_regret": {
+      "gov_report": 0.0,
+      "niah_single_1": 0.0
+    },
+    "task_spearman": {
+      "gov_report": 0.9642857142857144,
+      "niah_single_1": 1.0
+    },
+    "top1_accuracy": 1.0
+  },
+  "formal_action_only": {
+    "minimum_sequence_spearman": 0.4285714285714286,
+    "normalized_regret": 0.24688729180614205,
+    "overall_spearman": 0.7142857142857143,
+    "pairwise_accuracy": 0.8035714285714286,
+    "positive_sequence_fraction": 1.0,
+    "score": "action_only_risk",
+    "sequence_count": 4,
+    "task_normalized_regret": {
+      "gov_report": 0.38928567154935756,
+      "niah_single_1": 0.10448891206292651
+    },
+    "task_spearman": {
+      "gov_report": 0.5595238095238095,
+      "niah_single_1": 0.8690476190476191
+    },
+    "top1_accuracy": 0.0
+  },
+  "formal_dense": {
+    "minimum_sequence_spearman": 1.0,
+    "normalized_regret": 0.0,
+    "overall_spearman": 1.0,
+    "pairwise_accuracy": 1.0,
+    "positive_sequence_fraction": 1.0,
+    "score": "multi_all_endpoint_risk",
+    "sequence_count": 4,
+    "task_normalized_regret": {
+      "gov_report": 0.0,
+      "niah_single_1": 0.0
+    },
+    "task_spearman": {
+      "gov_report": 1.0,
+      "niah_single_1": 1.0
+    },
+    "top1_accuracy": 1.0
+  },
+  "formal_gate": {
+    "checks": {
+      "each_task_action_only_regret_strict_gain": true,
+      "each_task_spearman": true,
+      "overall_spearman": true,
+      "pairwise_accuracy": true,
+      "positive_sequence_fraction": true,
+      "top1_accuracy": true
+    },
+    "passed": true
+  },
+  "frozen_model_sha256": "00ac4a261bb0dfc33b3ce6ea67ae6a3cc7720c2587737287e676adbcb169e872",
+  "integrity": {
+    "all_candidate_generator_label_free": true,
+    "all_clone_isolated": true,
+    "all_query_aligned": true,
+    "all_token_aligned": true,
+    "maximum_baseline_repeat_logit_error": 0.0,
+    "maximum_candidate_repeat_logit_error": 0.0,
+    "maximum_identity_absolute_l2": 1.0463566090360008e-13,
+    "maximum_multi_reconstruction_error": 0.0,
+    "maximum_no_op_exact_kl": 0.0,
+    "maximum_readout_reconstruction_error": 0.0,
+    "maximum_stable_identity_relative_l2": 3.907320106173118e-07,
+    "minimum_exact_kl_range": 4.625299102083646e-10,
+    "minimum_finite_candidates": 8,
+    "passed": true,
+    "unit_count": 56
+  },
+  "iteration_count": 17,
+  "iteration_ledger": [
+    "I01_M0_target_execution_and_identity_audit",
+    "I02_M1_P3_transfer_discrepancy_decomposition",
+    "I03_M2_current_physical_state_conditioned_injection",
+    "I04_M3_single_analytic_boundary_scan",
+    "I05_M4_sparse_multi_boundary_forward_selection",
+    "I06_M5_downstream_KV_summary_readouts",
+    "I07_M6_low_rank_cross_layer_interactions",
+    "I08_M7_primary_physical_candidate_generation",
+    "I09_M8_mechanistic_vs_diagnostic_sufficiency",
+    "I10_M9_dense_all_layer_mechanistic_oracle",
+    "I11_sparse_compression_fallback",
+    "I12_candidate_specific_probe_and_path_calibration",
+    "I13_first_frozen_formal_and_replication",
+    "I14_dense_recovery_formal_and_replication",
+    "I15_budget_history_anchor_candidate_scope_attribution",
+    "I16_mechanism_disagreement_generator_calibration_and_path",
+    "I17_fresh_formal_frozen_replication_and_minimality"
+  ],
+  "minimality": {
+    "boundary": 27,
+    "boundary_count": 1,
+    "candidate_probe_count": 1,
+    "formal_action_only_gain_retention": 0.9375000000000002,
+    "formal_dense_spearman_gap": 0.017857142857142794,
+    "parameter_count": 0,
+    "passed": true,
+    "path_midpoint_count": 1,
+    "replication_dense_spearman_gap": 0.0
+  },
+  "model_class_best": [
+    {
+      "model_class": "M2",
+      "name": "M2_adjacent_only_current_response",
+      "overall_spearman": 0.9017857142857144,
+      "passed": false
+    },
+    {
+      "model_class": "M3",
+      "name": "M3_single_boundary_b17",
+      "overall_spearman": 0.8125000000000001,
+      "passed": false
+    },
+    {
+      "model_class": "M4",
+      "name": "M4_sparse_boundary_ridge_17_16_5_18",
+      "overall_spearman": 0.8630952380952382,
+      "passed": false
+    },
+    {
+      "model_class": "M5",
+      "name": "M5_KV_augmented_depth3_tree_1",
+      "overall_spearman": 0.8470643173982406,
+      "passed": false
+    },
+    {
+      "model_class": "M6",
+      "name": "M6_low_rank_interaction_rank2",
+      "overall_spearman": 0.8303571428571429,
+      "passed": false
+    },
+    {
+      "model_class": "M8",
+      "name": "M8_dense_current_state_ridge",
+      "overall_spearman": 0.6130952380952381,
+      "passed": false
+    },
+    {
+      "model_class": "M9",
+      "name": "M9_dense_mechanistic_all28",
+      "overall_spearman": 1.0,
+      "passed": true
+    },
+    {
+      "model_class": "inherited_control",
+      "name": "M1_O0_inherited_P3_scalar_transfer",
+      "overall_spearman": 0.1876,
+      "passed": false
+    },
+    {
+      "model_class": "physical_path",
+      "name": "physical_path_b18_k1",
+      "overall_spearman": 0.9166666666666667,
+      "passed": true
+    }
+  ],
+  "old_manifest_checks": {
+    "p0_manifest": {
+      "current": "7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57",
+      "expected": "7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57",
+      "unchanged": true
+    },
+    "p1_manifest": {
+      "current": "e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1",
+      "expected": "e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1",
+      "unchanged": true
+    },
+    "p2_manifest": {
+      "current": "768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51",
+      "expected": "768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51",
+      "unchanged": true
+    },
+    "p2_recovery_manifest": {
+      "current": "353aa54aa3fb912f907337769864a510102f9a429d7013a92ca9d277b72ce4dd",
+      "expected": "353aa54aa3fb912f907337769864a510102f9a429d7013a92ca9d277b72ce4dd",
+      "unchanged": true
+    },
+    "p3_manifest": {
+      "current": "f6b9137ca4f1b36dbc25894ec1abaf45a618b43fea5660b4baf7c430e88cc4ff",
+      "expected": "f6b9137ca4f1b36dbc25894ec1abaf45a618b43fea5660b4baf7c430e88cc4ff",
+      "unchanged": true
+    }
+  },
+  "outcome": "P3PR-S",
+  "program": "p3_physical_recovery",
+  "replication": {
+    "minimum_sequence_spearman": 0.9523809523809524,
+    "normalized_regret": 0.0,
+    "overall_spearman": 0.9880952380952381,
+    "pairwise_accuracy": 0.9821428571428572,
+    "positive_sequence_fraction": 1.0,
+    "score": "probe_b27_path_k1_risk",
+    "sequence_count": 4,
+    "task_normalized_regret": {
+      "gov_report": 0.0,
+      "niah_single_1": 0.0
+    },
+    "task_spearman": {
+      "gov_report": 0.9761904761904763,
+      "niah_single_1": 1.0
+    },
+    "top1_accuracy": 1.0
+  },
+  "replication_action_only": {
+    "minimum_sequence_spearman": 0.3333333333333334,
+    "normalized_regret": 0.13279686773971694,
+    "overall_spearman": 0.630952380952381,
+    "pairwise_accuracy": 0.732142857142857,
+    "positive_sequence_fraction": 1.0,
+    "score": "action_only_risk",
+    "sequence_count": 4,
+    "task_normalized_regret": {
+      "gov_report": 0.13082327222498757,
+      "niah_single_1": 0.1347704632544463
+    },
+    "task_spearman": {
+      "gov_report": 0.6666666666666667,
+      "niah_single_1": 0.5952380952380953
+    },
+    "top1_accuracy": 0.0
+  },
+  "replication_dense": {
+    "minimum_sequence_spearman": 0.9761904761904763,
+    "normalized_regret": 0.0,
+    "overall_spearman": 0.9880952380952381,
+    "pairwise_accuracy": 0.9821428571428572,
+    "positive_sequence_fraction": 1.0,
+    "score": "multi_all_endpoint_risk",
+    "sequence_count": 4,
+    "task_normalized_regret": {
+      "gov_report": 0.0,
+      "niah_single_1": 0.0
+    },
+    "task_spearman": {
+      "gov_report": 0.9880952380952381,
+      "niah_single_1": 0.9880952380952381
+    },
+    "top1_accuracy": 1.0
+  },
+  "replication_gate": {
+    "checks": {
+      "each_task_action_only_regret_strict_gain": true,
+      "each_task_spearman": true,
+      "overall_spearman": true,
+      "pairwise_accuracy": true,
+      "positive_sequence_fraction": true,
+      "top1_accuracy": true
+    },
+    "passed": true
+  },
+  "schema_version": 1,
+  "scope": {
+    "scope_budget": {
+      "action_only_risk": {
+        "minimum_sequence_spearman": 0.7857142857142858,
+        "normalized_regret": 0.00014175338992835737,
+        "overall_spearman": 0.9047619047619049,
+        "pairwise_accuracy": 0.9017857142857144,
+        "positive_sequence_fraction": 1.0,
+        "score": "action_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.00028350677985671473,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.8452380952380953,
+          "niah_single_1": 0.9642857142857144
+        },
+        "top1_accuracy": 0.75
+      },
+      "adjacent_only_risk": {
+        "minimum_sequence_spearman": 0.7857142857142858,
+        "normalized_regret": 0.00014175338992835737,
+        "overall_spearman": 0.880952380952381,
+        "pairwise_accuracy": 0.875,
+        "positive_sequence_fraction": 1.0,
+        "score": "adjacent_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.00028350677985671473,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.8333333333333335,
+          "niah_single_1": 0.9285714285714286
+        },
+        "top1_accuracy": 0.75
+      },
+      "multi_all_endpoint_risk": {
+        "minimum_sequence_spearman": 1.0,
+        "normalized_regret": 0.0,
+        "overall_spearman": 1.0,
+        "pairwise_accuracy": 1.0,
+        "positive_sequence_fraction": 1.0,
+        "score": "multi_all_endpoint_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 1.0,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b18_path_k1_risk": {
+        "minimum_sequence_spearman": 0.9047619047619048,
+        "normalized_regret": 3.934933943100602e-05,
+        "overall_spearman": 0.9345238095238095,
+        "pairwise_accuracy": 0.9196428571428571,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b18_path_k1_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 7.869867886201204e-05
+        },
+        "task_spearman": {
+          "gov_report": 0.9404761904761905,
+          "niah_single_1": 0.9285714285714286
+        },
+        "top1_accuracy": 0.75
+      },
+      "probe_b27_risk": {
+        "minimum_sequence_spearman": 0.9761904761904763,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.9821428571428572,
+        "pairwise_accuracy": 0.9732142857142857,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9761904761904763,
+          "niah_single_1": 0.9880952380952381
+        },
+        "top1_accuracy": 1.0
+      }
+    },
+    "scope_candidate_pool": {
+      "action_only_risk": {
+        "minimum_sequence_spearman": 0.7857142857142858,
+        "normalized_regret": 8.138025802782798e-05,
+        "overall_spearman": 0.898809523809524,
+        "pairwise_accuracy": 0.8928571428571428,
+        "positive_sequence_fraction": 1.0,
+        "score": "action_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.00016276051605565597,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.8333333333333335,
+          "niah_single_1": 0.9642857142857144
+        },
+        "top1_accuracy": 0.75
+      },
+      "adjacent_only_risk": {
+        "minimum_sequence_spearman": 0.7857142857142858,
+        "normalized_regret": 8.138025802782798e-05,
+        "overall_spearman": 0.898809523809524,
+        "pairwise_accuracy": 0.8928571428571428,
+        "positive_sequence_fraction": 1.0,
+        "score": "adjacent_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.00016276051605565597,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.8333333333333335,
+          "niah_single_1": 0.9642857142857144
+        },
+        "top1_accuracy": 0.75
+      },
+      "multi_all_endpoint_risk": {
+        "minimum_sequence_spearman": 1.0,
+        "normalized_regret": 0.0,
+        "overall_spearman": 1.0,
+        "pairwise_accuracy": 1.0,
+        "positive_sequence_fraction": 1.0,
+        "score": "multi_all_endpoint_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 1.0,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b18_path_k1_risk": {
+        "minimum_sequence_spearman": 0.7380952380952381,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.8928571428571429,
+        "pairwise_accuracy": 0.9017857142857143,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b18_path_k1_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.8690476190476191,
+          "niah_single_1": 0.9166666666666667
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b27_risk": {
+        "minimum_sequence_spearman": 0.9285714285714287,
+        "normalized_regret": 0.0,
+        "overall_spearman": 0.9821428571428572,
+        "pairwise_accuracy": 0.9821428571428572,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9642857142857144,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      }
+    },
+    "scope_history_anchor": {
+      "action_only_risk": {
+        "minimum_sequence_spearman": 0.9285714285714287,
+        "normalized_regret": 3.3266382858905994e-07,
+        "overall_spearman": 0.9642857142857144,
+        "pairwise_accuracy": 0.9553571428571428,
+        "positive_sequence_fraction": 1.0,
+        "score": "action_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 6.653276571781199e-07,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9642857142857144,
+          "niah_single_1": 0.9642857142857144
+        },
+        "top1_accuracy": 0.5
+      },
+      "adjacent_only_risk": {
+        "minimum_sequence_spearman": 0.9285714285714287,
+        "normalized_regret": 3.3266382858905994e-07,
+        "overall_spearman": 0.9642857142857144,
+        "pairwise_accuracy": 0.9553571428571428,
+        "positive_sequence_fraction": 1.0,
+        "score": "adjacent_only_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 6.653276571781199e-07,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9642857142857144,
+          "niah_single_1": 0.9642857142857144
+        },
+        "top1_accuracy": 0.5
+      },
+      "multi_all_endpoint_risk": {
+        "minimum_sequence_spearman": 1.0,
+        "normalized_regret": 0.0,
+        "overall_spearman": 1.0,
+        "pairwise_accuracy": 1.0,
+        "positive_sequence_fraction": 1.0,
+        "score": "multi_all_endpoint_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 1.0,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      },
+      "probe_b18_path_k1_risk": {
+        "minimum_sequence_spearman": 0.880952380952381,
+        "normalized_regret": 1.6326739941416088e-07,
+        "overall_spearman": 0.9583333333333334,
+        "pairwise_accuracy": 0.9464285714285714,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b18_path_k1_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 3.2653479882832176e-07,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 0.9404761904761905,
+          "niah_single_1": 0.9761904761904763
+        },
+        "top1_accuracy": 0.75
+      },
+      "probe_b27_risk": {
+        "minimum_sequence_spearman": 1.0,
+        "normalized_regret": 0.0,
+        "overall_spearman": 1.0,
+        "pairwise_accuracy": 1.0,
+        "positive_sequence_fraction": 1.0,
+        "score": "probe_b27_risk",
+        "sequence_count": 4,
+        "task_normalized_regret": {
+          "gov_report": 0.0,
+          "niah_single_1": 0.0
+        },
+        "task_spearman": {
+          "gov_report": 1.0,
+          "niah_single_1": 1.0
+        },
+        "top1_accuracy": 1.0
+      }
+    }
+  },
+  "terminal_condition": "Terminal Success",
+  "terminal_success": true
+}

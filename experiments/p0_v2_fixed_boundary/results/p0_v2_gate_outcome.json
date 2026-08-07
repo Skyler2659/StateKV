@@ -1,0 +1,99 @@
+{
+  "decision_gain": {
+    "checks": {
+      "overall_delta_spearman": true,
+      "pairwise_gain": true,
+      "positive_sequence_fraction": true,
+      "task_delta_spearman": true,
+      "top1_not_decreased": true,
+      "topk_not_decreased": true
+    },
+    "metrics": {
+      "best_euclidean_top1_accuracy": 1.0,
+      "best_euclidean_topk_overlap": 0.625,
+      "fisher_top1_accuracy": 1.0,
+      "fisher_topk_overlap": 1.0,
+      "overall_delta_fisher_direct": 0.07142857142857156,
+      "overall_delta_fisher_local": 0.1071428571428572,
+      "pairwise_gain_over_best_euclidean": 0.0803571428571428,
+      "positive_sequence_fractions": [
+        {
+          "positive_fisher_direct": 1.0,
+          "positive_fisher_local": 1.0,
+          "task": "gov_report"
+        },
+        {
+          "positive_fisher_direct": 1.0,
+          "positive_fisher_local": 1.0,
+          "task": "niah_single_1"
+        }
+      ],
+      "task_deltas": [
+        {
+          "median_delta_fisher_direct": 0.11309523809523819,
+          "median_delta_fisher_local": 0.11904761904761912,
+          "task": "gov_report"
+        },
+        {
+          "median_delta_fisher_direct": 0.07142857142857145,
+          "median_delta_fisher_local": 0.10119047619047616,
+          "task": "niah_single_1"
+        }
+      ]
+    },
+    "passed": true
+  },
+  "downstream_linearization": {
+    "checks": {
+      "row_pass_fraction": true,
+      "sequence_first_median_cosine": true,
+      "sequence_first_median_relative_l2": true
+    },
+    "metrics": {
+      "row_pass_fraction": 0.8958333333333334,
+      "sequence_first_median_cosine": 0.9982339191782457,
+      "sequence_first_median_relative_l2": 0.057815436405215144
+    },
+    "passed": true
+  },
+  "numeric": {
+    "checks": {
+      "boundary_map_baseline_cosine": true,
+      "boundary_map_baseline_relative_l2": true,
+      "cache_and_positions": true,
+      "calibration_pass": true,
+      "candidate_count": true,
+      "identity_all_finite": true,
+      "repeat_replay": true,
+      "response_all_finite": true,
+      "retained_mass": true,
+      "same_budget": true,
+      "split_isolation": true,
+      "upstream_unchanged": true
+    },
+    "metrics": {
+      "boundary_map_baseline_max_relative_l2": 0.0,
+      "boundary_map_baseline_min_cosine": 0.9999999999999999,
+      "finite_rate": 1.0,
+      "kappa_mass_max": 9756.167321247254,
+      "repeat_max_absolute_error": 0.0,
+      "retained_mass_min": 0.00010249926708638668
+    },
+    "passed": true
+  },
+  "outcome": "A",
+  "outcome_definition": "representation_and_linearization_and_decision_gain_pass",
+  "representation": {
+    "checks": {
+      "row_pass_fraction": true,
+      "sequence_first_median_cosine": true,
+      "sequence_first_median_relative_l2": true
+    },
+    "metrics": {
+      "row_pass_fraction": 1.0,
+      "sequence_first_median_cosine": 0.9999999999993944,
+      "sequence_first_median_relative_l2": 8.093354799555204e-07
+    },
+    "passed": true
+  }
+}

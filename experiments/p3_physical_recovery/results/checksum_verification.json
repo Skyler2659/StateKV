@@ -1,0 +1,7 @@
+{
+  "entry_count": 492,
+  "manifest": "experiments/p3_physical_recovery/P3_PHYSICAL_RECOVERY_MANIFEST.yaml",
+  "mismatches": {},
+  "passed": true,
+  "schema_version": 1
+}

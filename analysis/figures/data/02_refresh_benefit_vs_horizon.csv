@@ -1,0 +1,13 @@
+strategy,refresh_lag,metric,estimate,ci_low,ci_high,n_samples,n_rows,uncertainty
+attention_weighted_v_ridge_leverage,16,refresh_benefit,0.03532215680685719,0.0023515368426524222,0.08944786215838728,15,15,95% sample-cluster bootstrap CI
+attention_weighted_v_ridge_leverage,32,refresh_benefit,0.11053548459700929,0.02469599412980036,0.20128591007105265,15,15,95% sample-cluster bootstrap CI
+attention_weighted_v_ridge_leverage,48,refresh_benefit,0.14841884126599325,0.024884360603048966,0.30708533901693646,15,15,95% sample-cluster bootstrap CI
+future_attention_oracle,16,refresh_benefit,0.002610961699429026,-0.00045101448093494884,0.0080274376402546,15,15,95% sample-cluster bootstrap CI
+future_attention_oracle,32,refresh_benefit,0.07329683713654352,-0.0004641827379532514,0.17314699910076642,15,15,95% sample-cluster bootstrap CI
+future_attention_oracle,48,refresh_benefit,0.10165859063390599,0.012564351994814541,0.24690679857776782,15,15,95% sample-cluster bootstrap CI
+snapkv,16,refresh_benefit,0.06479394019758426,-0.0016247138243519052,0.19646599119347533,15,15,95% sample-cluster bootstrap CI
+snapkv,32,refresh_benefit,0.17632695352425193,0.01308063355891212,0.3850657078248021,15,15,95% sample-cluster bootstrap CI
+snapkv,48,refresh_benefit,0.2257642221129572,0.02494719658174442,0.5158410190621968,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,16,refresh_benefit,0.06140452424000008,-0.10748327329243088,0.29955773501930233,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,32,refresh_benefit,0.2446187689053962,0.06893336259312491,0.4677746037270723,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,48,refresh_benefit,0.24420811911962423,0.0874134035003226,0.4412668969117597,15,15,95% sample-cluster bootstrap CI

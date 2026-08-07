@@ -1,0 +1,40 @@
+schema_version: 1
+iteration: r1_amplitude_trust_region
+status: frozen_before_execution
+frozen_at: "2026-07-27T23:00:00+08:00"
+claim_scope: retrospective_mechanism_diagnosis_only
+source:
+  p2_config_sha256: 2d27f2877ae2588e9f41582c30f4a74bb3a3bef3fb6f551eba438a32aa8b4b6a
+  p2_manifest_sha256: 768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51
+data:
+  ids: [gov_report:84, gov_report:85, synthetic_niah_84, synthetic_niah_85]
+  formal_already_viewed: true
+  anchors: [48, 64]
+  layers: [0, 14, 26]
+  histories: [H0, H1, H2, H3]
+  candidates_per_unit: 8
+  expected_direction_count: 768
+  expected_rows: 4608
+scaling:
+  gamma: [0.0625, 0.125, 0.25, 0.5, 0.75, 1.0]
+gates:
+  overall_sequence_first_cosine_min: 0.99
+  each_task_cosine_min: 0.98
+  overall_sequence_first_relative_l2_max: 0.05
+  row_cosine_min: 0.99
+  row_pass_fraction_min: 0.95
+  all_finite: true
+quadratic_scaling:
+  median_log_log_slope_min: 1.7
+  median_log_log_slope_max: 2.3
+branch:
+  r1_a: smallest_gamma_passes_and_gamma_one_fails
+  r1_b: smallest_gamma_fails_systemically
+  r1_c_row_pass_floor: 0.90
+  r1_c_failure_concentration_min: 0.80
+  r1_c_max_task_layer_candidate_groups: 2
+prohibited:
+  - new_positive_claim
+  - threshold_tuning
+  - exact_kl_as_predictor_input
+  - formal_reassignment

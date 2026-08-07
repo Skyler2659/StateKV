@@ -1,0 +1,7 @@
+check,status,value,expected
+sample completeness,pass,15,15
+dense token alignment,pass,1080,1080
+recent-exit token alignment,pass,135,135
+online leverage finite,pass,34560,34560
+online factor condition warnings,pass,0,0
+recent exit semantics before/at,pass,before protected; exit eligible,before protected; exit eligible

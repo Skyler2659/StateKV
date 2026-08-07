@@ -1,0 +1,8 @@
+method: conditional_k_leverage
+cache_size: 512
+sink_size: 0
+recent_size: 0
+conditional_ridge_lambda: 0.001
+conditional_leverage_lambda: 0.001
+update_policy: prefill_only
+update_interval: 0

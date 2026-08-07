@@ -1,0 +1,19 @@
+{
+  "layers": [
+    0,
+    14,
+    26
+  ],
+  "prompt_length": 1262,
+  "prompt_truncated": false,
+  "response_rows": 192,
+  "sample_id": "synthetic_niah_85",
+  "split": "evaluation",
+  "state": "complete",
+  "targets": [
+    48,
+    64
+  ],
+  "task": "niah_single_1",
+  "wall_seconds": 154.11721795900007
+}

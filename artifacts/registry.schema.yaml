@@ -1,0 +1,118 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://statekv.local/schemas/run-registry-v1
+title: StateKV run registry record
+description: >-
+  Versioned metadata for one future StateKV or supporting benchmark run. This
+  schema does not retroactively rewrite frozen phase manifests.
+type: object
+additionalProperties: false
+required:
+  - run_manifest_version
+  - config_schema_version
+  - artifact_schema_version
+  - run_id
+  - phase
+  - status
+  - protocol_version
+  - config_hash
+  - git_commit
+  - dirty_diff_hash
+  - backend
+  - model
+  - model_revision
+  - tokenizer_revision
+  - dataset
+  - dataset_revision
+  - artifact_path
+  - paper_usage
+properties:
+  run_manifest_version:
+    type: integer
+    const: 1
+  config_schema_version:
+    type: integer
+    const: 1
+  artifact_schema_version:
+    type: integer
+    const: 1
+  run_id:
+    type: string
+    minLength: 1
+  phase:
+    type: string
+    minLength: 1
+  status:
+    type: string
+    enum:
+      - complete
+      - negative-result
+      - failed-run
+      - interrupted-run
+      - obsolete-protocol
+      - smoke
+      - in-progress
+      - not-run
+  protocol_version:
+    type: string
+    minLength: 1
+  config_hash:
+    type: string
+    pattern: '^[0-9a-f]{64}$'
+  git_commit:
+    type: string
+    pattern: '^[0-9a-f]{40}$'
+  dirty_diff_hash:
+    oneOf:
+      - type: string
+        pattern: '^[0-9a-f]{64}$'
+      - type: 'null'
+  backend:
+    type: string
+    minLength: 1
+  model:
+    type: string
+    minLength: 1
+  model_revision:
+    oneOf:
+      - type: string
+        minLength: 1
+      - type: 'null'
+  tokenizer_revision:
+    oneOf:
+      - type: string
+        minLength: 1
+      - type: 'null'
+  dataset:
+    type: string
+    minLength: 1
+  dataset_revision:
+    oneOf:
+      - type: string
+        minLength: 1
+      - type: 'null'
+  artifact_path:
+    type: string
+    minLength: 1
+    description: Repository-relative logical path or artifact-store mount path.
+  paper_usage:
+    type: string
+    enum:
+      - none
+      - candidate
+      - main-text
+      - appendix
+      - table
+      - figure
+      - unresolved
+  command:
+    type: array
+    items:
+      type: string
+  runtime:
+    type: object
+  notes:
+    type: array
+    items:
+      type: string
+  example:
+    type: boolean

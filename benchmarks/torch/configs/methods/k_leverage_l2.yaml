@@ -1,0 +1,5 @@
+method:
+  name: k_leverage
+  score_source: k
+  leverage_estimator: l2_exact
+

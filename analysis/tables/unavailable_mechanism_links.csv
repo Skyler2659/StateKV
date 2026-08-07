@@ -1,0 +1,5 @@
+relationship,status,reason
+full-history residual -> score instability,unavailable,full historical V matrices and future V vectors not persisted
+online leverage -> turnover/refresh benefit,unavailable,anchor Gram/factor and future V vectors not persisted
+covariance/subspace drift -> score/refresh,unavailable,time-resolved V matrices or sufficient sketches not persisted
+recent-window exit -> refresh benefit,unavailable,no dense refreshed-cache arm or token-level event identity

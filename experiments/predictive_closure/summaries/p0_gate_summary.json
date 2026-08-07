@@ -1,0 +1,59 @@
+{
+  "checks": {
+    "active_budget_pass": true,
+    "base_alignment_pass": true,
+    "candidate_distinct_pass": true,
+    "fp32_identity_pass": false,
+    "identity_all_finite": true,
+    "jvp_all_finite": true,
+    "jvp_fd_pass": false,
+    "matrix_anchor_count": true,
+    "matrix_candidates_per_group": true,
+    "matrix_sequence_count": true,
+    "matrix_task_counts": true,
+    "projection_pass": true,
+    "repeat_pass": true,
+    "single_layer_pass": false,
+    "vjp_pass": true
+  },
+  "formal_p0": true,
+  "formal_p0_passed": false,
+  "heldout_touched": false,
+  "metrics": {
+    "base_repeat_max_absolute_error": 0.0,
+    "fp32_failure_max_absolute_error": 0.0119132399559021,
+    "fp32_failure_max_denominator": 1.0000001192092896,
+    "fp32_failure_min_direct_norm": 0.0,
+    "fp32_failure_row_count": 27073,
+    "fp32_max_relative_error": 2.735327380302998e+21,
+    "fp32_median_relative_error": 1.745401732478058e-06,
+    "jvp_fd_cosine_by_task": {
+      "gov_report": 0.0,
+      "niah_single_1": 0.0
+    },
+    "jvp_fd_cosine_median": 0.0,
+    "jvp_fd_fd_norm_median": 2.003794110409615,
+    "jvp_fd_scaled_jvp_norm_median": 0.008526873678285675,
+    "projection_min_cosine": 0.999999999999983,
+    "single_layer_cosine_by_task": {
+      "gov_report": 0.9843225175453503,
+      "niah_single_1": 0.9179677895721692
+    },
+    "single_layer_cosine_median": 0.9550696970644608
+  },
+  "row_counts": {
+    "anchor_audit": 16,
+    "candidate_registry": 128,
+    "deletion_identity": 86016,
+    "jvp_fd": 128,
+    "projection_block": 7168,
+    "single_layer": 640
+  },
+  "sequence_ids": [
+    "gov_report:24",
+    "gov_report:25",
+    "synthetic_niah_24",
+    "synthetic_niah_25"
+  ],
+  "stop_p1_plus": true
+}

@@ -1,0 +1,5 @@
+{
+  "iteration": "r1_amplitude_trust_region",
+  "outcome": "D2",
+  "mechanism": "finite_action_path_curvature"
+}

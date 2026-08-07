@@ -1,0 +1,13 @@
+{
+  "boundary": 15,
+  "comparison": "diagnostic capture enabled versus disabled",
+  "directional_derivative_max_absolute_error": 0.0,
+  "output_max_absolute_error": 0.0,
+  "passed": true,
+  "previous_recording_state": {
+    "enabled": true,
+    "temporal_record_diagnostics": true
+  },
+  "sample_id": "gov_report:86",
+  "target": 48
+}

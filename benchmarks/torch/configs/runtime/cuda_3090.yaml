@@ -1,0 +1,11 @@
+runtime:
+  backend: torch
+  device: cuda:0
+  seed: 42
+  deterministic: true
+  prefill_chunk_size: 128
+  attention_prefill_chunk_size: 16
+  local_files_only: true
+  fail_on_error: true
+  resume: true
+  warmup_steps: 1

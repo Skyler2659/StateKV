@@ -1,0 +1,20 @@
+{
+  "anchors": [
+    16,
+    48
+  ],
+  "candidate_rows": 48,
+  "layers": [
+    0,
+    14,
+    26
+  ],
+  "prompt_length": 905,
+  "prompt_truncated": false,
+  "sample_id": "gov_report:57",
+  "split": "evaluation",
+  "stage": "formal_evaluation",
+  "state": "complete",
+  "task": "gov_report",
+  "wall_seconds": 60.21290329200001
+}

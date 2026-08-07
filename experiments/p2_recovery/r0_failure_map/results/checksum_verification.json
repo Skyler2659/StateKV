@@ -1,0 +1,27 @@
+{
+  "entry_count": 19,
+  "iteration": "r0_failure_map",
+  "passed": true,
+  "schema_version": 1,
+  "verification": {
+    "experiments/p2_recovery/r0_failure_map/R0_CALIBRATION_REPORT.md": true,
+    "experiments/p2_recovery/r0_failure_map/R0_CODE_AUDIT.md": true,
+    "experiments/p2_recovery/r0_failure_map/R0_FAILURE_ANALYSIS.md": true,
+    "experiments/p2_recovery/r0_failure_map/R0_FORMAL_RESULTS.md": true,
+    "experiments/p2_recovery/r0_failure_map/R0_PREREGISTRATION.md": true,
+    "experiments/p2_recovery/r0_failure_map/r0_config.yaml": true,
+    "experiments/p2_recovery/r0_failure_map/results/formula_render_audit.json": true,
+    "experiments/p2_recovery/r0_failure_map/results/iteration_outcome.json": true,
+    "experiments/p2_recovery/r0_failure_map/results/p2_full_sequence_spearman.parquet": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_breakdown.csv": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_breakdown.parquet": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_classified_rows.parquet": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_correlations.csv": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_correlations.parquet": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_metadata.json": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_ranking_source.parquet": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_rows.parquet": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_summary.json": true,
+    "experiments/p2_recovery/r0_failure_map/results/r0_worst_rows.csv": true
+  }
+}

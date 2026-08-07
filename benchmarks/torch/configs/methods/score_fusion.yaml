@@ -1,0 +1,6 @@
+method:
+  name: score_fusion
+  leverage_estimator: l2_exact
+  alpha: 0.5
+  normalization: rank
+

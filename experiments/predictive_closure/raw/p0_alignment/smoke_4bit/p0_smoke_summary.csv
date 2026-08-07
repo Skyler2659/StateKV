@@ -1,0 +1,2 @@
+formal_p0,smoke_passed,identity_all_finite,fp32_max_relative_error,fp32_identity_pass,single_layer_cosine_median,single_layer_pass,jvp_fd_cosine_median,jvp_fd_pass,projection_min_cosine,projection_pass,repeat_pass,vjp_pass
+False,False,True,2.6458704471588135,False,0.9832084400812869,False,0.10191722654742777,False,0.9999999999999843,True,True,True

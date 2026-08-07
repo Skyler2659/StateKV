@@ -1,0 +1,68 @@
+{
+  "document_count": 5,
+  "documents": [
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r4_scalar_decision_risk/R4_CALIBRATION_REPORT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "a41c29a37d86bf96d6077ff875015d57a2dfd7dfce938adc037f94ada6aa317b",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r4_scalar_decision_risk/R4_CODE_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "427ed9cc97c6e8cffc1098b0fa99c0c2ce213642a3d8a42cbe043d35ebfc40f4",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 5,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r4_scalar_decision_risk/R4_FAILURE_ANALYSIS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "7a2fa52ae524f5686ce7c12059d5e742f797f309f5ca3ae36df7df3f4bd7d985",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r4_scalar_decision_risk/R4_FORMAL_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "ccd0a9ef91cdd6f25e9fdf5c592bce74c0f7eb38e8818b8f61376bc0a156cc62",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 11,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r4_scalar_decision_risk/R4_PREREGISTRATION.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "e78d1a83a455cd4ae9bbc831cea81679ad2acf83e67973379cf4cac8696d1e92",
+      "warning_count": 0
+    }
+  ],
+  "input_format": "gfm+tex_math_dollars",
+  "iteration": "r4_scalar_decision_risk",
+  "output_math": "MathML",
+  "passed": true,
+  "renderer": "pandoc 3.9.0.2",
+  "total_mathml_node_count": 16,
+  "total_raw_math_leftover_count": 0,
+  "total_warning_count": 0
+}

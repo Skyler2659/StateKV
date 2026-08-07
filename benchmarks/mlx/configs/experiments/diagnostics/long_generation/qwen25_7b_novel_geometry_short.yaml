@@ -1,0 +1,84 @@
+experiment_name: qwen25_7b_novel_geometry_short
+
+model:
+  name: mlx-community/Qwen2.5-7B-Instruct-4bit
+  family: qwen
+  backend: mlx
+  dtype: auto
+  device: mps
+  quant_bits: 4
+  quant_group_size: 64
+  mlx_weight_quantize: false
+  prefill_step_size: 4096
+  trust_remote_code: false
+  local_files_only: false
+  prompt_format:
+    mode: plain
+    system_prompt: null
+
+eviction:
+  method: conditional_v_leverage
+  cache_size: 512
+  sink_size: 0
+  recent_size: 0
+  score_source: v
+  update_policy: prefill_only
+  update_interval: 0
+  head_strategy: shared
+  conditional_ridge_lambda: 0.001
+  conditional_leverage_lambda: 0.001
+  attention_residual_ridge_lambda: 0.001
+  attention_residual_budget_ratio: 0.5
+  attention_weighted_ridge_lambda: 0.001
+  attention_weight_epsilon: 0.0001
+  joint_kv_gamma: 0.5
+  joint_kv_ridge_lambda: 0.000001
+  ridge_budget_lambda_floor: 0.0001
+  diversity_ridge_lambda: 0.001
+  diversity_candidate_multiplier: 4
+  seed: 42
+
+benchmark:
+  name: longbench
+  tasks:
+    - gov_report
+  max_words: 1500
+  n_samples_per_task: 1
+  num_samples: 1
+  max_steps: 4096
+  max_new_tokens: 128
+  eval_target_only: true
+  evaluation: official
+  use_official_prompt: true
+  use_official_dataset: true
+  require_official_dataset: true
+  longbench_max_length: 4096
+
+methods:
+  - full
+  - l2_prefill_only
+  - conditional_v_leverage
+  - conditional_k_leverage
+  - attention_residual_v_leverage
+  - attention_weighted_v_leverage
+  - joint_kv_leverage
+  - ridge_v_allocation
+  - diversity_v_leverage
+
+cache_budgets:
+  - 512
+
+analysis:
+  overlap: false
+  rank_correlation: false
+  evidence_recall: false
+  case_study: false
+  include_oracle: false
+
+output_dir: results/novel_geometry_7b_short
+save_selected_tokens: true
+save_scores: true
+save_prompt_text: true
+progress_every: 1
+seed: 42
+overwrite: false

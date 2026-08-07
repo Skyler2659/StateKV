@@ -1,0 +1,6 @@
+method:
+  name: independent_hybrid
+  leverage_estimator: l2_exact
+  attention_ratio: 0.5
+  normalization: rank
+

@@ -1,0 +1,38 @@
+{
+  "formula_audit_passed": true,
+  "formula_raw_math_leftover_count": 0,
+  "formula_warning_count": 0,
+  "passed": true,
+  "passed_test_count": 53,
+  "skipped_test_count": 0,
+  "source_manifests": {
+    "p0": {
+      "all_match": true,
+      "entry_count": 53,
+      "matched_entry_count": 53,
+      "outcome": "A",
+      "path": "experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml",
+      "sha256": "7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57"
+    },
+    "p1": {
+      "all_match": true,
+      "entry_count": 74,
+      "matched_entry_count": 74,
+      "outcome": "C",
+      "path": "experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml",
+      "sha256": "e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1"
+    }
+  },
+  "test_command": [
+    "/Users/wangsikai/l1-robust-kv-cache/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "/Users/wangsikai/l1-robust-kv-cache/tests/test_p0_v2.py",
+    "/Users/wangsikai/l1-robust-kv-cache/tests/test_p1_state_conditioned.py",
+    "/Users/wangsikai/l1-robust-kv-cache/tests/test_p2_state_local.py"
+  ],
+  "test_exit_code": 0,
+  "test_stderr": "",
+  "test_stdout": ".....................................................                    [100%]\n53 passed in 2.02s\n"
+}

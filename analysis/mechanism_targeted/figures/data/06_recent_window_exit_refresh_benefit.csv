@@ -1,0 +1,10 @@
+strategy,relative_to_exit,metric,statistic,estimate,ci_low,ci_high,n_samples,n_rows,uncertainty
+attention_weighted_v_ridge_leverage,-1,refresh_benefit_delta_nll,median,0.02537497878074646,4.255971859095099e-05,0.06995323300361633,15,15,95% sample-cluster bootstrap CI
+attention_weighted_v_ridge_leverage,0,refresh_benefit_delta_nll,median,0.013479858636856079,-7.699514389969409e-05,0.08460044860839844,15,15,95% sample-cluster bootstrap CI
+attention_weighted_v_ridge_leverage,1,refresh_benefit_delta_nll,median,0.0012910024379380047,-1.370861536997836e-05,0.12269021588144824,15,15,95% sample-cluster bootstrap CI
+snapkv,-1,refresh_benefit_delta_nll,median,0.0390239953994751,0.00018588389502838254,0.18030892312526703,15,15,95% sample-cluster bootstrap CI
+snapkv,0,refresh_benefit_delta_nll,median,0.00847826898097992,3.158811523462646e-05,0.5995156764984131,15,15,95% sample-cluster bootstrap CI
+snapkv,1,refresh_benefit_delta_nll,median,0.007038399577140808,-2.5271700906159822e-05,0.16690754890441895,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,-1,refresh_benefit_delta_nll,median,0.0001987480209209025,-0.13909724354743958,0.06198756396770477,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,0,refresh_benefit_delta_nll,median,0.00036198506131768227,-0.00011347196414135396,0.4627002477645874,15,15,95% sample-cluster bootstrap CI
+v_ridge_leverage,1,refresh_benefit_delta_nll,median,0.0069291070103645325,2.384182614889596e-06,0.2876211404800415,15,15,95% sample-cluster bootstrap CI

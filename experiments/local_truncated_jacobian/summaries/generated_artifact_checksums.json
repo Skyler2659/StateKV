@@ -1,0 +1,20 @@
+{
+  "figures/01_jvp_fd_cosine_vs_radius.png": "5bebfad87842dc19d8998fbc10d78b84362e09c62f36f53308321e0ce780626b",
+  "figures/02_fd_norm_vs_noise_floor.png": "465d7bdd75423ec0fb5562b440c2001ced6780f4774ec3f84a705ac245c2e253",
+  "figures/03_native_boundary_by_task_layer.png": "e5e2ca65240dd307530f74ac597a7ff148febc8b1f2592b3ac125acc14d7168b",
+  "figures/04_l1_cosine_by_scale.png": "29cc5641f7347ed4d002cd5d62e1867d4a6fdea9325c4e5db5692f42d85fdce9",
+  "figures/05_predicted_vs_true_energy.png": "a6f9c3206fb3c0546d25e45a3de5f4ecd5b2726f164718e89e70580251a4c498",
+  "figures/06_depth_vs_ranking_accuracy.png": "daf4d83aeded5ecbbba329851b4549e0890c84b1eb1a672089eec6214a8f214c",
+  "figures/07_depth_vs_latency_memory.png": "6b9e93052cd5451865edfd212cd3ccc5aff214b2d70a12b50bc612d9b4a3e7b0",
+  "figures/08_taskwise_delta_rho_by_depth.png": "4f84798baaddcba791dc7d44800100df6aae1a8d6b22b6ce94dcd4013f95dec1",
+  "figures/09_injection_error_vs_attention_mass.png": "d4d8ee38f79f5c79ac3323925aa3d34ef0e261edc2fdf6f91bcbf40d41204e20",
+  "figures/10_adjacent_hidden_energy_vs_exact_kl.png": "27d3688dbfc01565d329779c12a63e14c86760424f56f1797d34f45e409dd2ca",
+  "summaries/l0_boundary_stratified.parquet": "86aace5a0de7cddf051155ec4c8f93e4e512876af0807a540e5c662ee3203c3b",
+  "summaries/l0_direct_stratified.parquet": "6da09d0fed35b74929319c4f89a78d0bb8cf61897ae1ee3f870f8cec728c440e",
+  "summaries/l1_sequence_ranking_aggregate.parquet": "e652d34b2c5dd3b09ddd9c4b6e22ec59767127724cf158a73955d1658d605c16",
+  "summaries/l1_sequence_vector_aggregate.parquet": "6256d0ff4bc767aead7244d84bb9241eb8f9fd31b53feda7c35a0b5da369e905",
+  "summaries/l2_sequence_ranking_aggregate.parquet": "20d167b513672a40e787855759c04d7492d3272373509d19dabcc53225b1ed06",
+  "summaries/l2_sequence_vector_aggregate.parquet": "7d339c3815ada9b5d0ea9d92e50363cd0cd94aa2901d3a0c49d76a21ef7fc1e6",
+  "summaries/l3_sequence_ranking_aggregate.parquet": "2e30f152bbd2b0c646c70821ca0ab5684038a67d9ccb5926da18f1397284927c",
+  "summaries/radius_aggregate.parquet": "b5e5fa1681fff5bdee22c520ab4f73bfd5b9514c4b6641068fae9c827e8f56f5"
+}

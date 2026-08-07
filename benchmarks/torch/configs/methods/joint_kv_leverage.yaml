@@ -1,0 +1,5 @@
+method:
+  name: joint_kv_leverage
+  score_source: kv
+  leverage_estimator: l2_exact
+

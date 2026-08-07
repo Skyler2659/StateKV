@@ -1,0 +1,113 @@
+{
+  "all_checks_passed": true,
+  "calibration_or_test_loaded": false,
+  "check_count": 62,
+  "checks": {
+    "all_stage_gates": true,
+    "all_stage_integrity": true,
+    "all_stage_train_only": true,
+    "candidate_registry_checksum": true,
+    "failure_report_absent_on_success": true,
+    "figure_01_jvp_fd_cosine_vs_radius.png_valid": true,
+    "figure_02_fd_norm_vs_noise_floor.png_valid": true,
+    "figure_03_native_boundary_by_task_layer.png_valid": true,
+    "figure_04_l1_cosine_by_scale.png_valid": true,
+    "figure_05_predicted_vs_true_energy.png_valid": true,
+    "figure_06_depth_vs_ranking_accuracy.png_valid": true,
+    "figure_07_depth_vs_latency_memory.png_valid": true,
+    "figure_08_taskwise_delta_rho_by_depth.png_valid": true,
+    "figure_09_injection_error_vs_attention_mass.png_valid": true,
+    "figure_10_adjacent_hidden_energy_vs_exact_kl.png_valid": true,
+    "figure_count": true,
+    "l0_audit_rows": true,
+    "l0_baseline_finite": true,
+    "l0_baseline_rows": true,
+    "l0_boundary_finite": true,
+    "l0_boundary_rows": true,
+    "l0_direct_finite": true,
+    "l0_direct_rows": true,
+    "l0_jvp_finite": true,
+    "l0_jvp_rows": true,
+    "l0_registry_rows": true,
+    "l1_groups_eight": true,
+    "l1_ranking_finite": true,
+    "l1_ranking_rows": true,
+    "l1_transfer_ranking_finite": true,
+    "l1_transfer_ranking_rows": true,
+    "l1_transfer_vector_finite": true,
+    "l1_transfer_vector_rows": true,
+    "l1_vector_finite": true,
+    "l1_vector_rows": true,
+    "l2_baseline_exact": true,
+    "l2_depth_counts": true,
+    "l2_physical_finite": true,
+    "l2_physical_rows": true,
+    "l2_ranking_finite": true,
+    "l2_ranking_rows": true,
+    "l2_vector_finite": true,
+    "l2_vector_rows": true,
+    "l3_candidate_finite": true,
+    "l3_candidate_rows": true,
+    "l3_group_finite": true,
+    "l3_group_rows": true,
+    "l3_sequence_rows": true,
+    "l3_task_rows": true,
+    "manifest_complete": true,
+    "manifest_no_heldout": true,
+    "preregistration_checksum": true,
+    "radius_finite": true,
+    "radius_rows": true,
+    "radius_units": true,
+    "required_AUDIT.md": true,
+    "required_EXPERIMENT_MANIFEST.yaml": true,
+    "required_LOCAL_TRUNCATED_JACOBIAN_RESULTS_EN.md": true,
+    "required_LOCAL_TRUNCATED_JACOBIAN_RESULTS_ZH.md": true,
+    "required_PREREGISTRATION.md": true,
+    "required_THEORY_UPDATE.md": true,
+    "required_figures/FIGURE_INDEX.md": true
+  },
+  "figure_shapes": {
+    "01_jvp_fd_cosine_vs_radius.png": [
+      1039,
+      641
+    ],
+    "02_fd_norm_vs_noise_floor.png": [
+      1010,
+      641
+    ],
+    "03_native_boundary_by_task_layer.png": [
+      1051,
+      638
+    ],
+    "04_l1_cosine_by_scale.png": [
+      1036,
+      638
+    ],
+    "05_predicted_vs_true_energy.png": [
+      871,
+      753
+    ],
+    "06_depth_vs_ranking_accuracy.png": [
+      1036,
+      638
+    ],
+    "07_depth_vs_latency_memory.png": [
+      1315,
+      624
+    ],
+    "08_taskwise_delta_rho_by_depth.png": [
+      1051,
+      647
+    ],
+    "09_injection_error_vs_attention_mass.png": [
+      1331,
+      638
+    ],
+    "10_adjacent_hidden_energy_vs_exact_kl.png": [
+      900,
+      752
+    ]
+  },
+  "formal_outcome": "local_outcome_l_a",
+  "status": "passed"
+}

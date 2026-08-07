@@ -1,0 +1,577 @@
+{
+  "calibration_boundary_scan": [
+    {
+      "boundary": 4,
+      "median_exact_range": 2.9521194656765297e-07,
+      "model_key": "llama32_1b",
+      "normalized_regret": 0.18137366372884162,
+      "num_layers": 16,
+      "pairwise_accuracy": 0.6785714285714286,
+      "positive_sequence_fraction": 1.0,
+      "relative_depth": 0.25,
+      "sequence_count": 4,
+      "spearman": 0.505952380952381,
+      "spearman_bootstrap_ci_high": 0.5952380952380953,
+      "spearman_bootstrap_ci_low": 0.3988095238095239,
+      "top1_accuracy": 0.5
+    },
+    {
+      "boundary": 8,
+      "median_exact_range": 2.9521194656765297e-07,
+      "model_key": "llama32_1b",
+      "normalized_regret": 0.07341430271352606,
+      "num_layers": 16,
+      "pairwise_accuracy": 0.7053571428571429,
+      "positive_sequence_fraction": 1.0,
+      "relative_depth": 0.5,
+      "sequence_count": 4,
+      "spearman": 0.5059523809523812,
+      "spearman_bootstrap_ci_high": 0.7500000000000002,
+      "spearman_bootstrap_ci_low": 0.261904761904762,
+      "top1_accuracy": 0.75
+    },
+    {
+      "boundary": 12,
+      "median_exact_range": 2.9521194656765297e-07,
+      "model_key": "llama32_1b",
+      "normalized_regret": 0.0,
+      "num_layers": 16,
+      "pairwise_accuracy": 0.8125,
+      "positive_sequence_fraction": 1.0,
+      "relative_depth": 0.75,
+      "sequence_count": 4,
+      "spearman": 0.7142857142857144,
+      "spearman_bootstrap_ci_high": 0.9166666666666667,
+      "spearman_bootstrap_ci_low": 0.4404761904761905,
+      "top1_accuracy": 1.0
+    },
+    {
+      "boundary": 15,
+      "median_exact_range": 2.9521194656765297e-07,
+      "model_key": "llama32_1b",
+      "normalized_regret": 0.0,
+      "num_layers": 16,
+      "pairwise_accuracy": 0.9642857142857143,
+      "positive_sequence_fraction": 1.0,
+      "relative_depth": 0.9375,
+      "sequence_count": 4,
+      "spearman": 0.9583333333333334,
+      "spearman_bootstrap_ci_high": 1.0,
+      "spearman_bootstrap_ci_low": 0.8928571428571429,
+      "top1_accuracy": 1.0
+    },
+    {
+      "boundary": 6,
+      "median_exact_range": 7.521538450006815e-05,
+      "model_key": "qwen25_05b",
+      "normalized_regret": 0.00810817434244192,
+      "num_layers": 24,
+      "pairwise_accuracy": 0.8482142857142858,
+      "positive_sequence_fraction": 1.0,
+      "relative_depth": 0.25,
+      "sequence_count": 4,
+      "spearman": 0.8214285714285715,
+      "spearman_bootstrap_ci_high": 0.9404761904761906,
+      "spearman_bootstrap_ci_low": 0.7023809523809524,
+      "top1_accuracy": 0.5
+    },
+    {
+      "boundary": 12,
+      "median_exact_range": 7.521538450006815e-05,
+      "model_key": "qwen25_05b",
+      "normalized_regret": 0.007232850271946115,
+      "num_layers": 24,
+      "pairwise_accuracy": 0.8392857142857143,
+      "positive_sequence_fraction": 1.0,
+      "relative_depth": 0.5,
+      "sequence_count": 4,
+      "spearman": 0.761904761904762,
+      "spearman_bootstrap_ci_high": 0.9761904761904763,
+      "spearman_bootstrap_ci_low": 0.5476190476190477,
+      "top1_accuracy": 0.75
+    },
+    {
+      "boundary": 18,
+      "median_exact_range": 7.521538450006815e-05,
+      "model_key": "qwen25_05b",
+      "normalized_regret": 0.00810817434244192,
+      "num_layers": 24,
+      "pairwise_accuracy": 0.8571428571428572,
+      "positive_sequence_fraction": 1.0,
+      "relative_depth": 0.75,
+      "sequence_count": 4,
+      "spearman": 0.7976190476190477,
+      "spearman_bootstrap_ci_high": 0.9880952380952381,
+      "spearman_bootstrap_ci_low": 0.6071428571428572,
+      "top1_accuracy": 0.5
+    },
+    {
+      "boundary": 23,
+      "median_exact_range": 7.521538450006815e-05,
+      "model_key": "qwen25_05b",
+      "normalized_regret": 0.0005515712908866392,
+      "num_layers": 24,
+      "pairwise_accuracy": 0.9464285714285714,
+      "positive_sequence_fraction": 1.0,
+      "relative_depth": 0.9583333333333334,
+      "sequence_count": 4,
+      "spearman": 0.9583333333333334,
+      "spearman_bootstrap_ci_high": 0.9880952380952381,
+      "spearman_bootstrap_ci_low": 0.9226190476190476,
+      "top1_accuracy": 0.5
+    }
+  ],
+  "gates": {
+    "formal": {
+      "action_only_risk": {
+        "checks": {
+          "each_model_spearman": false,
+          "each_model_task_spearman": false,
+          "each_task_spearman": false,
+          "normalized_regret": false,
+          "overall_spearman": false,
+          "pairwise_accuracy": false,
+          "positive_sequence_fraction": true,
+          "top1_accuracy": false
+        },
+        "model_spearman": {
+          "llama32_1b": 0.28571428571428575,
+          "qwen25_05b": 0.29761904761904767
+        },
+        "model_task_spearman": {
+          "llama32_1b|qmsum": 0.630952380952381,
+          "llama32_1b|vt": -0.05952380952380953,
+          "qwen25_05b|qmsum": 0.27380952380952384,
+          "qwen25_05b|vt": 0.3214285714285715
+        },
+        "overall": {
+          "median_exact_range": 7.715681922956213e-06,
+          "normalized_regret": 0.7322853411866025,
+          "pairwise_accuracy": 0.6428571428571429,
+          "positive_sequence_fraction": 0.875,
+          "sequence_count": 8,
+          "spearman": 0.29166666666666674,
+          "spearman_bootstrap_ci_high": 0.4672619047619048,
+          "spearman_bootstrap_ci_low": 0.10416666666666669,
+          "top1_accuracy": 0.0
+        },
+        "passed": false,
+        "score": "action_only_risk",
+        "stage": "formal",
+        "task_spearman": {
+          "qmsum": 0.4523809523809525,
+          "vt": 0.130952380952381
+        }
+      },
+      "dense_all_layer_mechanistic_risk": {
+        "checks": {
+          "each_model_spearman": true,
+          "each_model_task_spearman": true,
+          "each_task_spearman": true,
+          "normalized_regret": true,
+          "overall_spearman": true,
+          "pairwise_accuracy": true,
+          "positive_sequence_fraction": true,
+          "top1_accuracy": true
+        },
+        "model_spearman": {
+          "llama32_1b": 1.0,
+          "qwen25_05b": 1.0
+        },
+        "model_task_spearman": {
+          "llama32_1b|qmsum": 1.0,
+          "llama32_1b|vt": 1.0,
+          "qwen25_05b|qmsum": 1.0,
+          "qwen25_05b|vt": 1.0
+        },
+        "overall": {
+          "median_exact_range": 7.715681922956213e-06,
+          "normalized_regret": 0.0,
+          "pairwise_accuracy": 1.0,
+          "positive_sequence_fraction": 1.0,
+          "sequence_count": 8,
+          "spearman": 1.0,
+          "spearman_bootstrap_ci_high": 1.0,
+          "spearman_bootstrap_ci_low": 1.0,
+          "top1_accuracy": 1.0
+        },
+        "passed": true,
+        "score": "dense_all_layer_mechanistic_risk",
+        "stage": "formal",
+        "task_spearman": {
+          "qmsum": 1.0,
+          "vt": 1.0
+        }
+      },
+      "relative_penultimate_exact_map_risk": {
+        "checks": {
+          "each_model_spearman": false,
+          "each_model_task_spearman": false,
+          "each_task_spearman": false,
+          "normalized_regret": true,
+          "overall_spearman": false,
+          "pairwise_accuracy": false,
+          "positive_sequence_fraction": true,
+          "top1_accuracy": false
+        },
+        "model_spearman": {
+          "llama32_1b": 0.7619047619047621,
+          "qwen25_05b": 0.8392857142857144
+        },
+        "model_task_spearman": {
+          "llama32_1b|qmsum": 0.773809523809524,
+          "llama32_1b|vt": 0.75,
+          "qwen25_05b|qmsum": 0.7142857142857144,
+          "qwen25_05b|vt": 0.9642857142857144
+        },
+        "overall": {
+          "median_exact_range": 7.715681922956213e-06,
+          "normalized_regret": 0.07099542247195686,
+          "pairwise_accuracy": 0.8616071428571428,
+          "positive_sequence_fraction": 1.0,
+          "sequence_count": 8,
+          "spearman": 0.8005952380952381,
+          "spearman_bootstrap_ci_high": 0.9166666666666667,
+          "spearman_bootstrap_ci_low": 0.6547619047619049,
+          "top1_accuracy": 0.25
+        },
+        "passed": false,
+        "score": "relative_penultimate_exact_map_risk",
+        "stage": "formal",
+        "task_spearman": {
+          "qmsum": 0.7440476190476192,
+          "vt": 0.8571428571428572
+        }
+      },
+      "relative_penultimate_path_k1_risk": {
+        "checks": {
+          "each_model_spearman": false,
+          "each_model_task_spearman": false,
+          "each_task_spearman": false,
+          "normalized_regret": true,
+          "overall_spearman": false,
+          "pairwise_accuracy": false,
+          "positive_sequence_fraction": true,
+          "top1_accuracy": false
+        },
+        "model_spearman": {
+          "llama32_1b": 0.7619047619047621,
+          "qwen25_05b": 0.8392857142857144
+        },
+        "model_task_spearman": {
+          "llama32_1b|qmsum": 0.773809523809524,
+          "llama32_1b|vt": 0.75,
+          "qwen25_05b|qmsum": 0.7142857142857144,
+          "qwen25_05b|vt": 0.9642857142857144
+        },
+        "overall": {
+          "median_exact_range": 7.715681922956213e-06,
+          "normalized_regret": 0.07099542247195686,
+          "pairwise_accuracy": 0.8616071428571428,
+          "positive_sequence_fraction": 1.0,
+          "sequence_count": 8,
+          "spearman": 0.8005952380952381,
+          "spearman_bootstrap_ci_high": 0.9166666666666667,
+          "spearman_bootstrap_ci_low": 0.6547619047619049,
+          "top1_accuracy": 0.25
+        },
+        "passed": false,
+        "score": "relative_penultimate_path_k1_risk",
+        "stage": "formal",
+        "task_spearman": {
+          "qmsum": 0.7440476190476192,
+          "vt": 0.8571428571428572
+        }
+      }
+    },
+    "replication": {
+      "action_only_risk": {
+        "checks": {
+          "each_model_spearman": false,
+          "each_model_task_spearman": false,
+          "each_task_spearman": false,
+          "normalized_regret": false,
+          "overall_spearman": false,
+          "pairwise_accuracy": false,
+          "positive_sequence_fraction": true,
+          "top1_accuracy": false
+        },
+        "model_spearman": {
+          "llama32_1b": 0.5595238095238095,
+          "qwen25_05b": 0.20238095238095238
+        },
+        "model_task_spearman": {
+          "llama32_1b|qmsum": 0.6190476190476191,
+          "llama32_1b|vt": 0.5000000000000001,
+          "qwen25_05b|qmsum": 0.4166666666666667,
+          "qwen25_05b|vt": -0.011904761904761908
+        },
+        "overall": {
+          "median_exact_range": 5.539638227390485e-07,
+          "normalized_regret": 0.5420549805322974,
+          "pairwise_accuracy": 0.6517857142857142,
+          "positive_sequence_fraction": 0.875,
+          "sequence_count": 8,
+          "spearman": 0.38095238095238093,
+          "spearman_bootstrap_ci_high": 0.6160714285714286,
+          "spearman_bootstrap_ci_low": 0.15773809523809526,
+          "top1_accuracy": 0.0
+        },
+        "passed": false,
+        "score": "action_only_risk",
+        "stage": "replication",
+        "task_spearman": {
+          "qmsum": 0.5178571428571429,
+          "vt": 0.2440476190476191
+        }
+      },
+      "dense_all_layer_mechanistic_risk": {
+        "checks": {
+          "each_model_spearman": true,
+          "each_model_task_spearman": true,
+          "each_task_spearman": true,
+          "normalized_regret": true,
+          "overall_spearman": true,
+          "pairwise_accuracy": true,
+          "positive_sequence_fraction": true,
+          "top1_accuracy": true
+        },
+        "model_spearman": {
+          "llama32_1b": 0.9940476190476191,
+          "qwen25_05b": 0.9940476190476191
+        },
+        "model_task_spearman": {
+          "llama32_1b|qmsum": 0.9880952380952381,
+          "llama32_1b|vt": 1.0,
+          "qwen25_05b|qmsum": 1.0,
+          "qwen25_05b|vt": 0.9880952380952381
+        },
+        "overall": {
+          "median_exact_range": 5.539638227390485e-07,
+          "normalized_regret": 0.0,
+          "pairwise_accuracy": 0.9910714285714286,
+          "positive_sequence_fraction": 1.0,
+          "sequence_count": 8,
+          "spearman": 0.9940476190476191,
+          "spearman_bootstrap_ci_high": 1.0,
+          "spearman_bootstrap_ci_low": 0.9851190476190477,
+          "top1_accuracy": 1.0
+        },
+        "passed": true,
+        "score": "dense_all_layer_mechanistic_risk",
+        "stage": "replication",
+        "task_spearman": {
+          "qmsum": 0.9940476190476191,
+          "vt": 0.9940476190476191
+        }
+      },
+      "relative_penultimate_exact_map_risk": {
+        "checks": {
+          "each_model_spearman": true,
+          "each_model_task_spearman": true,
+          "each_task_spearman": true,
+          "normalized_regret": true,
+          "overall_spearman": true,
+          "pairwise_accuracy": true,
+          "positive_sequence_fraction": true,
+          "top1_accuracy": true
+        },
+        "model_spearman": {
+          "llama32_1b": 0.886904761904762,
+          "qwen25_05b": 0.9523809523809524
+        },
+        "model_task_spearman": {
+          "llama32_1b|qmsum": 0.9047619047619049,
+          "llama32_1b|vt": 0.8690476190476191,
+          "qwen25_05b|qmsum": 1.0,
+          "qwen25_05b|vt": 0.9047619047619049
+        },
+        "overall": {
+          "median_exact_range": 5.539638227390485e-07,
+          "normalized_regret": 0.019751817026560828,
+          "pairwise_accuracy": 0.9330357142857142,
+          "positive_sequence_fraction": 1.0,
+          "sequence_count": 8,
+          "spearman": 0.9196428571428572,
+          "spearman_bootstrap_ci_high": 0.9761904761904763,
+          "spearman_bootstrap_ci_low": 0.8482142857142858,
+          "top1_accuracy": 0.75
+        },
+        "passed": true,
+        "score": "relative_penultimate_exact_map_risk",
+        "stage": "replication",
+        "task_spearman": {
+          "qmsum": 0.9523809523809524,
+          "vt": 0.886904761904762
+        }
+      },
+      "relative_penultimate_path_k1_risk": {
+        "checks": {
+          "each_model_spearman": true,
+          "each_model_task_spearman": true,
+          "each_task_spearman": true,
+          "normalized_regret": true,
+          "overall_spearman": true,
+          "pairwise_accuracy": true,
+          "positive_sequence_fraction": true,
+          "top1_accuracy": true
+        },
+        "model_spearman": {
+          "llama32_1b": 0.886904761904762,
+          "qwen25_05b": 0.9523809523809524
+        },
+        "model_task_spearman": {
+          "llama32_1b|qmsum": 0.9047619047619049,
+          "llama32_1b|vt": 0.8690476190476191,
+          "qwen25_05b|qmsum": 1.0,
+          "qwen25_05b|vt": 0.9047619047619049
+        },
+        "overall": {
+          "median_exact_range": 5.539638227390485e-07,
+          "normalized_regret": 0.019751817026560828,
+          "pairwise_accuracy": 0.9330357142857142,
+          "positive_sequence_fraction": 1.0,
+          "sequence_count": 8,
+          "spearman": 0.9196428571428572,
+          "spearman_bootstrap_ci_high": 0.9761904761904763,
+          "spearman_bootstrap_ci_low": 0.8482142857142858,
+          "top1_accuracy": 0.75
+        },
+        "passed": true,
+        "score": "relative_penultimate_path_k1_risk",
+        "stage": "replication",
+        "task_spearman": {
+          "qmsum": 0.9523809523809524,
+          "vt": 0.886904761904762
+        }
+      }
+    }
+  },
+  "integrity": {
+    "checks": {
+      "baseline_replay": true,
+      "candidate_replay": true,
+      "clone_isolation": true,
+      "deletion_identity": true,
+      "finite_candidates": true,
+      "generator_no_endpoint_logits": true,
+      "generator_no_exact_kl": true,
+      "generator_no_task_id": true,
+      "hook_coverage": true,
+      "no_op_kl": true,
+      "query_alignment": true,
+      "token_alignment": true
+    },
+    "max_baseline_replay_logit_error": 0.0,
+    "max_candidate_replay_logit_error": 0.0,
+    "max_identity_relative_l2": 3.4822825940182065e-07,
+    "max_no_op_kl": 0.0,
+    "minimum_finite_candidates": 8,
+    "minimum_hook_coverage": 1.0,
+    "passed": true
+  },
+  "interpretation": "dense_mechanism_generalizes_but_relative_boundary_does_not",
+  "mechanism_gains": {
+    "formal": {
+      "dense_over_action": 0.7083333333333333,
+      "dense_over_action_paired_test": {
+        "all_sequence_gains_positive": true,
+        "exact_one_sided_sign_flip_p": 0.00390625,
+        "maximum_sequence_gain": 1.2380952380952381,
+        "mean_spearman_gain": 0.7083333333333333,
+        "minimum_sequence_gain": 0.2857142857142856,
+        "paired_sequence_count": 8
+      },
+      "dense_over_action_pass": true,
+      "penultimate_over_action": 0.5089285714285714,
+      "penultimate_over_action_paired_test": {
+        "all_sequence_gains_positive": true,
+        "exact_one_sided_sign_flip_p": 0.00390625,
+        "maximum_sequence_gain": 0.8333333333333334,
+        "mean_spearman_gain": 0.5089285714285714,
+        "minimum_sequence_gain": 0.04761904761904767,
+        "paired_sequence_count": 8
+      },
+      "penultimate_over_action_pass": true
+    },
+    "replication": {
+      "dense_over_action": 0.6130952380952381,
+      "dense_over_action_paired_test": {
+        "all_sequence_gains_positive": true,
+        "exact_one_sided_sign_flip_p": 0.00390625,
+        "maximum_sequence_gain": 1.023809523809524,
+        "mean_spearman_gain": 0.613095238095238,
+        "minimum_sequence_gain": 0.19047619047619035,
+        "paired_sequence_count": 8
+      },
+      "dense_over_action_pass": true,
+      "penultimate_over_action": 0.5386904761904763,
+      "penultimate_over_action_paired_test": {
+        "all_sequence_gains_positive": true,
+        "exact_one_sided_sign_flip_p": 0.00390625,
+        "maximum_sequence_gain": 0.9523809523809524,
+        "mean_spearman_gain": 0.5386904761904762,
+        "minimum_sequence_gain": 0.023809523809523836,
+        "paired_sequence_count": 8
+      },
+      "penultimate_over_action_pass": true
+    }
+  },
+  "models": {
+    "llama32_1b": {
+      "family": "llama",
+      "hidden_size": 2048,
+      "num_layers": 16,
+      "primary_boundary": 15,
+      "source": "mlx-community/Llama-3.2-1B-Instruct-4bit"
+    },
+    "qwen25_05b": {
+      "family": "qwen",
+      "hidden_size": 896,
+      "num_layers": 24,
+      "primary_boundary": 23,
+      "source": "mlx-community/Qwen2.5-0.5B-Instruct-4bit"
+    }
+  },
+  "outcome": "G-B",
+  "role_isolation": {
+    "models_paired_within_role": true,
+    "passed": true,
+    "roles_pairwise_disjoint": true,
+    "stage_sample_ids": {
+      "calibration": [
+        "qmsum:140",
+        "qmsum:141",
+        "synthetic_vt_140",
+        "synthetic_vt_141"
+      ],
+      "formal": [
+        "qmsum:142",
+        "qmsum:143",
+        "synthetic_vt_142",
+        "synthetic_vt_143"
+      ],
+      "replication": [
+        "qmsum:144",
+        "qmsum:145",
+        "synthetic_vt_144",
+        "synthetic_vt_145"
+      ]
+    }
+  },
+  "row_counts": {
+    "candidate_rows": 192,
+    "sequence_metric_rows": 96,
+    "summary_rows": 108,
+    "unit_rows": 24
+  },
+  "stages": [
+    "calibration",
+    "formal",
+    "replication"
+  ],
+  "tasks": [
+    "qmsum",
+    "vt"
+  ]
+}

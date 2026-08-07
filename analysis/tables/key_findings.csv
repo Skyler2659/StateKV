@@ -1,0 +1,5 @@
+finding,effect,ci_low,ci_high,status
+score_drift_to_turnover,0.5279955241637251,0.4317248449292723,0.6483917484683114,observed_exploratory
+turnover_to_delta_nll,0.19970944684385186,0.1437384068624752,0.24442581231665453,observed_exploratory
+selected_core_residual_to_sparse_refresh,0.04155780649290438,-0.03903718397921186,0.12334534924347795,narrow_residual_not_full_history
+stale_loss_to_sparse_refresh,0.8097126504485009,0.6720828272540182,0.9117072873462846,observed_sparse_counterfactual

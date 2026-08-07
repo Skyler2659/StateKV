@@ -1,0 +1,8 @@
+method: attention_weighted_v_leverage
+cache_size: 512
+sink_size: 0
+recent_size: 0
+attention_weighted_ridge_lambda: 0.001
+attention_weight_epsilon: 0.0001
+update_policy: prefill_only
+update_interval: 0

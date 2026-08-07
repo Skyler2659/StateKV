@@ -1,0 +1,14 @@
+{
+  "passed": false,
+  "selected": {
+    "exact_coverage": 0.5714285714285714,
+    "false_elimination": 0.42857142857142855,
+    "fresh_coverage": 0.5714285714285714,
+    "k": 4,
+    "mean_joint_forward_cost": 0.0,
+    "method": "action_only",
+    "passes": false,
+    "probe_savings": 0.5
+  },
+  "stage": "evaluation"
+}

@@ -1,0 +1,202 @@
+{
+  "all_method_mechanism_gates": {
+    "midpoint": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": true,
+        "overall_relative_l2": false,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9968185580980162,
+        "overall_sequence_first_relative_l2": 0.07156571232407549,
+        "row_pass_fraction": 0.9704861111111112,
+        "task_cosine": {
+          "gov_report": 0.9483686341527289,
+          "niah_single_1": 0.9970975543933394
+        }
+      },
+      "passed": false
+    },
+    "midpoint_k2": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9996794320980869,
+        "overall_sequence_first_relative_l2": 0.021220214856081256,
+        "row_pass_fraction": 0.984375,
+        "task_cosine": {
+          "gov_report": 0.9828658972604741,
+          "niah_single_1": 0.9996912618172344
+        }
+      },
+      "passed": true
+    },
+    "midpoint_k4": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9999782947709978,
+        "overall_sequence_first_relative_l2": 0.005461529234224701,
+        "row_pass_fraction": 0.9930555555555556,
+        "task_cosine": {
+          "gov_report": 0.9959343873040449,
+          "niah_single_1": 0.9999789678082485
+        }
+      },
+      "passed": true
+    },
+    "midpoint_k8": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9999987277560367,
+        "overall_sequence_first_relative_l2": 0.0013136367501264553,
+        "row_pass_fraction": 1.0,
+        "task_cosine": {
+          "gov_report": 0.9995971798877976,
+          "niah_single_1": 0.9999987626059402
+        }
+      },
+      "passed": true
+    },
+    "single_jvp": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": false,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9326799976717894,
+        "overall_sequence_first_relative_l2": 0.3529715589072011,
+        "row_pass_fraction": 0.8420138888888888,
+        "task_cosine": {
+          "gov_report": 0.799132644327651,
+          "niah_single_1": 0.9492380578058053
+        }
+      },
+      "passed": false
+    },
+    "trapezoidal": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": false,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9844372593471533,
+        "overall_sequence_first_relative_l2": 0.1571928531009894,
+        "row_pass_fraction": 0.9479166666666666,
+        "task_cosine": {
+          "gov_report": 0.8654260100095584,
+          "niah_single_1": 0.9853927739762676
+        }
+      },
+      "passed": false
+    }
+  },
+  "decision": {
+    "checks": {
+      "each_task_action_gain": true,
+      "each_task_spearman": true,
+      "overall_spearman": true,
+      "pairwise_gain": true,
+      "positive_sequence_fraction": true,
+      "secondary_not_degraded": true,
+      "top1_or_regret_improves": true
+    },
+    "metrics": {
+      "action_spearman": 0.8571428571428572,
+      "normalized_regret_gain": 0.0005784755397396573,
+      "overall_action_gain": 0.1428571428571428,
+      "overall_spearman": 1.0,
+      "pairwise_gain": 0.1160714285714286,
+      "positive_sequence_fraction": 1.0,
+      "task_action_gain": {
+        "gov_report": 0.11904761904761907,
+        "niah_single_1": 0.25595238095238093
+      },
+      "task_spearman": {
+        "gov_report": 1.0,
+        "niah_single_1": 1.0
+      },
+      "top1_gain": 0.75
+    },
+    "passed": true
+  },
+  "mechanism": {
+    "checks": {
+      "all_finite": true,
+      "each_task_cosine": true,
+      "overall_cosine": true,
+      "overall_relative_l2": true,
+      "row_pass_fraction": true
+    },
+    "metrics": {
+      "all_finite": true,
+      "overall_sequence_first_cosine": 0.9996794320980869,
+      "overall_sequence_first_relative_l2": 0.021220214856081256,
+      "row_pass_fraction": 0.984375,
+      "task_cosine": {
+        "gov_report": 0.9828658972604741,
+        "niah_single_1": 0.9996912618172344
+      }
+    },
+    "passed": true
+  },
+  "passed": true,
+  "reduced": {
+    "checks": {
+      "cost": true,
+      "gain_retention": true,
+      "oracle_gap": true
+    },
+    "metrics": {
+      "baseline_spearman": 0.8571428571428572,
+      "gain_retention": 1.0,
+      "oracle_gain": 0.1428571428571428,
+      "oracle_method": "midpoint_k8",
+      "oracle_spearman": 1.0,
+      "oracle_spearman_gap": 0.0,
+      "selected_gain": 0.1428571428571428,
+      "selected_jvp_cost": 2,
+      "selected_method": "midpoint_k2",
+      "selected_spearman": 1.0
+    },
+    "passed": true
+  },
+  "row_counts": {
+    "directions": 768,
+    "response": 4608,
+    "vectors": 24
+  },
+  "selected_method": "midpoint_k2",
+  "stage": "evaluation",
+  "stage_metadata_sha256": "e26e59667048baa0b3819697f453d2f61da6a3fb72bcb3227e17c486ba2e09c2"
+}

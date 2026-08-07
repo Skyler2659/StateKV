@@ -1,0 +1,31 @@
+schema_version: 1
+iteration: r0_failure_map
+status: frozen_before_execution
+frozen_at: "2026-07-27T23:00:00+08:00"
+claim_scope: retrospective_failure_diagnosis_only
+source:
+  p2_config: p2_state_local_config.yaml
+  p2_config_sha256: 2d27f2877ae2588e9f41582c30f4a74bb3a3bef3fb6f551eba438a32aa8b4b6a
+  p2_manifest: experiments/p2_state_local_risk/P2_STATE_LOCAL_MANIFEST.yaml
+  p2_manifest_sha256: 768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51
+  p2_outcome: D
+data:
+  ids: [gov_report:84, gov_report:85, synthetic_niah_84, synthetic_niah_85]
+  formal_already_viewed: true
+  anchors: [48, 64]
+  layers: [0, 14, 26]
+  histories: [H0, H1, H2, H3]
+  candidates_per_unit: 8
+  expected_rows: 768
+classification:
+  direction_error_cosine_below: 0.99
+  amplitude_error_cosine_min: 0.99
+  amplitude_error_relative_l2_above: 0.05
+  large_action_quantile: 0.90
+  low_norm_threshold: 1.0e-8
+  row_pass_cosine: 0.99
+prohibited:
+  - new_positive_claim
+  - threshold_tuning
+  - formal_reassignment
+  - p2_outcome_revision

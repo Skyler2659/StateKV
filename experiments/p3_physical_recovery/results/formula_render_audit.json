@@ -1,0 +1,437 @@
+{
+  "document_count": 25,
+  "mathml_node_count": 260,
+  "pandoc_version": "pandoc 3.9.0.2",
+  "passed": true,
+  "raw_math_leftover_count": 0,
+  "renderer": "pandoc --to html5 --mathml",
+  "rows": [
+    {
+      "mathml_node_count": 15,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/M0_PHYSICAL_TARGET_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 16,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 1,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_CODE_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 1,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 7,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_CROSS_LAYER_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 8,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_CUMULATIVE_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_DECISION_TREE.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 4,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_DENSE_ORACLE_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 5,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 5,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_DISCREPANCY_DECOMPOSITION.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 5,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_FAILURE_ANALYSIS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_FINAL_RECOMMENDATION.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_FORMAL_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_KV_SUMMARY_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 7,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_MASTER_EXPERIMENT_PLAN.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 2,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_MASTER_LOG.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 5,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_MINIMALITY_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 6,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 6,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_MULTI_BOUNDARY_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 7,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_PHYSICAL_CANDIDATE_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 14,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_PHYSICAL_INJECTION_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 16,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 8,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_PHYSICAL_PATH_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 8,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_REPLICATION_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 4,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_REPRESENTATION_SUFFICIENCY.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 5,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 0,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_SCOPE_EXPANSION.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 0,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 6,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_SINGLE_BOUNDARY_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 7,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 4,
+      "passed": true,
+      "path": "experiments/p3_physical_recovery/P3PR_TARGET_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 2,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 28,
+      "passed": true,
+      "path": "P3_PHYSICAL_RECOVERY_FINAL_SUMMARY_ZH.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 31,
+      "warning_count": 0,
+      "warnings": []
+    },
+    {
+      "mathml_node_count": 146,
+      "passed": true,
+      "path": "P3_PHYSICAL_RECOVERY_DETAILED_EXPERIMENT_REPORT_ZH.md",
+      "raw_math_leftover_count": 0,
+      "raw_math_leftovers": {
+        "display_backslash_close": 0,
+        "display_backslash_open": 0,
+        "double_dollar": 0,
+        "single_backslash_close": 0,
+        "single_backslash_open": 0
+      },
+      "return_code": 0,
+      "source_math_delimiter_count": 178,
+      "warning_count": 0,
+      "warnings": []
+    }
+  ],
+  "schema_version": 1,
+  "warning_count": 0
+}

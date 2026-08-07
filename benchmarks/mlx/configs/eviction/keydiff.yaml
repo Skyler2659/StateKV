@@ -1,0 +1,6 @@
+method: "keydiff"
+cache_size: 256
+sink_size: 0
+recent_size: 0
+keydiff_recent_ratio: 0.0
+score_normalization: "none"

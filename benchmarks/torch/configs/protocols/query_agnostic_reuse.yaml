@@ -1,0 +1,7 @@
+protocol:
+  visibility: query_agnostic
+  cache_mode: prefill_only
+  update_policy: prefill_once
+  update_interval: 32
+  reuse_mode: multi_query
+

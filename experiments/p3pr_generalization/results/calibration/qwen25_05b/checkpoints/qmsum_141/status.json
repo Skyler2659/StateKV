@@ -1,0 +1,11 @@
+{
+  "model_key": "qwen25_05b",
+  "row_counts": {
+    "candidate_registry": 8,
+    "candidate_rows": 8,
+    "unit_rows": 1
+  },
+  "sample_id": "qmsum:141",
+  "stage": "calibration",
+  "state": "complete"
+}

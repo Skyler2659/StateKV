@@ -1,0 +1,7 @@
+method:
+  name: residual_v
+  attention_ratio: 0.5
+  residual_lambda: 0.0001
+  residual_lambda_mode: relative
+  normalization: rank
+

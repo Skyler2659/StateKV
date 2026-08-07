@@ -1,0 +1,139 @@
+{
+  "eligible_methods": [
+    "midpoint_k2",
+    "midpoint_k4",
+    "midpoint_k8"
+  ],
+  "method_gates": {
+    "midpoint": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": true,
+        "overall_relative_l2": false,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9953410943669346,
+        "overall_sequence_first_relative_l2": 0.09310026104572716,
+        "row_pass_fraction": 0.9722222222222222,
+        "task_cosine": {
+          "gov_report": 0.9953410943669346,
+          "niah_single_1": 0.9796072705744345
+        }
+      },
+      "passed": false
+    },
+    "midpoint_k2": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9997140621230352,
+        "overall_sequence_first_relative_l2": 0.022831576438901418,
+        "row_pass_fraction": 1.0,
+        "task_cosine": {
+          "gov_report": 0.9997140621230352,
+          "niah_single_1": 0.9991429149772644
+        }
+      },
+      "passed": true
+    },
+    "midpoint_k4": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9999836719694496,
+        "overall_sequence_first_relative_l2": 0.00548870487304179,
+        "row_pass_fraction": 1.0,
+        "task_cosine": {
+          "gov_report": 0.9999836719694496,
+          "niah_single_1": 0.9999682084455637
+        }
+      },
+      "passed": true
+    },
+    "midpoint_k8": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9999990008672277,
+        "overall_sequence_first_relative_l2": 0.0013595268023402932,
+        "row_pass_fraction": 1.0,
+        "task_cosine": {
+          "gov_report": 0.9999990008672277,
+          "niah_single_1": 0.999998213178632
+        }
+      },
+      "passed": true
+    },
+    "single_jvp": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": false,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9258328357927282,
+        "overall_sequence_first_relative_l2": 0.388030602152196,
+        "row_pass_fraction": 0.8194444444444444,
+        "task_cosine": {
+          "gov_report": 0.9258328357927282,
+          "niah_single_1": 0.8495737852619157
+        }
+      },
+      "passed": false
+    },
+    "trapezoidal": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": false,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9844709994092391,
+        "overall_sequence_first_relative_l2": 0.17619708101266338,
+        "row_pass_fraction": 0.9375,
+        "task_cosine": {
+          "gov_report": 0.9844709994092391,
+          "niah_single_1": 0.9304834115174756
+        }
+      },
+      "passed": false
+    }
+  },
+  "row_counts": {
+    "directions": 192,
+    "response": 1152,
+    "vectors": 24
+  },
+  "selected_jvp_cost": 2,
+  "selected_method": "midpoint_k2",
+  "selection_rule": "minimum_jvp_cost_then_minimum_median_relative_l2_then_selection_order",
+  "stage": "calibration",
+  "stage_metadata_sha256": "6457fbb8a89d78b35f6bdb942b48711c5958abbd15b8244263f47842a18796f9"
+}

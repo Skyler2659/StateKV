@@ -1,0 +1,182 @@
+schema_version: 1
+experiment:
+  name: local_truncated_jacobian
+  run_id: local_truncated_jacobian_qwen25_15b_mlx4bit_seed20260726_v1
+  created_utc: "2026-07-26T05:47:45Z"
+  completed_utc: "2026-07-26T07:11:26Z"
+  status: complete
+  independent_from: predictive_closure
+  highest_completed_stage: l3_secondary_diagnostic
+  formal_outcome: local_outcome_l_a
+  professor_adjacent_depth_supported: true
+repository:
+  commit: 1d64abc8839e31ee1a0615e19a3b3b1809ca5618
+  branch: main
+  dirty_at_start: true
+  preexisting_tracked_diff_sha256: 0313f2d89830355faa6a4899ebe0bbdde94519d36a4b8c3f6d73ceeb95540f08
+  experiment_python_source_set_sha256: aedadbc3df720217e6c0904921f38159860fbc8b7df09b31c9148bc1a7700476
+preregistration:
+  design_frozen: true
+  frozen_utc: "2026-07-26T05:47:45Z"
+  sha256_before_radius_amendment: fc29e2b3edd8ba45e43163e195c7665ee0c2233f4a0764d11ed15db7b256f60c
+  sha256_after_radius_amendment: d21532527849ad9cf644458bbb622ba6afe9088443556d289401ece6e4c0b28e
+  formal_radius: 3.0e-6
+  radius_amendment_timing: before_formal_640_unit_matrix
+  calibration_or_test_loaded_before_radius_freeze: false
+  new_model_results_before_freeze: false
+model:
+  source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  revision: 8b403126fc14f14cfc99bb4cfa72ecbc129ea677
+  model_sha256: 0979f33d1bc58afcf696d13f57977644e7b11a6f0eec3e631d8e9463d18c0717
+  tokenizer_sha256: a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf
+  native_path: mlx_4bit_original_activation_arithmetic
+  local_path: same_checkpoint_deterministic_mlx_fp32_local_reconstruction
+data:
+  split: train_only
+  sequence_ids:
+    - "gov_report:24"
+    - "gov_report:25"
+    - "synthetic_niah_24"
+    - "synthetic_niah_25"
+  calibration_or_test_loaded: false
+  anchors: [16, 32, 48, 64]
+  layers: [0, 7, 14, 21, 26]
+candidate_registry:
+  source: experiments/predictive_closure/raw/p0_alignment/formal_4bit_retry1/candidate_registry_rows.parquet
+  file_sha256: f2d06b2732a2a0bf8baac6694ef35aa2ed4393a19e75400564a545786d787307
+  mask_set_sha256: 19eef4ada780a4f54c84229532cb713d5162c3cb7a5250ec7f139698a92641ef
+  candidates_per_group: 8
+  active_budget: 128
+radius_calibration:
+  sample_id: synthetic_niah_24
+  anchor: 16
+  candidate_sources: [attention_only, random_reference]
+  layers: [0, 7, 14, 21, 26]
+  grid: [1.0e-6, 3.0e-6, 1.0e-5, 3.0e-5, 1.0e-4, 3.0e-4, 1.0e-3, 3.0e-3, 1.0e-2]
+  repetitions: 5
+  selection_rule: first_smaller_radius_in_frozen_stable_eligible_plateau
+  status: passed
+  selected_radius: 3.0e-6
+  stable_plateau: [3.0e-6, 1.0e-5]
+  selected_median_cosine: 0.9996567310135583
+  selected_median_relative_l2: 0.026158112115690565
+  radius_rows_sha256: 98d55e56f9fadc273591e470fc8fdd1221139aa3541ca30b1f0bfecb4486d5ac
+  summary_sha256: 4171d5c9a060d44dd25fc47eb1c9a3935245f27c1b8ffbd319436efe8ac55827
+  local_block_metadata_sha256: e0f3d1a8345ad6d96df67742434a367955482931c7741d8578c8d3dcead4a164
+stages:
+  radius_calibration:
+    status: passed
+    rows: 90
+  l0_integrity:
+    status: passed
+    summary_sha256: 33c160e37677e3e1f0c343c4d16e791779d6df63f98b37c2b8cfa95554545f80
+  l0_direct_audit:
+    status: complete_diagnostic
+    candidate_layer_rows: 640
+    theory_phys_median_cosine: 0.9999424984511971
+    theory_phys_median_relative_l2: 0.010726444239048437
+  l0_native_boundary:
+    status: passed
+    candidate_layer_rows: 640
+    pooled_median_cosine: 0.9998632868447923
+    pooled_median_relative_l2: 0.016539436600101966
+    task_median_cosine:
+      gov_report: 0.9999153204891671
+      niah_single_1: 0.9995219138274015
+  l0_jvp_fd:
+    status: passed
+    primary_rows: 640
+    secondary_rows: 640
+    pooled_primary_median_cosine: 0.9996417188544067
+    pooled_primary_median_relative_l2: 0.02680454577318011
+  l1:
+    status: passed
+    summary_sha256: f127bfb9a0706719d04695013e3b943ebd8f92b66b17dde34778aa3efd0790c6
+    local_vector_rows: 6400
+    local_ranking_groups: 800
+    native_transfer_rows: 1920
+    native_transfer_ranking_groups: 240
+    local_primary:
+      vector_cosine: 0.9988827032850953
+      vector_relative_l2: 0.04357299298121145
+      energy_spearman: 1.0
+      pairwise_sign_accuracy: 1.0
+    native_primary_transfer:
+      vector_cosine: 0.9962066468877948
+      vector_relative_l2: 0.08626375100444614
+      energy_spearman: 1.0
+      pairwise_sign_accuracy: 1.0
+  l2:
+    status: passed
+    summary_sha256: 9e0132419c9cab4987a14be010b2aecc0347cf989527a876ac84a583b0d44ca8
+    depth_vector_rows: 2432
+    depth_ranking_groups: 304
+    common_support_rho:
+      0: 0.9761904761904763
+      1: 1.0
+      2: 1.0
+      4: 0.9940476190476191
+    k1_loss_to_best: 0.0
+    retained_fraction_of_ranking_gain: 0.999999999958
+    task_direction_consistent: true
+  l3:
+    status: complete_secondary_diagnostic
+    summary_sha256: 51979b3a458a1997abb325fbe4c643fc7d57b1996ed2ee5e5c6c836f13be2cb0
+    candidate_rows: 640
+    group_rows: 80
+    is_primary_gate: false
+    rho_sj1_strue1: 1.0
+    rho_strue1_exact_kl: 0.767857142857143
+    rho_sj1_exact_kl: 0.7619047619047621
+    rho_s0_exact_kl: 0.755952380952381
+    median_group_delta_rho: 0.0
+runtime:
+  radius_calibration_wall_seconds: 40.980636333
+  l0_wall_seconds: 949.472107541
+  l1_wall_seconds: 1048.751912375
+  l2_wall_seconds: 395.246378666
+  l0_mlx_peak_memory_bytes: 3230788632
+  l1_mlx_peak_memory_bytes: 3230714680
+  l2_mlx_peak_memory_bytes: 4254672036
+environment:
+  architecture: arm64
+  macos_version: "26.5"
+  python: "3.9.6"
+  mlx: "0.29.3"
+  mlx_lm: "0.29.1"
+  torch: "2.4.1"
+  numpy: "1.24.4"
+  pandas: "2.0.3"
+  scipy: "1.10.1"
+  matplotlib: "3.7.5"
+  pyarrow: "21.0.0"
+artifacts:
+  results_zh_sha256: 64941ca26a8231dfefc608cf199831da8ae1c60b8fb178896b8acfdac1030aa4
+  results_en_sha256: 43417472d4aa586262c41113100c934acf18e0a30096f4b1dede26b5ec035f92
+  theory_update_sha256: 0b47a010fba21ad620fa9f78467df9cc102c441f030f109de1af62ea41ed6b26
+  figure_index_sha256: 4d817fed4d322c22c4b11b9b2bee031b674110afc2f910d450d10289be406688
+  figure_count: 10
+  generated_summary_count: 8
+scope_exclusions:
+  not_run_by_gate: []
+  not_run_by_scope:
+    - calibration_test
+    - held_out_generalization
+    - gate_a_b
+    - fisher_pullback
+    - q_state
+    - refresh_policy
+    - free_generation
+    - secondary_model
+integrity:
+  row_format: parquet
+  per_sequence_checkpoint: true
+  atomic_writes: true
+  resume: true
+  full_vectors_persisted: false
+  failures_preserved: true
+  prior_experiment_modified: false
+  calibration_or_test_loaded: false
+  all_formal_rows_finite: true
+  all_stage_integrity_checks_passed: true
+  failure_report_generated: false

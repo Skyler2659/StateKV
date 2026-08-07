@@ -1,0 +1,6 @@
+method: "vatp"
+cache_size: 256
+sink_size: 0
+recent_size: 128
+h2o_recent_size: 128
+score_normalization: "none"

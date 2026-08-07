@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "program": "p3_decision_validity",
+  "outcome": "D1",
+  "outcome_label": "compressed-only observables cannot stably detect harmful decision staleness",
+  "named_stage_count": 6,
+  "iteration_count": 8,
+  "p4_allowed": false,
+  "gate_a": true,
+  "gate_b": false,
+  "gate_c": false,
+  "gate_d": false,
+  "gate_e_completed": true,
+  "physical_transfer_outcome": "Transfer_C",
+  "minimum_required_upgrade": "observed-current-state multi-boundary compressed descriptor with downstream-KV summary and physical-state action injection"
+}

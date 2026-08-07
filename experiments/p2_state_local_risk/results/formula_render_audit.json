@@ -1,0 +1,71 @@
+{
+  "documents": [
+    {
+      "mathml_node_count": 30,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P2_CODE_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "5b025fde34c3e5d6249eaaf8d33d9de55de21f5d5164ee71a7cc311e64225759",
+      "warning_count": 0
+    },
+    {
+      "mathml_node_count": 85,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P2_STATE_LOCAL_EXPERIMENT_PLAN.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "ae03e5689342ec7b5313c6346e2dc222f4e61fb102408928702ac3a43b5ee4c8",
+      "warning_count": 0
+    },
+    {
+      "mathml_node_count": 22,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P2_CALIBRATION_REPORT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "3f17b62b3ee7d454516ece8569a29f191a24295993c58530ff44e8190080478a",
+      "warning_count": 0
+    },
+    {
+      "mathml_node_count": 52,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P2_STATE_LOCAL_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "ad584801e94f6790a128738cd00f713640410ca752c1bbed27e3392ddf061a9d",
+      "warning_count": 0
+    },
+    {
+      "mathml_node_count": 34,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "P2_STATE_LOCAL_FAILURE_ANALYSIS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "f0bc35aa53589a133d1e8b6ed250d7c336f65d44f9de5fb60673206a075f7870",
+      "warning_count": 0
+    },
+    {
+      "mathml_node_count": 1,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_state_local_risk/README.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "86f5e9254b8d42621d54cc63e87eabc186e01c008639448128a6c570107668a2",
+      "warning_count": 0
+    }
+  ],
+  "input_format": "gfm+tex_math_dollars",
+  "output_math": "MathML",
+  "passed": true,
+  "renderer": "pandoc 3.9.0.2",
+  "total_mathml_node_count": 224,
+  "total_raw_math_leftover_count": 0,
+  "total_warning_count": 0
+}

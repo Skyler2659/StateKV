@@ -1,0 +1,22 @@
+{
+  "all_pass": true,
+  "rule": "smallest four IDs strictly greater than 81 that produce 66 reference tokens and anchors 16,24,32,40,48,56,64",
+  "selected_calibration": {
+    "gov_report": [82, 83],
+    "niah": [82, 83]
+  },
+  "selected_formal": {
+    "gov_report": [84, 85],
+    "niah": [84, 85]
+  },
+  "rows": [
+    {"sample_id": "gov_report:82", "success": true, "generated_tokens": 66, "prompt_length": 908, "prompt_truncated": false, "missing_anchors": []},
+    {"sample_id": "gov_report:83", "success": true, "generated_tokens": 66, "prompt_length": 897, "prompt_truncated": false, "missing_anchors": []},
+    {"sample_id": "gov_report:84", "success": true, "generated_tokens": 66, "prompt_length": 1085, "prompt_truncated": false, "missing_anchors": []},
+    {"sample_id": "gov_report:85", "success": true, "generated_tokens": 66, "prompt_length": 907, "prompt_truncated": false, "missing_anchors": []},
+    {"sample_id": "synthetic_niah_82", "success": true, "generated_tokens": 66, "prompt_length": 1264, "prompt_truncated": false, "missing_anchors": []},
+    {"sample_id": "synthetic_niah_83", "success": true, "generated_tokens": 66, "prompt_length": 1262, "prompt_truncated": false, "missing_anchors": []},
+    {"sample_id": "synthetic_niah_84", "success": true, "generated_tokens": 66, "prompt_length": 1264, "prompt_truncated": false, "missing_anchors": []},
+    {"sample_id": "synthetic_niah_85", "success": true, "generated_tokens": 66, "prompt_length": 1262, "prompt_truncated": false, "missing_anchors": []}
+  ]
+}

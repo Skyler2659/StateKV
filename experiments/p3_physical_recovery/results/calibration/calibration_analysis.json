@@ -1,0 +1,141 @@
+{
+  "completed": true,
+  "evaluated_model_count": 77,
+  "frozen_model": {
+    "boundary": 18,
+    "boundary_count": 1,
+    "calibration_ids": [
+      "gov_report:112",
+      "gov_report:113",
+      "synthetic_niah_112",
+      "synthetic_niah_113"
+    ],
+    "calibration_metrics": {
+      "boundary_count": 1,
+      "candidate_probe_count": 1,
+      "checks": {
+        "each_task_action_only_regret_gain": true,
+        "each_task_spearman": true,
+        "overall_spearman": true,
+        "pairwise_accuracy": true,
+        "positive_sequence_fraction": true,
+        "top1_accuracy": true
+      },
+      "model_class": "physical_path",
+      "name": "physical_path_b18_k1",
+      "normalized_regret": 0.0004390613374989658,
+      "overall_spearman": 0.9166666666666667,
+      "pairwise_accuracy": 0.9285714285714286,
+      "parameter_count": 0,
+      "passed": true,
+      "path_midpoint_count": 1,
+      "positive_sequence_fraction": 1.0,
+      "score": "_score",
+      "score_column": "probe_b18_path_k1_risk",
+      "sequence_count": 8,
+      "task_action_only_regret": {
+        "gov_report": 0.002272962563406981,
+        "niah_single_1": 0.0002284980881646538
+      },
+      "task_normalized_regret": {
+        "gov_report": 0.0008772465450731207,
+        "niah_single_1": 8.761299248109031e-07
+      },
+      "task_spearman": {
+        "gov_report": 0.892857142857143,
+        "niah_single_1": 0.9404761904761906
+      },
+      "top1_accuracy": 0.75
+    },
+    "candidate_probe_count": 1,
+    "config_sha256": "5ac71d08f0f18d05c65fe63ae33d44351574121e872f844e98844b2a9dc19af9",
+    "dense_oracle": {
+      "boundary_count": 28,
+      "candidate_probe_count": 0,
+      "checks": {
+        "each_task_action_only_regret_gain": true,
+        "each_task_spearman": true,
+        "overall_spearman": true,
+        "pairwise_accuracy": true,
+        "positive_sequence_fraction": true,
+        "top1_accuracy": true
+      },
+      "model_class": "M9",
+      "name": "M9_dense_mechanistic_all28",
+      "normalized_regret": 0.0,
+      "overall_spearman": 1.0,
+      "pairwise_accuracy": 1.0,
+      "parameter_count": 0,
+      "passed": true,
+      "positive_sequence_fraction": 1.0,
+      "score": "_score",
+      "score_column": "multi_all_endpoint_risk",
+      "sequence_count": 8,
+      "task_action_only_regret": {
+        "gov_report": 0.002272962563406981,
+        "niah_single_1": 0.0002284980881646538
+      },
+      "task_normalized_regret": {
+        "gov_report": 0.0,
+        "niah_single_1": 0.0
+      },
+      "task_spearman": {
+        "gov_report": 1.0,
+        "niah_single_1": 1.0
+      },
+      "top1_accuracy": 1.0
+    },
+    "endpoint_physical_logits_are_input": false,
+    "exact_physical_kl_is_input": false,
+    "formal_fit_allowed": false,
+    "formal_ids": [
+      "gov_report:114",
+      "gov_report:115",
+      "synthetic_niah_114",
+      "synthetic_niah_115"
+    ],
+    "future_attention_is_input": false,
+    "future_token_is_input": false,
+    "kv_descriptor_dimension": 0,
+    "model_class": "M9_candidate_specific_probe",
+    "model_name": "candidate_specific_physical_probe_b18_path_k1",
+    "parameter_count": 0,
+    "path_midpoint_count": 1,
+    "probe_layer": 17,
+    "replication_ids": [
+      "gov_report:116",
+      "gov_report:117",
+      "synthetic_niah_116",
+      "synthetic_niah_117"
+    ],
+    "representation": "actual candidate-conditioned residual response at boundary 18 plus current physical downstream KV readout",
+    "schema_version": 1,
+    "score_column": "probe_b18_path_k1_risk",
+    "selection_rule": "first boundary passing all calibration gates, then lowest midpoint count with identical gate result",
+    "status": "frozen_before_formal"
+  },
+  "model_class_count": 9,
+  "passing_models": [
+    "M9_dense_mechanistic_all28",
+    "M9_candidate_probe_b18",
+    "M9_candidate_probe_b19",
+    "M9_candidate_probe_b20",
+    "M9_candidate_probe_b21",
+    "M9_candidate_probe_b22",
+    "M9_candidate_probe_b23",
+    "M9_candidate_probe_b24",
+    "M9_candidate_probe_b25",
+    "M9_candidate_probe_b26",
+    "M9_candidate_probe_b27",
+    "physical_path_b18_k1",
+    "physical_path_b18_k2",
+    "physical_path_b18_k4",
+    "physical_path_b18_k8"
+  ],
+  "sparse_forward_boundaries": [
+    17,
+    16,
+    5,
+    18
+  ]
+}

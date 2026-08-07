@@ -1,0 +1,11 @@
+{
+  "calibration_or_test_loaded": false,
+  "calibration_passed": true,
+  "errors": [],
+  "formal_matrix_touched": false,
+  "sample_id": "synthetic_niah_24",
+  "selected_radius": 3e-06,
+  "split": "train",
+  "stage": "radius_calibration",
+  "state": "complete"
+}

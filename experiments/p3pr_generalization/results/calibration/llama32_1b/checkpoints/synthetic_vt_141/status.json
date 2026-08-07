@@ -1,0 +1,11 @@
+{
+  "model_key": "llama32_1b",
+  "row_counts": {
+    "candidate_registry": 8,
+    "candidate_rows": 8,
+    "unit_rows": 1
+  },
+  "sample_id": "synthetic_vt_141",
+  "stage": "calibration",
+  "state": "complete"
+}

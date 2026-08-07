@@ -1,0 +1,201 @@
+registry_version: 1
+title: StateKV frozen experiment registry
+policy:
+  default_mutable: false
+  path_semantics: repository-relative
+  historical_root_names: provenance-only
+  canonical_documentation: README.md
+  layout_migration_ledger: experiments/layout_migrations.yaml
+  retired_document_ledger: experiments/retired_documents.yaml
+  authority: phase manifests and ledgers remain authoritative
+  status_vocabulary:
+    - frozen-positive-evidence
+    - frozen-negative-evidence
+    - frozen-boundary-evidence
+    - frozen-recovery-evidence
+    - frozen-generalization-evidence
+
+experiments:
+  predictive_closure:
+    path: experiments/predictive_closure
+    status: frozen-negative-evidence
+    scientific_role: >-
+      Early predictive-closure and precision evidence. It records execution-graph
+      failure boundaries and motivates matched-graph, state-conditioned analysis.
+    mutable: false
+    manifest: experiments/predictive_closure/experiment_manifest.yaml
+    ledger: []
+    config_paths:
+      - experiments/predictive_closure/configs/primary.yaml
+      - experiments/predictive_closure/configs/p0_formal_4bit.yaml
+    entry_points:
+      - experiments/predictive_closure/scripts/run_p0_formal.py
+      - experiments/predictive_closure/scripts/precision_diagnostic.py
+    canonical_claims:
+      - Native 4-bit and mismatched execution graphs do not support the original closure audit.
+      - Precision and graph matching are prerequisites for interpreting later action transport.
+    notes:
+      - A completed negative result is not a failed run.
+      - Precision diagnostics and failure artifacts remain part of the claim boundary.
+
+  local_truncated_jacobian:
+    path: experiments/local_truncated_jacobian
+    status: frozen-boundary-evidence
+    scientific_role: >-
+      Local Jacobian and finite-difference boundary study retained as mechanistic
+      evidence; it does not define the StateKV method.
+    mutable: false
+    manifest: experiments/local_truncated_jacobian/EXPERIMENT_MANIFEST.yaml
+    ledger: []
+    config_paths:
+      - experiments/local_truncated_jacobian/configs/local_primary.yaml
+    entry_points:
+      - experiments/local_truncated_jacobian/scripts/run_l0_formal.py
+      - experiments/local_truncated_jacobian/scripts/run_l1_formal.py
+      - experiments/local_truncated_jacobian/scripts/run_l2_formal.py
+      - experiments/local_truncated_jacobian/scripts/run_l3_formal.py
+    canonical_claims:
+      - Local action transport is informative only within its registered depth and numerical regime.
+      - Long-range or global closure is not established by this phase.
+    notes:
+      - Retain the complete local-depth and numerical-boundary record.
+
+  p0_v2_fixed_boundary:
+    path: experiments/p0_v2_fixed_boundary
+    status: frozen-positive-evidence
+    scientific_role: Matched-graph deletion identity and fixed-boundary action validation.
+    mutable: false
+    manifest: experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml
+    ledger: []
+    config_paths:
+      - configs/frozen/p0_v2_config.yaml
+    entry_points:
+      - experiments/p0_v2_fixed_boundary/scripts/run_p0_v2.py
+      - experiments/p0_v2_fixed_boundary/scripts/analyze_p0_v2.py
+    canonical_claims:
+      - Current-layer deletion injection is validated on the matched execution graph.
+      - This phase does not prove all-layer physical equivalence.
+    notes:
+      - The historical root config name is retained only in the phase manifest; runtime code uses configs/frozen/p0_v2_config.yaml.
+
+  p1_state_conditioned:
+    path: experiments/p1_state_conditioned
+    status: frozen-boundary-evidence
+    scientific_role: State-conditioned action geometry and fixed-boundary propagation evidence.
+    mutable: false
+    manifest: experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml
+    ledger: []
+    config_paths:
+      - configs/frozen/p1_state_conditioned_config.yaml
+    entry_points:
+      - experiments/p1_state_conditioned/scripts/run_p1.py
+      - experiments/p1_state_conditioned/scripts/analyze_p1.py
+    canonical_claims:
+      - The observed operating state changes action geometry and candidate ordering.
+      - The preregistered full-vector readout gate did not close.
+    notes:
+      - Post-hoc operating-point diagnostics do not replace the formal negative result.
+
+  p2_state_local_risk:
+    path: experiments/p2_state_local_risk
+    status: frozen-negative-evidence
+    scientific_role: State-local risk model test and failure localization.
+    mutable: false
+    manifest: experiments/p2_state_local_risk/P2_STATE_LOCAL_MANIFEST.yaml
+    ledger: []
+    config_paths:
+      - configs/frozen/p2_state_local_config.yaml
+    entry_points:
+      - experiments/p2_state_local_risk/scripts/run_p2.py
+      - experiments/p2_state_local_risk/scripts/analyze_p2.py
+    canonical_claims:
+      - Natural-amplitude full-vector reconstruction did not pass its prerequisite gate.
+      - Descriptive ranking signal motivated finite-action recovery but was not formal closure.
+    notes:
+      - Preserve failure analysis and geometry rows as scientific evidence.
+
+  p2_recovery:
+    path: experiments/p2_recovery
+    status: frozen-recovery-evidence
+    scientific_role: Finite-action path recovery and controlled scalar decision-risk closure.
+    mutable: false
+    manifest: experiments/p2_recovery/P2_RECOVERY_MANIFEST.yaml
+    ledger:
+      - experiments/p2_recovery/data_ledger.yaml
+      - configs/frozen/P2_RECOVERY_DATA_LEDGER.yaml
+    config_paths:
+      - experiments/p2_recovery/r0_failure_map/r0_config.yaml
+      - experiments/p2_recovery/r1_amplitude_trust_region/r1_config.yaml
+      - experiments/p2_recovery/r3_path_integrated_readout/r3_config.yaml
+      - experiments/p2_recovery/r4_scalar_decision_risk/r4_config.yaml
+    entry_points:
+      - experiments/p2_recovery/scripts/run_r0_r1.py
+      - experiments/p2_recovery/scripts/run_r3.py
+      - experiments/p2_recovery/scripts/analyze_r4.py
+    canonical_claims:
+      - Finite-action path summaries preserve controlled candidate decision ranking.
+      - State-local Fisher scalar ranking closes in formal and frozen replication.
+      - Full-vector reconstruction remains unclosed after replication.
+    notes:
+      - R2 and the gated pullback branch were preregistered but not run; they are not negative results.
+
+  p3_decision_validity:
+    path: experiments/p3_decision_validity
+    status: frozen-negative-evidence
+    scientific_role: Selection staleness, refresh diagnostics, and controlled-to-physical transfer test.
+    mutable: false
+    manifest: experiments/p3_decision_validity/P3_DECISION_VALIDITY_MANIFEST.yaml
+    ledger:
+      - experiments/p3_decision_validity/P3_DATA_LEDGER.yaml
+    config_paths:
+      - experiments/p3_decision_validity/p3_config.yaml
+    entry_points:
+      - experiments/p3_decision_validity/scripts/run_p3_trajectory.py
+      - experiments/p3_decision_validity/scripts/analyze_p3.py
+    canonical_claims:
+      - The controlled score does not directly transfer to propagated all-layer physical histories.
+      - Tested detector, minimal-refresh, and candidate-prefilter gates did not jointly close.
+    notes:
+      - Transfer C is retained and is not overridden by the later same-state target.
+
+  p3_physical_recovery:
+    path: experiments/p3_physical_recovery
+    status: frozen-recovery-evidence
+    scientific_role: Same-state physical singleton target, mechanism search, and teacher-level ranking closure.
+    mutable: false
+    manifest: experiments/p3_physical_recovery/P3_PHYSICAL_RECOVERY_MANIFEST.yaml
+    ledger:
+      - experiments/p3_physical_recovery/P3PR_DATA_LEDGER.yaml
+      - experiments/p3_physical_recovery/P3PR_MODEL_CLASS_LEDGER.yaml
+    config_paths:
+      - experiments/p3_physical_recovery/p3pr_config.yaml
+    entry_points:
+      - experiments/p3_physical_recovery/scripts/run_p3pr.py
+      - experiments/p3_physical_recovery/scripts/analyze_p3pr_calibration.py
+      - experiments/p3_physical_recovery/scripts/analyze_p3pr_evaluation.py
+    canonical_claims:
+      - The clone-based same-state singleton exact-KL target passes integrity checks.
+      - Dense current-state mechanism is sufficient within the frozen protocol.
+      - A candidate-specific boundary-27 teacher closes the final frozen eight-candidate ranking.
+    notes:
+      - The successful teacher is high cost and not a deployable online policy.
+      - Static model classes and saturation outcomes remain part of the frozen evidence.
+
+  p3pr_generalization:
+    path: experiments/p3pr_generalization
+    status: frozen-generalization-evidence
+    scientific_role: Limited cross-model and cross-task validation of the P3PR mechanism.
+    mutable: false
+    manifest: experiments/p3pr_generalization/P3PR_GENERALIZATION_MANIFEST.yaml
+    ledger: []
+    config_paths:
+      - experiments/p3pr_generalization/p3pr_generalization_config.yaml
+    entry_points:
+      - experiments/p3pr_generalization/scripts/run_generalization.py
+      - experiments/p3pr_generalization/scripts/analyze_generalization.py
+    canonical_claims:
+      - Dense current-state sufficiency replicates across the tested two-model, two-task scope.
+      - A fixed relative late-boundary rule fails fresh formal generalization.
+    notes:
+      - The run_summary models field has a known metadata omission documented in evidence.md.
+      - Limited generalization does not establish a universal boundary or deployable policy.

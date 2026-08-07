@@ -1,0 +1,18 @@
+benchmark:
+  name: longbench
+  task: narrativeqa
+  context_length: 32768
+  num_samples: 50
+  dataset_name: THUDM/LongBench
+  dataset_config: null
+  split: test
+  dataset_revision: null
+  data_path: null
+  sample_strategy: first
+  sample_indices: null
+  require_official: true
+  use_official_prompt: true
+  use_official_generation_length: true
+  max_words: 0
+  truncation: head_tail
+

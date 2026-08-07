@@ -1,0 +1,10 @@
+{
+  "program": "p2_recovery",
+  "outcome": "A",
+  "iteration_count": 4,
+  "claim": "replicated_scalar_decision_risk_closure",
+  "predictor": "midpoint_k2_state_local_scalar_risk",
+  "p3_eligible": true,
+  "full_vector_closure": false,
+  "full_vector_closure_claimed": false
+}

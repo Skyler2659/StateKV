@@ -1,0 +1,7 @@
+{
+  "boundary": 18,
+  "layer": 17,
+  "reason": "first candidate-specific physical boundary probe passing every calibration ranking gate in the dense b=1..27 scan",
+  "midpoint_grid": [1, 2, 4, 8],
+  "formal_opened": false
+}

@@ -1,0 +1,176 @@
+schema_version: 1
+experiment: formal_fixed_boundary_readout_closure_p0_v2
+protocol_status: design_frozen_before_evaluation
+design_frozen_at: "2026-07-27T00:00:00+08:00"
+numeric_calibration_status: mechanically_selected_and_frozen
+numeric_calibration_frozen_at: "2026-07-27T00:00:00+08:00"
+
+scope:
+  current_step_only: true
+  action_only: true
+  delta_x_boundary: 0.0
+  isolated_single_layer_mask: true
+  boundary: "b=(layer+1,input)"
+  same_step_final_logits: true
+  prohibited:
+    - historical_accumulated_state
+    - temporal_transition
+    - E2
+    - E2_J1
+    - refresh_policy
+    - future_query_prediction
+    - future_attention_oracle
+    - multi_step_horizon
+    - free_generation
+    - joint_multilayer_mask
+    - multilayer_response_sum
+    - selection_refresh_controller
+    - low_rank_Q
+    - post_test_threshold_tuning
+
+model:
+  source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  revision: 8b403126fc14f14cfc99bb4cfa72ecbc129ea677
+  local_files_only: true
+  checkpoint_storage: 4bit
+  execution_weights: dequantized_float32
+  activations: float32
+  anchor_kv: float32
+  replay_kv: float32
+  attention_implementation: repository_qwen_projection_flow_v2
+  prompt_format: chat_template
+
+data:
+  tasks: [gov_report, ruler_niah]
+  gov_report:
+    dataset_name: THUDM/LongBench
+    dataset_config: gov_report
+    split: test
+    max_words: 700
+  ruler_niah:
+    context_length: 768
+  smoke:
+    gov_report_indices: [44]
+    niah_offsets: [44]
+    anchors: [16]
+    layers: [14]
+    candidate_sources: [attention_only, random_reference]
+  calibration:
+    gov_report_indices: [44, 45]
+    niah_offsets: [44, 45]
+    anchors: [16]
+    layers: [0, 14, 26]
+    candidate_sources: [attention_only, random_reference]
+    direction_types: [physical_boundary, J1_theory]
+  evaluation:
+    gov_report_indices: [56, 57]
+    niah_offsets: [56, 57]
+    anchors: [16, 48]
+    layers: [0, 14, 26]
+    candidates_per_unit: 8
+  max_prompt_tokens: 1536
+  max_new_tokens: 50
+  stop_on_eos: false
+  split_isolation_required: true
+  forbidden_historical_test_ids:
+    - gov_report:24
+    - gov_report:25
+    - synthetic_niah_24
+    - synthetic_niah_25
+
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+  shared_mask_across_layers_for_candidate_generation: true
+  physically_applied_to_one_layer_only: true
+
+candidates:
+  sources:
+    - attention_only
+    - aov
+    - aor
+    - v_ridge
+    - snapkv
+    - old_stale_core
+    - fresh_core
+    - random_reference
+  deduplication: pre_action_seeded_uniform
+  same_budget_required: true
+  actual_retained_sets_required: true
+
+numeric:
+  seed: 20260727
+  deterministic: true
+  prefill_chunk_size: 128
+  probability_floor: 1.0e-12
+  vector_norm_floor: 1.0e-12
+  identity_norm_floors: [1.0e-12, 1.0e-10, 1.0e-8, 1.0e-6]
+  fd_relative_radius_grid:
+    - 1.0e-2
+    - 3.0e-3
+    - 1.0e-3
+    - 3.0e-4
+    - 1.0e-4
+    - 3.0e-5
+    - 1.0e-5
+    - 3.0e-6
+    - 1.0e-6
+  fd_selected_relative_radius: 3.0e-3
+  fd_selection_rule:
+    finite_rate_min: 1.0
+    nonzero_fd_norm_rate_min: 1.0
+    median_cosine_min: 0.999
+    median_relative_l2_max: 0.05
+    median_symmetric_norm_ratio_min: 0.95
+    objective: minimum_median_relative_l2
+    tie_break: larger_radius
+  exact_autodiff_required: true
+  explicit_vocab_jacobian_forbidden: true
+
+metrics:
+  top_k: 2
+  low_norm_threshold: 1.0e-8
+  sequence_first: true
+  scores: [direct_euclidean, local_hidden_euclidean, baseline_fisher]
+  retrospective_diagnostics: [midpoint_fisher_oracle]
+
+gates:
+  numeric:
+    finite_rate_min: 1.0
+    repeat_max_absolute_error_max: 1.0e-6
+    boundary_map_baseline_cosine_min: 0.999999
+    boundary_map_baseline_relative_l2_max: 1.0e-5
+    retained_mass_min_strict: 1.0e-8
+    candidate_count_per_unit: 8
+  representation:
+    sequence_first_median_cosine_min: 0.999
+    sequence_first_median_relative_l2_max: 0.05
+    row_cosine_threshold: 0.99
+    row_pass_fraction_min: 0.90
+  downstream_linearization:
+    sequence_first_median_cosine_min: 0.95
+    sequence_first_median_relative_l2_max: 0.25
+    row_cosine_threshold: 0.90
+    row_pass_fraction_min: 0.80
+  decision_gain:
+    task_and_overall_median_delta_spearman_min: 0.05
+    positive_sequence_fraction_min: 0.625
+    overall_pairwise_gain_min: 0.02
+    fisher_top1_must_not_decrease: true
+    fisher_topk_must_not_decrease: true
+
+outcomes:
+  order: [N, D, C, A, B]
+  N: numeric_gate_failure
+  D: numeric_pass_representation_failure
+  C: representation_pass_linearization_failure
+  A: representation_and_linearization_and_decision_gain_pass
+  B: representation_and_linearization_pass_decision_gain_failure
+
+runtime:
+  resume: true
+  atomic_writes: true
+  output_dir: experiments/p0_v2_fixed_boundary/results
+  run_id: p0_v2_qwen25_15b_dequantized_fp32_seed20260727_v1

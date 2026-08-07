@@ -1,0 +1,16 @@
+{
+  "config_sha256": "8a9de821a36aa1823a6d387a2014f59d2fb36127da45ba794438d82e60a29c4b",
+  "selected_method": "midpoint_k2",
+  "source_checks": {
+    "p0_manifest": true,
+    "p1_manifest": true,
+    "p2_config": true,
+    "p2_manifest": true,
+    "r1_summary": true,
+    "r3_config": true,
+    "r3_formal_summary": true,
+    "r3_replication_summary": true
+  },
+  "stage": "evaluation",
+  "started_at_unix": 1785172860.4493692
+}

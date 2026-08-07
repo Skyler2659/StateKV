@@ -1,0 +1,35 @@
+run_id: local_truncated_jacobian_qwen25_15b_mlx4bit_seed20260726_v1
+seed: 20260726
+model:
+  source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  revision: 8b403126fc14f14cfc99bb4cfa72ecbc129ea677
+  native_dtype: 4bit
+  local_dtype: float32
+data:
+  sequence_ids: ["gov_report:24", "gov_report:25", "synthetic_niah_24", "synthetic_niah_25"]
+  anchors: [16, 32, 48, 64]
+  max_prompt_tokens: 1536
+  max_new_tokens: 72
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  core_size: 92
+candidates:
+  count_per_group: 8
+  registry: experiments/predictive_closure/raw/p0_alignment/formal_4bit_retry1/candidate_registry_rows.parquet
+layers: [0, 7, 14, 21, 26]
+radius_calibration:
+  sample_id: synthetic_niah_24
+  anchor: 16
+  sources: [attention_only, random_reference]
+  grid: [1.0e-6, 3.0e-6, 1.0e-5, 3.0e-5, 1.0e-4, 3.0e-4, 1.0e-3, 3.0e-3, 1.0e-2]
+  repetitions: 5
+l1:
+  scales: [0.125, 0.25, 0.5, 1.0, 2.0]
+l2:
+  depths: [0, 1, 2, 4]
+runtime:
+  resume: true
+  atomic_writes: true
+  heldout_forbidden: true

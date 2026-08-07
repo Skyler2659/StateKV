@@ -1,0 +1,12 @@
+{
+  "calibration_or_test_loaded": false,
+  "errors": [],
+  "prompt_length": 1266,
+  "prompt_truncated": false,
+  "sample_id": "synthetic_niah_24",
+  "split": "train",
+  "stage": "formal_l2",
+  "state": "complete",
+  "task": "niah_single_1",
+  "wall_seconds": 106.59405662500001
+}

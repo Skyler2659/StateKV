@@ -1,0 +1,78 @@
+schema_version: 1
+program: p3_physical_recovery
+status: finalized_terminal_success
+outcome:
+  code: P3PR-S
+  condition: Terminal Success
+  calibration_model_instances: 77
+  selected_model: mechanism_disagreement_pool_v1_candidate_probe_b27_path_k1
+  boundary_count: 1
+  boundary: 27
+  candidate_probe_count: 1
+  path_midpoint_count: 1
+  parameter_count: 0
+  fresh_formal_overall_spearman: 0.9821428571428572
+  frozen_replication_overall_spearman: 0.9880952380952381
+  method_abstraction_allowed: true
+classes:
+  M1_oracle_ladder:
+    hypothesis: isolate_the_dominant_source_of_P3_Transfer_C
+    allowed_inputs: [inherited_P3_scores, current_physical_state_descriptors, candidate_identity]
+    enters_positive_claim: false
+  M2_state_conditioned_injection:
+    hypothesis: current_physical_QKV_restores_the_direct_action_identity
+    allowed_inputs: [current_query, current_cached_keys, current_cached_values, candidate_delete_position]
+    enters_positive_claim: true
+  M3_single_boundary:
+    hypothesis: one_current_physical_boundary_is_sufficient
+    maximum_boundaries: 1
+    enters_positive_claim: true
+  M4_sparse_multi_boundary:
+    hypothesis: two_to_four_current_physical_boundaries_are_sufficient
+    maximum_boundaries: 4
+    selection_split: calibration_only
+    enters_positive_claim: true
+  M5_kv_augmented:
+    hypothesis: downstream_KV_and_attention_conditioned_summaries_supply_missing_state
+    projection_fit_split: calibration_only
+    enters_positive_claim: true
+  M6_low_rank_interaction:
+    hypothesis: low_rank_cross_layer_interactions_explain_remaining_ranking_error
+    allowed_ranks: [2, 4, 8]
+    enters_positive_claim: true
+  M7_physical_candidate_generation:
+    hypothesis: current_physical_candidate_pool_is_required_for_optimum_coverage
+    selectors: [attention, value_norm, aov, aor, v_ridge, key_query, age, random]
+    frozen_recovery_generator:
+      name: mechanism_disagreement_pool_v1
+      seed_pool_variants: [low, high, median]
+      selection_inputs: [all_layer_state_conditioned_action_energy, dense_mechanistic_current_state_risk]
+      exact_physical_kl_used_for_selection: false
+      candidate_endpoint_logits_used_for_selection: false
+      calibration_ids: [gov_report:128, gov_report:129, synthetic_niah_128, synthetic_niah_129]
+      formal_ids: [gov_report:130, gov_report:131, synthetic_niah_130, synthetic_niah_131]
+      replication_ids: [gov_report:132, gov_report:133, synthetic_niah_132, synthetic_niah_133]
+    enters_positive_claim: true
+  M8_mechanistic_and_diagnostic:
+    hypothesis: distinguish_representation_sufficiency_from_readout_failure
+    readouts: [mechanistic, nonnegative_linear, ridge, pairwise_logistic, depth3_tree, rank_constrained_bilinear]
+    enters_positive_claim: true
+  M9_dense_oracle_and_probe:
+    hypothesis: all_layer_current_state_or_candidate_specific_boundary_probe_closes_physical_risk
+    order: [dense_current_state, sparse_compression, candidate_specific_boundary_probe]
+    enters_positive_claim: true
+  physical_path:
+    hypothesis: determine_minimum_midpoint_count_for_finite_physical_action
+    midpoint_grid: [1, 2, 4, 8]
+    selection_split: calibration_only
+    enters_positive_claim: true
+class_results:
+  M1_oracle_ladder: {best_overall_spearman: 0.1876, passed: false}
+  M2_state_conditioned_injection: {best_overall_spearman: 0.9017857142857144, passed: false}
+  M3_single_boundary: {best_overall_spearman: 0.8125, passed: false}
+  M4_sparse_multi_boundary: {best_overall_spearman: 0.8630952380952382, passed: false}
+  M5_kv_augmented: {best_overall_spearman: 0.8470643173982406, passed: false}
+  M6_low_rank_interaction: {best_overall_spearman: 0.8303571428571429, passed: false}
+  M8_dense_static_ranker: {best_overall_spearman: 0.6130952380952381, passed: false}
+  M9_dense_mechanistic: {best_overall_spearman: 1.0, passed: true}
+  M7_plus_M9_minimal: {formal_overall_spearman: 0.9821428571428572, replication_overall_spearman: 0.9880952380952381, passed: true}

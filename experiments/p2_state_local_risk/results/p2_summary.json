@@ -1,0 +1,75 @@
+{
+  "calibration": {
+    "direction_count": 192,
+    "row_count": 1728,
+    "selected_relative_radius": 0.003
+  },
+  "config_sha256": "2d27f2877ae2588e9f41582c30f4a74bb3a3bef3fb6f551eba438a32aa8b4b6a",
+  "formal_row_counts": {
+    "candidate_registry": 64,
+    "geometry_score_rows": 7680,
+    "identity_rows": 4608,
+    "response_rows": 768,
+    "score_registry": 10,
+    "sequence_vector_metrics": 24,
+    "state_registry": 96,
+    "unit_audit": 24
+  },
+  "gate1_metrics": {
+    "all_vectors_finite": true,
+    "maximum_operating_point_output_error": 0.0,
+    "overall_sequence_first_median_cosine": 0.9546333262124307,
+    "overall_sequence_first_median_relative_l2": 0.2478327573601593,
+    "row_cosine_pass_fraction": 0.8368055555555556,
+    "row_count": 576,
+    "task_median_cosine": {
+      "gov_report": 0.8039392956754752,
+      "niah_single_1": 0.9974969328318726
+    },
+    "task_median_relative_l2": {
+      "gov_report": 0.5720191869261108,
+      "niah_single_1": 0.0690498453602488
+    }
+  },
+  "gate2_descriptive_metrics": {
+    "normalized_regret_gain": 0.034782635083746793,
+    "overall_action_spearman": 0.7619047619047621,
+    "overall_full_action_spearman_gain": 0.23809523809523792,
+    "overall_full_p1_spearman_gain": 0.08333333333333326,
+    "overall_full_spearman": 1.0,
+    "overall_p1_spearman": 0.9166666666666667,
+    "pairwise_accuracy_gain": 0.2053571428571428,
+    "positive_sequence_fraction": 1.0,
+    "task_full_action_spearman_gain": {
+      "gov_report": 0.24404761904761907,
+      "niah_single_1": 0.19642857142857129
+    },
+    "task_full_spearman": {
+      "gov_report": 0.9642857142857144,
+      "niah_single_1": 1.0
+    },
+    "top1_accuracy_gain": 1.0
+  },
+  "gates": {
+    "gate0": true,
+    "gate1": false,
+    "gate2": false,
+    "gate3": false
+  },
+  "outcome": "D",
+  "qualifying_reduced_geometries": [
+    "gradient_jacobian_updated"
+  ],
+  "table_counts": {
+    "component_attribution": 70,
+    "diagnostic_correlations": 21,
+    "factorial_effects": 7,
+    "gradient_diagnostics": 72,
+    "history_sequence_first_summary": 160,
+    "jacobian_diagnostics": 576,
+    "readout_breakdown": 25,
+    "sequence_first_summary": 40,
+    "stratified_component_attribution": 200,
+    "unit_ranking_rows": 960
+  }
+}

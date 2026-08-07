@@ -1,0 +1,12 @@
+model:
+  # Override with model.name=/ceph/home/<username>/models/Qwen2.5-7B-Instruct.
+  name: Qwen/Qwen2.5-7B-Instruct
+  revision: null
+  dtype: float16
+  quantization: none
+  trust_remote_code: false
+  attn_implementation: eager
+  max_context: 32768
+  prompt_format: chat_template
+  system_prompt: null
+

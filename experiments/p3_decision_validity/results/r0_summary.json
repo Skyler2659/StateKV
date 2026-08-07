@@ -1,0 +1,35 @@
+{
+  "candidate_count": 672,
+  "epsilon_selection": {
+    "rows": [
+      {
+        "epsilon": 0.01,
+        "event_rate": 0.6904761904761905
+      },
+      {
+        "epsilon": 0.02,
+        "event_rate": 0.6428571428571429
+      },
+      {
+        "epsilon": 0.05,
+        "event_rate": 0.6428571428571429
+      },
+      {
+        "epsilon": 0.1,
+        "event_rate": 0.6309523809523809
+      }
+    ],
+    "selected": 0.1
+  },
+  "harmful_event_count": 53,
+  "harmful_event_rate": 0.6309523809523809,
+  "nondegenerate": true,
+  "selected_epsilon": 0.1,
+  "stage": "P3-R0",
+  "task_event_rate": {
+    "gov_report": 0.5952380952380952,
+    "niah_single_1": 0.6666666666666666
+  },
+  "top1_staleness_rate": 0.75,
+  "unit_count": 84
+}

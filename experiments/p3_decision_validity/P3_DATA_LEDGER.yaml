@@ -1,0 +1,79 @@
+schema_version: 1
+program: p3_decision_validity
+updated_at: "2026-07-28T04:00:00+08:00"
+scan:
+  path: experiments/p3_decision_validity/results/data_scan_98_109.json
+  all_pass: true
+  sequence_count: 24
+  required_generated_tokens: 66
+  required_anchors: [32, 33, 34, 36, 40, 48, 64]
+immutable_sources:
+  p0:
+    path: experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml
+    sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
+  p1:
+    path: experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml
+    sha256: e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1
+  p2:
+    path: experiments/p2_state_local_risk/P2_STATE_LOCAL_MANIFEST.yaml
+    sha256: 768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51
+  p2_recovery:
+    path: experiments/p2_recovery/P2_RECOVERY_MANIFEST.yaml
+    sha256: 353aa54aa3fb912f907337769864a510102f9a429d7013a92ca9d277b72ce4dd
+    outcome: A
+excluded_ranges:
+  - ids: [24, 25, 44, 45, 56, 57, 68, 69, 80, 81]
+    reason: pre_P3 diagnostic_calibration_or_formal_use
+  - range: [82, 97]
+    reason: P2_and_P2_Recovery_use
+allocations:
+  diagnostic:
+    ids: [gov_report:98, gov_report:99, synthetic_niah_98, synthetic_niah_99]
+    iteration: P3-R0
+    formal_result_viewed: false
+    enters_model_selection: false
+    completed: true
+    stage_config_sha256: ec436e5a39f8c4251f96ec01436b209dd70f3233147ccf01039e968c61e0cac9
+    hypothesis: select_harmful_regret_epsilon_and_map_staleness_only
+  calibration:
+    ids: [gov_report:100, gov_report:101, synthetic_niah_100, synthetic_niah_101]
+    iteration: P3-R1_R2_R3_R4
+    formal_result_viewed: false
+    enters_model_selection: true
+    completed: true
+    stage_config_sha256: 9ed54a498e7d13789a16200d5711408b7849a08b3d97c5212dcc2d5ab56541ad
+    hypothesis: select_detector_refresh_and_prefilter
+  formal:
+    ids: [gov_report:102, gov_report:103, synthetic_niah_102, synthetic_niah_103]
+    iteration: P3_detector_refresh_prefilter
+    formal_result_viewed: true
+    enters_model_selection: false
+    completed: true
+    stage_config_sha256: 33b5836627701445e0091e320f3b583d60a4bbc125b74d7077e767bbc3b86b73
+    hypothesis: frozen_detector_refresh_and_prefilter_evaluation
+  replication:
+    ids: [gov_report:104, gov_report:105, synthetic_niah_104, synthetic_niah_105]
+    iteration: P3_detector_refresh_prefilter
+    formal_result_viewed: true
+    enters_model_selection: false
+    completed: true
+    stage_config_sha256: 8f0f5169485bbe64f7b07fd05963517bbb160b2a9782d0b24d0102f9416482af
+    hypothesis: frozen_detector_refresh_and_prefilter_replication
+  physical_formal:
+    ids: [gov_report:106, gov_report:107, synthetic_niah_106, synthetic_niah_107]
+    iteration: P3-R5
+    formal_result_viewed: true
+    enters_model_selection: false
+    entered_post_failure_descriptor_choice: true
+    positive_claim_from_descriptor: false
+    completed: true
+    stage_config_sha256: 8f0f5169485bbe64f7b07fd05963517bbb160b2a9782d0b24d0102f9416482af
+    hypothesis: primary_transfer_then_parameter_free_boundary_descriptor_sanity
+  physical_replication:
+    ids: [gov_report:108, gov_report:109, synthetic_niah_108, synthetic_niah_109]
+    iteration: P3-R5
+    formal_result_viewed: true
+    enters_model_selection: false
+    completed: true
+    stage_config_sha256: e09c1a80fc37b5cd8940d07723c8a03be2ec7fa61907769df593de90af91bb46
+    hypothesis: frozen_primary_and_descriptor_transfer_replication

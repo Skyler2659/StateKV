@@ -1,0 +1,16 @@
+{
+  "completed_sequences": [
+    "gov_report:24",
+    "gov_report:25",
+    "synthetic_niah_24",
+    "synthetic_niah_25"
+  ],
+  "errors": [],
+  "formal_p0": true,
+  "formal_p0_passed": false,
+  "heldout_touched": false,
+  "split": "train",
+  "stage": "formal_p0",
+  "state": "complete",
+  "stop_p1_plus": true
+}

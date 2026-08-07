@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+logs/
+
+# Keep benchmark provenance and aggregates visible while ignoring bulky raw
+# generations, token dumps, scores, and model-local artifacts.
+results/**
+!results/
+!results/**/
+!results/**/config.yaml
+!results/**/summary.json
+!results/**/metrics.csv
+!results/**/profiling_summary.json
+!results/**/model_info.json
+!results/**/env.json
+!results/**/analysis/
+!results/**/analysis/**
+!results/**/figures/
+!results/**/figures/**

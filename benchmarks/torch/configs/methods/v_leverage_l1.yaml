@@ -1,0 +1,6 @@
+method:
+  name: v_leverage
+  score_source: v
+  leverage_estimator: l1_approx
+  sketch_dim: 1024
+

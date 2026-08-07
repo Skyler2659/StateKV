@@ -1,0 +1,12 @@
+{
+  "calibration_or_test_loaded": false,
+  "errors": [],
+  "prompt_length": 971,
+  "prompt_truncated": false,
+  "sample_id": "gov_report:24",
+  "split": "train",
+  "stage": "formal_l0",
+  "state": "complete",
+  "task": "gov_report",
+  "wall_seconds": 243.199422208
+}

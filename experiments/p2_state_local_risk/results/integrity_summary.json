@@ -1,0 +1,99 @@
+{
+  "checks": {
+    "manifest_entry_counts_match": true,
+    "mechanical_scan_matches_frozen_ids": true,
+    "outcomes_unchanged": true,
+    "p0_manifest_all_match": true,
+    "p0_p1_tests_pass": true,
+    "p1_manifest_all_match": true,
+    "scan_all_constructed": true,
+    "source_hashes_match": true,
+    "split_isolation": true
+  },
+  "config_sha256": "ab72324befef1ae1dc1587d40bb93136a5cd5c0b21d81dd3477bb0acd30c3a4d",
+  "manifests": {
+    "p0": {
+      "all_entries_match": true,
+      "entry_count": 53,
+      "entry_count_matches": true,
+      "matched_entries": 53,
+      "outcome": "A",
+      "outcome_matches": true
+    },
+    "p1": {
+      "all_entries_match": true,
+      "entry_count": 74,
+      "entry_count_matches": true,
+      "matched_entries": 74,
+      "outcome": "C",
+      "outcome_matches": true
+    }
+  },
+  "passed": true,
+  "source_hash_checks": {
+    "p0_config": true,
+    "p0_core": true,
+    "p0_manifest": true,
+    "p0_results": true,
+    "p0_runner": true,
+    "p1_analyzer": true,
+    "p1_config": true,
+    "p1_core": true,
+    "p1_manifest": true,
+    "p1_results": true,
+    "p1_runner": true,
+    "p1_state_operating_rows": true,
+    "p1_state_operating_summary": true
+  },
+  "split_audit": {
+    "calibration_ids": [
+      "gov_report:82",
+      "gov_report:83",
+      "synthetic_niah_82",
+      "synthetic_niah_83"
+    ],
+    "checks": {
+      "calibration_evaluation_disjoint": true,
+      "evaluation_forbidden_disjoint": true,
+      "evaluation_smoke_disjoint": true,
+      "two_sequences_per_task": true,
+      "two_tasks_in_evaluation": true
+    },
+    "evaluation_ids": [
+      "gov_report:84",
+      "gov_report:85",
+      "synthetic_niah_84",
+      "synthetic_niah_85"
+    ],
+    "forbidden_ids": [
+      "gov_report:24",
+      "gov_report:25",
+      "gov_report:44",
+      "gov_report:45",
+      "gov_report:56",
+      "gov_report:57",
+      "gov_report:68",
+      "gov_report:69",
+      "gov_report:80",
+      "gov_report:81",
+      "synthetic_niah_24",
+      "synthetic_niah_25",
+      "synthetic_niah_44",
+      "synthetic_niah_45",
+      "synthetic_niah_56",
+      "synthetic_niah_57",
+      "synthetic_niah_68",
+      "synthetic_niah_69",
+      "synthetic_niah_80",
+      "synthetic_niah_81"
+    ],
+    "smoke_ids": [
+      "gov_report:80",
+      "synthetic_niah_80"
+    ]
+  },
+  "stage": "integrity",
+  "tests_stderr": "",
+  "tests_stdout": ".............................                                            [100%]\n29 passed in 1.70s\n",
+  "wall_seconds": 2.1846235839999997
+}

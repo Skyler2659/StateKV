@@ -1,0 +1,8 @@
+method: joint_kv_leverage
+cache_size: 512
+sink_size: 0
+recent_size: 0
+joint_kv_gamma: 0.5
+joint_kv_ridge_lambda: 0.000001
+update_policy: prefill_only
+update_interval: 0

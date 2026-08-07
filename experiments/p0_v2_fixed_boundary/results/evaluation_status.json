@@ -1,0 +1,14 @@
+{
+  "completed_sequences": [
+    "gov_report:56",
+    "gov_report:57",
+    "synthetic_niah_56",
+    "synthetic_niah_57"
+  ],
+  "config_sha256": "bbf03214f9af4074ff541966f3f5f2a8ea13b589f146bc2517a285ed3a3469d8",
+  "errors": [],
+  "selected_relative_radius": 0.003,
+  "stage": "formal_evaluation",
+  "state": "complete",
+  "wall_seconds": 263.02383145799996
+}

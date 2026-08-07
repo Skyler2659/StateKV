@@ -1,0 +1,19 @@
+{
+  "layers": [
+    0,
+    14,
+    26
+  ],
+  "prompt_length": 985,
+  "prompt_truncated": false,
+  "response_rows": 192,
+  "sample_id": "gov_report:80",
+  "split": "evaluation",
+  "state": "complete",
+  "targets": [
+    48,
+    64
+  ],
+  "task": "gov_report",
+  "wall_seconds": 121.565404583
+}

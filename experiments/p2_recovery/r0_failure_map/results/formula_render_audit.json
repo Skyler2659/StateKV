@@ -1,0 +1,68 @@
+{
+  "document_count": 5,
+  "documents": [
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r0_failure_map/R0_CALIBRATION_REPORT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "f13caf375fbb8f54f2d6968c426ac7db4dd6cb33491984381fb26c359b27ea5a",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r0_failure_map/R0_CODE_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "3f2215f0d1045acf4a72264086d2bc7c86ce2bac7fe362d95a39295f616f346e",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r0_failure_map/R0_FAILURE_ANALYSIS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "5782220011b4dc07aa61bb3e0fc845d49fce4820716479df1d95c0d07ff39635",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r0_failure_map/R0_FORMAL_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "1a2b56f1fe4d1a154f456cc93b936c82d04964a8ad4e49bf3200258b737627c2",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 2,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p2_recovery/r0_failure_map/R0_PREREGISTRATION.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "339d22e745ce5fc7a675401a09f0dda8b3017a1ab21996beb55fd99d8059aa51",
+      "warning_count": 0
+    }
+  ],
+  "input_format": "gfm+tex_math_dollars",
+  "iteration": "r0_failure_map",
+  "output_math": "MathML",
+  "passed": true,
+  "renderer": "pandoc 3.9.0.2",
+  "total_mathml_node_count": 2,
+  "total_raw_math_leftover_count": 0,
+  "total_warning_count": 0
+}

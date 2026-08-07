@@ -1,0 +1,20 @@
+{
+  "config_sha256_at_integrity": "ab72324befef1ae1dc1587d40bb93136a5cd5c0b21d81dd3477bb0acd30c3a4d",
+  "p0_manifest_sha256": "7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57",
+  "p1_manifest_sha256": "e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1",
+  "source_hash_checks": {
+    "p0_config": true,
+    "p0_core": true,
+    "p0_manifest": true,
+    "p0_results": true,
+    "p0_runner": true,
+    "p1_analyzer": true,
+    "p1_config": true,
+    "p1_core": true,
+    "p1_manifest": true,
+    "p1_results": true,
+    "p1_runner": true,
+    "p1_state_operating_rows": true,
+    "p1_state_operating_summary": true
+  }
+}

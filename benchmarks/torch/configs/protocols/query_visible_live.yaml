@@ -1,0 +1,7 @@
+protocol:
+  visibility: query_visible
+  cache_mode: live_bounded
+  update_policy: periodic
+  update_interval: 32
+  reuse_mode: single_query
+

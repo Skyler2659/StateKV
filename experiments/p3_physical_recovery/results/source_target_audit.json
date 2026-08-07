@@ -1,0 +1,115 @@
+{
+  "automatic_old_id_scan": {
+    "count": 38,
+    "ids": [
+      24,
+      25,
+      44,
+      45,
+      56,
+      57,
+      68,
+      69,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109
+    ],
+    "maximum": 109,
+    "minimum": 24,
+    "parquet_file_count": 442,
+    "roots": [
+      "experiments/p0_v2_fixed_boundary",
+      "experiments/p1_state_conditioned",
+      "experiments/p2_state_local_risk",
+      "experiments/p2_recovery",
+      "experiments/p3_decision_validity"
+    ],
+    "text_file_count": 288
+  },
+  "p3_target_code_audit": {
+    "baseline": "full_replay_at_target",
+    "candidate": "tau_selected_all_layer_mask_propagated_by_teacher_forcing",
+    "is_same_current_physical_state_clone_target": false,
+    "physical_trajectories_lines": [
+      340,
+      404
+    ],
+    "retained_without_redefinition": true,
+    "run_sequence_lines": [
+      407,
+      893
+    ],
+    "runner": "experiments/p3_decision_validity/scripts/run_p3_trajectory.py",
+    "target": "KL(full_reference_target_logits, propagated_candidate_logits)"
+  },
+  "p3pr_target": {
+    "baseline": "same_prequery_compressed_state_clone_without_current_eviction",
+    "candidate": "same_prequery_state_clone_with_one_shared_physical_position deleted_before_the_same_query",
+    "compared_on_independent_new_ids": true,
+    "does_not_replace_p3_target": true,
+    "target": "KL(unpruned_current_baseline_logits, current_candidate_eviction_logits)"
+  },
+  "passed": true,
+  "schema_version": 1,
+  "source_checks": {
+    "p0_manifest": true,
+    "p1_manifest": true,
+    "p2_manifest": true,
+    "p2_recovery_manifest": true,
+    "p3_manifest": true
+  },
+  "source_hashes": {
+    "p0_manifest": {
+      "actual": "7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57",
+      "expected": "7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57",
+      "path": "experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml"
+    },
+    "p1_manifest": {
+      "actual": "e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1",
+      "expected": "e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1",
+      "path": "experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml"
+    },
+    "p2_manifest": {
+      "actual": "768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51",
+      "expected": "768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51",
+      "path": "experiments/p2_state_local_risk/P2_STATE_LOCAL_MANIFEST.yaml"
+    },
+    "p2_recovery_manifest": {
+      "actual": "353aa54aa3fb912f907337769864a510102f9a429d7013a92ca9d277b72ce4dd",
+      "expected": "353aa54aa3fb912f907337769864a510102f9a429d7013a92ca9d277b72ce4dd",
+      "path": "experiments/p2_recovery/P2_RECOVERY_MANIFEST.yaml"
+    },
+    "p3_manifest": {
+      "actual": "f6b9137ca4f1b36dbc25894ec1abaf45a618b43fea5660b4baf7c430e88cc4ff",
+      "expected": "f6b9137ca4f1b36dbc25894ec1abaf45a618b43fea5660b4baf7c430e88cc4ff",
+      "path": "experiments/p3_decision_validity/P3_DECISION_VALIDITY_MANIFEST.yaml"
+    }
+  }
+}

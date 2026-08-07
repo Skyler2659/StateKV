@@ -1,0 +1,188 @@
+{
+  "document_count": 16,
+  "documents": [
+    {
+      "has_math_input": true,
+      "mathml_node_count": 3,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_CANDIDATE_PREFILTER_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "3cd25add417977c1bccf29d905e3c4a34db460487ae8f4146490e168b4e3a148",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 3,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_CODE_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "43722e00c8fb6663371c63c3896e5a77d3f06bac7521818c9ba41d99837bcc72",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 6,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_CUMULATIVE_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "d4f60b985ef3bfbb617d4ab402a8529aba72e08ab78c11448e569d2d8317b594",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 11,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_DECISION_STALENESS_DEFINITION.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "26e23296324acb23bb4c815d243edd76198235e48fd0fbd58dc3306959e035eb",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 5,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_DETECTOR_CALIBRATION_REPORT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "461f244c9b9edff42d2e535148f28af9c180fa69dd955cc19707190a51e03e3d",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 6,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_DETECTOR_FORMAL_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "fc19f0dc10b774e9c8f280cb95e2227653ec586d7ddb157278e6681463c7e8b4",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 5,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_DETECTOR_REPLICATION_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "1be690773c66e3a4db9e78fe79b88ec7b746c05d4da7dd7b34d0596553da6d7e",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 9,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_FAILURE_ANALYSIS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "330fb19f76105f23359f235ada33f5a7efea797bb6d7acdd2fcf5a35cd4ea3e9",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": false,
+      "mathml_node_count": 0,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_FINAL_RECOMMENDATION.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "5641b3e068a0ac7d4fa692b5fc88c98f8cc9f47ab2dddf5479726aa5cd29fef8",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 59,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_FINAL_SUMMARY.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "b6f2efd101765b1ab0ba898fd5f054deeffc3c6c7cb0347604c938537182f4d6",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 7,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_MASTER_EXPERIMENT_PLAN.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "c8fca42a36f90cbd1690006462c042107bd337c985c6b0e4e3fb733944c1525b",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 8,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_MINIMAL_REFRESH_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "312e098644f26c174aa7af467002657998621c558f20f8c240032b2513d32f55",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 7,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_OBSERVABLE_AUDIT.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "c68b579abd7fbb78e680d5966fc237415b1a09f8f68d9bc396b62bf33ff0b4cc",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 7,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_PHYSICAL_TRANSFER_RESULTS.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "2cefe95bfcdd40749b076d5edd899bd089878bd0f1d748e7289631612ac37926",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 16,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_R0_STALENESS_LANDSCAPE.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "ec4822f4ce01557d45830969f6478f66fcd45be648dc759a9bd90d5ec4fd572c",
+      "warning_count": 0
+    },
+    {
+      "has_math_input": true,
+      "mathml_node_count": 17,
+      "pandoc_exit_code": 0,
+      "pandoc_stderr": "",
+      "passed": true,
+      "path": "experiments/p3_decision_validity/P3_RECALIBRATION_ATTRIBUTION.md",
+      "raw_math_leftover_count": 0,
+      "sha256": "393c3d3b4d5a78237341530739ce0c2af86825c2beb878e92cf316305f7d2058",
+      "warning_count": 0
+    }
+  ],
+  "input_format": "gfm+tex_math_dollars",
+  "output_math": "MathML",
+  "passed": true,
+  "renderer": "pandoc 3.9.0.2",
+  "total_mathml_node_count": 169,
+  "total_raw_math_leftover_count": 0,
+  "total_warning_count": 0
+}

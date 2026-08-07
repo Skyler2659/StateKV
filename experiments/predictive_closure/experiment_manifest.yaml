@@ -1,0 +1,175 @@
+schema_version: 1
+experiment:
+  name: predictive_theory_closure
+  run_id: predictive_closure_qwen25_15b_mlx4bit_seed20260726_v1
+  created_utc: "2026-07-26T04:07:41Z"
+  timezone: Asia/Shanghai
+  status: stopped_after_formal_p0_failure
+  highest_completed_stage: p0
+  formal_outcome: outcome_d_predictive_bridge_not_validated
+  outcome_qualification: gate_a_not_statistically_adjudicated_because_p0_failed
+repository:
+  root: /Users/wangsikai/l1-robust-kv-cache
+  commit: 1d64abc8839e31ee1a0615e19a3b3b1809ca5618
+  branch: main
+  dirty_at_start: true
+  preexisting_tracked_diff_sha256: 0313f2d89830355faa6a4899ebe0bbdde94519d36a4b8c3f6d73ceeb95540f08
+  experiment_files_sha256: c3dd7b968e8464b9a21184f346799b006972a4b036073ad1729c7c9db7f5af03
+preregistration:
+  frozen: true
+  frozen_utc: "2026-07-26T04:07:41Z"
+  initial_sha256: d6b545117d97c3d459bbb6ad8321454e049d8aec228b2539adef60941db772ca
+  sha256: e4a0cd13bd0d75fb126e1dbb45196a62b3feeecf3748b138cfa782ded5238f10
+  amendment_1:
+    reason: user_confirmed_4bit_is_sufficient
+    timing: before_heldout_evaluation
+    changes_precision_path_only: true
+  heldout_loaded_before_freeze: false
+  heldout_loaded_during_run: false
+model:
+  source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  revision: 8b403126fc14f14cfc99bb4cfa72ecbc129ea677
+  source_model_sha256: 0979f33d1bc58afcf696d13f57977644e7b11a6f0eec3e631d8e9463d18c0717
+  tokenizer_sha256: a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf
+  execution_path: mlx_native_4bit
+  execution_checkpoint_sha256: 0979f33d1bc58afcf696d13f57977644e7b11a6f0eec3e631d8e9463d18c0717
+  quantized_autograd_used: true
+  quantized_autograd_requires_p0_validation: true
+  dtype: 4bit
+  primary_device: mlx_metal
+  fallback_device: none_for_formal_4bit_gate
+  layers: 28
+  hidden_size: 1536
+  query_heads: 12
+  kv_heads: 2
+  head_dim: 128
+data:
+  govreport:
+    dataset: THUDM/LongBench
+    config: gov_report
+    split: test
+    official_required: true
+    train_indices: "24-43"
+    calibration_indices: "44-55"
+    test_indices: "56-71"
+  niah:
+    dataset: repository_deterministic_ruler_niah
+    official: false
+    context_length: 768
+    generator_seed: 20260726
+    train_indices: "24-43"
+    calibration_indices: "44-55"
+    test_indices: "56-71"
+  prior_ids_scan:
+    parquet_files: 685
+    unreadable_files: 0
+    related_ids: "gov_report:0-23; synthetic_niah_0-23"
+  formal_p0_consumed_ids:
+    - "gov_report:24"
+    - "gov_report:25"
+    - "synthetic_niah_24"
+    - "synthetic_niah_25"
+  calibration_consumed_ids: []
+  test_consumed_ids: []
+protocol:
+  seed: 20260726
+  deterministic: true
+  teacher_forced: true
+  free_generation: gated
+  anchors: [16, 32, 48, 64]
+  horizons: [1, 4, 8, 16, 32, 64]
+  max_new_tokens: 128
+  cache:
+    total_budget: 128
+    sink_size: 4
+    recent_size: 32
+    core_size: 92
+  candidates_per_group: 32
+  bootstrap_replicates: 10000
+hardware:
+  host: Apple_M4
+  gpu_cores: 10
+  unified_memory_bytes: 34359738368
+  cuda_available: false
+  mps_available: true
+  disk_available_at_audit: approximately_320_GiB
+software:
+  python: 3.9.6
+  torch: 2.4.1
+  transformers: 4.46.3
+  datasets: 3.2.0
+  pyarrow: 21.0.0
+  scipy: 1.10.1
+  pandas: 2.0.3
+stages:
+  p0:
+    status: failed_after_numerical_fix_and_full_rerun
+    authoritative_run: raw/p0_alignment/formal_4bit_retry1
+    formal_p0_passed: false
+    stop_p1_plus: true
+    checks:
+      matrix_sequence_count: true
+      matrix_task_counts: true
+      matrix_anchor_count: true
+      matrix_candidates_per_group: true
+      candidate_distinct_pass: true
+      active_budget_pass: true
+      identity_all_finite: true
+      fp32_identity_pass: false
+      single_layer_pass: false
+      jvp_fd_pass: false
+      projection_pass: true
+      repeat_pass: true
+      base_alignment_pass: true
+      vjp_pass: true
+    metrics:
+      fp32_identity_max_relative_error: 2.735327380302998e+21
+      fp32_identity_median_relative_error: 1.745401732478058e-06
+      single_layer_cosine_median: 0.9550696970644608
+      single_layer_cosine_govreport: 0.9843225175453503
+      single_layer_cosine_niah: 0.9179677895721692
+      jvp_fd_cosine_median: 0.0
+      projection_min_cosine: 0.999999999999983
+    rows:
+      candidate_registry: 128
+      deletion_identity: 86016
+      projection_block: 7168
+      single_layer: 640
+      jvp_fd: 128
+      anchor_audit: 16
+    runtime_seconds_authoritative_rerun: 543.2948655419999
+    peak_rss_bytes: 2978512896
+    mlx_peak_memory_bytes: 2394897432
+  p1:
+    status: not_run_stopped_by_p0
+  p2:
+    status: not_run_stopped_by_p0
+  gate_a:
+    status: not_run_not_adjudicated_stopped_by_p0
+  p4:
+    status: not_run_stopped_by_p0
+  p5:
+    status: not_run_stopped_by_p0
+  gate_b1:
+    status: not_run_stopped_by_p0
+  gate_b2:
+    status: not_run_stopped_by_p0
+  secondary_model:
+    status: not_run_stopped_by_p0
+  policy:
+    status: not_run_stopped_by_p0
+integrity:
+  raw_format: parquet
+  summary_csv: required
+  summary_json: required
+  per_sequence_checkpoint: true
+  atomic_writes: true
+  candidate_deduplication: true
+  oom_recovery: not_exercised_no_oom
+  full_vocabulary_logits_persisted: false
+  failures_preserved: true
+  authoritative_p0_tree_sha256: 107ec3ff33709f5080e67fae442332db9dbec1bacf66303b3ddd9fb1bcb516f2
+  authoritative_p0_summary_sha256: fe25f98cff5157236ddaa69347e56be5d4d6d09380e5e1d16b6f4042f37849c0
+  compact_summary_sha256: bdd26c1abf6efe51325d114c003d3f3380fc44fad2903574c48b08238cb26aee
+  figures_tree_sha256: f55526799ccb7e2223a7a5a709a6ab31bdad42019eb67d3c8f4eb2fb6bee66df
+  summaries_tree_sha256: bf66f9ccc62d8d6eb1a54c1a5c2eae62f6e92fa1554e3ba41a5b295d4f4ebf4e

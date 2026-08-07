@@ -1,0 +1,3 @@
+canonical_ledger: P2_RECOVERY_DATA_LEDGER.yaml
+canonical_ledger_location: repository_root
+rule: This file is a routing stub; the root ledger is the only mutable canonical record.

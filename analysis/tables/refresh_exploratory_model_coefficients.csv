@@ -1,0 +1,7 @@
+model,term,coefficient,n_rows,n_samples,in_sample_r2
+standardized_ols_exploratory,intercept,0.11550030471184981,90,15,0.6681367803668925
+standardized_ols_exploratory,stale_loss,0.25722197879075365,90,15,0.6681367803668925
+standardized_ols_exploratory,mean_selected_core_residual,0.032117052114574704,90,15,0.6681367803668925
+standardized_ols_exploratory,selected_core_turnover,0.07563324599873959,90,15,0.6681367803668925
+standardized_ols_exploratory,attention_distribution_shift,0.004877993696657302,90,15,0.6681367803668925
+standardized_ols_exploratory,selection_boundary_margin_future,0.0022955310441868824,90,15,0.6681367803668925

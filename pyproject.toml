@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "statekv"
+version = "0.1.0"
+description = "State-conditioned KV-cache selection and refresh research"
+requires-python = ">=3.9"
+dependencies = [
+  "torch>=2.4,<2.5",
+  "transformers>=4.46,<4.47",
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "pandas>=2.0",
+  "PyYAML>=6.0",
+  "matplotlib>=3.7",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["statekv*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "experiments"]
+addopts = "-ra"
+pythonpath = [".", "benchmarks/torch", "benchmarks/mlx"]

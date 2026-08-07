@@ -1,0 +1,8 @@
+issue_code,severity,scope,count,classification,detail,excluded
+EARLY_EOS_BUT_HORIZONS_COVERED,info,reference,2,expected run variation,"Generated lengths [115, 126]; all requested anchor/horizon rows are valid.",False
+DIRTY_WORKTREE,warning,provenance,102,provenance limitation,Commit hash does not include all source state; metadata records git status.,False
+FOUR_BIT_OVERRIDE,warning,model,1,experiment limitation,"Executed model uses user-approved cached 4-bit weights, not bfloat16.",False
+FULL_VALUE_VECTORS_NOT_PERSISTED,critical,geometry,1,missing field,Anchor/history V and future per-token V vectors are absent from Parquet/NPZ.,False
+DENSE_REFRESH_COUNTERFACTUAL_NOT_PERSISTED,critical,refresh,1,missing experimental arm,No refreshed replay at every future step. Only sparse cross-anchor same-token comparisons are recoverable.,False
+FUTURE_SCORE_VECTORS_NOT_PERSISTED,warning,stability,1,missing field,Future full score vectors/sets are absent; stored score stability is aggregate and old-token-only.,False
+STEP_ROWS_REPEAT_ACROSS_TARGET_HORIZONS,info,step_losses,15300,intentional design,Deployable strategies replay each target horizon independently; oracle core is horizon-conditioned.,False

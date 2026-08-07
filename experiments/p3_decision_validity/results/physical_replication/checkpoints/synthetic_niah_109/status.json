@@ -1,0 +1,8 @@
+{
+  "candidate_row_count": 168,
+  "event_row_count": 21,
+  "sample_id": "synthetic_niah_109",
+  "stage": "physical_replication",
+  "state": "complete",
+  "wall_seconds": 196.81939412500003
+}

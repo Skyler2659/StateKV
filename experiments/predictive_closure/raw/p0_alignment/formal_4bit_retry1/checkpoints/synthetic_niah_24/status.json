@@ -1,0 +1,19 @@
+{
+  "anchors": [
+    16,
+    32,
+    48,
+    64
+  ],
+  "candidate_count_per_anchor": 8,
+  "formal_p0": true,
+  "generation_stopped_on_eos": false,
+  "heldout_touched": false,
+  "prompt_length": 1266,
+  "prompt_truncated": false,
+  "sample_id": "synthetic_niah_24",
+  "split": "train",
+  "state": "complete",
+  "task": "niah_single_1",
+  "wall_seconds": 126.15839758300001
+}

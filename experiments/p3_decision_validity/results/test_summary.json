@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "phase": "final",
+  "test_files": [
+    "tests/test_p0.py",
+    "tests/test_p0_v2.py",
+    "tests/test_p1_state_conditioned.py",
+    "tests/test_p2_state_local.py",
+    "tests/test_p2_recovery.py",
+    "tests/test_p3_decision_validity.py"
+  ],
+  "passed_count": 134,
+  "skipped_count": 0,
+  "warning_count": 3
+}

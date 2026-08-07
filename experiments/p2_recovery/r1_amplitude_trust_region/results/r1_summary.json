@@ -1,0 +1,136 @@
+{
+  "branch": "R1-A",
+  "claim_scope": "retrospective_only",
+  "config_sha256": "a73633c9899980b3c56f0ac72a2435cbcc1a715f3290ff679937b4ed7e1dccdb",
+  "cumulative_mechanism_outcome": "D2",
+  "direction_count": 576,
+  "gates_by_gamma": {
+    "0.0625": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9998648435406507,
+        "overall_sequence_first_relative_l2": 0.014860795703730787,
+        "row_pass_fraction": 1.0,
+        "task_cosine": {
+          "gov_report": 0.999100339492157,
+          "niah_single_1": 0.999989687195894
+        }
+      },
+      "passed": true
+    },
+    "0.125": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": true,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9994625686244998,
+        "overall_sequence_first_relative_l2": 0.02946337345998437,
+        "row_pass_fraction": 0.9913194444444444,
+        "task_cosine": {
+          "gov_report": 0.9964501661081346,
+          "niah_single_1": 0.999959649130644
+        }
+      },
+      "passed": true
+    },
+    "0.25": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": true,
+        "overall_cosine": true,
+        "overall_relative_l2": false,
+        "row_pass_fraction": true
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9978817655431169,
+        "overall_sequence_first_relative_l2": 0.057877934404378426,
+        "row_pass_fraction": 0.9548611111111112,
+        "task_cosine": {
+          "gov_report": 0.986113947432874,
+          "niah_single_1": 0.9998393608091255
+        }
+      },
+      "passed": false
+    },
+    "0.5": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": true,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9913719885194061,
+        "overall_sequence_first_relative_l2": 0.11395891442227861,
+        "row_pass_fraction": 0.9270833333333334,
+        "task_cosine": {
+          "gov_report": 0.9462422547364902,
+          "niah_single_1": 0.9993621267440551
+        }
+      },
+      "passed": false
+    },
+    "0.75": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": false,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9781498491391375,
+        "overall_sequence_first_relative_l2": 0.17658277733469285,
+        "row_pass_fraction": 0.8767361111111112,
+        "task_cosine": {
+          "gov_report": 0.8834940715302386,
+          "niah_single_1": 0.9985773613246869
+        }
+      },
+      "passed": false
+    },
+    "1.0": {
+      "checks": {
+        "all_finite": true,
+        "each_task_cosine": false,
+        "overall_cosine": false,
+        "overall_relative_l2": false,
+        "row_pass_fraction": false
+      },
+      "metrics": {
+        "all_finite": true,
+        "overall_sequence_first_cosine": 0.9546333262124307,
+        "overall_sequence_first_relative_l2": 0.2478327573601593,
+        "row_pass_fraction": 0.8368055555555556,
+        "task_cosine": {
+          "gov_report": 0.8039392956754752,
+          "niah_single_1": 0.9974969328318726
+        }
+      },
+      "passed": false
+    }
+  },
+  "iteration": "r1_amplitude_trust_region",
+  "median_residual_log_log_slope": 1.9826635515337188,
+  "next_iteration": "R3",
+  "quadratic_scaling_consistent": true,
+  "r1_c_candidate_specific_flag": false,
+  "row_count": 4608,
+  "small_gamma_failure_concentration": 0.0
+}

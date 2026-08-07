@@ -1,0 +1,5 @@
+method:
+  name: snapkv
+  observation_window: 32
+  pooling_kernel: 5
+

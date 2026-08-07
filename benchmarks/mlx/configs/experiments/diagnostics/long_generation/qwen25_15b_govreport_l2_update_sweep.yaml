@@ -1,0 +1,69 @@
+experiment_name: long_generation_govreport_l2_update_sweep
+
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  family: qwen
+  backend: mlx
+  dtype: auto
+  device: mps
+  quant_bits: 4
+  quant_group_size: 64
+  mlx_weight_quantize: false
+  prefill_step_size: 6144
+  trust_remote_code: false
+  local_files_only: false
+  prompt_format:
+    mode: plain
+    system_prompt: null
+
+eviction:
+  method: l2_prefill_only
+  cache_size: 128
+  sink_size: 4
+  recent_size: 32
+  score_source: v
+  update_interval: 64
+  update_policy: every_n_steps
+  score_normalization: rank
+  head_strategy: shared
+  seed: 42
+
+benchmark:
+  name: longbench
+  tasks:
+    - gov_report
+  # This is a diagnostic of decode-time cache maintenance, not a LongBench
+  # leaderboard run.  The bounded prompt/output and 1.5B model keep the
+  # every-token stress condition within a few hours.
+  max_words: 3000
+  n_samples_per_task: 2
+  num_samples: 2
+  max_steps: 6144
+  max_new_tokens: 256
+  eval_target_only: true
+  evaluation: official
+  use_official_prompt: true
+  use_official_dataset: true
+  require_official_dataset: true
+  longbench_max_length: 6144
+
+# The launcher overrides this list and update interval for each condition.
+methods:
+  - l2_prefill_only
+cache_budgets:
+  - 128
+
+analysis:
+  overlap: false
+  rank_correlation: false
+  evidence_recall: false
+  case_study: false
+  include_oracle: false
+
+output_dir: results/long_generation_leverage
+save_selected_tokens: false
+save_scores: false
+save_prompt_text: false
+progress_every: 1
+seed: 42
+overwrite: false

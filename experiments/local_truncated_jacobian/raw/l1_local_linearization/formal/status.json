@@ -1,0 +1,17 @@
+{
+  "calibration_or_test_loaded": false,
+  "completed_sequences": [
+    "gov_report:24",
+    "gov_report:25",
+    "synthetic_niah_24",
+    "synthetic_niah_25"
+  ],
+  "errors": [],
+  "formal_l1_local_passed": true,
+  "formal_l1_native_transfer_passed": true,
+  "proceed_l2_l3": true,
+  "split": "train",
+  "stage": "formal_l1",
+  "state": "complete",
+  "stop_reason": null
+}

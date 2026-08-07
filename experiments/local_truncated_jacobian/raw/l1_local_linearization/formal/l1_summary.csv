@@ -1,0 +1,2 @@
+formal_l1_local_passed,formal_l1_native_transfer_passed,proceed_l2_l3,stop_reason,local_vector_cosine,local_energy_spearman,native_vector_cosine,native_energy_spearman
+True,True,True,,0.9988827032850953,1.0,0.9962066468877948,1.0

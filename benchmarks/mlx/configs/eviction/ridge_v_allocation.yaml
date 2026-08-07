@@ -1,0 +1,7 @@
+method: ridge_v_allocation
+cache_size: 512
+sink_size: 0
+recent_size: 0
+ridge_budget_lambda_floor: 0.0001
+update_policy: prefill_only
+update_interval: 0

@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "manifest_all_match": true,
+    "p0_outcome_is_A": true,
+    "p0_tests_all_pass": true,
+    "response_row_count_matches": true,
+    "source_hashes_match": true
+  },
+  "hash_checks": {
+    "config": true,
+    "core": true,
+    "manifest": true,
+    "response_parquet": true,
+    "results": true,
+    "runner": true
+  },
+  "manifest_entry_count": 53,
+  "manifest_match_count": 53,
+  "passed": true,
+  "response_row_count": 192,
+  "stage": "p0_regression",
+  "tests_stderr": "",
+  "tests_stdout": ".....                                                                    [100%]\n5 passed in 1.53s\n",
+  "wall_seconds": 2.054788625
+}

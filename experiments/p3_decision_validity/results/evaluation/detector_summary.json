@@ -1,0 +1,100 @@
+{
+  "checks": {
+    "below_always_refresh": true,
+    "coverage": false,
+    "each_task_recall": true,
+    "harmful_recall": true,
+    "missed_regret": false,
+    "pareto_vs_fixed_interval": true
+  },
+  "fixed_interval_baselines": [
+    {
+      "harmful_event_count": 28,
+      "harmful_recall": 1.0,
+      "interval": 1,
+      "missed_event_count": 0,
+      "missed_normalized_regret": 0.0,
+      "refresh_coverage": 0.8571428571428571,
+      "task_recall": {
+        "gov_report": 1.0,
+        "niah_single_1": 1.0
+      }
+    },
+    {
+      "harmful_event_count": 28,
+      "harmful_recall": 0.7857142857142857,
+      "interval": 2,
+      "missed_event_count": 6,
+      "missed_normalized_regret": 0.1553516194371354,
+      "refresh_coverage": 0.7142857142857143,
+      "task_recall": {
+        "gov_report": 0.8461538461538461,
+        "niah_single_1": 0.7333333333333333
+      }
+    },
+    {
+      "harmful_event_count": 28,
+      "harmful_recall": 0.6071428571428571,
+      "interval": 4,
+      "missed_event_count": 11,
+      "missed_normalized_regret": 0.2579297383129318,
+      "refresh_coverage": 0.5714285714285714,
+      "task_recall": {
+        "gov_report": 0.6153846153846154,
+        "niah_single_1": 0.6
+      }
+    },
+    {
+      "harmful_event_count": 28,
+      "harmful_recall": 0.5714285714285714,
+      "interval": 8,
+      "missed_event_count": 12,
+      "missed_normalized_regret": 0.2626374776376633,
+      "refresh_coverage": 0.42857142857142855,
+      "task_recall": {
+        "gov_report": 0.5384615384615384,
+        "niah_single_1": 0.6
+      }
+    },
+    {
+      "harmful_event_count": 28,
+      "harmful_recall": 0.32142857142857145,
+      "interval": 16,
+      "missed_event_count": 19,
+      "missed_normalized_regret": 0.44393926771829934,
+      "refresh_coverage": 0.2857142857142857,
+      "task_recall": {
+        "gov_report": 0.3076923076923077,
+        "niah_single_1": 0.3333333333333333
+      }
+    },
+    {
+      "harmful_event_count": 28,
+      "harmful_recall": 0.14285714285714285,
+      "interval": 32,
+      "missed_event_count": 24,
+      "missed_normalized_regret": 0.5821483815820946,
+      "refresh_coverage": 0.14285714285714285,
+      "task_recall": {
+        "gov_report": 0.15384615384615385,
+        "niah_single_1": 0.13333333333333333
+      }
+    }
+  ],
+  "metrics": {
+    "auprc": 0.39338715303239985,
+    "auroc": 0.5707908163265306,
+    "harmful_event_count": 28,
+    "harmful_recall": 0.9642857142857143,
+    "missed_event_count": 1,
+    "missed_normalized_regret": 0.03571428571428571,
+    "refresh_coverage": 0.8333333333333334,
+    "task_recall": {
+      "gov_report": 1.0,
+      "niah_single_1": 0.9333333333333333
+    }
+  },
+  "model_name": "query_norm_drift_gt_0.00057923663",
+  "passed": false,
+  "stage": "evaluation"
+}

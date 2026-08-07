@@ -1,0 +1,78 @@
+experiment_name: predictive_closure_p0_formal_mlx4bit
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  dtype: 4bit
+  backend: mlx
+  quant_bits: 4
+  deterministic: true
+  temperature: 0.0
+  do_sample: false
+  revision: 8b403126fc14f14cfc99bb4cfa72ecbc129ea677
+  trust_remote_code: false
+  local_files_only: true
+  attn_implementation: eager
+  prompt_format: chat_template
+  system_prompt: null
+tasks:
+  gov_report:
+    num_samples: 2
+    dataset_name: THUDM/LongBench
+    dataset_config: gov_report
+    split: test
+    sample_indices: [24, 25]
+    max_words: 700
+  ruler_niah:
+    num_samples: 2
+    context_length: 768
+    sample_offset: 24
+generation:
+  max_new_tokens: 72
+  temperature: 0.0
+  do_sample: false
+  stop_on_eos: false
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+anchor_steps: [16, 32, 48, 64]
+horizons: [1]
+strategies:
+  - snapkv
+  - v_ridge_leverage
+  - attention_weighted_v_ridge_leverage
+  - future_attention_oracle
+signal_lags: [1]
+diagnostics:
+  num_layers: 28
+  heads_per_layer: 12
+  layer_selection: explicit
+  explicit_layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]
+  explicit_heads: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+metrics:
+  logits_top_k: 256
+  probability_floor: 1.0e-12
+  attention_error_epsilon: 1.0e-8
+  large_loss_spike_threshold: 0.25
+selectors:
+  observation_window: 32
+  snapkv_pooling_kernel: 63
+  snapkv_pooling: max
+  ridge_lambda: 0.001
+  ridge_lambda_mode: relative
+  attention_weighted_ridge_lambda: 0.001
+  attention_weight_epsilon: 0.0001
+  shared_token_selection: true
+independent_fisher:
+  enabled: false
+runtime:
+  device: auto
+  seed: 20260726
+  deterministic: true
+  prefill_chunk_size: 128
+  resume: true
+  fail_on_error: true
+  max_prompt_tokens: 1536
+  output_root: experiments/predictive_closure/raw
+  run_id: predictive_closure_qwen25_15b_mlx4bit_seed20260726_v1_p0
+  bootstrap_samples: 100

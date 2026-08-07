@@ -1,0 +1,107 @@
+schema_version: 1
+iteration: r4_scalar_decision_risk
+protocol_status: design_data_predictor_gates_frozen_before_calibration
+design_frozen_at: "2026-07-28T03:00:00+08:00"
+numeric_calibration_status: frozen
+numeric_calibration_frozen_at: inherited_before_r4
+source:
+  p0_manifest_sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
+  p1_manifest_sha256: e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1
+  p2_manifest_sha256: 768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51
+  p2_config_sha256: 2d27f2877ae2588e9f41582c30f4a74bb3a3bef3fb6f551eba438a32aa8b4b6a
+  r1_summary_sha256: 4e183d26a3380aa51b6b081b81d6b88fc13ffb05cf2924ef109cd3bce6ff08a6
+  r3_config_sha256: dc709a0526a7b6e41a1b46d8a9b49403b4bf4ae46f3ff0a20ad66d56c98b1e85
+  r3_formal_summary_sha256: efc1e2779ed798289ad2253024b5b8fe4b69ce10847aae807bf677c7d78934c2
+  r3_replication_summary_sha256: dba5b737d3eb91b3a785294fe5fc36391fbea69627c9f0f39df6ab4d63df0fbe
+  r3_formal_vector_passed: true
+  r3_replication_vector_passed: false
+  r3_formal_decision_passed: true
+  r3_replication_decision_passed: true
+data:
+  scan_path: experiments/p2_recovery/results/data_scan_92_97.json
+  calibration:
+    gov_report_indices: [92, 93]
+    niah_offsets: [92, 93]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidate_sources: [attention_only, random_reference]
+    expected_directions: 192
+    expected_method_rows: 192
+  evaluation:
+    gov_report_indices: [94, 95]
+    niah_offsets: [94, 95]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidates_per_unit: 8
+    expected_directions: 768
+    expected_method_rows: 768
+  replication:
+    gov_report_indices: [96, 97]
+    niah_offsets: [96, 97]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidates_per_unit: 8
+    expected_directions: 768
+  histories: [H0, H1, H2, H3]
+methods:
+  selection_order: [midpoint_k2]
+  midpoint_k2:
+    nodes: [0.25, 0.75]
+    weights: [0.5, 0.5]
+    jvp_cost: 2
+    selectable: true
+numeric_backend:
+  name: symmetric_central_fd
+  relative_radius: 3.0e-3
+  forward_probes_per_derivative: 2
+  inherited_from: r3_frozen_numeric_bridge
+calibration_selection:
+  vector_gate:
+    overall_sequence_first_cosine_min: 0.0
+    each_task_cosine_min: 0.0
+    overall_sequence_first_relative_l2_max: 1000000.0
+    row_cosine_min: -1.0
+    row_pass_fraction_min: 0.0
+    all_finite: true
+  rule: predictor_preselected_from_r3_no_r4_method_tuning
+  selected_method: midpoint_k2
+  selected_jvp_cost: 2
+formal_gates:
+  mechanism:
+    overall_sequence_first_cosine_min: 0.0
+    each_task_cosine_min: 0.0
+    overall_sequence_first_relative_l2_max: 1000000.0
+    row_cosine_min: -1.0
+    row_pass_fraction_min: 0.0
+    all_finite: true
+  decision:
+    overall_sequence_first_spearman_min: 0.90
+    each_task_spearman_min: 0.85
+    each_task_action_gain_strict_min: 0.0
+    positive_sequence_fraction_min: 0.75
+    pairwise_gain_min: 0.02
+    secondary_max_degradation: 0.02
+  reduced:
+    maximum_directional_derivatives: 2
+    maximum_forward_probes: 4
+    inherited_oracle_evidence_required: true
+    inherited_oracle_gain_retention_min: 0.80
+    inherited_oracle_spearman_gap_max: 0.02
+replication:
+  required: true
+  reuse_frozen_predictor_and_gates: true
+  selected_method_only: true
+claim:
+  primary: scalar_decision_risk_closure
+  explicitly_not_claimed: full_vector_readout_closure
+prohibited:
+  - final_exact_kl_as_predictor_input
+  - endpoint_logits_as_predictor
+  - future_token
+  - future_attention
+  - formal_threshold_tuning
+  - formal_method_reselection
+runtime:
+  seed: 20260727
+  run_id: p2_recovery_r4_qwen25_15b_fp32_seed20260727_v1
+  resume: true

@@ -1,0 +1,251 @@
+schema_version: 1
+experiment: p1_state_conditioned_fixed_boundary_risk_closure
+protocol_status: design_gate_and_numeric_radius_frozen_before_evaluation
+design_frozen_at: "2026-07-27T00:00:00+08:00"
+numeric_calibration_status: passed_and_frozen
+numeric_calibration_frozen_at: "2026-07-27T00:00:00+08:00"
+
+scope:
+  observed_history_state: true
+  fixed_current_step: true
+  boundary: "b=(layer+1,input)"
+  isolated_current_single_layer_action: true
+  controlled_full_downstream_context: true
+  same_step_logits: true
+  teacher_forced: true
+  prohibited:
+    - predicted_history_state
+    - temporal_transition_fit
+    - E2
+    - E2_J1
+    - multi_step_horizon_risk
+    - future_query_prediction
+    - future_attention_oracle
+    - refresh_policy_evaluation
+    - controller
+    - free_generation
+    - joint_current_multilayer_mask
+    - multilayer_response_sum
+    - low_rank_Q
+    - online_deployment
+    - post_formal_threshold_tuning
+
+source_p0_v2:
+  outcome: A
+  config_sha256: bbf03214f9af4074ff541966f3f5f2a8ea13b589f146bc2517a285ed3a3469d8
+  results_sha256: 9b2280b531e61c13be016a6b0934d3016399852e8cac5f92f5b65bf17fc165ed
+  response_parquet_sha256: 4b983b2bfa9c99799f1bd5fd56d801b6cee8ecaeab2958861c8b475cbdf9a8fe
+  core_sha256: db945e8d27c30b63f245068c708aa0600a4f6112ad1054b00afc4514eaeb92c9
+  runner_sha256: c48f81439eb83245ca460ff4690d0a5e6b128c64a89ba7bcbfabeebecb4eb21c
+  manifest_sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
+  expected_test_count: 5
+  expected_response_rows: 192
+
+model:
+  source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  revision: 8b403126fc14f14cfc99bb4cfa72ecbc129ea677
+  checkpoint_storage: 4bit
+  execution_weights: dequantized_float32
+  activations: float32
+  anchor_kv: float32
+  replay_kv: float32
+  local_files_only: true
+  prompt_format: chat_template
+
+data:
+  tasks: [gov_report, ruler_niah]
+  gov_report:
+    dataset_name: THUDM/LongBench
+    dataset_config: gov_report
+    split: test
+    max_words: 700
+  ruler_niah:
+    context_length: 768
+  smoke:
+    gov_report_indices: [68]
+    niah_offsets: [68]
+    target_anchors: [48]
+    layers: [14]
+    candidate_sources: [attention_only, random_reference]
+  calibration:
+    gov_report_indices: [68, 69]
+    niah_offsets: [68, 69]
+    target_anchors: [48]
+    layers: [0, 14, 26]
+    candidate_sources: [attention_only, random_reference]
+  evaluation:
+    gov_report_indices: [80, 81]
+    niah_offsets: [80, 81]
+    target_anchors: [48, 64]
+    layers: [0, 14, 26]
+    candidates_per_unit: 8
+    expected_candidate_history_rows: 768
+  max_prompt_tokens: 1536
+  max_new_tokens: 66
+  stop_on_eos: false
+  forbidden_ids:
+    - gov_report:24
+    - gov_report:25
+    - gov_report:44
+    - gov_report:45
+    - gov_report:56
+    - gov_report:57
+    - synthetic_niah_24
+    - synthetic_niah_25
+    - synthetic_niah_44
+    - synthetic_niah_45
+    - synthetic_niah_56
+    - synthetic_niah_57
+
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+  history_compresses_all_layers: true
+  current_action_applies_to_one_layer_only: true
+
+history_conditions:
+  H0:
+    history_length: 0
+    initial_source: full_reference
+    refresh_interval: null
+    refresh_source: null
+    expected_refresh_count: 0
+  H1:
+    history_length: 8
+    initial_source: old_stale_core
+    refresh_interval: null
+    refresh_source: null
+    expected_refresh_count: 0
+  H2:
+    history_length: 32
+    initial_source: old_stale_core
+    refresh_interval: null
+    refresh_source: null
+    expected_refresh_count: 0
+  H3:
+    history_length: 32
+    initial_source: old_stale_core
+    refresh_interval: 8
+    refresh_source: fresh_core
+    expected_refresh_count: 3
+  periodic_refresh_semantics: matched_full_reference_anchor_reset
+  current_target_capture_steps_beyond_history: 1
+  state_hash_dtype: float32
+
+candidates:
+  sources:
+    - attention_only
+    - aov
+    - aor
+    - v_ridge
+    - snapkv
+    - old_stale_core
+    - fresh_core
+    - random_reference
+  generation_operating_point: target_full_reference
+  shared_across_histories: true
+  shared_across_layers: true
+  deduplication: pre_action_seeded_uniform
+
+numeric:
+  seed: 20260727
+  deterministic: true
+  prefill_chunk_size: 128
+  probability_floor: 1.0e-12
+  vector_norm_floor: 1.0e-12
+  low_norm_threshold: 1.0e-8
+  cross_ratio_epsilon: 1.0e-12
+  identity_norm_floors: [1.0e-12, 1.0e-10, 1.0e-8, 1.0e-6]
+  fd_relative_radius_grid:
+    - 1.0e-2
+    - 3.0e-3
+    - 1.0e-3
+    - 3.0e-4
+    - 1.0e-4
+    - 3.0e-5
+    - 1.0e-5
+    - 3.0e-6
+    - 1.0e-6
+  fd_selected_relative_radius: 3.0e-3
+  fd_selection_rule:
+    finite_rate_min: 1.0
+    nonzero_fd_norm_rate_min: 1.0
+    median_cosine_min: 0.999
+    median_relative_l2_max: 0.05
+    median_symmetric_norm_ratio_min: 0.95
+    objective: minimum_median_relative_l2
+    tie_break: larger_radius
+  explicit_vocab_jacobian_forbidden: true
+
+metrics:
+  top_k: 2
+  sequence_first: true
+  primary_gain_histories: [H1, H2, H3]
+  scores:
+    - direct
+    - local
+    - action_fisher
+    - state_fisher
+    - midpoint_oracle
+  retrospective_diagnostics:
+    - midpoint_oracle
+    - physical_adjacent_input
+    - physical_history_logits
+
+gates:
+  p0_regression:
+    p0_tests_all_pass: true
+    p0_manifest_all_match: true
+    p0_outcome_required: A
+    h0_delta_x_max_norm: 0.0
+    h0_cross_max_abs: 1.0e-12
+    h0_state_action_score_max_abs: 1.0e-12
+    h0_sequence_first_action_spearman_min: 0.90
+    h0_sequence_first_combined_cosine_min: 0.95
+    h0_sequence_first_combined_relative_l2_max: 0.25
+  history_validity:
+    finite_rate_min: 1.0
+    nonzero_state_norm_strict_min: 1.0e-8
+    unique_state_key_required: true
+    candidate_shared_state_hash_required: true
+    candidate_hash_sets_equal_across_histories: true
+    h1_h2_hash_must_differ: true
+    h2_h3_hash_must_differ: true
+    split_isolation_required: true
+  combined_readout:
+    overall_sequence_first_cosine_min: 0.95
+    each_task_median_cosine_min: 0.90
+    overall_sequence_first_relative_l2_max: 0.25
+    row_cosine_threshold: 0.90
+    row_pass_fraction_min: 0.80
+  decision_gain:
+    overall_median_delta_spearman_min: 0.05
+    each_task_median_delta_spearman_strict_min: 0.0
+    positive_sequence_fraction_min: 0.75
+    pairwise_accuracy_gain_min: 0.02
+    secondary_metric_max_degradation: 0.02
+    top1_reversal_rate_strict_min: 0.0
+    reversal_state_lower_regret_fraction_strict_min: 0.5
+
+outcomes:
+  A: all_prerequisites_combined_readout_and_decision_gain_pass
+  B: combined_readout_pass_decision_gain_fail
+  C: combined_readout_fail_state_operating_point_diagnostic_recovers
+  D: boundary_state_composition_failure
+  N: numerical_or_protocol_inconclusive
+
+diagnostics:
+  scaling_only_if_gate2_fails:
+    gamma: [0.25, 0.5, 0.75, 1.0]
+    families: [gamma_state_plus_action, state_plus_gamma_action]
+  state_operating_point_only_if_gate2_fails: true
+  physical_history_transfer_after_main_only: true
+  physical_history_transfer_enters_main_gate: false
+
+runtime:
+  resume: true
+  atomic_writes: true
+  output_dir: experiments/p1_state_conditioned/results
+  run_id: p1_state_conditioned_qwen25_15b_fp32_seed20260727_v1

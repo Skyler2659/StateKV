@@ -1,0 +1,30 @@
+# Documentation-only example. This is not a scientific run or a source of data.
+run_manifest_version: 1
+config_schema_version: 1
+artifact_schema_version: 1
+run_id: example-do-not-run
+phase: documentation-example
+status: smoke
+protocol_version: example-v1
+config_hash: "0000000000000000000000000000000000000000000000000000000000000000"
+git_commit: 1d64abc8839e31ee1a0615e19a3b3b1809ca5618
+dirty_diff_hash: null
+backend: none
+model: documentation-placeholder
+model_revision: null
+tokenizer_revision: null
+dataset: documentation-placeholder
+dataset_revision: null
+artifact_path: artifacts/raw/example-do-not-run
+paper_usage: none
+command:
+  - python
+  - -m
+  - statekv.cli
+  - example-only
+runtime:
+  documentation_only: true
+notes:
+  - Do not treat this file as an executed experiment.
+  - Future real runs must record resolved model, tokenizer, and dataset revisions.
+example: true

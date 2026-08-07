@@ -1,0 +1,5 @@
+sample_id,task,split,anchors,candidate_groups,fp32_identity_max_relative_error,fp32_identity_median_relative_error,single_layer_cosine_median,jvp_fd_cosine_median,jvp_fd_relative_l2_median,base_repeat_max_absolute_error
+gov_report:24,gov_report,train,4,4,2.735327380302998e+21,1.0547677788963483e-06,0.9823066736681833,0.0,1.0,0.0
+gov_report:25,gov_report,train,4,4,3.28941333486397e+20,1.0623490425132331e-06,0.9912227914208612,0.010930371914055378,1.0000021912196522,0.0
+synthetic_niah_24,niah_single_1,train,4,4,7929632256.0,4.08785444960813e-06,0.9137799734533497,0.0,1.0,0.0
+synthetic_niah_25,niah_single_1,train,4,4,7.004747567612088e+20,2.685762410692405e-06,0.9221173479548921,-0.02268284708479512,1.0000230908173253,0.0

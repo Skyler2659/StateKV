@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "legacy_test_count": 53,
+  "recovery_test_count": 20,
+  "total_passed": 73,
+  "failed": 0,
+  "skipped": 0,
+  "command": ".venv/bin/python -m pytest -q tests/test_p0_v2.py tests/test_p1_state_conditioned.py tests/test_p2_state_local.py tests/test_p2_recovery.py"
+}

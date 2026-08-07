@@ -1,0 +1,16 @@
+{
+  "approximate_kl_vs_step": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/03_approximate_kl_vs_step.png",
+  "attention_output_error_vs_step": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/04_attention_output_error_vs_step.png",
+  "cumulative_delta_nll_vs_step": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/02_cumulative_delta_nll_vs_step.png",
+  "deployable_oracle_overlap": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/07_deployable_oracle_overlap_vs_horizon.png",
+  "effective_rank_vs_loss": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/14_value_effective_rank_vs_future_loss.png",
+  "loss_vs_horizon": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/01_loss_vs_horizon.png",
+  "new_value_residual_vs_loss": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/11_new_token_value_residual_vs_future_loss.png",
+  "oracle_set_overlap": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/06_oracle_set_overlap_across_horizons.png",
+  "query_drift_vs_loss": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/10_query_drift_vs_future_loss.png",
+  "score_rank_correlation": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/08_score_rank_correlation_vs_lag.png",
+  "selected_token_age_distribution": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/13_selected_token_age_distribution.png",
+  "snapshot_loss_vs_validity": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/12_snapshot_loss_vs_validity_horizon.png",
+  "strategy_horizon_loss_heatmap": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/05_strategy_horizon_loss_heatmap.png",
+  "top_core_overlap": "/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/discovery_small_4bit_seed42_protocol_v4/figures/09_top_core_overlap_vs_lag.png"
+}

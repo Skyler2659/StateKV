@@ -44,6 +44,13 @@ mlruns/
 tmp/
 temp/
 
+# StateKV artifact-store payloads. Keep schemas and documentation examples in
+# artifacts/, while raw, derived, and failed run payloads remain local or in an
+# external artifact store.
+artifacts/raw/
+artifacts/derived/
+artifacts/failed/
+
 # Local model weights, checkpoints, and caches.
 # Use anchored paths so configs/models/ remains tracked.
 /models/

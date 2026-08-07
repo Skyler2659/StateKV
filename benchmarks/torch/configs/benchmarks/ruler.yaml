@@ -1,0 +1,17 @@
+benchmark:
+  name: ruler
+  task: niah_single_1
+  context_length: 16384
+  num_samples: 50
+  dataset_name: null
+  dataset_config: null
+  split: null
+  dataset_revision: null
+  data_path: null
+  sample_strategy: first
+  sample_indices: null
+  require_official: true
+  use_official_prompt: true
+  use_official_generation_length: true
+  max_words: 0
+  truncation: error

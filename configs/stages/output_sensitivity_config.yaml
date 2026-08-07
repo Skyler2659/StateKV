@@ -1,0 +1,113 @@
+experiment_name: output_sensitivity_closure
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  dtype: 4bit
+  backend: mlx
+  quant_bits: 4
+  deterministic: true
+  temperature: 0.0
+  do_sample: false
+  revision: null
+  trust_remote_code: false
+  local_files_only: true
+  attn_implementation: eager
+  prompt_format: chat_template
+  system_prompt: null
+tasks:
+  ruler_niah:
+    num_samples: 12
+    context_length: 768
+  govreport_or_qmsum:
+    num_samples: 12
+    preferred: gov_report
+    max_words: 700
+    sample_strategy: first
+    fallback_paragraphs: 24
+generation:
+  max_new_tokens: 112
+  temperature: 0.0
+  do_sample: false
+  stop_on_eos: false
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+anchor_steps: [16, 32, 48]
+horizons: [4, 8, 16, 32, 64]
+strategies:
+  - snapkv
+  - v_ridge_leverage
+  - attention_weighted_v_ridge_leverage
+  - future_attention_oracle
+signal_lags: [1, 2, 4, 8, 16, 32, 64]
+diagnostics:
+  num_layers: 6
+  heads_per_layer: 12
+  layer_selection: explicit
+  explicit_layers: [0, 7, 14, 15, 21, 27]
+  explicit_heads: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+metrics:
+  logits_top_k: 128
+  probability_floor: 1.0e-12
+  attention_error_epsilon: 1.0e-8
+  large_loss_spike_threshold: 0.25
+selectors:
+  observation_window: 32
+  snapkv_pooling_kernel: 63
+  snapkv_pooling: max
+  ridge_lambda: 0.001
+  ridge_lambda_mode: relative
+  attention_weighted_ridge_lambda: 0.001
+  attention_weight_epsilon: 0.0001
+  shared_token_selection: true
+validity_thresholds:
+  avg_delta_nll: [0.01, 0.05, 0.1, 0.25]
+  max_delta_nll: [0.05, 0.1, 0.25, 0.5]
+  avg_approx_kl: [0.001, 0.005, 0.01, 0.05]
+mechanism:
+  enabled: false
+functional_probe:
+  enabled: false
+theory_closing:
+  enabled: false
+trajectory_model:
+  enabled: false
+robust_envelope:
+  enabled: false
+output_sensitivity:
+  enabled: true
+  anchors: [16, 32, 48]
+  segment_horizon: 32
+  state_reference_anchor: 32
+  state_reference_horizon: 64
+  diagnostic_layers: [0, 7, 14, 15, 21, 27]
+  total_budget: 128
+  protected_recent: 32
+  candidate_count: 24
+  evaluation_horizons: [4, 8, 16, 32]
+  state_evaluation_horizons: [1, 2, 4, 8, 16, 32, 64]
+  coverage_levels: [0.90, 0.95]
+  calibration_sequences: 8
+  state_margin_sequences: 5
+  jacobian_directions: 8
+  jacobian_radii: [0.001, 0.01, 0.05]
+  output_pointwise_coverage_gate: 0.90
+  output_looseness_gate: 5.0
+  action_spearman_increment_gate: 0.05
+  pairwise_sign_accuracy_gate: 0.65
+  partial_pairwise_sign_accuracy_gate: 0.60
+  maximum_refresh_count: 3
+  refresh_cost: 1.0
+  random_seed: 42
+runtime:
+  device: auto
+  seed: 42
+  deterministic: true
+  prefill_chunk_size: 128
+  resume: true
+  fail_on_error: true
+  max_prompt_tokens: 1536
+  output_root: results/temporal_cache_discovery
+  run_id: output_sensitivity_4bit_24seq_seed42_v1
+  bootstrap_samples: 2000

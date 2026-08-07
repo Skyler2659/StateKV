@@ -1,0 +1,42 @@
+{
+  "checks": {
+    "action_only_gain": false,
+    "each_task_spearman": false,
+    "overall_spearman": false,
+    "positive_sequence_fraction": true
+  },
+  "overall_scalar_physical_spearman": 0.1876417233560091,
+  "passed": false,
+  "positive_sequence_fraction": 1.0,
+  "recovery_descriptor": {
+    "checks": {
+      "action_only_gain": false,
+      "each_task_spearman": false,
+      "overall_spearman": false,
+      "positive_sequence_fraction": false
+    },
+    "name": "physical_boundary_effect_norm_no_fitted_weight",
+    "overall_spearman": -0.15249433106575966,
+    "passed": false,
+    "positive_sequence_fraction": 0.5,
+    "task_regret_gain_vs_action_only": {
+      "gov_report": -0.004572628657674549,
+      "niah_single_1": -0.43794290171969164
+    },
+    "task_spearman": {
+      "gov_report": 0.06519274376417233,
+      "niah_single_1": -0.5736961451247167
+    }
+  },
+  "sequence_count": 4,
+  "stage": "physical_evaluation",
+  "task_regret_gain_vs_action_only": {
+    "gov_report": -0.04530011356569008,
+    "niah_single_1": -0.02531068413581483
+  },
+  "task_scalar_physical_spearman": {
+    "gov_report": 0.2148526077097506,
+    "niah_single_1": 0.1876417233560091
+  },
+  "transfer_outcome": "Transfer_C"
+}

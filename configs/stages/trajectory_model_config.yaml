@@ -1,0 +1,103 @@
+experiment_name: trajectory_stochastic_model_identification
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  dtype: 4bit
+  backend: mlx
+  quant_bits: 4
+  deterministic: true
+  temperature: 0.0
+  do_sample: false
+  revision: null
+  trust_remote_code: false
+  local_files_only: true
+  attn_implementation: eager
+  prompt_format: chat_template
+  system_prompt: null
+tasks:
+  ruler_niah:
+    num_samples: 3
+    context_length: 768
+  govreport_or_qmsum:
+    num_samples: 3
+    preferred: gov_report
+    max_words: 700
+    sample_strategy: first
+    fallback_paragraphs: 24
+generation:
+  max_new_tokens: 144
+  temperature: 0.0
+  do_sample: false
+  stop_on_eos: false
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+anchor_steps: [16, 32, 48, 64, 80]
+horizons: [1, 8, 16, 32, 64]
+strategies:
+  - snapkv
+  - v_ridge_leverage
+  - attention_weighted_v_ridge_leverage
+  - future_attention_oracle
+signal_lags: [1, 8, 16, 32, 64]
+diagnostics:
+  num_layers: 6
+  heads_per_layer: 12
+  layer_selection: explicit
+  explicit_layers: [0, 7, 14, 15, 21, 27]
+  explicit_heads: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+metrics:
+  logits_top_k: 128
+  probability_floor: 1.0e-12
+  attention_error_epsilon: 1.0e-8
+  large_loss_spike_threshold: 0.25
+selectors:
+  observation_window: 32
+  snapkv_pooling_kernel: 63
+  snapkv_pooling: max
+  ridge_lambda: 0.001
+  ridge_lambda_mode: relative
+  attention_weighted_ridge_lambda: 0.001
+  attention_weight_epsilon: 0.0001
+  shared_token_selection: true
+validity_thresholds:
+  avg_delta_nll: [0.01, 0.05, 0.1, 0.25]
+  max_delta_nll: [0.05, 0.1, 0.25, 0.5]
+  avg_approx_kl: [0.001, 0.005, 0.01, 0.05]
+mechanism:
+  enabled: false
+functional_probe:
+  enabled: false
+theory_closing:
+  enabled: false
+trajectory_model:
+  enabled: true
+  anchors: [16, 32, 48, 64, 80]
+  horizon: 64
+  diagnostic_layers: [0, 7, 14, 15, 21, 27]
+  betas: [0.0, 0.25, 0.5, 0.75, 1.0, 1.5]
+  protected_recent_sizes: [0, 32]
+  mask_types: [attention, aov, aor, v_ridge, random, old_core]
+  total_budget: 128
+  scaling_relative_tolerance: 0.20
+  scaling_r2_gate: 0.80
+  superposition_relative_tolerance: 0.25
+  latent_ranks: [2, 4, 8, 16, 32]
+  latent_variance_gate: 0.90
+  markov_history_delta_r2_gate: 0.03
+  rollout_r2_gate: 0.20
+  ridge_alpha: 0.001
+  state_storage_dtype: float16
+  random_seed: 42
+runtime:
+  device: auto
+  seed: 42
+  deterministic: true
+  prefill_chunk_size: 128
+  resume: true
+  fail_on_error: true
+  max_prompt_tokens: 1536
+  output_root: results/temporal_cache_discovery
+  run_id: trajectory_stochastic_model_4bit_seed42_v1
+  bootstrap_samples: 2000

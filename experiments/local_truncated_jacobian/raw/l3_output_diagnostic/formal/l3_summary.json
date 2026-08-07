@@ -1,0 +1,63 @@
+{
+  "calibration_or_test_loaded": false,
+  "changes_l0_l1_l2_outcome": false,
+  "exact_kl_distribution": {
+    "maximum": 1.624209900664514,
+    "median": 4.4650836286550536e-05,
+    "minimum": 6.064404957418203e-10
+  },
+  "integrity": {
+    "checks": {
+      "calibration_or_test_not_loaded": true,
+      "candidate_finite": true,
+      "candidate_groups": true,
+      "candidate_rows": true,
+      "exact_kl_nonnegative": true,
+      "group_finite": true,
+      "group_rows": true,
+      "l1_summary": true,
+      "l2_summary": true,
+      "physical_rows": true,
+      "preregistration": true,
+      "sequence_rows": true,
+      "task_rows": true
+    },
+    "passed": true
+  },
+  "interpretation_scope": "same-step output-ranking diagnostic only; no Fisher, policy, held-out, or causal utility claim",
+  "is_primary_gate": false,
+  "row_counts": {
+    "candidate": 640,
+    "group": 80,
+    "sequence": 4,
+    "task": 2
+  },
+  "sequence_independent_pooled_medians": {
+    "delta_rho_j1_minus_s0_to_kl": 0.0,
+    "rho_s0_exact_kl": 0.755952380952381,
+    "rho_sj1_exact_kl": 0.7619047619047621,
+    "rho_sj1_strue1": 1.0,
+    "rho_strue1_exact_kl": 0.767857142857143
+  },
+  "split": "train",
+  "stage": "formal_l3_secondary_diagnostic",
+  "status": "complete",
+  "task_medians": [
+    {
+      "delta_rho_j1_minus_s0_to_kl": 0.011904761904761876,
+      "rho_s0_exact_kl": 0.7916666666666667,
+      "rho_sj1_exact_kl": 0.8154761904761907,
+      "rho_sj1_strue1": 1.0,
+      "rho_strue1_exact_kl": 0.8214285714285716,
+      "task": "gov_report"
+    },
+    {
+      "delta_rho_j1_minus_s0_to_kl": 0.0,
+      "rho_s0_exact_kl": 0.7142857142857144,
+      "rho_sj1_exact_kl": 0.7083333333333335,
+      "rho_sj1_strue1": 1.0,
+      "rho_strue1_exact_kl": 0.6785714285714286,
+      "task": "niah_single_1"
+    }
+  ]
+}

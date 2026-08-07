@@ -1,0 +1,40 @@
+{
+  "amplitude_error_fraction": 0.4114583333333333,
+  "claim_scope": "retrospective_only",
+  "config_sha256": "a8ec683bb1b54236813a138328c26f8c331eccb865c3d4e35b9aaac5a8712aa6",
+  "direction_error_fraction": 0.16319444444444445,
+  "iteration": "r0_failure_map",
+  "large_action_direction_error_fraction": 0.6,
+  "large_action_threshold": 10.160239257666985,
+  "median_action_norm_exact_kl_spearman": 0.7380952380952381,
+  "median_full_score_exact_kl_spearman": 1.0,
+  "median_truth_norm_exact_kl_spearman": 0.7142857142857144,
+  "non_large_action_direction_error_fraction": 0.1124031007751938,
+  "p2_full_all_sequences_equal_one": false,
+  "p2_full_sequence_spearman": [
+    {
+      "sample_id": "gov_report:84",
+      "spearman": 0.9285714285714287,
+      "task": "gov_report"
+    },
+    {
+      "sample_id": "gov_report:85",
+      "spearman": 1.0,
+      "task": "gov_report"
+    },
+    {
+      "sample_id": "synthetic_niah_84",
+      "spearman": 1.0,
+      "task": "niah_single_1"
+    },
+    {
+      "sample_id": "synthetic_niah_85",
+      "spearman": 1.0,
+      "task": "niah_single_1"
+    }
+  ],
+  "pass_or_other_fraction": 0.4253472222222222,
+  "row_count": 576,
+  "units_with_exact_kl_ties": 0,
+  "units_with_full_score_ties": 0
+}
