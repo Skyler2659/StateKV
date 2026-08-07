@@ -32,13 +32,6 @@ scope:
 
 source_p0_v2:
   outcome: A
-  config_sha256: bbf03214f9af4074ff541966f3f5f2a8ea13b589f146bc2517a285ed3a3469d8
-  results_sha256: 9b2280b531e61c13be016a6b0934d3016399852e8cac5f92f5b65bf17fc165ed
-  response_parquet_sha256: 4b983b2bfa9c99799f1bd5fd56d801b6cee8ecaeab2958861c8b475cbdf9a8fe
-  core_sha256: db945e8d27c30b63f245068c708aa0600a4f6112ad1054b00afc4514eaeb92c9
-  runner_sha256: c48f81439eb83245ca460ff4690d0a5e6b128c64a89ba7bcbfabeebecb4eb21c
-  manifest_sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
-  expected_test_count: 5
   expected_response_rows: 192
 
 model:

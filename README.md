@@ -2,238 +2,299 @@
 
 **State-conditioned physical risk for KV-cache selection and refresh.**
 
-StateKV studies how a concrete KV-cache action changes model-output risk under
-the observed compressed state created by earlier cache decisions. Selection
-chooses among candidate actions in that state; refresh decides when state
-evolution makes an earlier choice unreliable. L1/L2 leverage, attention,
-SnapKV, H2O, value norm, age, Fisher and related geometry are retained as
-baselines, candidate generators or diagnostics, not as StateKV itself.
+StateKV is a research prototype for reasoning about repeated KV-cache
+compression as a sequential intervention. The current repository validates a
+reference-dependent teacher evaluator in controlled diagnostics; it does not
+yet contain a deployable online selection-and-refresh policy.
 
-This is the repository's only Markdown document. Detailed machine-readable
-evidence remains in manifests, ledgers, YAML, JSON, CSV and Parquet artifacts.
+The method evaluates retained-set actions under the functional state created by
+earlier cache decisions. L1/L2 leverage, attention, recency, value norm,
+SnapKV, H2O, Fisher geometry, and related scores remain baselines, candidate
+generators, or diagnostics—not as StateKV itself.
 
-## Scientific scope
+![StateKV architecture](assets/statekv-architecture.png)
 
-Repeated cache compression is a sequential intervention:
+The editable [TikZ source](assets/statekv-architecture.tex) and vector
+[PDF](assets/statekv-architecture.pdf) are versioned with the repository.
+
+## Research question
+
+Static token scores assume that a candidate has the same consequence whenever
+it is evaluated. Repeated compression breaks that assumption: earlier evictions
+change later queries, attention, residual streams, and KV contents. StateKV asks
+a more specific question:
+
+> Given the compressed trajectory observed now, which retained set produces the
+> smallest increase in output risk, and when does state evolution invalidate
+> that choice?
+
+This separates three roles that are easy to conflate:
+
+1. **Candidate generation** proposes legal retained sets at a fixed budget.
+2. **State-conditioned evaluation** estimates the finite downstream effect and
+   its incremental output risk under the current trajectory.
+3. **Selection and refresh** choose the lowest-risk candidate and re-evaluate
+   when the preferred action may have changed.
+
+## Minimal formulation
+
+Compression history is represented at boundary $b$ by a functional
+displacement from a paired full-cache reference:
+
+$$
+\mathbf{s}_{t,b}
+=
+\mathbf{x}^{\mathrm{hist}}_{t,b}
+-
+\mathbf{x}^{\mathrm{ref}}_{t,b}.
+$$
+
+For a retained set $C$, the teacher computes the exact local
+deletion-and-renormalization response, transports that finite action through the
+downstream network, and evaluates the second-order increment in reference KL at
+the current state:
+
+$$
+\widehat{\mathcal R}_{\mathbf s}(C)
+=
+\mathbf g_{\mathbf s}^{\top}\widehat{\Delta\mathbf z}(C)
++
+\frac{1}{2}
+\widehat{\Delta\mathbf z}(C)^{\top}
+\mathbf F_{\mathbf s}
+\widehat{\Delta\mathbf z}(C).
+$$
+
+Selection and refresh share this risk object:
+
+$$
+C^{\star}_{\mathbf s}=\arg\min_{C\in\mathcal A_{t,\ell}(B)}
+\widehat{\mathcal R}_{\mathbf s}(C),
+\qquad
+\text{oracle refresh if }
+C^{\star}_{\mathbf s_t}\ne C^{\star}_{\mathbf s_{t-1}}.
+$$
+
+The refresh rule above is an **oracle diagnostic**. A low-cost state-drift
+detector that works without the full-cache reference is a next-stage component,
+not a current result.
+
+## What has been established
+
+The manuscript draft and frozen artifacts support the following bounded
+findings. Values below are reported from the stored structured results; they are
+not newly generated claims.
+
+| Finding | Stored evidence | Scope |
+|---|---|---|
+| Exact set-level deletion identity reaches a maximum FP64 L2 error of $2.26\times10^{-11}$. | [P0 identity rows](experiments/p0_v2_fixed_boundary/results/identity_rows.parquet) | Fixed operating point and stored candidate protocol. |
+| Physical boundary replay reaches sequence-first cosine $\approx 1$ and relative L2 $8.09\times10^{-7}$. | [P0 summary](experiments/p0_v2_fixed_boundary/results/p0_v2_summary.json) | Controlled fixed-boundary replay. |
+| Evaluating at the observed state improves the P1 diagnostic to cosine $0.99974$ and relative L2 $0.02255$. | [P1 operating-point summary](experiments/p1_state_conditioned/results/state_operating_point_summary.json) | Four stored sequences on the frozen Qwen protocol. |
+| The finite-action approximation has a visible trust region: cosine falls from $0.99986$ at amplitude $1/16$ to $0.95463$ at amplitude $1$; the median residual slope is $1.983$. | [R1 summary](experiments/p2_recovery/r1_amplitude_trust_region/results/r1_summary.json) | Retrospective amplitude study. |
+| The two-midpoint state-local scalar-risk evaluator obtains Spearman $1.0$ and top-1 gain $1.0$ in both evaluation and replication splits, outperforming the stored action-only ranking. | [Evaluation](experiments/p2_recovery/r4_scalar_decision_risk/results/evaluation/analysis_summary.json), [replication](experiments/p2_recovery/r4_scalar_decision_risk/results/replication/analysis_summary.json) | Frozen candidate pools; scalar ranking only, not full-vector closure. |
+| Dense all-layer mechanistic risk transfers across the limited P3PR model/task study (Spearman $1.0$ formal, $0.9940$ replication; top-1 $1.0$), while the relative single-boundary shortcut does not pass the same gate. | [P3PR summary](experiments/p3pr_generalization/results/analysis/analysis_summary.json) | Two model families, two task families, and the stored splits. |
+
+The current distinction is important: a same-state physical evaluator and a
+candidate-specific teacher are supported in the frozen protocols, while the
+online policy remains future work.
+
+These results support the mechanism and the teacher evaluator. They do **not**
+yet establish:
+
+- a low-cost risk estimator that removes full-cache references and deep
+  per-candidate probes;
+- a deployable refresh trigger;
+- subset-level physical closure beyond the frozen action protocols;
+- end-to-end free-generation quality preservation;
+- latency, memory, throughput, and refresh-overhead gains at matched budgets;
+- universal transfer of a single relative boundary across models and tasks.
+
+Same-step KL is therefore an evaluator target, not a substitute for downstream
+generation quality.
+
+## Repository architecture
 
 ```text
-compression history
-  -> observed compressed state
-  -> candidate retained/deletion action
-  -> state-conditioned physical risk
-  -> selection validity
-  -> refresh decision
+statekv/
+  core/                    stable paper-facing state, action, risk, decision API
+  storage.py               atomic JSON, text, frame, gzip, and NPZ writes
+  backend*.py              model/backend adapters
+  selectors.py             candidate generators and baseline selectors
+  functional_*.py          functional-state probes and features
+  *risk*, *fisher*, ...    research instrumentation and analysis modules
+configs/
+  ccfa.yaml                project stage, claims, evidence, and next gates
+  discovery/               active discovery and smoke configurations
+  stages/                  active staged experiments
+  frozen/                  immutable evaluation-time protocols
+experiments/               frozen phase code, manifests, and structured results
+benchmarks/
+  mlx/                     Apple-Silicon execution and baselines
+  torch/                   PyTorch/CUDA execution and baselines
+analysis/                  derived tables and publication analysis
+assets/                    architecture source and rendered deliverables
+tests/
+  core/                    tests for the stable StateKV contract
+  golden/                  frozen parity and protocol tests
 ```
 
-A static token score omits the first term. Earlier evictions can change later
-queries, attention, residual streams and KV contents, so the same candidate can
-have different risk in different compressed states. StateKV separates:
-
-1. candidate generation using attention, leverage, age or other selectors;
-2. risk evaluation under the current functional or physical state;
-3. selection and refresh policy driven by that risk object.
-
-The strongest current positive results are deliberately narrow:
-
-- A controlled reference-dependent evaluator closes scalar ranking for frozen
-  retained-set candidate pools after exact deletion injection, finite-action
-  transport and state-local KL/Fisher readout.
-- A same-state physical evaluator closes candidate ranking for an observed
-  compressed prequery state under the frozen singleton-deletion protocol.
-- Dense all-layer mechanism evidence transfers across the limited tested
-  model/task scope, while the successful candidate-specific teacher remains too
-  expensive to be an online policy.
-
-The repository does not yet establish a deployable low-cost controller,
-subset-level physical closure, free-generation quality preservation, or full
-latency/memory/throughput gains. Same-step KL is an evaluator target, not a
-substitute for downstream generation quality.
-
-Important negative results are preserved as scientific evidence:
-
-- controlled single-boundary risk does not directly transfer across propagated
-  all-layer physical histories;
-- full-vector reconstruction did not replicate where scalar ranking did;
-- static single-/multi-boundary geometry and low-dimensional summaries did not
-  replace candidate-conditioned deep response;
-- the successful late boundary on one model is not a universal rule.
-
-## Repository layout
+The dependency direction is deliberate:
 
 ```text
-statekv/               canonical StateKV implementation
-statekv/io/            artifact, schema and provenance interfaces
-configs/               active, staged and frozen StateKV configurations
-scripts/               StateKV experiment, validation and analysis entrypoints
-experiments/           frozen phase code, manifests, ledgers and result data
-benchmarks/mlx/        Apple-Silicon benchmark and baseline harness
-benchmarks/torch/      protocol-aware PyTorch/CUDA benchmark
-analysis/              structured StateKV analysis pipeline and tables
-results/               StateKV discovery and mechanism artifacts
-artifacts/             run-registry schema and artifact governance
-tests/                 unit, architecture, provenance and golden tests
+statekv.core  <-  research instrumentation  <-  experiment protocols
+     ^                    ^                            ^
+     |                    |                            |
+ pure contracts     model-aware logic          frozen evidence runs
 ```
 
-The benchmark projects are supporting infrastructure. They must not import
-phase-specific experiment code or define the StateKV research claim. New shared
-research logic belongs under `statekv/`; new backend-specific execution logic
-belongs under `benchmarks/<backend>/`.
+`statekv.core` must not import benchmark backends or experiment modules.
+Backend-specific execution belongs under `benchmarks/<backend>/`; reusable
+StateKV logic belongs under `statekv/`. The benchmark projects support the
+research claim but do not define it.
 
-The repository has no compatibility symlinks. Code uses canonical paths such as
-`benchmarks/torch`, `configs/frozen` and `experiments/<phase>` directly.
+## Paper-facing Python API
+
+The stable core exposes the mathematical objects without importing a model
+backend:
+
+```python
+from statekv import (
+    functional_history_state,
+    select_lowest_risk,
+    set_level_attention_delta,
+    state_conditioned_quadratic_risk,
+)
+
+state = functional_history_state(history_boundary, reference_boundary)
+boundary_delta = set_level_attention_delta(attention, values, retained_positions)
+risk = state_conditioned_quadratic_risk(
+    reference_logits, state_logits, candidate_delta_logits
+)
+decision = select_lowest_risk({"candidate-a": float(risk_a), "candidate-b": float(risk_b)})
+```
+
+`set_level_attention_delta` implements the exact fixed-operating-point action.
+Finite downstream transport remains model-aware and is available through
+`statekv.core.midpoint_path_response`. `oracle_refresh_required` deliberately
+states its diagnostic status in its API documentation.
 
 ## Installation
 
-The current local environment is Python 3.9 based and uses both backend
-projects. Install in this order:
+The project targets Python 3.9+ and separates the canonical package from the
+two backend harnesses:
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
+.venv/bin/python -m pip install -U pip
 .venv/bin/python -m pip install -e benchmarks/torch
 .venv/bin/python -m pip install -e benchmarks/mlx
 .venv/bin/python -m pip install -e .
 ```
 
-Backend requirements are declared separately in:
-
-- `pyproject.toml`
-- `benchmarks/mlx/pyproject.toml`
-- `benchmarks/torch/pyproject.toml`
-
-Model-scale work additionally requires local model weights, dataset access and
-appropriate MPS or CUDA hardware. Unit-test success alone does not validate a
-full model run.
+Model-scale runs additionally require local model weights, dataset access, and
+appropriate MPS or CUDA hardware. Unit tests do not validate a full model run.
 
 ## Verification
 
-Run all automated suites without writing pytest caches into the repository:
+Run the dependency-light research-path check:
 
 ```bash
 PYTHONPYCACHEPREFIX=/tmp/statekv-pycache \
-  .venv/bin/python -m pytest -q -p no:cacheprovider
-
-cd benchmarks/mlx
-PYTHONPYCACHEPREFIX=/tmp/statekv-mlx-pycache \
-  ../../.venv/bin/python -m pytest -q -p no:cacheprovider
-
-cd ../torch
-PYTHONPYCACHEPREFIX=/tmp/statekv-torch-pycache \
-  ../../.venv/bin/python -m pytest -q -p no:cacheprovider
+  .venv/bin/python scripts/smoke_test.py
 ```
 
-Static syntax and dependency checks:
+It covers configuration loading, cache budgeting, leverage-based candidate
+generation, functional measurement, output-risk utilities, refresh scheduling,
+the exact retained-set action, and the stable state/risk/decision API.
+
+Run the repository suite with:
 
 ```bash
-PYTHONPYCACHEPREFIX=/tmp/statekv-compile \
-  .venv/bin/python -m compileall -q statekv scripts tests experiments benchmarks
-.venv/bin/python -m pip check
+.venv/bin/python -m pytest
 ```
 
-Five golden tests are intentionally skipped until a researcher exports audited
-`frozen_v1` fixtures. No cache tensor, logit, risk value or ranking is fabricated
-to make those tests pass.
+Run each backend suite from its own project root because the MLX fixtures use
+backend-relative configuration paths:
 
-## Main StateKV entrypoints
+```bash
+(cd benchmarks/mlx && ../../.venv/bin/python -m pytest tests)
+(cd benchmarks/torch && ../../.venv/bin/python -m pytest tests)
+```
 
-Mechanism-discovery and state-evolution runs:
+## Experiment and evidence map
 
-| Purpose | Entrypoint | Configuration |
-|---|---|---|
-| Temporal discovery | `scripts/run_temporal_discovery.py` | `configs/discovery/discovery_small.yaml` |
-| Functional probe | `scripts/run_functional_probe.py` | `configs/discovery/functional_probe_stage1_4bit.yaml` |
-| Mechanism-targeted analysis | `scripts/run_mechanism_targeted.py` | `configs/discovery/mechanism_targeted_4bit.yaml` |
-| Gauge geometry | `scripts/run_gauge_geometry.py` | `configs/stages/gauge_geometry_config.yaml` |
-| Independent Fisher | `scripts/run_independent_fisher.py` | `configs/stages/independent_fisher_config.yaml` |
-| Output sensitivity | `scripts/run_output_sensitivity.py` | `configs/stages/output_sensitivity_config.yaml` |
-| Robust envelope | `scripts/run_robust_envelope.py` | `configs/stages/robust_envelope_config.yaml` |
-| Trajectory model | `scripts/run_trajectory_model.py` | `configs/stages/trajectory_model_config.yaml` |
-| Theory closing | `scripts/run_theory_closing.py` | `configs/stages/theory_closing_config.yaml` |
+The machine-readable inventory is
+[`experiments/frozen_registry.yaml`](experiments/frozen_registry.yaml). Frozen
+phases preserve positive, negative, recovery, and generalization evidence:
 
-Reusable logic is implemented in `statekv/backend.py`, `backend_mlx.py`,
-`mechanism.py`, `selectors.py`, `signals.py`, `metrics.py`,
-`functional_probe.py`, `gauge_geometry.py`, `independent_fisher.py`,
-`output_sensitivity.py`, `robust_envelope.py`, `trajectory_model.py` and
-`theory_closing.py`.
+| Phase family | Scientific role |
+|---|---|
+| Predictive closure / local Jacobian | Records why static and overly local surrogates were insufficient. |
+| P0-v2 | Validates the exact action identity, physical replay, and fixed-boundary response. |
+| P1 / P2 | Tests state conditioning and records failed state-local shortcuts. |
+| P2 recovery R1–R4 | Identifies the finite-action trust region and closes scalar decision risk. |
+| P3 / P3 physical recovery | Tests decision validity under propagated histories and recovers a physical evaluator. |
+| P3PR | Probes cross-model/task generalization and rejects the universal relative-boundary shortcut. |
 
-Backend benchmark entrypoints remain under `benchmarks/mlx/scripts` and
-`benchmarks/torch/scripts`. Historical MLX benchmark outputs were removed from
-the working tree; StateKV result data remains under
-`results/temporal_cache_discovery`.
+Negative evidence is part of the result: a completed negative experiment must
+not be relabeled as a failed run. Failed, interrupted, smoke, obsolete-protocol,
+and in-progress outputs remain distinct statuses.
 
-## Frozen evidence registry
+## Recommended next work
 
-`experiments/frozen_registry.yaml` is the repository-level inventory. Each
-phase manifest remains authoritative for the exact evaluation-time protocol,
-checksums and bounded claim.
+The shortest path from the current teacher evaluator to a publishable system is:
 
-| Phase | Status | Manifest |
-|---|---|---|
-| Predictive closure | frozen negative evidence | `experiments/predictive_closure/experiment_manifest.yaml` |
-| Local truncated Jacobian | frozen boundary evidence | `experiments/local_truncated_jacobian/EXPERIMENT_MANIFEST.yaml` |
-| P0-v2 fixed boundary | frozen positive evidence | `experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml` |
-| P1 state-conditioned | frozen boundary evidence | `experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml` |
-| P2 state-local risk | frozen negative evidence | `experiments/p2_state_local_risk/P2_STATE_LOCAL_MANIFEST.yaml` |
-| P2 recovery | frozen recovery evidence | `experiments/p2_recovery/P2_RECOVERY_MANIFEST.yaml` |
-| P3 decision validity | frozen negative evidence | `experiments/p3_decision_validity/P3_DECISION_VALIDITY_MANIFEST.yaml` |
-| P3 physical recovery | frozen recovery evidence | `experiments/p3_physical_recovery/P3_PHYSICAL_RECOVERY_MANIFEST.yaml` |
-| P3PR generalization | frozen generalization evidence | `experiments/p3pr_generalization/P3PR_GENERALIZATION_MANIFEST.yaml` |
+1. **Lock the teacher protocol.** Define one canonical retained-set action
+   schema, candidate pool, budget policy, sequence split, and target metric.
+   Rerun it into a new output directory and confirm that the stored conclusions
+   survive the refactored API.
+2. **Distill a low-cost risk estimator.** Use teacher risks as labels, split by
+   sequence/task/model rather than candidate rows, and compare against
+   action-only, attention, recency, leverage, SnapKV, and H2O baselines. Report
+   Spearman, pairwise accuracy, top-1 accuracy, normalized regret, calibration,
+   and estimator cost together.
+3. **Learn or design a state-drift trigger.** Label an event when oracle
+   re-evaluation changes the preferred candidate. Measure missed switches,
+   precision/recall, refresh frequency, hysteresis, and probe overhead. The
+   deployed trigger must not use the full-cache reference.
+4. **Run closed-loop generation.** At matched cache budgets, compare quality,
+   peak memory, prefill/decode latency, throughput, refresh count, and refresh
+   overhead against strong static and refresh baselines. This is the gate that
+   turns StateKV from an evaluator into a cache policy.
+5. **Stress generalization.** Vary model family and scale, task family, context
+   length, cache budget, candidate pool, and action size. Preserve the current
+   distinction between dense-mechanism transfer and relative-boundary failure.
 
-Negative evidence is not a failed run. Failed, interrupted, smoke and obsolete
-protocol artifacts remain distinct statuses.
-
-Historical Markdown reports have been retired from the checkout. Their paths
-and SHA-256 values are recorded in `experiments/retired_documents.yaml`.
-Evaluation-time filenames and hashes remain unchanged inside phase manifests;
-`statekv/repository_layout.py` distinguishes an intentionally retired document
-from an unrecorded missing source. Path-only source migrations are separately
-bound in `experiments/layout_migrations.yaml`.
+Do not optimize the manuscript around a deployment claim before steps 2–4 have
+real results. The current paper story is strongest when it cleanly distinguishes
+the validated teacher mechanism from the planned online estimator and policy.
 
 ## Reproducibility rules
 
-Do not rerun a frozen experiment into its original results directory. For a new
-run:
+For every new formal run:
 
-1. copy the relevant frozen configuration into a new experiment/config ID;
-2. choose a new output directory;
-3. record random seeds and deterministic settings;
-4. record model and tokenizer identifiers plus immutable revisions;
-5. record dataset identifiers, revisions and exact sample IDs;
-6. record the Git commit and dirty-diff hash;
-7. save the executed command and resolved configuration;
-8. write structured JSON/CSV/Parquet artifacts and a run record conforming to
-   `artifacts/registry.schema.yaml`;
-9. classify the result as complete, negative-result, failed-run,
-   interrupted-run, obsolete-protocol, smoke or in-progress.
+1. start from a frozen configuration but assign a new experiment ID and output
+   directory;
+2. store the resolved semantic configuration, command, seed, model/tokenizer
+   revision, dataset revision, and exact sample IDs;
+3. write structured JSON, CSV, or Parquet results atomically;
+4. separate calibration, evaluation, and replication splits;
+5. classify the run status explicitly and never overwrite frozen evidence;
+6. update `configs/ccfa.yaml` only after a gate changes.
 
-The frozen P0/P1/P2 inputs live under `configs/frozen`. New discovery configs
-belong under `configs/discovery`; later risk-model stages belong under
-`configs/stages`. Generic cache-method/model/task benchmark configs belong under
-their backend project, not under the StateKV config root.
+Historical checksums may remain as evaluation-time metadata. New code should
+prefer semantic configuration equality and immutable external revisions over
+generic repository-wide checksum boilerplate.
 
-## Data and output policy
-
-- `results/temporal_cache_discovery` contains StateKV raw and derived mechanism
-  artifacts. Large Parquet/CSV candidate, trajectory, Fisher and sensitivity
-  tables are research data, not source code.
-- `analysis/tables` and `analysis/figures` contain derived paper-analysis
-  material.
-- `experiments/<phase>/results` contains frozen phase artifacts.
-- Generic benchmark outputs belong under `benchmarks/<backend>/results` and are
-  disposable when reproducible and not selected as paper evidence.
-- Future raw, derived and failed payloads should follow the schemas under
-  `artifacts/` or live in an external artifact store.
-
-The repository intentionally keeps exactly one Markdown file: this README.
-Intermediate explanations, meeting notes, duplicated reports, figure indexes,
-backend mini-READMEs and generated Markdown summaries must not be added. Put
-machine-consumable results in JSON, YAML, CSV or Parquet and update this README
-only when repository-wide guidance changes.
+This repository intentionally keeps one Markdown documentation entry point:
+this README. Machine-readable state belongs in YAML/JSON/CSV/Parquet; figures
+belong in `assets/` or `analysis/figures/`.
 
 ## Citation and license
 
 The StateKV paper is in preparation and has no archival citation identifier.
 Until one is published, cite the repository commit and the relevant frozen
-experiment manifest. Do not cite the earlier L1/geometry project title as the
-StateKV method name.
+experiment manifest. Do not cite the earlier L1/geometry project name as the
+StateKV method.
 
-The project license is in `LICENSE`.
+See [LICENSE](LICENSE) for licensing terms.

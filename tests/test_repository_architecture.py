@@ -36,11 +36,23 @@ def _imports_prefix(source: Path, forbidden: tuple[str, ...]) -> bool:
 def test_statekv_has_a_canonical_package() -> None:
     package = ROOT / "statekv"
     assert (package / "__init__.py").is_file()
+    assert (package / "core" / "actions.py").is_file()
+    assert (package / "core" / "risk.py").is_file()
+    assert (package / "core" / "decision.py").is_file()
+    assert (package / "storage.py").is_file()
     assert (package / "config.py").is_file()
     assert (package / "backend.py").is_file()
     assert (package / "backend_mlx.py").is_file()
     pyproject = (ROOT / "pyproject.toml").read_text()
     assert '"statekv*"' in pyproject
+
+
+def test_statekv_core_is_independent_of_experiments_and_backends() -> None:
+    core = ROOT / "statekv" / "core"
+    for source in _python_sources(core):
+        assert not _imports_prefix(
+            source, ("experiments", "benchmarks", "statekv.backend")
+        ), source
 
 
 def test_legacy_temporal_namespace_is_only_a_compatibility_layer() -> None:
@@ -120,8 +132,6 @@ def test_root_contains_only_canonical_documentation_and_no_yaml() -> None:
 
 def test_root_readme_is_the_only_documentation_entrypoint() -> None:
     assert (ROOT / "README.md").is_file()
-    assert (ROOT / "experiments/retired_documents.yaml").is_file()
-    assert (ROOT / "experiments/layout_migrations.yaml").is_file()
     assert not (ROOT / "paper").exists()
 
 
@@ -143,8 +153,6 @@ def test_obvious_intermediate_root_documents_are_removed() -> None:
 
 def test_repository_governance_entrypoints_exist() -> None:
     assert (ROOT / "experiments" / "frozen_registry.yaml").is_file()
-    assert (ROOT / "artifacts" / "registry.schema.yaml").is_file()
-    assert (ROOT / "artifacts" / "example-run.yaml").is_file()
 
 
 def test_canonical_statekv_does_not_mutate_python_path() -> None:

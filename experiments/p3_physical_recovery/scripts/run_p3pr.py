@@ -36,8 +36,6 @@ for value in IMPORT_DIRS:
     if str(value) not in sys.path:
         sys.path.insert(0, str(value))
 
-from statekv.repository_layout import resolve_repository_path  # noqa: E402
-
 from mlx_predictive_core import (  # noqa: E402
     PureMultiBoundaryMap,
     joint_candidate_selection,
@@ -101,9 +99,7 @@ def model_protocol(
     config: Mapping[str, Any], stage: str
 ) -> Dict[str, Any]:
     protocol = yaml.safe_load(
-        resolve_repository_path(
-            ROOT, str(config["model"]["source_protocol"])
-        ).read_text(
+        (ROOT / str(config["model"]["source_protocol"])).read_text(
             encoding="utf-8"
         )
     )

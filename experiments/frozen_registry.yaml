@@ -5,9 +5,7 @@ policy:
   path_semantics: repository-relative
   historical_root_names: provenance-only
   canonical_documentation: README.md
-  layout_migration_ledger: experiments/layout_migrations.yaml
-  retired_document_ledger: experiments/retired_documents.yaml
-  authority: phase manifests and ledgers remain authoritative
+  authority: phase manifests remain historical experiment records
   status_vocabulary:
     - frozen-positive-evidence
     - frozen-negative-evidence

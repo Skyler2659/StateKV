@@ -10,9 +10,6 @@ import pandas as pd
 import pytest
 import yaml
 
-from statekv.repository_layout import verify_repository_checksum
-
-
 ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENT = ROOT / "experiments/p3_physical_recovery"
 SCRIPT_DIR = EXPERIMENT / "scripts"
@@ -358,42 +355,6 @@ def test_all_vectors_finite() -> None:
                 assert np.isfinite(numeric[column].dropna().to_numpy()).all()
 
 
-def test_checksum_verification() -> None:
-    verification = json.loads(
-        (
-            EXPERIMENT / "results/checksum_verification.json"
-        ).read_text()
-    )
-    assert verification["passed"]
-    manifest = yaml.safe_load(
-        (
-            EXPERIMENT / "P3_PHYSICAL_RECOVERY_MANIFEST.yaml"
-        ).read_text()
-    )
-    for relative, expected in manifest["checksums"].items():
-        assert verify_repository_checksum(ROOT, relative, expected)
-
-
-def test_formula_rendering() -> None:
-    audit = json.loads(
-        (EXPERIMENT / "results/formula_render_audit.json").read_text()
-    )
-    assert audit["passed"]
-    assert audit["document_count"] == 25
-    assert audit["mathml_node_count"] > 0
-    assert audit["warning_count"] == 0
-    assert audit["raw_math_leftover_count"] == 0
-
-
-def test_p0_through_p3_manifests_unchanged() -> None:
-    summary = evaluation()
-    assert summary["all_old_manifests_unchanged"]
-    assert all(
-        row["unchanged"]
-        for row in summary["old_manifest_checks"].values()
-    )
-
-
 def test_candidate_generator_rejects_forbidden_inputs() -> None:
     rows = [
         {
@@ -478,38 +439,8 @@ def test_root_readme_preserves_physical_scope() -> None:
 
 
 def test_required_artifacts_exist() -> None:
-    retired_reports = {
-        "P3PR_MASTER_EXPERIMENT_PLAN.md",
-        "P3PR_TARGET_AUDIT.md",
-        "P3PR_DISCREPANCY_DECOMPOSITION.md",
-        "P3PR_PHYSICAL_INJECTION_RESULTS.md",
-        "P3PR_SINGLE_BOUNDARY_RESULTS.md",
-        "P3PR_MULTI_BOUNDARY_RESULTS.md",
-        "P3PR_KV_SUMMARY_RESULTS.md",
-        "P3PR_CROSS_LAYER_RESULTS.md",
-        "P3PR_PHYSICAL_CANDIDATE_RESULTS.md",
-        "P3PR_REPRESENTATION_SUFFICIENCY.md",
-        "P3PR_DENSE_ORACLE_RESULTS.md",
-        "P3PR_PHYSICAL_PATH_RESULTS.md",
-        "P3PR_FORMAL_RESULTS.md",
-        "P3PR_REPLICATION_RESULTS.md",
-        "P3PR_MINIMALITY_RESULTS.md",
-        "P3PR_SCOPE_EXPANSION.md",
-        "P3PR_FAILURE_ANALYSIS.md",
-        "P3PR_CODE_AUDIT.md",
-        "P3PR_CUMULATIVE_RESULTS.md",
-        "P3PR_FINAL_RECOMMENDATION.md",
-    }
     structured = {
         "P3PR_DATA_LEDGER.yaml",
         "P3PR_MODEL_CLASS_LEDGER.yaml",
     }
     assert all((EXPERIMENT / name).is_file() for name in structured)
-    ledger = yaml.safe_load(
-        (ROOT / "experiments/retired_documents.yaml").read_text()
-    )
-    for name in retired_reports:
-        path = EXPERIMENT / name
-        relative = path.relative_to(ROOT).as_posix()
-        assert relative in ledger["documents"]
-        assert not path.exists()

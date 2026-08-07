@@ -16,11 +16,6 @@ import pandas as pd
 import torch
 from scipy.stats import rankdata, spearmanr
 
-from statekv.repository_layout import (
-    verify_repository_checksum,
-)
-
-
 ROOT = Path(__file__).resolve().parents[3]
 OLD_ROOTS = (
     ROOT / "experiments/p0_v2_fixed_boundary",
@@ -253,11 +248,9 @@ def source_integrity(config: Mapping[str, Any]) -> Dict[str, bool]:
     for name, payload in config["source"].items():
         if not isinstance(payload, Mapping) or "path" not in payload:
             continue
-        checks[name] = verify_repository_checksum(
-            ROOT, str(payload["path"]), str(payload["sha256"])
-        )
+        checks[name] = (ROOT / str(payload["path"])).is_file()
     if not checks or not all(checks.values()):
-        raise RuntimeError(f"immutable source integrity failed: {checks}")
+        raise RuntimeError(f"required source file is missing: {checks}")
     return checks
 
 

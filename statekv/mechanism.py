@@ -3,8 +3,6 @@ from __future__ import annotations
 
 import json
 import math
-import os
-import tempfile
 import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Tuple
@@ -16,6 +14,7 @@ import torch
 from statekv.artifacts import json_text
 from statekv.backend import ReferenceTrajectory
 from statekv.runner import TemporalDiscoveryRunner, _sample_slug
+from statekv.storage import atomic_frame as _atomic_frame
 from statekv.selectors import (
     CoreSelection,
     fit_online_ridge_factor,
@@ -37,24 +36,6 @@ MECHANISM_TABLES = (
     "refresh_set_rank_changes",
     "recent_window_exit_events",
 )
-
-
-def _atomic_frame(frame: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=str(path.parent))
-    os.close(fd)
-    temporary_path = Path(temporary)
-    try:
-        if path.suffix == ".parquet":
-            frame.to_parquet(temporary_path, index=False)
-        elif path.suffix == ".csv":
-            frame.to_csv(temporary_path, index=False)
-        else:
-            raise ValueError("unsupported frame output: %s" % path)
-        os.replace(temporary_path, path)
-    finally:
-        if temporary_path.exists():
-            temporary_path.unlink()
 
 
 def _jaccard(left: Iterable[int], right: Iterable[int]) -> float:

@@ -38,5 +38,5 @@ include = ["kvbench*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+addopts = "-ra -p no:cacheprovider"
 pythonpath = ["."]

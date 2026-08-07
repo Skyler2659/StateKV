@@ -6,19 +6,14 @@ design_frozen_at: "2026-07-28T18:30:00+08:00"
 source:
   p0_manifest:
     path: experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml
-    sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
   p1_manifest:
     path: experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml
-    sha256: e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1
   p2_manifest:
     path: experiments/p2_state_local_risk/P2_STATE_LOCAL_MANIFEST.yaml
-    sha256: 768a80c99216b3ebd23c0356893c5aba46be02a82565d38dd986456776de7c51
   p2_recovery_manifest:
     path: experiments/p2_recovery/P2_RECOVERY_MANIFEST.yaml
-    sha256: 353aa54aa3fb912f907337769864a510102f9a429d7013a92ca9d277b72ce4dd
   p3_manifest:
     path: experiments/p3_decision_validity/P3_DECISION_VALIDITY_MANIFEST.yaml
-    sha256: f6b9137ca4f1b36dbc25894ec1abaf45a618b43fea5660b4baf7c430e88cc4ff
   inherited_p2_recovery_outcome: A
   inherited_p3_outcome: D1
   inherited_physical_transfer: Transfer_C
@@ -87,7 +82,7 @@ data:
     role: frozen_mechanism_disagreement_candidate_generator_replication
 
 model:
-  source_protocol: p2_state_local_config.yaml
+  source_protocol: configs/frozen/p2_state_local_config.yaml
   source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
   execution: dequantized_float32
   local_files_only: true

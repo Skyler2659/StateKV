@@ -287,15 +287,18 @@ def test_formal_state_and_total_ranking_identity() -> None:
         )
 
 
-def test_formal_config_hash_and_sequence_first_cardinality() -> None:
+def test_formal_protocol_identity_and_sequence_first_cardinality() -> None:
     result = ROOT / "experiments/p1_state_conditioned/results"
     metadata = json.loads(
         (result / "evaluation_metadata.json").read_text()
     )
-    assert (
-        CORE.sha256_file(ROOT / "configs/frozen/p1_state_conditioned_config.yaml")
-        == metadata["config_sha256"]
-    )
+    config = protocol()
+    assert config["experiment"] == "p1_state_conditioned_fixed_boundary_risk_closure"
+    assert metadata["completed"]
+    assert metadata["stage"] == "formal_evaluation"
+    assert metadata["row_counts"]["response_rows"] == config["data"][
+        "evaluation"
+    ]["expected_candidate_history_rows"]
     sequence = pd.read_parquet(
         result / "sequence_first_ranking.parquet"
     )

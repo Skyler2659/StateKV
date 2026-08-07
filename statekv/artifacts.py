@@ -1,12 +1,9 @@
 """Atomic fragments, NPZ references, and consolidated discovery tables."""
 from __future__ import annotations
 
-import hashlib
 import gzip
 import json
-import os
 import subprocess
-import tempfile
 import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
@@ -18,6 +15,13 @@ import yaml
 
 from statekv.backend import ReferenceTrajectory
 from statekv.config import DiscoveryConfig
+from statekv.storage import (
+    atomic_frame,
+    atomic_gzip_text,
+    atomic_json,
+    atomic_npz,
+    atomic_text,
+)
 
 
 TABLES = ("reference", "candidate", "step", "horizon", "temporal")
@@ -50,35 +54,6 @@ def json_text(value: Any) -> str:
     )
 
 
-def _atomic_text(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(prefix=path.name + ".", dir=str(path.parent))
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            handle.write(text)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
-
-
-def _atomic_gzip_text(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, temporary = tempfile.mkstemp(
-        prefix=path.name + ".", dir=str(path.parent)
-    )
-    os.close(fd)
-    try:
-        with gzip.open(temporary, "wt", encoding="utf-8") as handle:
-            handle.write(text)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
-
-
 def _git(command: List[str], cwd: Path) -> Optional[str]:
     try:
         return subprocess.check_output(
@@ -107,22 +82,21 @@ class ArtifactStore:
         self.status_path = self.run_dir / "status.json"
         self.status: Dict[str, Any] = self._load_status()
         resolved_path = self.run_dir / "resolved_config.yaml"
+        resolved_payload = cfg.to_dict()
         if resolved_path.exists():
             with open(resolved_path, "r", encoding="utf-8") as handle:
-                prior = yaml.safe_load(handle) or {}
-            prior_hash = hashlib.sha256(
-                json.dumps(prior, sort_keys=True, separators=(",", ":")).encode(
-                    "utf-8"
-                )
-            ).hexdigest()
-            if prior_hash != cfg.config_hash:
+                prior_payload = yaml.safe_load(handle) or {}
+            if prior_payload != resolved_payload:
                 raise RuntimeError(
-                    "run directory contains a different config: %s" % self.run_dir
+                    "run directory contains a different resolved configuration: %s"
+                    % self.run_dir
                 )
         else:
-            _atomic_text(
+            atomic_text(
                 resolved_path,
-                yaml.safe_dump(cfg.to_dict(), sort_keys=False, allow_unicode=True),
+                yaml.safe_dump(
+                    resolved_payload, sort_keys=False, allow_unicode=True
+                ),
             )
 
     def _load_status(self) -> Dict[str, Any]:
@@ -132,15 +106,10 @@ class ArtifactStore:
             return json.load(handle)
 
     def save_status(self) -> None:
-        _atomic_text(
+        atomic_json(
             self.status_path,
-            json.dumps(
-                self.status,
-                indent=2,
-                sort_keys=True,
-                ensure_ascii=False,
-                default=_json_default,
-            ),
+            self.status,
+            default=_json_default,
         )
 
     def is_complete(self, key: str) -> bool:
@@ -186,15 +155,10 @@ class ArtifactStore:
                 "recent_policy": "fifo",
             },
         }
-        _atomic_text(
+        atomic_json(
             self.run_dir / "metadata.json",
-            json.dumps(
-                metadata,
-                indent=2,
-                sort_keys=True,
-                ensure_ascii=False,
-                default=_json_default,
-            ),
+            metadata,
+            default=_json_default,
         )
         return metadata
 
@@ -217,7 +181,7 @@ class ArtifactStore:
             / (self.safe_slug(key) + ".json.gz")
         )
         payload = list(rows)
-        _atomic_gzip_text(
+        atomic_gzip_text(
             path,
             json.dumps(
                 payload,
@@ -324,10 +288,7 @@ class ArtifactStore:
                 arrays["attention_distribution_lengths_%s" % suffix] = (
                     attention_lengths
                 )
-        temporary = path.with_suffix(".npz.tmp")
-        with open(temporary, "wb") as handle:
-            np.savez_compressed(handle, **arrays)
-        os.replace(temporary, path)
+        atomic_npz(path, arrays)
         return path
 
     def consolidate(self) -> Dict[str, Path]:
@@ -347,6 +308,6 @@ class ArtifactStore:
                 rows.extend(value)
             frame = pd.DataFrame(rows)
             path = self.run_dir / PARQUET_NAMES[table]
-            frame.to_parquet(path, index=False)
+            atomic_frame(frame, path)
             outputs[table] = path
         return outputs

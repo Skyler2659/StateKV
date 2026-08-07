@@ -9,8 +9,6 @@ from __future__ import annotations
 import itertools
 import json
 import math
-import os
-import tempfile
 import time
 import traceback
 from dataclasses import replace
@@ -31,6 +29,8 @@ from statekv.functional_probe import (
     _distribution_metrics,
 )
 from statekv.runner import _sample_slug
+from statekv.storage import atomic_frame as _atomic_frame
+from statekv.storage import atomic_json
 from statekv.selectors import (
     CoreSelection,
     CoreSelector,
@@ -47,26 +47,6 @@ THEORY_TABLES = (
     "direct_stateful_decomposition",
     "theory_runtime",
 )
-
-
-def _atomic_frame(frame: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(
-        prefix=path.name + ".", dir=str(path.parent)
-    )
-    os.close(descriptor)
-    temporary_path = Path(temporary)
-    try:
-        if path.suffix == ".parquet":
-            frame.to_parquet(temporary_path, index=False)
-        elif path.suffix == ".csv":
-            frame.to_csv(temporary_path, index=False)
-        else:
-            raise ValueError("unsupported output table: %s" % path)
-        os.replace(temporary_path, path)
-    finally:
-        if temporary_path.exists():
-            temporary_path.unlink()
 
 
 def enumerate_fixed_subsets(pool_size: int, subset_size: int) -> np.ndarray:
@@ -682,17 +662,7 @@ class TheoryClosingRunner(FunctionalProbeRunner):
                 },
             }
         path = self.store.run_dir / "artifact_schema.json"
-        descriptor, temporary = tempfile.mkstemp(
-            prefix=path.name + ".", dir=str(path.parent)
-        )
-        os.close(descriptor)
-        try:
-            with open(temporary, "w", encoding="utf-8") as handle:
-                json.dump(payload, handle, indent=2, sort_keys=True)
-            os.replace(temporary, path)
-        finally:
-            if os.path.exists(temporary):
-                os.unlink(temporary)
+        atomic_json(path, payload)
         return path
 
     def _stable_rng(self, sample_id: str, layer: int) -> np.random.Generator:

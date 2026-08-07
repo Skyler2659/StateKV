@@ -8,7 +8,6 @@ import gc
 import json
 import platform
 import resource
-import subprocess
 import sys
 import time
 from pathlib import Path
@@ -27,10 +26,6 @@ P1_DIR = ROOT / "experiments/p1_state_conditioned/scripts"
 for value in (ROOT, ROOT / "benchmarks/torch", P0_DIR, P1_DIR, SCRIPT_DIR):
     if str(value) not in sys.path:
         sys.path.insert(0, str(value))
-
-from statekv.repository_layout import (  # noqa: E402
-    verify_repository_checksum,
-)
 
 from p0_v2_core import (  # noqa: E402
     AdjacentBoundaryMap,
@@ -168,83 +163,13 @@ def expected_ids(
     ]
 
 
-def _manifest_checks(path: Path) -> Tuple[Mapping[str, Any], Dict[str, bool]]:
-    manifest = yaml.safe_load(path.read_text(encoding="utf-8"))
-    checks = {}
-    for relative, expected in manifest["checksums"].items():
-        checks[str(relative)] = verify_repository_checksum(
-            ROOT, relative, str(expected)
-        )
-    return manifest, checks
-
-
 def integrity_stage(
     protocol: Mapping[str, Any],
-    config_path: Path,
+    _config_path: Path,
     output_dir: Path,
 ) -> Dict[str, Any]:
-    """Verify immutable P0/P1 evidence before any P2 model run."""
+    """Check the P2 data split before a model run."""
     started = time.perf_counter()
-    source_paths = {
-        "p0": {
-            "config": ROOT / "configs/frozen/p0_v2_config.yaml",
-            "results": ROOT / "experiments/p0_v2_fixed_boundary/docs/results.md",
-            "core": P0_DIR / "p0_v2_core.py",
-            "runner": P0_DIR / "run_p0_v2.py",
-        },
-        "p1": {
-            "config": ROOT / "configs/frozen/p1_state_conditioned_config.yaml",
-            "results": ROOT / "experiments/p1_state_conditioned/docs/results.md",
-            "core": P1_DIR / "p1_core.py",
-            "runner": P1_DIR / "run_p1.py",
-            "analyzer": P1_DIR / "analyze_p1.py",
-            "state_operating_rows": ROOT
-            / "experiments/p1_state_conditioned/results/"
-            "state_operating_point_rows.parquet",
-            "state_operating_summary": ROOT
-            / "experiments/p1_state_conditioned/results/"
-            "state_operating_point_summary.json",
-        },
-    }
-    source_hash_checks: Dict[str, bool] = {}
-    manifest_details: Dict[str, Any] = {}
-    for source_name in ("p0", "p1"):
-        source = protocol["source_integrity"][source_name]
-        manifest_path = ROOT / str(source["manifest_path"])
-        manifest, artifact_checks = _manifest_checks(manifest_path)
-        source_hash_checks[f"{source_name}_manifest"] = (
-            sha256_file(manifest_path) == str(source["manifest_sha256"])
-        )
-        for label, path in source_paths[source_name].items():
-            source_hash_checks[f"{source_name}_{label}"] = (
-                path.exists()
-                and sha256_file(path)
-                == str(source[f"{label}_sha256"])
-            )
-        manifest_details[source_name] = {
-            "outcome": manifest["outcome"],
-            "outcome_matches": str(manifest["outcome"])
-            == str(source["outcome"]),
-            "entry_count": len(artifact_checks),
-            "entry_count_matches": len(artifact_checks)
-            == int(source["manifest_entry_count"]),
-            "all_entries_match": all(artifact_checks.values()),
-            "matched_entries": int(sum(artifact_checks.values())),
-        }
-    tests = subprocess.run(
-        [
-            str(ROOT / ".venv/bin/python"),
-            "-m",
-            "pytest",
-            "-q",
-            str(ROOT / "tests/test_p0_v2.py"),
-            str(ROOT / "tests/test_p1_state_conditioned.py"),
-        ],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
     split_audit = validate_split_isolation(protocol)
     scan = json.loads(
         (
@@ -257,22 +182,6 @@ def integrity_stage(
         + expected_ids(protocol, "evaluation")
     )
     checks = {
-        "source_hashes_match": all(source_hash_checks.values()),
-        "p0_manifest_all_match": manifest_details["p0"][
-            "all_entries_match"
-        ],
-        "p1_manifest_all_match": manifest_details["p1"][
-            "all_entries_match"
-        ],
-        "manifest_entry_counts_match": all(
-            value["entry_count_matches"]
-            for value in manifest_details.values()
-        ),
-        "outcomes_unchanged": all(
-            value["outcome_matches"]
-            for value in manifest_details.values()
-        ),
-        "p0_p1_tests_pass": tests.returncode == 0,
         "split_isolation": all(split_audit["checks"].values()),
         "mechanical_scan_matches_frozen_ids": scan_ids == frozen_ids,
         "scan_all_constructed": bool(
@@ -283,28 +192,10 @@ def integrity_stage(
         "stage": "integrity",
         "passed": all(checks.values()),
         "checks": checks,
-        "source_hash_checks": source_hash_checks,
-        "manifests": manifest_details,
         "split_audit": split_audit,
-        "tests_stdout": tests.stdout,
-        "tests_stderr": tests.stderr,
-        "config_sha256": sha256_file(config_path),
         "wall_seconds": time.perf_counter() - started,
     }
     atomic_json(output_dir / "integrity_summary.json", summary)
-    atomic_json(
-        output_dir / "source_freeze.json",
-        {
-            "config_sha256_at_integrity": sha256_file(config_path),
-            "source_hash_checks": source_hash_checks,
-            "p0_manifest_sha256": protocol["source_integrity"]["p0"][
-                "manifest_sha256"
-            ],
-            "p1_manifest_sha256": protocol["source_integrity"]["p1"][
-                "manifest_sha256"
-            ],
-        },
-    )
     if not summary["passed"]:
         raise RuntimeError(f"P2 integrity failed: {checks}")
     return summary

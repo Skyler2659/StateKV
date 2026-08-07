@@ -31,29 +31,6 @@ scope:
     - online_policy
     - post_formal_threshold_tuning
 
-source_integrity:
-  p0:
-    outcome: A
-    manifest_path: experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml
-    manifest_sha256: 7a4b76b28fa84be92b67de6727b3f760caff9872a9cb39b85c3c49650d4b4e57
-    manifest_entry_count: 53
-    config_sha256: bbf03214f9af4074ff541966f3f5f2a8ea13b589f146bc2517a285ed3a3469d8
-    results_sha256: 9b2280b531e61c13be016a6b0934d3016399852e8cac5f92f5b65bf17fc165ed
-    core_sha256: db945e8d27c30b63f245068c708aa0600a4f6112ad1054b00afc4514eaeb92c9
-    runner_sha256: c48f81439eb83245ca460ff4690d0a5e6b128c64a89ba7bcbfabeebecb4eb21c
-  p1:
-    outcome: C
-    manifest_path: experiments/p1_state_conditioned/P1_STATE_CONDITIONED_MANIFEST.yaml
-    manifest_sha256: e5ee0aac72cacff971292b2cace71e042334b71432f5b6e6769e036bc967daf1
-    manifest_entry_count: 74
-    config_sha256: 21ca1590606d7bcd135635122c347f46eec4232e06e293a76bf82bf458533226
-    results_sha256: b3f8f62e43e6ed6c8e0ef1b784f91d26c46403c18a05874e0383ef8294bcb4b7
-    core_sha256: 31d9938b48c79f521cb3723e613e51d8ac9dc01e4e41afd18eacfdee327f05d7
-    runner_sha256: 8a35f9547a45f115b93e6d10481de7aa26d4e655c3f8468949bbe8e8ee69d7d1
-    analyzer_sha256: ae636ab598f90953365dd27c43056028ea9260a346024caed2a28abaa59348ca
-    state_operating_rows_sha256: 9a0a350825250039f3e17965b2bfd43a5c1c1b9d42c80b18ead6b625cabac90e
-    state_operating_summary_sha256: b943c89d738e7e0a32a94110303135e089054b88da9278e2749ac263e6608bcf
-
 model:
   source: mlx-community/Qwen2.5-1.5B-Instruct-4bit
   revision: 8b403126fc14f14cfc99bb4cfa72ecbc129ea677

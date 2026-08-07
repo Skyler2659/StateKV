@@ -3,8 +3,6 @@ from __future__ import annotations
 
 import json
 import math
-import os
-import tempfile
 import time
 import traceback
 from dataclasses import dataclass, replace
@@ -23,6 +21,7 @@ from statekv.functional_features import (
     functional_measurement,
 )
 from statekv.runner import TemporalDiscoveryRunner, _sample_slug
+from statekv.storage import atomic_frame as _atomic_frame
 from statekv.selectors import CoreSelection, CoreSelector
 from statekv.tasks import load_discovery_tasks
 
@@ -49,26 +48,6 @@ class ProbeStep:
     target_token_position: int
     active_cache_tokens: int
     forward_time_s: float
-
-
-def _atomic_frame(frame: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(
-        prefix=path.name + ".", dir=str(path.parent)
-    )
-    os.close(descriptor)
-    temporary_path = Path(temporary)
-    try:
-        if path.suffix == ".parquet":
-            frame.to_parquet(temporary_path, index=False)
-        elif path.suffix == ".csv":
-            frame.to_csv(temporary_path, index=False)
-        else:
-            raise ValueError("unsupported table output: %s" % path)
-        os.replace(temporary_path, path)
-    finally:
-        if temporary_path.exists():
-            temporary_path.unlink()
 
 
 def _jaccard(left: Iterable[int], right: Iterable[int]) -> float:

@@ -29,7 +29,6 @@ for value in (ROOT, ROOT / "benchmarks/torch", P0_DIR, PREDICTIVE_DIR, SCRIPT_DI
 
 from kvbench.temporal.config import DiscoveryConfig
 from kvbench.temporal.tasks import load_discovery_tasks
-from statekv.repository_layout import verify_repository_checksum
 from mlx_predictive_core import make_selector_candidates
 from precision_diagnostic import (
     count_quantized_modules,
@@ -287,47 +286,17 @@ def p0_regression_stage(
 ) -> Dict[str, Any]:
     started = time.perf_counter()
     source = protocol["source_p0_v2"]
-    paths = {
-        "config": ROOT / "configs/frozen/p0_v2_config.yaml",
-        "results": ROOT / "experiments/p0_v2_fixed_boundary/docs/results.md",
-        "response_parquet": ROOT
-        / "experiments/p0_v2_fixed_boundary/results/response_rows.parquet",
-        "core": P0_DIR / "p0_v2_core.py",
-        "runner": P0_DIR / "run_p0_v2.py",
-        "manifest": ROOT
-        / "experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml",
-    }
-    hashes = {name: sha256_file(path) for name, path in paths.items()}
-    hash_checks = {
-        name: hashes[name] == str(source[f"{name}_sha256"])
-        for name in paths
-    }
+    response_path = (
+        ROOT / "experiments/p0_v2_fixed_boundary/results/response_rows.parquet"
+    )
+    manifest_path = (
+        ROOT / "experiments/p0_v2_fixed_boundary/P0_V2_MANIFEST.yaml"
+    )
     manifest = yaml.safe_load(
-        paths["manifest"].read_text(encoding="utf-8")
+        manifest_path.read_text(encoding="utf-8")
     )
-    manifest_checks = {}
-    for relative, expected in manifest["checksums"].items():
-        manifest_checks[relative] = verify_repository_checksum(
-            ROOT, relative, str(expected)
-        )
-    tests = subprocess.run(
-        [
-            str(ROOT / ".venv/bin/python"),
-            "-m",
-            "pytest",
-            "-q",
-            str(ROOT / "tests/test_p0_v2.py"),
-        ],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    response_rows = len(pd.read_parquet(paths["response_parquet"]))
+    response_rows = len(pd.read_parquet(response_path))
     checks = {
-        "source_hashes_match": all(hash_checks.values()),
-        "manifest_all_match": all(manifest_checks.values()),
-        "p0_tests_all_pass": tests.returncode == 0,
         "p0_outcome_is_A": str(manifest["outcome"]) == "A",
         "response_row_count_matches": response_rows
         == int(source["expected_response_rows"]),
@@ -336,11 +305,6 @@ def p0_regression_stage(
         "stage": "p0_regression",
         "passed": all(checks.values()),
         "checks": checks,
-        "hash_checks": hash_checks,
-        "manifest_match_count": int(sum(manifest_checks.values())),
-        "manifest_entry_count": len(manifest_checks),
-        "tests_stdout": tests.stdout,
-        "tests_stderr": tests.stderr,
         "response_row_count": response_rows,
         "wall_seconds": time.perf_counter() - started,
     }

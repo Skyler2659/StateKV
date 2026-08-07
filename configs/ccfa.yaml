@@ -1,0 +1,52 @@
+version: "0.4.0"
+project:
+  title: "StateKV: Unifying Selection and Refresh through State-Conditioned Risk"
+  short_name: "StateKV"
+  root: "."
+target_venue:
+  name: ""
+  year: ""
+  mode: "draft"
+stage:
+  current: "teacher-evaluator-validated"
+  gate: "online-estimator-not-started"
+  updated_at: "2026-08-07"
+artifacts:
+  manuscript: "local:draftv2.pdf"
+  architecture: "assets/statekv-architecture.pdf"
+  evidence_registry: "experiments/frozen_registry.yaml"
+  reusable_core: "statekv/core/"
+  experiments: "experiments/"
+  analysis: "analysis/"
+claims:
+  - id: "state-conditioned-risk"
+    status: "supported-controlled-setting"
+    evidence:
+      - "experiments/p1_state_conditioned/results/state_operating_point_summary.json"
+      - "experiments/p2_recovery/r4_scalar_decision_risk/results/evaluation/analysis_summary.json"
+      - "experiments/p2_recovery/r4_scalar_decision_risk/results/replication/analysis_summary.json"
+  - id: "cross-model-dense-mechanism"
+    status: "preliminary-supported"
+    evidence:
+      - "experiments/p3pr_generalization/results/analysis/analysis_summary.json"
+  - id: "deployable-selection-refresh-policy"
+    status: "not-yet-supported"
+    evidence: []
+experiments:
+  - id: "teacher-evaluator"
+    status: "done-controlled-setting"
+  - id: "low-cost-estimator"
+    status: "planned"
+  - id: "state-drift-trigger"
+    status: "planned"
+  - id: "closed-loop-policy"
+    status: "planned"
+  - id: "end-to-end-benchmarks"
+    status: "planned"
+reviews: []
+revision_ledger:
+  path: "local:revision-ledger"
+  status: "not-started"
+submission_checks:
+  path: "local:submission-checks"
+  status: "not-started"

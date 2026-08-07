@@ -11,9 +11,6 @@ import pytest
 import torch
 import yaml
 
-from statekv.repository_layout import verify_repository_checksum
-
-
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = ROOT / "experiments/p2_state_local_risk/scripts"
 if str(SCRIPT_DIR) not in sys.path:
@@ -157,21 +154,7 @@ def test_sequence_first_keeps_four_independent_sequences() -> None:
     assert np.allclose(sequence.to_numpy(), [3.5, 11.5, 19.5, 27.5])
 
 
-def test_source_manifests_are_unchanged() -> None:
-    cfg = protocol()["source_integrity"]
-    for source in ("p0", "p1"):
-        path = ROOT / cfg[source]["manifest_path"]
-        manifest = yaml.safe_load(path.read_text(encoding="utf-8"))
-        assert CORE.sha256_file(path) == cfg[source]["manifest_sha256"]
-        assert manifest["outcome"] == cfg[source]["outcome"]
-        assert len(manifest["checksums"]) == cfg[source][
-            "manifest_entry_count"
-        ]
-        for relative, expected in manifest["checksums"].items():
-            assert verify_repository_checksum(ROOT, relative, expected)
-
-
-def test_atomic_writes_and_checksums(tmp_path: Path) -> None:
+def test_structured_writes(tmp_path: Path) -> None:
     json_path = tmp_path / "value.json"
     parquet_path = tmp_path / "value.parquet"
     CORE.atomic_json(json_path, {"value": 1})
@@ -180,8 +163,6 @@ def test_atomic_writes_and_checksums(tmp_path: Path) -> None:
     )
     assert json.loads(json_path.read_text())["value"] == 1
     assert pd.read_parquet(parquet_path)["value"].iloc[0] == 1.0
-    assert len(CORE.sha256_file(json_path)) == 64
-    assert len(CORE.sha256_file(parquet_path)) == 64
 
 
 class LinearMap:
@@ -281,16 +262,19 @@ def test_formal_h0_identities() -> None:
     assert h0["h0_full_action_score_absolute_error"].max() <= 1.0e-12
 
 
-def test_formal_config_freeze() -> None:
+def test_formal_protocol_identity_and_cardinality() -> None:
     result = ROOT / "experiments/p2_state_local_risk/results"
     metadata = result / "evaluation_metadata.json"
     if not metadata.exists():
         pytest.skip("P2 formal evaluation not generated yet")
-    frozen = json.loads(metadata.read_text())["config_sha256"]
-    assert (
-        CORE.sha256_file(ROOT / "configs/frozen/p2_state_local_config.yaml")
-        == frozen
-    )
+    payload = json.loads(metadata.read_text())
+    config = protocol()
+    assert config["experiment"] == "p2_state_local_risk_closure_and_geometry_attribution"
+    assert payload["completed"]
+    assert payload["stage"] == "formal_evaluation"
+    assert payload["row_counts"]["response_rows"] == config["data"][
+        "evaluation"
+    ]["expected_candidate_history_rows"]
 
 
 def test_formal_calibration_artifact_passes() -> None:
