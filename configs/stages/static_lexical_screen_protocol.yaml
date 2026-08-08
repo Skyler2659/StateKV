@@ -1,0 +1,47 @@
+experiment_name: statekv_static_lexical_screen_p20
+status: preregistered_before_execution
+objective: test_attention_free_static_signals_after_dynamic_geometry_failed
+fixed_policy:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+  generation_tokens: 128
+  candidate_algorithms_run_per_deployment_decision: 0
+methods:
+  - name: position_coverage_shared
+    role: deterministic_matched_partition_control
+    signal: logical_position_coverage
+  - name: sink_recent_random
+    role: stochastic_budget_control
+    signal: none
+  - name: token_rarity_shared
+    role: candidate
+    signal: five_token_span_smoothed_inverse_observed_stream_frequency
+  - name: query_overlap_shared
+    role: candidate
+    signal: final_64_prompt_token_overlap_inverse_frequency_with_span_propagation
+  - name: full
+    role: uncompressed_upper_reference
+workloads:
+  - config: benchmarks/mlx/configs/experiments/statekv/qwen25_15b_govreport_static_lexical_p20a.yaml
+    run_dir: results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p20a_v1
+    sample_ids: [gov_report:56, gov_report:57]
+    scope: 700_word_project_workload_not_full_official_context
+  - config: benchmarks/mlx/configs/experiments/statekv/qwen25_15b_ruler_static_lexical_p20b.yaml
+    run_dir: results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p20b_v1
+    sample_ids: [niah_single_1:56, niah_single_1:57]
+    scope: official_ruler_16k_samples
+screening_rules:
+  - report_each_task_official_score_against_both_controls
+  - report_overall_teacher_forced_nll_against_both_controls
+  - require_decode_throughput_at_least_90_percent_of_position_control
+  - require_peak_memory_no_more_than_105_percent_of_full_reference
+  - require_zero_attention_hook_errors
+  - require_cache_budget_respected
+  - prefer_a_candidate_that_recovers_at_least_one_ruler_needle
+claims_excluded:
+  - confirmatory_superiority
+  - full_LongBench_official_result
+  - cross_model_generalization
+  - production_kernel_parity

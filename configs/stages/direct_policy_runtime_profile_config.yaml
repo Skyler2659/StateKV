@@ -1,0 +1,45 @@
+experiment_name: statekv_direct_policy_runtime_profile_p10
+
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_direct_policy_runtime_profile_p10_v3
+data_seed: 20260813
+runtime_run_id: direct_policy_runtime_profile_seed20260813_v1
+task_overrides:
+  ruler_niah:
+    num_samples: 1
+    context_length: 768
+    sample_offset: 30
+  govreport_or_qmsum:
+    num_samples: 1
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [30]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:30"
+  - synthetic_niah_30
+anchors: [16, 32, 48]
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+scenario_window: 4
+contribution_weight: 0.25
+
+sink_size: 4
+recent_size: 32
+core_budget: 92
+total_budget: 128
+timing_repeats: 40
+capture_anchor: 48
+capture_timing_repeats: 20
+capture_full_timing_repeats: 10
+refresh_intervals: [4, 8, 16, 32]
+
+comparison_run: results/temporal_cache_discovery/statekv_direct_policy_shrinkage_independent_p9_v1
+comparison_policy: blend_attention_contribution_25_w4_shared
+
+evidence_status: runtime_microbenchmark_not_quality_evidence
+claims_excluded:
+  - end-to-end latency speedup
+  - GPU or MLX fused-kernel timing
+  - free-generation quality

@@ -1,0 +1,63 @@
+experiment_name: statekv_freegen_ruler_token_rarity_replication_p21b
+run_id: p21b_v1
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  family: qwen
+  backend: mlx
+  dtype: auto
+  device: mps
+  quant_bits: 4
+  quant_group_size: 64
+  mlx_weight_quantize: false
+  prefill_step_size: 512
+  trust_remote_code: false
+  local_files_only: true
+  prompt_format:
+    mode: plain
+    system_prompt: null
+eviction:
+  method: token_rarity_shared
+  cache_size: 128
+  sink_size: 4
+  recent_size: 32
+  score_source: lexical
+  score_normalization: none
+  observation_window: 4
+  attention_window: 4
+  direct_policy_layers: [0, 7, 14, 15, 21, 27]
+  update_interval: 1
+  update_policy: every_n_steps
+  seed: 20260826
+benchmark:
+  name: ruler
+  tasks: [niah_single_1]
+  use_official_dataset: true
+  require_official_dataset: true
+  hf_dataset_name: xAlg-AI/att-hub-ruler-16k
+  n_samples_per_task: 3
+  num_samples: 3
+  sample_strategy: explicit
+  official_sample_indices: [58, 59, 60]
+  max_steps: 32768
+  max_new_tokens: 128
+  eval_target_only: true
+  evaluation: both
+methods:
+  - full
+  - latest_attention_shared
+  - position_coverage_shared
+  - token_rarity_shared
+cache_budgets: [128]
+analysis:
+  overlap: false
+  rank_correlation: false
+  evidence_recall: false
+  case_study: false
+  include_oracle: false
+output_dir: results/temporal_cache_discovery
+save_selected_tokens: false
+save_scores: false
+save_prompt_text: false
+progress_every: 64
+seed: 20260826
+overwrite: true

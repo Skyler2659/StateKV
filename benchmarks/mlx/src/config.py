@@ -171,6 +171,7 @@ class EvictionConfig:
     layer_strategy: str = "all"
     selected_layers: Optional[List[int]] = None
     head_strategy: str = "shared"
+    direct_policy_layers: Optional[List[int]] = None
     # PyramidKV
     pyramid_mode: str = "funnel"
     pyramid_beta: int = 20

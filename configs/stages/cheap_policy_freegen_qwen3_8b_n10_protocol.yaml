@@ -1,0 +1,85 @@
+experiment_name: statekv_cheap_policy_freegen_qwen3_8b_n10_p32
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_cheap_policy_freegen_qwen3_8b_n10_p32_v1
+data_seed: 20260808
+runtime_run_id: cheap_policy_freegen_qwen3_8b_n10_seed20260808_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+task_overrides:
+  ruler_niah:
+    num_samples: 5
+    context_length: 768
+    sample_offset: 81
+  govreport_or_qmsum:
+    num_samples: 5
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [81, 82, 83, 84, 85]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:81"
+  - "gov_report:82"
+  - "gov_report:83"
+  - "gov_report:84"
+  - "gov_report:85"
+  - synthetic_niah_81
+  - synthetic_niah_82
+  - synthetic_niah_83
+  - synthetic_niah_84
+  - synthetic_niah_85
+expected_sample_count: 10
+
+start_anchor: 0
+control_cycles: 64
+control_horizon: 1
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+a3_output_diagnostic_layers: [0, 9, 18, 27, 35]
+a4_cascade_margin: 0.15
+b3_adaptive_budget_delta: 44
+
+policies:
+  - a1_candidate_proxy
+  - a2_temporal_volatility
+  - a3_set_output_perturbation
+  - a4_uncertainty_cascade
+  - b1_historical_tiny_ranker
+  - b2_direct_action_generator
+  - b3_layer_adaptive_budget
+
+candidate_panel:
+  - stale
+  - attention
+  - snapkv
+  - h2o
+  - key_norm
+  - value_norm
+  - uniform
+
+b1_historical_trace: results/temporal_cache_discovery/statekv_oracle_policy_comparison_independent_p28_v1/candidate_step_rows.parquet
+b1_ridge: 0.001
+reused_baseline_run: results/temporal_cache_discovery/statekv_oracle_policy_freegen_qwen3_8b_n10_p31_v1
+bootstrap_samples: 20000
+
+comparison_contract:
+  old_policies_rerun: false
+  kl_instrumentation: per_token_full_kv_exact_kl
+  task_metrics: same_greedy_outputs_and_official_metrics_as_p31
+  b3_constraint: sum_layer_core_budgets_equals_num_layers_times_220
+  deployment_claim: excluded_until_wall_time_and_memory_profile

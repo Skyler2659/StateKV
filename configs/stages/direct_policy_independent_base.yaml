@@ -1,0 +1,141 @@
+experiment_name: direct_policy_independent_multianchor
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  dtype: 4bit
+  backend: mlx
+  quant_bits: 4
+  deterministic: true
+  temperature: 0.0
+  do_sample: false
+  revision: null
+  trust_remote_code: false
+  local_files_only: true
+  attn_implementation: eager
+  prompt_format: chat_template
+  system_prompt: null
+tasks:
+  ruler_niah:
+    num_samples: 6
+    context_length: 768
+    sample_offset: 24
+  govreport_or_qmsum:
+    num_samples: 6
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [24, 25, 26, 27, 28, 29]
+    sample_strategy: first
+    fallback_paragraphs: 24
+generation:
+  max_new_tokens: 64
+  temperature: 0.0
+  do_sample: false
+  stop_on_eos: false
+cache:
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+anchor_steps: [16, 32, 48]
+horizons: [1, 4, 8, 16]
+strategies:
+  - snapkv
+  - v_ridge_leverage
+  - attention_weighted_v_ridge_leverage
+  - future_attention_oracle
+signal_lags: [1, 2, 4, 8, 16]
+diagnostics:
+  num_layers: 6
+  heads_per_layer: 12
+  layer_selection: explicit
+  explicit_layers: [0, 7, 14, 15, 21, 27]
+  explicit_heads: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+metrics:
+  logits_top_k: 256
+  probability_floor: 1.0e-12
+  attention_error_epsilon: 1.0e-8
+  large_loss_spike_threshold: 0.25
+selectors:
+  observation_window: 32
+  snapkv_pooling_kernel: 63
+  snapkv_pooling: max
+  ridge_lambda: 0.001
+  ridge_lambda_mode: relative
+  attention_weighted_ridge_lambda: 0.001
+  attention_weight_epsilon: 0.0001
+  shared_token_selection: true
+validity_thresholds:
+  avg_delta_nll: [0.01, 0.05, 0.1, 0.25]
+  max_delta_nll: [0.05, 0.1, 0.25, 0.5]
+  avg_approx_kl: [0.001, 0.005, 0.01, 0.05]
+mechanism:
+  enabled: false
+functional_probe:
+  enabled: false
+theory_closing:
+  enabled: false
+trajectory_model:
+  enabled: false
+robust_envelope:
+  enabled: false
+output_sensitivity:
+  enabled: false
+gauge_geometry:
+  enabled: false
+independent_fisher:
+  enabled: false
+  prior_run_ids: []
+  anchors: [16, 32, 48]
+  segment_horizon: 16
+  evaluation_horizons: [1, 4, 8, 16]
+  diagnostic_layers: [0, 7, 14, 15, 21, 27]
+  total_budget: 128
+  protected_recent: 32
+  candidate_count: 24
+  stage_b_candidate_count: 8
+  stage_b_candidate_sources:
+    - attention
+    - direct_energy_greedy
+    - v_ridge
+    - aor
+    - preceding_anchor_old_core
+    - stratified_random_00
+    - stratified_random_01
+    - stratified_random_02
+  topk_values: [4, 8, 16, 32, 64, 128, 256]
+  trust_top_k: 16
+  adaptive_relative_tolerance: 1.0e-8
+  adaptive_absolute_tolerance: 1.0e-10
+  adaptive_subdivision_limit: 50
+  pullback_radii: [0.0001, 0.001, 0.01, 0.05]
+  pullback_directions: 8
+  pullback_power_iterations: 5
+  pullback_sketch_sizes: [16, 32, 64]
+  pullback_ranks: [4, 8, 16, 32]
+  periodic_q_intervals: [1, 2, 4, 8, 16]
+  maximum_refresh_count: 3
+  refresh_horizons: [4, 8, 16]
+  g3_kl_spearman_gate: 0.90
+  g3_action_spearman_gate: 0.85
+  g3_median_symmetric_ratio_gate: 1.50
+  g3_action_increment_gate: 0.10
+  trust_precision_gate: 0.90
+  trust_coverage_gate: 0.50
+  trust_relative_error_gate: 0.10
+  oracle_midpoint_kl_spearman_gate: 0.90
+  oracle_midpoint_action_spearman_gate: 0.85
+  fisher_direct_action_increment_gate: 0.05
+  q_pointwise_coverage_gate: 0.90
+  q_median_looseness_gate: 5.0
+  q_action_spearman_increment_gate: 0.05
+  random_seed: 20260811
+runtime:
+  device: auto
+  seed: 20260811
+  deterministic: true
+  prefill_chunk_size: 128
+  resume: false
+  fail_on_error: true
+  max_prompt_tokens: 1536
+  output_root: results/temporal_cache_discovery
+  run_id: direct_policy_independent_multianchor_seed20260811_v1
+  bootstrap_samples: 50000

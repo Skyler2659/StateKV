@@ -68,6 +68,9 @@ class MLXTemporalModel:
                 prompt_format={
                     "mode": self.cfg.model.prompt_format,
                     "system_prompt": self.cfg.model.system_prompt,
+                    "template_kwargs": dict(
+                        self.cfg.model.chat_template_kwargs
+                    ),
                 },
             ),
             eviction=EvictionConfig(
@@ -198,8 +201,18 @@ class MLXTemporalModel:
         return token_ids[:half] + token_ids[-(limit - half) :], True
 
     @staticmethod
+    def _numpy(value: Any, dtype: Any = np.float32) -> np.ndarray:
+        # NumPy has no native MLX bfloat16 buffer representation. Convert only
+        # the exported diagnostic copy through FP32; model and cache tensors
+        # remain in their original MLX dtype.
+        import mlx.core as mx
+
+        exported = value.astype(mx.float32) if hasattr(value, "astype") else value
+        return np.asarray(exported).astype(dtype, copy=False).copy()
+
+    @staticmethod
     def _torch(value: Any, dtype: torch.dtype = torch.float32) -> torch.Tensor:
-        return torch.from_numpy(np.asarray(value).copy()).to(dtype=dtype)
+        return torch.from_numpy(MLXTemporalModel._numpy(value)).to(dtype=dtype)
 
     def _configure_attention(self, phase: str) -> None:
         state = self.runner.attention_state
@@ -217,8 +230,10 @@ class MLXTemporalModel:
             or self.cfg.output_sensitivity.enabled
             or self.cfg.gauge_geometry.enabled
             or self.cfg.independent_fisher.enabled
+            or getattr(self.cfg, "direct_policy_capture_only", False)
         )
         state["temporal_record_diagnostics"] = True
+        state["temporal_record_direct_policy"] = False
         state["temporal_record_query_head_window"] = bool(
             self.cfg.functional_probe.enabled
             or self.cfg.theory_closing.enabled
@@ -227,6 +242,7 @@ class MLXTemporalModel:
             or self.cfg.output_sensitivity.enabled
             or self.cfg.gauge_geometry.enabled
             or self.cfg.independent_fisher.enabled
+            or getattr(self.cfg, "direct_policy_capture_only", False)
         )
         state["temporal_selected_layers"] = list(self.selected_layers)
         state["temporal_selected_heads"] = {
@@ -439,6 +455,18 @@ class MLXTemporalModel:
             )
         return output
 
+    def _attention_observation_rows(self) -> Dict[int, List[torch.Tensor]]:
+        """Copy the retained per-query attention window for closed-loop replay."""
+
+        state = self.runner.attention_state
+        return {
+            int(layer): [
+                self._torch(row, torch.float32)
+                for row in state.get("observe_heads", {}).get(layer, [])
+            ]
+            for layer in range(int(self.model_info["num_layers"]))
+        }
+
     def _anchor_state(
         self,
         cache: List[Any],
@@ -473,6 +501,7 @@ class MLXTemporalModel:
             },
             attention=self._attention_signals(),
             query_head_observation=self._query_head_observation(),
+            attention_observation_rows=self._attention_observation_rows(),
         )
 
     def _score_state(
@@ -504,7 +533,7 @@ class MLXTemporalModel:
     def _top_distribution(
         self, logits: Any
     ) -> Tuple[int, float, torch.Tensor, torch.Tensor]:
-        values = np.asarray(logits, dtype=np.float64).reshape(-1)
+        values = self._numpy(logits, np.float64).reshape(-1)
         if not np.isfinite(values).all():
             raise FloatingPointError("reference logits contain NaN/Inf")
         maximum = float(values.max())
@@ -539,6 +568,7 @@ class MLXTemporalModel:
         sample_id: str,
         task: str,
         prompt: str,
+        extra_probe_target_indices: Optional[Sequence[int]] = None,
     ) -> ReferenceTrajectory:
         import mlx.core as mx
 
@@ -570,6 +600,9 @@ class MLXTemporalModel:
             for lag in self.cfg.functional_probe.probe_lags
             if int(anchor + lag) < int(self.cfg.generation.max_new_tokens)
         }
+        probe_target_indices.update(
+            int(value) for value in (extra_probe_target_indices or [])
+        )
         if self.cfg.theory_closing.enabled:
             theory = self.cfg.theory_closing
             probe_target_indices.update(

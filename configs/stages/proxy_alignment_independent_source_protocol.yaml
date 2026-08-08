@@ -1,0 +1,57 @@
+experiment_name: statekv_risk_consistent_proxy_independent_source_p23a
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_risk_consistent_proxy_independent_source_p23a_v1
+data_seed: 20260818
+runtime_run_id: risk_consistent_proxy_independent_source_seed20260818_v1
+
+task_overrides:
+  ruler_niah:
+    num_samples: 3
+    context_length: 768
+    sample_offset: 61
+  govreport_or_qmsum:
+    num_samples: 3
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [61, 62, 63]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:61"
+  - "gov_report:62"
+  - "gov_report:63"
+  - synthetic_niah_61
+  - synthetic_niah_62
+  - synthetic_niah_63
+reserved_independent_sample_ids: []
+anchors: [16, 32, 48]
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+scenario_windows: [1, 4]
+horizon: 16
+
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+
+policies:
+  - attention_mean_w1_shared
+  - attention_head_peak_w4_shared
+  - attention_temporal_volatility_w4_shared
+  - key_diagonal_leverage_shared
+  - value_diagonal_leverage_shared
+  - value_adjacent_change_shared
+  - uniform_position_coverage_shared
+baseline: attention_mean_w1_shared
+primary: attention_temporal_volatility_w4_shared
+
+gate_mode: development_screen
+gate:
+  minimum_anchor_mean_wins: 2
+
+evidence_status: independent_action-panel-source-for-frozen-proxy-audit
+claims_excluded:
+  - new policy selection
+  - free-generation quality
+  - deployment latency

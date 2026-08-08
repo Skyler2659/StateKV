@@ -1,0 +1,40 @@
+experiment_name: statekv_direct_coreset_p4_replication
+
+base_config: configs/stages/independent_fisher_config.yaml
+output_run: results/temporal_cache_discovery/statekv_direct_coreset_p4_replication_v1
+
+sample_ids:
+  - "gov_report:14"
+  - "gov_report:15"
+  - "gov_report:16"
+  - "gov_report:17"
+  - synthetic_niah_14
+  - synthetic_niah_15
+  - synthetic_niah_16
+  - synthetic_niah_17
+anchors: [16]
+layers: [0, 14, 27]
+horizon: 8
+scenario_windows: [1, 4, 8, 16]
+
+total_budget: 128
+sink_size: 4
+recent_size: 32
+random_seed: 20260808
+
+baseline: attention_mean_w1
+primary: contribution_mean_w4
+merge_methods:
+  - attention_mean_w1
+  - contribution_mean_w4
+tier_methods:
+  - attention_mean_w1
+  - contribution_mean_w4
+cold_value_bits: [2, 3, 4]
+
+evidence_status: held_out_local_mechanism_replication
+claims_excluded:
+  - end-to-end KL improvement
+  - full KV quantization
+  - cache-transfer latency
+  - formally preregistered independent replication

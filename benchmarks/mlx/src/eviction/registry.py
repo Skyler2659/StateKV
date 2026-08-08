@@ -116,6 +116,30 @@ def _init_registry() -> None:
     _register(_spec("sink_recent_random", "src.eviction.random_eviction", "RandomEviction", "random",
                     aliases=("sink_recency_random",), supports=("torch", "mlx")))
     _register(_spec("uniform", "src.eviction.uniform", "UniformEviction", "geometry"))
+    _register(_spec("token_rarity_shared", "src.eviction.uniform", "UniformEviction", "lexical",
+                    supports=("mlx",), requires_scores=True,
+                    score_source="observed_stream_local_token_rarity_shared_set",
+                    paper_method=False, implementation_fidelity="experimental",
+                    fidelity_notes=(
+                        "Training-free MLX research policy using local span-smoothed inverse "
+                        "token frequency and one shared retained set across layers."
+                    )))
+    _register(_spec("query_overlap_shared", "src.eviction.uniform", "UniformEviction", "lexical",
+                    supports=("mlx",), requires_scores=True,
+                    score_source="prompt_tail_overlap_inverse_frequency_shared_set",
+                    paper_method=False, implementation_fidelity="experimental",
+                    fidelity_notes=(
+                        "Training-free lexical-retrieval policy using overlap with the final 64 "
+                        "prompt tokens, inverse stream frequency, and local span propagation."
+                    )))
+    _register(_spec("position_coverage_shared", "src.eviction.uniform", "UniformEviction", "geometry",
+                    supports=("mlx",), requires_scores=False,
+                    score_source="deterministic_stream_position_coverage_shared_set",
+                    paper_method=False, implementation_fidelity="control",
+                    fidelity_notes=(
+                        "Deterministic position-coverage control with the same sink/recent/core "
+                        "partition and one shared retained set across layers."
+                    )))
 
     # Attention
     _register(_spec("attention", "src.eviction.attention", "AttentionEviction", "attention",
@@ -126,6 +150,12 @@ def _init_registry() -> None:
     _register(_spec("windowed_attention", "src.eviction.attention", "WindowedAttentionEviction", "attention",
                     supports=("torch", "mlx"), requires_attention=True, requires_scores=True,
                     score_source="windowed_attention"))
+    _register(_spec("latest_attention_shared", "src.eviction.attention", "LastTokenAttentionEviction", "attention",
+                    supports=("mlx",), requires_attention=True, requires_scores=True,
+                    score_source="latest_attention_six_layer_shared_set"))
+    _register(_spec("temporal_volatility_shared", "src.eviction.attention", "WindowedAttentionEviction", "attention",
+                    supports=("mlx",), requires_attention=True, requires_scores=True,
+                    score_source="four_query_temporal_volatility_six_layer_shared_set"))
     _register(_spec("attention_decay", "src.eviction.attention", "AttentionDecayEviction", "attention",
                     supports=("torch", "mlx"), requires_attention=True, requires_scores=True,
                     score_source="decayed_attention"))
@@ -666,11 +696,23 @@ def create_eviction(
     return instance
 
 
-BASIC_METHODS = ["full", "recency", "sink_recent", "streamingllm", "random", "uniform"]
+BASIC_METHODS = [
+    "full",
+    "recency",
+    "sink_recent",
+    "streamingllm",
+    "random",
+    "uniform",
+    "token_rarity_shared",
+    "query_overlap_shared",
+    "position_coverage_shared",
+]
 ATTENTION_METHODS = [
     "attention",
     "last_token_attention",
     "windowed_attention",
+    "latest_attention_shared",
+    "temporal_volatility_shared",
     "attention_decay",
     "h2o",
     "snapkv",

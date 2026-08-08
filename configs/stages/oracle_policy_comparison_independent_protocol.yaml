@@ -1,0 +1,70 @@
+experiment_name: statekv_oracle_policy_comparison_independent_p28
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_oracle_policy_comparison_independent_p28_v1
+data_seed: 20260828
+runtime_run_id: oracle_policy_comparison_independent_seed20260828_v1
+
+task_overrides:
+  ruler_niah:
+    num_samples: 4
+    context_length: 768
+    sample_offset: 67
+  govreport_or_qmsum:
+    num_samples: 2
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [67, 70]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:67"
+  - "gov_report:70"
+  - synthetic_niah_67
+  - synthetic_niah_70
+
+start_anchor: 32
+control_cycles: 4
+control_horizon: 8
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+
+policies:
+  - statekv_exact_mean
+  - attention
+  - snapkv
+  - h2o
+
+candidate_panel:
+  - stale
+  - attention
+  - snapkv
+  - h2o
+  - key_norm
+  - value_norm
+  - uniform
+
+primary_metric: full_vocabulary_exact_kl_mean
+gate:
+  - all_physical_loops_passed
+  - statekv_lower_overall_mean_than_each_fixed_policy
+
+frozen_from:
+  run: results/temporal_cache_discovery/statekv_oracle_policy_comparison_p27_v1
+  policy_changes: none
+  candidate_changes: none
+  budget_changes: none
+  control_changes: none
+  sample_change: four_untouched_sequences
+
+evidence_status: independent-matched-teacher-forced-closed-loop
+claims_excluded:
+  - free-generation task quality
+  - deployment efficiency
+  - global retained-set optimality

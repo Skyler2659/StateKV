@@ -1,0 +1,47 @@
+experiment_name: statekv_direct_policy_independent_multianchor_p7
+
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_direct_policy_independent_multianchor_p7_v1
+
+sample_ids:
+  - "gov_report:24"
+  - "gov_report:25"
+  - "gov_report:26"
+  - "gov_report:27"
+  - "gov_report:28"
+  - "gov_report:29"
+  - synthetic_niah_24
+  - synthetic_niah_25
+  - synthetic_niah_26
+  - synthetic_niah_27
+  - synthetic_niah_28
+  - synthetic_niah_29
+anchors: [16, 32, 48]
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+scenario_windows: [1, 4]
+horizon: 16
+
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+
+policies:
+  - attention_mean_w1_shared
+  - contribution_mean_w4_shared
+baseline: attention_mean_w1_shared
+primary: contribution_mean_w4_shared
+
+gate:
+  minimum_anchor_mean_wins: 2
+  minimum_sample_anchor_win_rate: 0.55
+  require_overall_mean_improvement: true
+  require_overall_p95_improvement: true
+  require_overall_maximum_improvement: true
+  require_all_task_mean_improvement: true
+
+evidence_status: independent_new_sequence_multianchor_teacher_forced_replay
+claims_excluded:
+  - free-generation quality
+  - wall-clock speedup
+  - cross-model confirmation

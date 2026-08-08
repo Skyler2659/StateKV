@@ -137,7 +137,13 @@ def apply_prompt_format(tokenizer: Any, prompt: str, cfg: ModelConfig) -> str:
     if system_prompt:
         messages.append({"role": "system", "content": str(system_prompt)})
     messages.append({"role": "user", "content": prompt})
+    template_kwargs = dict(prompt_cfg.get("template_kwargs") or {})
     try:
-        return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        return tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            **template_kwargs,
+        )
     except Exception:
         return prompt

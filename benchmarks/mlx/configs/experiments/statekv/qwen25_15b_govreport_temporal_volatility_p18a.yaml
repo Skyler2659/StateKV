@@ -1,0 +1,64 @@
+experiment_name: statekv_freegen_govreport_p18a
+run_id: v1
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  family: qwen
+  backend: mlx
+  dtype: auto
+  device: mps
+  quant_bits: 4
+  quant_group_size: 64
+  mlx_weight_quantize: false
+  prefill_step_size: 512
+  trust_remote_code: false
+  local_files_only: true
+  prompt_format:
+    mode: plain
+    system_prompt: null
+eviction:
+  method: latest_attention_shared
+  cache_size: 128
+  sink_size: 4
+  recent_size: 32
+  score_source: attention
+  score_normalization: none
+  observation_window: 4
+  attention_window: 4
+  direct_policy_layers: [0, 7, 14, 15, 21, 27]
+  update_interval: 1
+  update_policy: every_n_steps
+  seed: 20260819
+benchmark:
+  name: longbench
+  tasks: [gov_report]
+  max_words: 700
+  n_samples_per_task: 3
+  num_samples: 3
+  official_sample_indices: [51, 52, 53]
+  max_steps: 1536
+  max_new_tokens: 128
+  eval_target_only: true
+  evaluation: both
+  use_official_prompt: true
+  use_official_dataset: true
+  require_official_dataset: true
+  longbench_max_length: 1536
+methods:
+  - full
+  - latest_attention_shared
+  - temporal_volatility_shared
+cache_budgets: [128]
+analysis:
+  overlap: true
+  rank_correlation: true
+  evidence_recall: false
+  case_study: true
+  case_study_count: 3
+  include_oracle: false
+output_dir: results/temporal_cache_discovery
+save_selected_tokens: true
+save_scores: true
+save_prompt_text: true
+progress_every: 64
+seed: 20260819
+overwrite: true

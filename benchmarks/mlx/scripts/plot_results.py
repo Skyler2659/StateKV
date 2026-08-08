@@ -326,7 +326,10 @@ def write_case_study_markdown(run_dir: Path) -> str:
     if not results_path.exists():
         return ""
     results = load_results(results_path)
-    out = run_dir / "analysis" / "case_study.md"
+    # Result-local reports are data artifacts, not repository documentation.
+    # Keep them as plain text so root-level documentation governance remains
+    # enforceable when experiment outputs are stored inside the worktree.
+    out = run_dir / "analysis" / "case_study.txt"
     lines = ["# Case Studies", ""]
     for result in results[:10]:
         lines.extend(

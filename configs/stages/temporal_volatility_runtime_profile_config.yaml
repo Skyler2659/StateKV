@@ -1,0 +1,11 @@
+experiment_name: statekv_temporal_volatility_runtime_profile_p17
+output_run: results/temporal_cache_discovery/statekv_temporal_volatility_runtime_profile_p17_v1
+signal: attention_temporal_volatility_w4_shared
+diagnostic_layers: 6
+window: 4
+query_heads: 12
+core_budget: 92
+token_counts: [768, 1536, 8192, 32768]
+timing_repeats: 40
+seed: 20260818
+evidence_status: cpu_arithmetic_microbenchmark_not_end_to_end_latency

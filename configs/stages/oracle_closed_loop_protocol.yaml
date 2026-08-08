@@ -1,0 +1,53 @@
+experiment_name: statekv_physical_oracle_closed_loop_p25
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_physical_oracle_closed_loop_p25_v1
+data_seed: 20260820
+runtime_run_id: physical_oracle_closed_loop_seed20260820_v1
+
+task_overrides:
+  ruler_niah:
+    num_samples: 1
+    context_length: 768
+    sample_offset: 64
+  govreport_or_qmsum:
+    num_samples: 1
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [64]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:64"
+  - synthetic_niah_64
+
+start_anchor: 16
+control_cycles: 3
+control_horizon: 4
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+diagnostic_layers: [0, 7, 14, 21, 27]
+
+candidate_panel:
+  - stale
+  - attention
+  - attention_history
+  - attention_value
+  - key_norm
+  - value_norm
+  - uniform
+
+teacher_strategies:
+  - dense_quadratic_h1
+  - dense_quadratic_mean
+  - exact_mean
+  - exact_max
+
+evidence_status: development-physical-oracle-closed-loop
+claims_excluded:
+  - free-generation quality
+  - deployment latency
+  - low-cost control
+  - global retained-set optimality

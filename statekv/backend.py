@@ -118,6 +118,9 @@ class AnchorState:
     query_head_observation: Dict[int, torch.Tensor] = field(
         default_factory=dict
     )
+    attention_observation_rows: Dict[int, List[torch.Tensor]] = field(
+        default_factory=dict
+    )
 
     def snapshot(self, sample_id: str) -> CacheSnapshot:
         return CacheSnapshot(
@@ -492,6 +495,7 @@ class TemporalModel:
         sample_id: str,
         task: str,
         prompt: str,
+        extra_probe_target_indices: Optional[Sequence[int]] = None,
     ) -> ReferenceTrajectory:
         self._reset_peak_memory()
         started = time.perf_counter()
@@ -527,6 +531,9 @@ class TemporalModel:
             }
             if self.cfg.functional_probe.enabled
             else set()
+        )
+        probe_targets.update(
+            int(value) for value in (extra_probe_target_indices or [])
         )
         if self.cfg.independent_fisher.enabled:
             for anchor in self.cfg.independent_fisher.anchors:

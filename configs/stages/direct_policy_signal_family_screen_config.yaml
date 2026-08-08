@@ -1,0 +1,95 @@
+experiment_name: statekv_direct_policy_signal_family_screen_p15
+
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_direct_policy_signal_family_screen_p15_v1
+data_seed: 20260816
+runtime_run_id: direct_policy_signal_family_screen_seed20260816_v1
+task_overrides:
+  ruler_niah:
+    num_samples: 3
+    context_length: 768
+    sample_offset: 42
+  govreport_or_qmsum:
+    num_samples: 3
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [42, 43, 44]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:42"
+  - "gov_report:43"
+  - "gov_report:44"
+  - synthetic_niah_42
+  - synthetic_niah_43
+  - synthetic_niah_44
+reserved_independent_sample_ids:
+  - "gov_report:45"
+  - "gov_report:46"
+  - "gov_report:47"
+  - "gov_report:48"
+  - "gov_report:49"
+  - "gov_report:50"
+  - synthetic_niah_45
+  - synthetic_niah_46
+  - synthetic_niah_47
+  - synthetic_niah_48
+  - synthetic_niah_49
+  - synthetic_niah_50
+anchors: [16, 32, 48]
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+scenario_windows: [1, 4]
+horizon: 16
+
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+
+policies:
+  - attention_mean_w1_shared
+  - attention_head_peak_w4_shared
+  - attention_temporal_volatility_w4_shared
+  - key_diagonal_leverage_shared
+  - value_diagonal_leverage_shared
+  - value_adjacent_change_shared
+  - uniform_position_coverage_shared
+baseline: attention_mean_w1_shared
+primary: attention_head_peak_w4_shared
+
+signal_families:
+  attention_head_peak_w4_shared: rare_head_recent_access
+  attention_temporal_volatility_w4_shared: temporal_access_dynamics
+  key_diagonal_leverage_shared: key_geometry
+  value_diagonal_leverage_shared: value_geometry
+  value_adjacent_change_shared: representation_boundary
+  uniform_position_coverage_shared: position_only_coverage
+
+gate_mode: development_screen
+gate:
+  minimum_anchor_mean_wins: 2
+
+development_selection:
+  candidates:
+    - attention_head_peak_w4_shared
+    - attention_temporal_volatility_w4_shared
+    - key_diagonal_leverage_shared
+    - value_diagonal_leverage_shared
+    - value_adjacent_change_shared
+    - uniform_position_coverage_shared
+  objective: maximum_mean_exact_kl_reduction
+  required:
+    - mean_exact_kl_improves
+    - p95_exact_kl_nonworse
+    - cvar95_exact_kl_nonworse
+    - maximum_exact_kl_nonworse
+    - large_loss_rate_nonworse
+    - all_task_means_improve
+  tie_break: policy_name_for_exact_numeric_ties
+
+evidence_status: heterogeneous_signal_family_development_screen
+claims_excluded:
+  - independent confirmation
+  - free-generation quality
+  - end-to-end speedup

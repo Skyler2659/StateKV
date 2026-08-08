@@ -1,0 +1,50 @@
+experiment_name: statekv_shared_jvp_pilot_p2
+
+base_config: configs/stages/independent_fisher_config.yaml
+source_run: results/temporal_cache_discovery/independent_fisher_4bit_24newseq_seed20260726_v1
+output_run: results/temporal_cache_discovery/statekv_shared_jvp_pilot_p2_v1
+
+sample_ids:
+  - "gov_report:12"
+  - synthetic_niah_12
+anchors: [16]
+horizon: 8
+minimum_horizon: 2
+
+candidate_sources:
+  - attention
+  - direct_energy_greedy
+  - v_ridge
+  - aor
+  - preceding_anchor_old_core
+  - stratified_random_00
+  - stratified_random_01
+  - stratified_random_02
+
+ranks: [2, 4]
+basis_oversampling: 4
+refresh_intervals: [1, 2, 4, 8]
+fisher_sketch_widths: [16, 32]
+decay: 0.95
+random_seed: 20260807
+directional_derivative: symmetric_finite_difference
+finite_difference_radius: 0.001
+
+baseline: hidden_l2_action
+primary:
+  rank: 4
+  refresh_interval: 4
+  fisher_sketch_width: 32
+  state_mode: innovation
+
+evidence_status: bounded_model_backed_development_pilot
+implementation_note: >-
+  The installed MLX build raises Primitive::jvp Not implemented for Sum on the
+  pure tail map. This pilot therefore uses symmetric finite differences and
+  reports tail-forward counts explicitly; it is not labeled as an autodiff-JVP
+  runtime result.
+claims_excluded:
+  - independent replication
+  - end-to-end controller quality
+  - wall-clock speedup
+  - full-model pullback across all layers

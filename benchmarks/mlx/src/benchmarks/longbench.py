@@ -139,6 +139,7 @@ class LongBenchWrapper(BaseBenchmark):
         use_official_prompt: bool = False,
         prompt_style: Optional[str] = None,
         max_length: int = 32768,
+        official_sample_indices: Optional[List[int]] = None,
     ):
         super().__init__(seed=seed, max_samples=max_samples)
         self.tasks = tasks or ["narrativeqa", "hotpotqa", "triviaqa"]
@@ -147,6 +148,11 @@ class LongBenchWrapper(BaseBenchmark):
         self.use_official_prompt = use_official_prompt
         self.prompt_style = prompt_style
         self.max_length = max_length
+        self.official_sample_indices = (
+            [int(value) for value in official_sample_indices]
+            if official_sample_indices is not None
+            else None
+        )
 
     def _load_task_data(self, task_name: str) -> List[Dict[str, Any]]:
         """Load a single LongBench task from HF datasets."""
@@ -155,10 +161,23 @@ class LongBenchWrapper(BaseBenchmark):
             ds = load_dataset("THUDM/LongBench", task_name, split="test",
                               trust_remote_code=True)
             rows = []
-            for i, row in enumerate(ds):
-                if i >= self.n_samples_per_task:
-                    break
+            if self.official_sample_indices is None:
+                indices = list(range(min(len(ds), self.n_samples_per_task)))
+            else:
+                invalid = [
+                    index
+                    for index in self.official_sample_indices
+                    if index < 0 or index >= len(ds)
+                ]
+                if invalid:
+                    raise ValueError(
+                        f"LongBench sample indices out of range: {invalid[:10]}"
+                    )
+                indices = self.official_sample_indices[: self.n_samples_per_task]
+            for i in indices:
+                row = ds[int(i)]
                 row["_task"] = task_name
+                row["_official_dataset_index"] = int(i)
                 rows.append(dict(row))
             return rows
         except Exception as e:

@@ -200,6 +200,31 @@ class PureFinalBoundaryMap:
             np.asarray(derivative).astype(np.float64),
         )
 
+    def vjp(
+        self, point: np.ndarray, cotangent: np.ndarray
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        """Return logits and a hidden-space vector-Jacobian product.
+
+        MLX's forward-mode JVP currently encounters an unsupported ``Sum``
+        primitive in this tail map, while reverse-mode VJP is implemented.
+        The explicit wrapper also normalizes the list-valued MLX API so the
+        experiment code receives ordinary NumPy vectors.
+        """
+        import mlx.core as mx
+
+        primal = mx.array(np.asarray(point, dtype=np.float32))
+        vector = mx.array(np.asarray(cotangent, dtype=np.float32))
+        output, gradient = mx.vjp(self, [primal], [vector])
+        if isinstance(output, (list, tuple)):
+            output = output[0]
+        if isinstance(gradient, (list, tuple)):
+            gradient = gradient[0]
+        mx.eval(output, gradient)
+        return (
+            np.asarray(output).astype(np.float64),
+            np.asarray(gradient).astype(np.float64),
+        )
+
     def symmetric_fd(
         self,
         point: np.ndarray,
@@ -237,6 +262,91 @@ class PureFinalBoundaryMap:
                 )
             ),
         }
+
+
+class PurePostAttentionTailMap(PureFinalBoundaryMap):
+    """Post-attention residual at one layer to final-logits pure tail map.
+
+    A cache deletion changes the projected attention output before the layer's
+    MLP.  Starting at this boundary is therefore a more faithful linearization
+    than injecting that action at the layer input.  Later layers are replayed
+    against immutable full-reference K/V caches.
+    """
+
+    def __init__(self, backend: Any, layer_caches: Sequence[Any], start_layer: int):
+        import mlx.core as mx
+
+        self.backend = backend
+        self.start_layer = int(start_layer)
+        self.output_model = backend.runner.model
+        self.layers = self.output_model.model.layers
+        if self.start_layer < 0 or self.start_layer >= len(self.layers):
+            raise ValueError("start_layer is outside the model")
+        self.cache_data: Dict[int, Tuple[Any, Any, int]] = {}
+        for layer_index in range(self.start_layer + 1, len(self.layers)):
+            layer_cache = layer_caches[layer_index]
+            offset = int(layer_cache.offset)
+            keys = mx.array(layer_cache.keys[:, :, :offset, :])
+            values = mx.array(layer_cache.values[:, :, :offset, :])
+            rope_offset = int(getattr(layer_cache, "logical_offset", offset))
+            mx.eval(keys, values)
+            self.cache_data[layer_index] = (keys, values, rope_offset)
+        self.final_norm = self.output_model.model.norm
+
+    @staticmethod
+    def _full_layer(layer: Any, x: Any, cache: Tuple[Any, Any, int]) -> Any:
+        import mlx.core as mx
+        from mlx_lm.models.base import scaled_dot_product_attention
+
+        attention = layer.self_attn
+        cached_keys, cached_values, rope_offset = cache
+        normalized = layer.input_layernorm(x)
+        queries = attention.q_proj(normalized)
+        keys = attention.k_proj(normalized)
+        values = attention.v_proj(normalized)
+        queries = queries.reshape(1, 1, attention.n_heads, -1)
+        keys = keys.reshape(1, 1, attention.n_kv_heads, -1)
+        values = values.reshape(1, 1, attention.n_kv_heads, -1)
+        if hasattr(attention, "q_norm"):
+            queries = attention.q_norm(queries)
+        if hasattr(attention, "k_norm"):
+            keys = attention.k_norm(keys)
+        queries = queries.transpose(0, 2, 1, 3)
+        keys = keys.transpose(0, 2, 1, 3)
+        values = values.transpose(0, 2, 1, 3)
+        queries = attention.rope(queries, offset=int(rope_offset))
+        keys = attention.rope(keys, offset=int(rope_offset))
+        all_keys = mx.concatenate([cached_keys, keys], axis=2)
+        all_values = mx.concatenate([cached_values, values], axis=2)
+        attention_output = scaled_dot_product_attention(
+            queries,
+            all_keys,
+            all_values,
+            cache=None,
+            scale=attention.scale,
+            mask=None,
+        )
+        attention_output = attention_output.transpose(0, 2, 1, 3).reshape(
+            1, 1, -1
+        )
+        hidden = x + attention.o_proj(attention_output)
+        return hidden + layer.mlp(layer.post_attention_layernorm(hidden))
+
+    def __call__(self, post_attention_residual: Any) -> Any:
+        hidden_size = int(self.backend.model_info["hidden_size"])
+        hidden = post_attention_residual.reshape(1, 1, hidden_size)
+        start = self.layers[self.start_layer]
+        hidden = hidden + start.mlp(start.post_attention_layernorm(hidden))
+        for layer_index in range(self.start_layer + 1, len(self.layers)):
+            hidden = self._full_layer(
+                self.layers[layer_index], hidden, self.cache_data[layer_index]
+            )
+        output = self.final_norm(hidden)
+        if self.output_model.args.tie_word_embeddings:
+            logits = self.output_model.model.embed_tokens.as_linear(output)
+        else:
+            logits = self.output_model.lm_head(output)
+        return logits.reshape(-1)
 
 
 def jvp_fd_diagnostics(

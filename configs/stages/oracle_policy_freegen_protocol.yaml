@@ -1,0 +1,60 @@
+experiment_name: statekv_oracle_policy_freegen_p29
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_oracle_policy_freegen_p29_v1
+data_seed: 20260829
+runtime_run_id: oracle_policy_freegen_seed20260829_v1
+
+task_overrides:
+  ruler_niah:
+    num_samples: 1
+    context_length: 768
+    sample_offset: 65
+  govreport_or_qmsum:
+    num_samples: 1
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [65]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:65"
+  - synthetic_niah_65
+
+start_anchor: 0
+control_cycles: 8
+control_horizon: 8
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+
+policies:
+  - statekv_exact_mean
+  - attention
+  - snapkv
+  - h2o
+
+candidate_panel:
+  - stale
+  - attention
+  - snapkv
+  - h2o
+  - key_norm
+  - value_norm
+  - uniform
+
+generation: greedy_policy_conditioned_receding_horizon
+primary_metrics:
+  - policy_conditioned_full_vocabulary_exact_kl
+  - govreport_rouge_l
+  - niah_retrieval_accuracy
+
+evidence_status: development-greedy-physical-closed-loop
+claims_excluded:
+  - deployment efficiency
+  - global retained-set optimality

@@ -122,6 +122,116 @@ def test_mlx_attention_hook_matches_causal_gqa_reference():
     assert state["query_counts"][0]["prefill"] == 3
 
 
+def test_mlx_shared_temporal_volatility_signal_and_budget_partition():
+    mx = pytest.importorskip("mlx.core")
+    cfg = ExperimentConfig()
+    cfg.eviction.sink_size = 1
+    cfg.eviction.recent_size = 2
+    cfg.eviction.attention_window = 4
+    cfg.eviction.direct_policy_layers = [0, 1]
+    state = {"observe": {}, "last": {}}
+    base = np.zeros(10, dtype=np.float32)
+    changes = [
+        np.zeros(10, dtype=np.float32),
+        np.asarray([0, 1, 0, 0, 0, 0, 0, 0, 0, 0], dtype=np.float32),
+        np.asarray([0, 2, 0, 0, 0, 0, 0, 0, 0, 0], dtype=np.float32),
+        np.asarray([0, 3, 0, 0, 0, 0, 0, 0, 0, 0], dtype=np.float32),
+    ]
+    for layer in (0, 1):
+        state["observe"][layer] = [mx.array(base + value) for value in changes]
+        state["observe"][layer][0] = state["observe"][layer][0][:-1]
+    eviction = MLXCacheEvictor(
+        "temporal_volatility_shared",
+        budget=6,
+        cfg=cfg,
+        num_layers=2,
+        attention_state=state,
+    )
+    score = eviction._shared_direct_score(10)
+    assert int(mx.argmax(score).item()) == 1
+    keep = eviction._select_shared_direct_indices(score, 10, 6)
+    selected = set(int(value) for value in keep.tolist())
+    assert 0 in selected
+    assert {8, 9}.issubset(selected)
+    assert len(selected) == 6
+
+    caches = []
+    for _ in range(2):
+        cache = type("Cache", (), {})()
+        cache.keys = mx.arange(1 * 2 * 10 * 2).reshape(1, 2, 10, 2)
+        cache.values = cache.keys
+        cache.offset = 10
+        cache.logical_offset = 10
+        caches.append(cache)
+    eviction.evict(caches, 6)
+    assert all(cache.offset == 6 for cache in caches)
+    assert eviction.last_selected[0] == eviction.last_selected[1]
+    assert set(eviction.last_selected[0]) == selected
+    assert all(
+        len(vector) == 6
+        for vectors in state["observe"].values()
+        for vector in vectors
+    )
+
+
+def test_mlx_attention_free_shared_rarity_and_position_coverage():
+    mx = pytest.importorskip("mlx.core")
+    cfg = ExperimentConfig()
+    cfg.eviction.sink_size = 1
+    cfg.eviction.recent_size = 2
+    token_ids = [1, 1, 1, 98, 99, 1, 1, 1, 1, 1]
+
+    rarity = MLXCacheEvictor(
+        "token_rarity_shared",
+        budget=6,
+        cfg=cfg,
+        num_layers=2,
+        stream_token_ids=token_ids,
+    )
+    caches = []
+    for _ in range(2):
+        cache = type("Cache", (), {})()
+        cache.keys = mx.arange(1 * 2 * 10 * 2).reshape(1, 2, 10, 2)
+        cache.values = cache.keys
+        cache.offset = 10
+        cache.logical_offset = 10
+        caches.append(cache)
+    rarity.sync_maps(caches)
+    rarity_scores = rarity._shared_direct_score(10)
+    assert float(rarity_scores[3].item()) > float(rarity_scores[1].item())
+    rarity.evict(caches, 6)
+    assert all(cache.offset == 6 for cache in caches)
+    assert rarity.last_selected[0] == rarity.last_selected[1]
+    assert {3, 4}.intersection(rarity.last_selected[0])
+
+    coverage = MLXCacheEvictor(
+        "position_coverage_shared",
+        budget=6,
+        cfg=cfg,
+        num_layers=1,
+        stream_token_ids=token_ids,
+    )
+    coverage.position_maps[0] = mx.arange(10)
+    zero_scores = coverage._shared_direct_score(10)
+    keep = coverage._select_shared_direct_indices(zero_scores, 10, 6)
+    assert keep.tolist() == [0, 1, 4, 7, 8, 9]
+    coverage.append_stream_token(77)
+    assert coverage.stream_token_ids[-1] == 77
+    assert coverage.stream_token_counts[77] == 1
+
+    query_ids = [7] * 10 + [42] + [7] * 60 + [42] + [7] * 8
+    query_overlap = MLXCacheEvictor(
+        "query_overlap_shared",
+        budget=6,
+        cfg=cfg,
+        num_layers=1,
+        stream_token_ids=query_ids,
+    )
+    query_overlap.position_maps[0] = mx.arange(len(query_ids))
+    query_scores = query_overlap._shared_direct_score(len(query_ids))
+    assert float(query_scores[10].item()) > float(query_scores[5].item())
+
+
 def test_mlx_position_map_stays_aligned_across_multiple_evictions():
     mx = pytest.importorskip("mlx.core")
     cache = type("Cache", (), {})()

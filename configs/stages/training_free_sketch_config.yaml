@@ -1,0 +1,45 @@
+experiment_name: statekv_tf_fixed_decay_sketch_p0
+
+# Frozen real-model artifacts.  This analysis does not rerun or overwrite them.
+source_run: results/temporal_cache_discovery/gauge_geometry_4bit_24seq_seed42_v1
+output_run: results/temporal_cache_discovery/statekv_tf_sketch_p0_v1
+
+# Nested fixed Rademacher projections: one shared draw, truncated per dimension.
+projection_dimensions: [16, 32, 64, 128]
+projection_seeds: [42]
+decays: [0.50, 0.80, 0.95, 1.00]
+minimum_horizon: 2
+
+# Predeclared zero-training feasibility configuration.  The remaining grid is
+# sensitivity analysis, not evaluation-time tuning.
+primary:
+  projection_dimension: 64
+  projection_seed: 42
+  decay: 0.95
+
+# Split by sequence identity, never by candidate rows.
+splits:
+  calibration: [0, 1, 2, 3]
+  evaluation: [4, 5, 6, 7]
+  replication: [8, 9, 10, 11]
+
+claims:
+  - id: history_sketch_increment
+    comparison: recursive_state_sketch_vs_action_energy_only
+    primary_metrics:
+      - median_spearman_gain
+      - mean_pairwise_accuracy_gain
+      - mean_normalized_regret_gain
+    stop_condition: >-
+      Stop before online benchmark expansion if the predeclared history term
+      does not improve both evaluation and replication, including both tasks.
+
+method_scope:
+  action_signature: stored layer-27 direct projected action vector
+  state_update: m_next = decay * m + action_signature
+  teacher_target: stored source_exact_kl
+  excludes:
+    - query-cosine decay
+    - online direct-set execution
+    - end-to-end generation quality
+    - latency or memory claims

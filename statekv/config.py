@@ -26,6 +26,7 @@ class ModelDiscoveryConfig:
     attn_implementation: str = "eager"
     prompt_format: str = "chat_template"
     system_prompt: Optional[str] = None
+    chat_template_kwargs: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -522,10 +523,14 @@ class DiscoveryConfig:
             if self.model.quant_bits is not None:
                 raise ValueError("the Torch discovery backend is not quantized")
         elif self.model.backend == "mlx":
-            if self.model.name != "mlx-community/Qwen2.5-1.5B-Instruct-4bit":
+            supported_mlx_models = {
+                "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+                "mlx-community/Qwen3-8B-4bit",
+            }
+            if self.model.name not in supported_mlx_models:
                 raise ValueError(
-                    "the MLX discovery backend requires the cached 1.5B "
-                    "Instruct 4-bit checkpoint"
+                    "the MLX discovery backend requires a supported 4-bit "
+                    "checkpoint: %s" % sorted(supported_mlx_models)
                 )
             if self.model.dtype not in {"4bit", "int4"}:
                 raise ValueError("the MLX discovery backend requires dtype=4bit")

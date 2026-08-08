@@ -1,0 +1,40 @@
+experiment_name: statekv_direct_policy_shrinkage_screen_p8
+
+base_config: configs/stages/independent_fisher_config.yaml
+output_run: results/temporal_cache_discovery/statekv_direct_policy_shrinkage_screen_p8_v1
+
+sample_ids:
+  - "gov_report:18"
+  - "gov_report:19"
+  - "gov_report:20"
+  - synthetic_niah_18
+  - synthetic_niah_19
+  - synthetic_niah_20
+anchors: [16, 32, 48]
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+scenario_windows: [1, 4]
+horizon: 16
+
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+
+policies:
+  - attention_mean_w1_shared
+  - contribution_mean_w4_shared
+  - blend_attention_contribution_25_w4_shared
+  - blend_attention_contribution_50_w4_shared
+  - blend_attention_contribution_75_w4_shared
+baseline: attention_mean_w1_shared
+primary: blend_attention_contribution_50_w4_shared
+
+gate:
+  minimum_anchor_mean_wins: 2
+  minimum_sample_anchor_win_rate: 0.50
+
+evidence_status: post-failure-training-free-shrinkage-development_screen
+claims_excluded:
+  - independent confirmation
+  - free-generation quality
+  - wall-clock speedup

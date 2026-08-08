@@ -48,6 +48,11 @@ SUPPORTED_MLX_METHODS = {
     "attention",
     "accumulated_attention",
     "windowed_attention",
+    "latest_attention_shared",
+    "temporal_volatility_shared",
+    "token_rarity_shared",
+    "query_overlap_shared",
+    "position_coverage_shared",
     "attention_decay",
     "h2o",
     "tova",
@@ -121,6 +126,8 @@ SUPPORTED_MLX_METHODS = {
 ATTENTION_SCORE_METHODS = {
     "attention",
     "windowed_attention",
+    "latest_attention_shared",
+    "temporal_volatility_shared",
     "attention_decay",
     "h2o",
     "tova",
@@ -169,6 +176,11 @@ HYBRID_METHODS = {
 MANUAL_COMPACT_METHODS = {
     "attention",
     "windowed_attention",
+    "latest_attention_shared",
+    "temporal_volatility_shared",
+    "token_rarity_shared",
+    "query_overlap_shared",
+    "position_coverage_shared",
     "attention_decay",
     "h2o",
     "tova",
@@ -224,6 +236,18 @@ MANUAL_COMPACT_METHODS = {
 }
 METHODS_NEED_ATTENTION = ATTENTION_SCORE_METHODS | SNAP_METHODS | HYBRID_METHODS
 METHODS_NEED_ATTENTION = METHODS_NEED_ATTENTION | PREFILL_COMPRESS_METHODS
+SHARED_DIRECT_ATTENTION_METHODS = {
+    "latest_attention_shared",
+    "temporal_volatility_shared",
+}
+SHARED_DIRECT_STATIC_METHODS = {
+    "token_rarity_shared",
+    "query_overlap_shared",
+    "position_coverage_shared",
+}
+SHARED_DIRECT_METHODS = (
+    SHARED_DIRECT_ATTENTION_METHODS | SHARED_DIRECT_STATIC_METHODS
+)
 
 
 class ScoreUnavailableError(RuntimeError):
@@ -841,6 +865,7 @@ class MLXCacheEvictor:
         num_layers: int,
         attention_state: Optional[Dict[str, Any]] = None,
         oracle_positions: Optional[List[int]] = None,
+        stream_token_ids: Optional[List[int]] = None,
     ):
         self.method = canonical_method(method)
         self.budget = int(budget)
@@ -858,6 +883,9 @@ class MLXCacheEvictor:
             "hook_errors": 0,
         }
         self.oracle_positions = sorted({int(x) for x in (oracle_positions or [])})
+        self.stream_token_ids = [int(value) for value in (stream_token_ids or [])]
+        self.stream_token_counts = Counter(self.stream_token_ids)
+        self.query_signature_counts = Counter(self.stream_token_ids[-64:])
         self.position_maps: Dict[int, Any] = {}
         self.next_positions: Dict[int, int] = {}
         self.last_selected: Dict[int, List[int]] = {}
@@ -892,6 +920,11 @@ class MLXCacheEvictor:
 
     def set_phase(self, phase: str) -> None:
         self.phase = str(phase or "decode").lower()
+
+    def append_stream_token(self, token_id: int) -> None:
+        token = int(token_id)
+        self.stream_token_ids.append(token)
+        self.stream_token_counts[token] += 1
 
     def _record_score_refit(self) -> None:
         phase = self.phase if self.phase in self.score_refit_phase_counts else "decode"
@@ -1070,6 +1103,9 @@ class MLXCacheEvictor:
 
         budget = int(budget or self.budget)
         self.sync_maps(cache)
+        if self.method in SHARED_DIRECT_METHODS:
+            self._evict_shared_direct(cache, budget)
+            return
         decision_units: List[Dict[str, Any]] = []
         made_eviction_decision = False
         for layer_idx, c in enumerate(cache):
@@ -2829,6 +2865,270 @@ class MLXCacheEvictor:
         keep = mx.array(sorted(set(reserved + current)), dtype=mx.int32)
         return self._ensure_keep_budget(keep, seq_len, budget, scores)
 
+    def _direct_policy_layer_score(self, layer_idx: int, seq_len: int):
+        """Return the frozen per-layer signal for a shared direct policy."""
+
+        import mlx.core as mx
+
+        if self.method == "latest_attention_shared":
+            latest = self.attention_state.get("last", {}).get(layer_idx)
+            if latest is None:
+                raise ScoreUnavailableError(
+                    f"latest attention is unavailable for layer={layer_idx}"
+                )
+            if int(latest.shape[0]) < int(seq_len):
+                latest = mx.concatenate(
+                    [
+                        latest,
+                        mx.zeros(
+                            (int(seq_len) - int(latest.shape[0]),),
+                            dtype=latest.dtype,
+                        ),
+                    ],
+                    axis=0,
+                )
+            return latest[:seq_len].astype(mx.float32)
+
+        if self.method != "temporal_volatility_shared":
+            raise ValueError(f"not a shared direct policy: {self.method}")
+        window = int(getattr(self.cfg.eviction, "attention_window", 4))
+        observed = self.attention_state.get("observe", {}).get(layer_idx, [])
+        if len(observed) < window:
+            raise ScoreUnavailableError(
+                f"temporal volatility needs {window} queries at layer={layer_idx}; "
+                f"found={len(observed)}"
+            )
+        aligned = []
+        for vector in observed[-window:]:
+            current = vector[:seq_len]
+            if int(current.shape[0]) < int(seq_len):
+                current = mx.concatenate(
+                    [
+                        current,
+                        mx.zeros(
+                            (int(seq_len) - int(current.shape[0]),),
+                            dtype=current.dtype,
+                        ),
+                    ],
+                    axis=0,
+                )
+            aligned.append(current.astype(mx.float32))
+        return mx.std(mx.stack(aligned, axis=0), axis=0).astype(mx.float32)
+
+    def _shared_direct_score(self, seq_len: int):
+        """Build the one-dimensional score used by a shared-set policy."""
+
+        import mlx.core as mx
+
+        if self.method in SHARED_DIRECT_STATIC_METHODS:
+            if not self.stream_token_ids:
+                raise ScoreUnavailableError(
+                    f"{self.method} requires the observed stream token ids"
+                )
+            positions = self._to_int_list(self.position_maps[0])
+            if len(positions) != int(seq_len):
+                raise RuntimeError("static shared score position map is misaligned")
+            if self.method == "position_coverage_shared":
+                return mx.zeros((int(seq_len),), dtype=mx.float32)
+            if self.method not in {"token_rarity_shared", "query_overlap_shared"}:
+                raise ValueError(f"not a static shared policy: {self.method}")
+            total = max(1, len(self.stream_token_ids))
+            if self.method == "query_overlap_shared":
+                base_scores = []
+                for token in self.stream_token_ids:
+                    query_count = int(self.query_signature_counts[int(token)])
+                    stream_count = max(1, int(self.stream_token_counts[int(token)]))
+                    base_scores.append(
+                        (1.0 / float(stream_count)) if query_count > 0 else 0.0
+                    )
+                values = []
+                for position in positions:
+                    if position < 0 or position >= len(base_scores):
+                        raise ScoreUnavailableError(
+                            f"token id unavailable at logical position={position}"
+                        )
+                    start = max(0, position - 2)
+                    end = min(len(base_scores), position + 3)
+                    values.append(max(base_scores[start:end], default=0.0))
+                return mx.array(np.asarray(values, dtype=np.float32))
+            values = []
+            for position in positions:
+                if position < 0 or position >= len(self.stream_token_ids):
+                    raise ScoreUnavailableError(
+                        f"token id unavailable at logical position={position}"
+                    )
+                start = max(0, position - 2)
+                end = min(len(self.stream_token_ids), position + 3)
+                local = []
+                for neighbor in self.stream_token_ids[start:end]:
+                    count = max(1, int(self.stream_token_counts[int(neighbor)]))
+                    local.append(math.log((total + 1.0) / (count + 1.0)))
+                values.append(float(sum(local) / max(1, len(local))))
+            return mx.array(np.asarray(values, dtype=np.float32))
+
+        configured = getattr(self.cfg.eviction, "direct_policy_layers", None)
+        layers = configured or [0, 7, 14, 15, 21, 27]
+        layers = sorted({int(layer) for layer in layers})
+        invalid = [layer for layer in layers if layer < 0 or layer >= self.num_layers]
+        if invalid or not layers:
+            raise ValueError(f"invalid direct-policy diagnostic layers: {invalid}")
+        sink = min(int(self.cfg.eviction.sink_size), int(seq_len))
+        recent = min(
+            int(self.cfg.eviction.recent_size), max(0, int(seq_len) - sink)
+        )
+        eligible_end = int(seq_len) - recent
+        if eligible_end <= sink:
+            raise ScoreUnavailableError("shared direct policy has no eligible core")
+        normalized = []
+        for layer in layers:
+            score = mx.maximum(
+                self._direct_policy_layer_score(layer, seq_len), 0.0
+            )
+            denominator = float(mx.sum(score[sink:eligible_end]).item())
+            if not math.isfinite(denominator) or denominator <= 0.0:
+                raise ScoreUnavailableError(
+                    f"non-positive eligible signal at layer={layer}"
+                )
+            current = mx.zeros((int(seq_len),), dtype=mx.float32)
+            current[sink:eligible_end] = score[sink:eligible_end] / denominator
+            normalized.append(current)
+        return mx.mean(mx.stack(normalized, axis=0), axis=0).astype(mx.float32)
+
+    def _select_shared_direct_indices(self, scores: Any, seq_len: int, budget: int):
+        """Apply the frozen sink/recent/core partition to one shared score."""
+
+        import mlx.core as mx
+
+        target = min(int(seq_len), int(budget))
+        if int(seq_len) <= target:
+            return mx.arange(int(seq_len), dtype=mx.int32)
+        sink = min(int(self.cfg.eviction.sink_size), target)
+        recent = min(
+            int(self.cfg.eviction.recent_size), max(0, target - sink)
+        )
+        core = max(0, target - sink - recent)
+        eligible_end = int(seq_len) - recent
+        parts = []
+        if sink:
+            parts.append(mx.arange(sink, dtype=mx.int32))
+        if core:
+            take = min(core, max(0, eligible_end - sink))
+            if take and self.method == "position_coverage_shared":
+                logical_positions = self._to_int_list(self.position_maps[0])
+                candidate_indices = list(range(sink, eligible_end))
+                if take >= len(candidate_indices):
+                    chosen_values = candidate_indices
+                else:
+                    candidate_positions = {
+                        index: logical_positions[index]
+                        for index in candidate_indices
+                    }
+                    ideals = np.linspace(
+                        min(candidate_positions.values()),
+                        max(candidate_positions.values()),
+                        num=take,
+                    )
+                    available = set(candidate_indices)
+                    chosen_values = []
+                    for ideal in ideals:
+                        chosen = min(
+                            available,
+                            key=lambda index: (
+                                abs(candidate_positions[index] - float(ideal)),
+                                candidate_positions[index],
+                            ),
+                        )
+                        chosen_values.append(chosen)
+                        available.remove(chosen)
+                parts.append(mx.array(chosen_values, dtype=mx.int32))
+            elif take:
+                candidates = scores[sink:eligible_end]
+                chosen = mx.argpartition(-candidates, max(0, take - 1))[:take]
+                parts.append((chosen + sink).astype(mx.int32))
+        if recent:
+            parts.append(mx.arange(eligible_end, int(seq_len), dtype=mx.int32))
+        keep = mx.sort(mx.concatenate(parts))
+        if int(keep.shape[0]) != target:
+            raise RuntimeError(
+                f"shared direct selection size={keep.shape[0]} expected={target}"
+            )
+        return keep
+
+    def _evict_shared_direct(self, cache: List[Any], budget: int) -> None:
+        """Prune every layer with one shared retained set."""
+
+        import mlx.core as mx
+
+        lengths = [int(current.offset) for current in cache]
+        if not lengths or len(set(lengths)) != 1:
+            raise RuntimeError("shared direct policy requires aligned layer lengths")
+        seq_len = lengths[0]
+        if seq_len <= int(budget):
+            for layer_idx in range(len(cache)):
+                self.last_selected[layer_idx] = self._to_int_list(
+                    self.position_maps[layer_idx]
+                )
+            return
+        reference_positions = self._to_int_list(self.position_maps[0])
+        for layer_idx in range(1, len(cache)):
+            if self._to_int_list(self.position_maps[layer_idx]) != reference_positions:
+                raise RuntimeError("shared direct policy position maps diverged")
+
+        score_start = time.perf_counter()
+        scores = self._shared_direct_score(seq_len)
+        self.profile_times["score_time_s"] += time.perf_counter() - score_start
+        self.score_update_count += 1
+        phase = self.phase if self.phase in self.score_phase_counts else "decode"
+        self.score_phase_counts[phase] += 1
+
+        topk_start = time.perf_counter()
+        keep = self._select_shared_direct_indices(scores, seq_len, int(budget))
+        self.profile_times["topk_time_s"] += time.perf_counter() - topk_start
+        selected_positions = mx.take(self.position_maps[0], keep, axis=0)
+        score_values = self._to_float_list(scores)
+        selected_values = self._to_int_list(selected_positions)
+
+        rebuild_start = time.perf_counter()
+        decision_units = []
+        for layer_idx, current in enumerate(cache):
+            universe = self._to_int_list(self.position_maps[layer_idx])
+            current.keys = mx.take(
+                current.keys[:, :, :seq_len, :], keep, axis=2
+            )
+            current.values = mx.take(
+                current.values[:, :, :seq_len, :], keep, axis=2
+            )
+            current.offset = int(keep.shape[0])
+            self._prune_attention_state(layer_idx, keep, seq_len)
+            self.position_maps[layer_idx] = selected_positions
+            self.last_selected[layer_idx] = selected_values
+            self.last_scores[layer_idx] = score_values
+            self._current_scores_by_head.pop(layer_idx, None)
+            decision_units.append(
+                {
+                    "layer": layer_idx,
+                    "head": None,
+                    "universe_positions": universe,
+                    "score_positions": universe,
+                    "scores": score_values,
+                    "selected_positions": selected_values,
+                    "requested_budget": int(budget),
+                }
+            )
+        self.profile_times["cache_rebuild_time_s"] += (
+            time.perf_counter() - rebuild_start
+        )
+        self.eviction_count += 1
+        if self.phase == "prefill":
+            self.prefill_decision = {
+                "phase": "pre_answer",
+                "budget_scope": "total_kv",
+                "budget_unit": "token_slots_per_kv_head",
+                "requested_budget": int(budget),
+                "units": decision_units,
+            }
+        self.eviction_step += 1
+
     def _attention_scores(self, layer_idx: int, seq_len: int, mode: str):
         import mlx.core as mx
 
@@ -3117,18 +3417,43 @@ class MLXCacheEvictor:
             self._record_head_scores(layer_idx, pruned)
         observe = self.attention_state.get("observe", {}).get(layer_idx)
         if observe:
-            self.attention_state["observe"][layer_idx] = [
-                mx.take(vec[:seq_len], keep, axis=0)
-                for vec in observe
-                if int(vec.shape[0]) >= seq_len
-            ]
+            aligned = []
+            for vec in observe:
+                current = vec[:seq_len]
+                if int(current.shape[0]) < seq_len:
+                    current = mx.concatenate(
+                        [
+                            current,
+                            mx.zeros(
+                                (seq_len - int(current.shape[0]),),
+                                dtype=current.dtype,
+                            ),
+                        ],
+                        axis=0,
+                    )
+                aligned.append(mx.take(current, keep, axis=0))
+            self.attention_state["observe"][layer_idx] = aligned
         observe_heads = self.attention_state.get("observe_heads", {}).get(layer_idx)
         if observe_heads:
-            self.attention_state["observe_heads"][layer_idx] = [
-                mx.take(vec[:, :seq_len], keep, axis=1)
-                for vec in observe_heads
-                if int(vec.shape[-1]) >= seq_len
-            ]
+            aligned_heads = []
+            for vec in observe_heads:
+                current = vec[:, :seq_len]
+                if int(current.shape[-1]) < seq_len:
+                    current = mx.concatenate(
+                        [
+                            current,
+                            mx.zeros(
+                                (
+                                    int(current.shape[0]),
+                                    seq_len - int(current.shape[-1]),
+                                ),
+                                dtype=current.dtype,
+                            ),
+                        ],
+                        axis=1,
+                    )
+                aligned_heads.append(mx.take(current, keep, axis=1))
+            self.attention_state["observe_heads"][layer_idx] = aligned_heads
 
     @staticmethod
     def _to_int_list(arr: Any) -> List[int]:
@@ -3261,7 +3586,11 @@ class MLXRunner(BaseRunner):
                         if self.cfg.analysis.evidence_recall
                         else ""
                     ),
-                    "case_study_markdown": write_case_study_markdown(out_dir),
+                    "case_study_markdown": (
+                        write_case_study_markdown(out_dir)
+                        if self.cfg.analysis.case_study
+                        else ""
+                    ),
                 }
                 save_results(figure_outputs, fig_dir / "figures_summary.json")
             except Exception as exc:
@@ -3368,6 +3697,7 @@ class MLXRunner(BaseRunner):
         self.attention_state[
             "temporal_attention_distributions_all_heads"
         ] = {}
+        self.attention_state["direct_policy_attention"] = {}
         self.attention_state["temporal_projected_attention_outputs"] = {}
         self.attention_state["temporal_projected_injections"] = {}
         self.attention_state["temporal_query_overrides"] = {}
@@ -3385,6 +3715,7 @@ class MLXRunner(BaseRunner):
         )
         self.attention_state["record_all_queries"] = False
         self.attention_state["temporal_record_query_head_window"] = False
+        self.attention_state["temporal_record_direct_policy"] = False
         self.attention_state["decay_gamma"] = float(getattr(self.cfg.eviction, "decay_gamma", 0.95))
         self.attention_state["enabled"] = False
         self.attention_state["phase"] = "idle"
@@ -3620,9 +3951,8 @@ class MLXRunner(BaseRunner):
                 temporal_layer = int(
                     getattr(self_attn, "_l1kv_layer_idx", -1)
                 )
-                record_temporal = bool(
+                selected_temporal_layer = bool(
                     temporal_state
-                    and temporal_state.get("temporal_record_diagnostics", False)
                     and temporal_layer
                     in set(
                         int(value)
@@ -3631,7 +3961,15 @@ class MLXRunner(BaseRunner):
                         )
                     )
                 )
-                if record_temporal:
+                record_temporal = bool(
+                    selected_temporal_layer
+                    and temporal_state.get("temporal_record_diagnostics", False)
+                )
+                record_direct_policy = bool(
+                    selected_temporal_layer
+                    and temporal_state.get("temporal_record_direct_policy", False)
+                )
+                if record_temporal or record_direct_policy:
                     selected_heads = [
                         int(value)
                         for value in temporal_state.get(
@@ -3650,6 +3988,11 @@ class MLXRunner(BaseRunner):
                     last_attention = mx.softmax(
                         last_logits, axis=-1, precise=True
                     )
+                    if record_direct_policy:
+                        temporal_state.setdefault("direct_policy_attention", {})[
+                            temporal_layer
+                        ] = last_attention[0, :, :]
+                if record_temporal:
                     temporal_state.setdefault("temporal_queries", {})[
                         temporal_layer
                     ] = queries_pre_rope[0, selected_heads, -1, :]
@@ -4017,6 +4360,9 @@ class MLXRunner(BaseRunner):
                 ),
                 "observation_window": int(self.cfg.eviction.observation_window),
                 "attention_window": int(self.cfg.eviction.attention_window),
+                "direct_policy_layers": list(
+                    self.cfg.eviction.direct_policy_layers or []
+                ),
                 "decay_gamma": float(self.attention_state.get("decay_gamma", 0.0)),
             },
             "geometry_score_source": self._geometry_score_source(method_key),
@@ -4226,6 +4572,10 @@ class MLXRunner(BaseRunner):
 
     @staticmethod
     def _attention_score_source(method_key: str) -> Optional[str]:
+        if method_key == "latest_attention_shared":
+            return "latest_query_attention_six_layer_normalized_shared_set"
+        if method_key == "temporal_volatility_shared":
+            return "four_query_attention_std_six_layer_normalized_shared_set"
         if method_key == "tova":
             return "latest_query_causal_attention_averaged_over_query_heads"
         if method_key in {"h2o", "vatp"}:
@@ -4259,6 +4609,12 @@ class MLXRunner(BaseRunner):
 
     @staticmethod
     def _geometry_score_source(method_key: str) -> Optional[str]:
+        if method_key == "token_rarity_shared":
+            return "observed_stream_local_span_token_rarity"
+        if method_key == "query_overlap_shared":
+            return "prompt_tail_overlap_inverse_stream_frequency"
+        if method_key == "position_coverage_shared":
+            return "deterministic_logical_position_coverage"
         if method_key == "knorm":
             return "negative_key_l2_norm"
         if method_key == "keydiff":
@@ -4347,6 +4703,7 @@ class MLXRunner(BaseRunner):
                 len(cache),
                 attention_state=self.attention_state,
                 oracle_positions=oracle_positions,
+                stream_token_ids=prompt_ids,
             )
 
         t_start = time.perf_counter()
@@ -4389,6 +4746,8 @@ class MLXRunner(BaseRunner):
                     eviction_time += time.perf_counter() - t0
             token = int(next_token.item())
             generated.append(token)
+            if evictor:
+                evictor.append_stream_token(token)
             kv_lens.append(self.cache_len(cache))
             kv_slot_pairs.append(self.cache_slot_pairs(cache))
             current = token
@@ -4534,6 +4893,7 @@ class MLXRunner(BaseRunner):
                 len(cache),
                 attention_state=self.attention_state,
                 oracle_positions=oracle_positions,
+                stream_token_ids=prompt_prefix,
             )
         t_start = time.perf_counter()
         prefill_time = self.prefill(prompt_prefix[:-1], cache, evictor, budget)
@@ -4565,6 +4925,8 @@ class MLXRunner(BaseRunner):
                     evictor.evict(cache, budget)
                     eviction_time += time.perf_counter() - t0
             current = target
+            if evictor:
+                evictor.append_stream_token(target)
         mean_nll = sum(nlls) / len(nlls) if nlls else None
         total_time = time.perf_counter() - t_start
         decode_loop_time = decode_time + eviction_time

@@ -99,6 +99,7 @@ def instantiate_benchmark(cfg: ExperimentConfig):
             "use_official_prompt": bench_cfg.use_official_prompt,
             "prompt_style": bench_cfg.prompt_style,
             "max_length": bench_cfg.longbench_max_length,
+            "official_sample_indices": bench_cfg.official_sample_indices,
         }
         return _construct_from_signature(LongBenchWrapper, values)
 
