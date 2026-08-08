@@ -1,0 +1,95 @@
+{
+  "candidate": "temporal_volatility_shared",
+  "experiment": "statekv_temporal_volatility_free_generation_p18",
+  "gates": {
+    "cache_budget_respected": {
+      "budget": 128,
+      "maximum_observed": 128,
+      "pass": true
+    },
+    "each_task_mean_official_score_nonworse": {
+      "by_workload": {
+        "gov_report": {
+          "baseline": 7.305499999999999,
+          "candidate": 7.950633333333333,
+          "delta": 0.6451333333333338,
+          "pass": true
+        },
+        "niah_single_1": {
+          "baseline": 100.0,
+          "candidate": 100.0,
+          "delta": 0.0,
+          "pass": true
+        }
+      },
+      "pass": true
+    },
+    "no_attention_hook_errors": {
+      "matched_methods_hook_errors": 0,
+      "pass": true,
+      "runner_errors": 0
+    },
+    "overall_end_to_end_decode_throughput_at_least_90_percent_of_baseline": {
+      "baseline_tokens_per_second": 36.15685181389437,
+      "candidate_tokens_per_second": 34.592992274884786,
+      "pass": true,
+      "ratio": 0.9567479063979618,
+      "threshold": 0.9
+    },
+    "overall_mean_teacher_forced_nll_nonworse": {
+      "baseline": 1.6831766764322917,
+      "candidate": 1.686920166015625,
+      "delta": 0.0037434895833332593,
+      "pass": false
+    },
+    "overall_peak_memory_no_more_than_105_percent_of_baseline": {
+      "baseline_max_bytes": 6595440176,
+      "candidate_max_bytes": 6596799896,
+      "pass": true,
+      "ratio": 1.0002061606145634,
+      "threshold": 1.05
+    }
+  },
+  "interpretation_scope": {
+    "excluded": [
+      "full_LongBench_official_result",
+      "cross_model_generalization",
+      "per_sample_superiority"
+    ],
+    "frozen_before_execution": true,
+    "govreport": "three 700-word project-workload samples",
+    "ruler": "three official 16K NIAH samples",
+    "statistical_note": "Six paired samples are a decision gate for the next experiment, not evidence of population-level superiority."
+  },
+  "matched_baseline": "latest_attention_shared",
+  "paired_secondary": {
+    "mean_answer_f1_delta": -0.001402503856637589,
+    "mean_nll_delta": 0.0037434895833333335,
+    "mean_official_score_delta": 0.3225666666666667,
+    "official_score_ties": 3,
+    "official_score_wins": 3,
+    "teacher_forced_nll_ties": 0,
+    "teacher_forced_nll_wins": 4,
+    "throughput_relative_delta": -0.04325209360203821
+  },
+  "primary_gate_pass": false,
+  "sample_count_per_method": 6,
+  "source_files": {
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/v1/config.yaml": "a6007355aafb2ffbb6c31f5650fe4b8b37393f05cd7dd0a314a52c2b0df8329b",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/v1/results.jsonl": "8cb783947a6452cff83ba00678f13f2b8a19097dbbcc80a75d3679de95473fb7",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/v1/summary.json": "258347ef0b569fba2c34df21061873f110c40c39447a87bd2dadbe1e7a5719f4",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/v1/config.yaml": "584414129716ce896879cc99f8f471def77c7d27e14299c1165c202586079ced",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/v1/results.jsonl": "2998434cfc7488ba44c30fb7e836dd3c88943d0404341aa76176b0f97b33247c",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/v1/summary.json": "8c889d334e17d16ea323ade2b9e3723977d0c2e75d953fa1d49493128dbd678b"
+  },
+  "status": "completed",
+  "upper_reference": "full",
+  "upper_reference_diagnostic_not_a_primary_gate": {
+    "candidate_max_peak_memory_bytes": 6596799896,
+    "candidate_mean_prefill_time_s": 13.835884749499996,
+    "candidate_to_reference_peak_memory_ratio": 3.1942189261673404,
+    "reference_max_peak_memory_bytes": 2065230984,
+    "reference_mean_prefill_time_s": 17.438545785166664,
+    "warning": "The matched comparison is fair, but current MLX attention capture has a large absolute 16K prefill memory footprint; the policy is not yet a low-memory deployment path."
+  }
+}

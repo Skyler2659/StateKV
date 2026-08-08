@@ -1,0 +1,97 @@
+{
+  "additional_model_replay_for_trigger_analysis": 0,
+  "alternative": "blend_attention_contribution_25_w4_shared",
+  "anchors": [
+    16,
+    32,
+    48
+  ],
+  "baseline": "attention_mean_w1_shared",
+  "candidate_algorithms_run_per_decision": 0,
+  "checks": {
+    "activated_win_rate": false,
+    "activation_rate_in_range": true,
+    "all_task_means_improve": false,
+    "maximum_exact_kl_nonworse": true,
+    "mean_exact_kl_improves": true,
+    "p95_exact_kl_improves": true,
+    "sample_anchor_nonworse_rate": true
+  },
+  "collection_elapsed_s": 64.714555042,
+  "confirmatory_evidence": false,
+  "experiment": "statekv_direct_policy_selective_trigger_independent_p12",
+  "feature_units": 36,
+  "gate": {
+    "maximum_activation_rate": 0.5,
+    "minimum_activated_win_rate": 0.6,
+    "minimum_activation_rate": 0.15,
+    "minimum_sample_anchor_nonworse_rate": 0.8,
+    "require_all_task_mean_improvement": true,
+    "require_overall_maximum_nonworse": true,
+    "require_overall_mean_improvement": true,
+    "require_overall_p95_improvement": true
+  },
+  "locked_rule": {
+    "direction": "high",
+    "feature": "score_tv",
+    "name": "selective_score_tv_high_0p2473483254",
+    "threshold": 0.24734832541706464
+  },
+  "metrics": {
+    "activated_mean_unit_reduction": 0.09844456488592031,
+    "activated_units": 6,
+    "activated_win_rate": 0.5,
+    "activation_rate": 0.16666666666666666,
+    "anchor_mean_improvement": {
+      "16": true,
+      "32": true,
+      "48": false
+    },
+    "baseline_maximum_exact_kl": 12.44139575958252,
+    "baseline_mean_exact_kl": 0.3576585639378961,
+    "baseline_p95_exact_kl": 1.9534813463687897,
+    "direction": "high",
+    "feature": "score_tv",
+    "maximum_activated_unit_harm": 0.013687315261492472,
+    "maximum_exact_kl": 12.44139575958252,
+    "mean_exact_kl": 0.3412511364569094,
+    "mean_exact_kl_reduction": 0.01640742748098667,
+    "p95_exact_kl": 1.7447261214256287,
+    "rule": "selective_score_tv_high_0p2473483254",
+    "sample_anchor_nonworse_rate": 0.9444444444444444,
+    "sample_anchor_strict_win_rate": 0.08333333333333333,
+    "sample_anchor_units": 36,
+    "sequence_strict_win_rate": 0.25,
+    "sequences": 12,
+    "steps": 576,
+    "task_mean_improvement": {
+      "gov_report": true,
+      "niah_single_1": false
+    },
+    "task_mean_reduction": {
+      "gov_report": 0.0328524996998496,
+      "niah_single_1": -3.764473787618017e-05
+    },
+    "threshold": 0.24734832541706464
+  },
+  "mode": "validate",
+  "passed": false,
+  "samples": [
+    "gov_report:30",
+    "gov_report:31",
+    "gov_report:32",
+    "gov_report:33",
+    "gov_report:34",
+    "gov_report:35",
+    "synthetic_niah_30",
+    "synthetic_niah_31",
+    "synthetic_niah_32",
+    "synthetic_niah_33",
+    "synthetic_niah_34",
+    "synthetic_niah_35"
+  ],
+  "scope": "Observable score features are recomputed from deterministic reference trajectories and matched to stored physical baseline/alternative replays. Conditional outcomes select one stored action per sample-anchor; no additional replay forward is used.",
+  "selection_hash_match_rate": 1.0,
+  "source_replay_run": "results/temporal_cache_discovery/statekv_direct_policy_shrinkage_independent_p9_v1",
+  "status": "locked_validation"
+}

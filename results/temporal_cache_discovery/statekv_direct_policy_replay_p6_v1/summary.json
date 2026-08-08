@@ -1,0 +1,71 @@
+{
+  "anchors": [
+    16
+  ],
+  "baseline": "attention_mean_w1_shared",
+  "baseline_values": {
+    "maximum_exact_kl": 1.6501590013504028,
+    "mean_delta_nll": 0.03680891770589767,
+    "mean_exact_kl": 0.04846453956009156,
+    "mean_exact_kl_reduction": 0.0,
+    "mean_forward_time_s": 0.04118864842187525,
+    "median_exact_kl": 0.0012868117191828787,
+    "p95_delta_nll": 0.17712833434343286,
+    "p95_exact_kl": 0.17927068844437577,
+    "policy": "attention_mean_w1_shared",
+    "sequence_win_rate_vs_baseline": 0.0,
+    "sequences": 8,
+    "step_win_rate_vs_baseline": 0.0,
+    "steps": 64
+  },
+  "candidate_algorithms_run_per_decision": 0,
+  "checks": {
+    "budget_respected": true,
+    "majority_sequence_win_rate": true,
+    "mean_exact_kl_improves": true,
+    "p95_exact_kl_improves": true
+  },
+  "collection_elapsed_s": 73.640301333,
+  "confirmatory_evidence": false,
+  "diagnostic_layers": [
+    0,
+    7,
+    14,
+    15,
+    21,
+    27
+  ],
+  "experiment": "statekv_direct_policy_physical_replay_p6",
+  "horizon": 8,
+  "passed": true,
+  "policies_evaluated_for_research": 5,
+  "primary": "contribution_mean_w4_shared",
+  "primary_values": {
+    "maximum_exact_kl": 0.16921132802963257,
+    "mean_delta_nll": 0.014160125330434425,
+    "mean_exact_kl": 0.0198563910401528,
+    "mean_exact_kl_reduction": 0.02860814851993876,
+    "mean_forward_time_s": 0.040045100234376074,
+    "median_exact_kl": 0.0013521817163564265,
+    "p95_delta_nll": 0.17928856164216972,
+    "p95_exact_kl": 0.15759949050843683,
+    "policy": "contribution_mean_w4_shared",
+    "sequence_win_rate_vs_baseline": 0.75,
+    "sequences": 8,
+    "step_win_rate_vs_baseline": 0.484375,
+    "steps": 64
+  },
+  "samples": [
+    "gov_report:14",
+    "gov_report:15",
+    "gov_report:16",
+    "gov_report:17",
+    "synthetic_niah_14",
+    "synthetic_niah_15",
+    "synthetic_niah_16",
+    "synthetic_niah_17"
+  ],
+  "scope": "One shared retained set is generated from past query/value scenarios and applied to all 28 layers. Evaluation is teacher-forced physical cache replay with full-vocabulary KL, not free generation or latency.",
+  "status": "held_out_teacher_forced_physical_replay_pilot",
+  "total_budget": 128
+}

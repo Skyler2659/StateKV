@@ -1,0 +1,89 @@
+{
+  "candidate": "token_rarity_shared",
+  "control_diagnostic": {
+    "full_max_peak_memory_bytes": 2065230984,
+    "full_overall_mean_nll": 1.5107421875,
+    "position_coverage_mean_throughput": 53.687901803440376,
+    "position_coverage_overall_mean_nll": 2.8043314615885415
+  },
+  "experiment": "statekv_token_rarity_independent_replication_p21",
+  "gates": {
+    "cache_budget_respected": {
+      "budget": 128,
+      "maximum_observed": 128,
+      "pass": true
+    },
+    "decode_throughput_nonworse_than_latest_attention": {
+      "baseline": 44.024414016775815,
+      "candidate": 55.11186176484461,
+      "pass": true,
+      "ratio": 1.2518477075888812
+    },
+    "each_task_mean_official_score_nonworse_than_latest_attention": {
+      "by_workload": {
+        "gov_report": {
+          "baseline": 8.918166666666666,
+          "candidate": 8.092966666666667,
+          "delta": -0.8251999999999988,
+          "pass": false
+        },
+        "niah_single_1": {
+          "baseline": 100.0,
+          "candidate": 100.0,
+          "delta": 0.0,
+          "pass": true
+        }
+      },
+      "pass": false
+    },
+    "maximum_peak_memory_lower_than_latest_attention": {
+      "baseline_bytes": 6592982576,
+      "candidate_bytes": 2065230984,
+      "pass": true,
+      "ratio": 0.3132468439273485
+    },
+    "overall_mean_teacher_forced_nll_nonworse_than_latest_attention": {
+      "baseline": 1.6849873860677083,
+      "candidate": 1.688323974609375,
+      "delta": 0.0033365885416667407,
+      "pass": false
+    },
+    "zero_attention_hook_errors": {
+      "matched_method_hook_errors": 0,
+      "pass": true,
+      "runner_errors": 0
+    }
+  },
+  "matched_low_cost_control": "position_coverage_shared",
+  "matched_strong_baseline": "latest_attention_shared",
+  "paired_secondary": {
+    "mean_nll_delta": 0.0033365885416666665,
+    "mean_official_score_delta": -0.41259999999999986,
+    "nll_ties": 1,
+    "nll_wins": 4,
+    "official_score_ties": 3,
+    "official_score_wins": 1
+  },
+  "primary_gate_pass": false,
+  "samples_per_method": 6,
+  "scope": {
+    "claims_excluded": [
+      "full_LongBench_official_result",
+      "cross_model_generalization",
+      "population_level_superiority",
+      "production_kernel_parity"
+    ],
+    "independent_samples": true,
+    "note": "Six paired samples test replication of the development signal; they do not establish population-level superiority."
+  },
+  "source_files": {
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p21a_v1/config.yaml": "4b193f84bef2febe5ef4fef364eabb0c592775bc8d4fc5f18f60b2bf544cad26",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p21a_v1/results.jsonl": "eec618ffcf95b6d995b92936e17f05c8ddc670b9ef3e18b84838f18a4ecd028b",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p21a_v1/summary.json": "1babef99897b7cd52a86c7b2c4a325f74488044adca7d53a0e799266e5699c9d",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p21b_v1/config.yaml": "46c3c69fb15dce4a85d658ee20db0bb9177d688d5676f8bfd1d913ca9d0aac36",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p21b_v1/results.jsonl": "a00f41ca5615c710a9f3924b9ae3b234842a393cc436b4a2eab621bc0d3ea261",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p21b_v1/summary.json": "3c8c350c18d62700f2aed39cb84fe2149c1de3a24a3455c830be63bf70172767"
+  },
+  "status": "completed_independent_replication",
+  "upper_reference": "full"
+}

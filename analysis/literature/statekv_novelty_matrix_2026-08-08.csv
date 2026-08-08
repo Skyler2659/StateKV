@@ -1,0 +1,19 @@
+id,title,year,status,closest_axis,collision_level,primary_url
+prem_2026,PReM: Learning What to Preserve and When to Refresh for Context Compression,2026,arxiv_preprint,preserve_and_refresh_framing,critical,https://arxiv.org/abs/2607.14327
+refreshkv_2025,RefreshKV: Updating Small KV Cache During Long-form Generation,2025,ACL_2025,attention_selection_plus_query_trigger,critical,https://aclanthology.org/2025.acl-long.1211/
+qevict_2026,QEvict: Recoverable Quantized KV Eviction for Attention-Drift-Robust Long-Context Decoding,2026,arxiv_preprint,dynamic_attention_recovery,critical,https://arxiv.org/abs/2608.05326
+criticalkv_2026,CriticalKV: Optimizing KV Cache Eviction from an Output Perturbation Perspective,2026,ICML_2026,output_perturbation_selection,critical,https://arxiv.org/abs/2502.03805
+restkv_2026,ReST-KV: Robust KV Cache Eviction with Layer-wise Output Reconstruction and Spatial-Temporal Smoothing,2026,ICLR_2026,output_reconstruction_and_temporal_smoothing,critical,https://openreview.net/forum?id=PhEHuo7oMm
+lava_2025,LAVa: Layer-wise KV Cache Eviction with Dynamic Budget Allocation,2025,Findings_EMNLP_2025,layer_output_loss_and_budget,high,https://aclanthology.org/2025.findings-emnlp.737/
+capkv_2026,Rethinking KV Cache Eviction via a Unified Information-Theoretic Objective,2026,arxiv_preprint,unified_information_objective,high,https://arxiv.org/abs/2604.25975
+risk_kv_2026,The risk of KV cache compression,2026,arxiv_preprint,risk_terminology_and_theory,critical,https://arxiv.org/abs/2607.01520
+minimal_intervention_2026,Minimal-Intervention KV Retention via Set-Conditioned Diversity,2026,arxiv_preprint,set_conditioned_selection,high,https://arxiv.org/abs/2605.14292
+polykv_2026,PolyKV: Heterogeneous Retention and Allocation for KV Cache Compression,2026,arxiv_preprint,method_router,critical,https://arxiv.org/abs/2606.15157
+dynamickv_2025,DynamicKV: Task-Aware Adaptive KV Cache Compression,2025,Findings_EMNLP_2025,task_router,critical,https://aclanthology.org/2025.findings-emnlp.426/
+taskkv_2025,Task-KV: Task-aware KV Cache Optimization via Semantic Differentiation of Attention Heads,2025,arxiv_preprint,task_aware_allocation,high,https://arxiv.org/abs/2501.15113
+memdecay_2026,MemDecay: Region-Aware KV Cache Eviction for Efficient LLM Agent Inference,2026,arxiv_preprint,metadata_and_attention_refresh,high,https://arxiv.org/abs/2607.10582
+confkv_2026,CONF-KV: Confidence-Aware KV Cache Eviction with Mixed-Precision Storage for Long-Horizon LLM,2026,arxiv_preprint,uncertainty_conditioned_budget,high,https://arxiv.org/abs/2605.24786
+expected_attention_2025,Expected Attention: KV Cache Compression by Estimating Attention from Future Queries Distribution,2025,arxiv_preprint,future_attention_proxy,high,https://arxiv.org/abs/2510.00636
+make_each_token_count_2026,Make Each Token Count: Towards Improving Long-Context Performance with KV Cache Eviction,2026,arxiv_preprint,learned_future_utility,medium,https://arxiv.org/abs/2605.09649
+pitfalls_2026,The Pitfalls of KV Cache Compression,2026,ACL_2026,evaluation_failures,requirement,https://aclanthology.org/2026.acl-long.1926/
+reskv_2026,ResKV: Reconstructing Omitted Attention Contributions for Fixed-Budget KV Cache Compression,2026,arxiv_preprint,residual_reconstruction_and_gate,high,https://arxiv.org/abs/2607.29591

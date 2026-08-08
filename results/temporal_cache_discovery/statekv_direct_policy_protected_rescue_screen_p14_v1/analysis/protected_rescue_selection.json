@@ -1,0 +1,22 @@
+{
+  "baseline": "attention_mean_w1_shared",
+  "confirmatory_evidence": false,
+  "decision": "No candidate satisfies every preregistered development constraint; keep the independent sample IDs untouched.",
+  "eligible_policies": [],
+  "independent_run_authorized": false,
+  "objective": "maximum_mean_exact_kl_reduction",
+  "required_development_checks": [
+    "mean_exact_kl_improves",
+    "p95_exact_kl_nonworse",
+    "cvar95_exact_kl_nonworse",
+    "maximum_exact_kl_nonworse",
+    "large_loss_rate_nonworse",
+    "all_task_means_improve"
+  ],
+  "selected_policy": null,
+  "status": "protected_rescue_development_selection",
+  "structural_checks": [
+    "action_radius_respected"
+  ],
+  "tie_break": "smaller_rescue_slot_count"
+}

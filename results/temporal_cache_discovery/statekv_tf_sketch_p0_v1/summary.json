@@ -1,0 +1,53 @@
+{
+  "calibration_best_sensitivity": {
+    "comparison": "recursive_vs_action",
+    "decay": 0.5,
+    "decision_units": 744,
+    "mean_normalized_regret_gain": -0.002355825967281756,
+    "mean_pairwise_accuracy_gain": -0.004470546984572228,
+    "mean_top1_accuracy_gain": 0.004032258064516129,
+    "median_spearman_gain": -0.005217391304347835,
+    "projection_dimension": 128,
+    "projection_seed": 42,
+    "sequences": 8,
+    "split": "calibration",
+    "task": "all"
+  },
+  "checks": {
+    "evaluation_gov_report_spearman_positive": false,
+    "evaluation_niah_single_1_spearman_positive": false,
+    "evaluation_pairwise_positive": false,
+    "evaluation_regret_positive": false,
+    "evaluation_spearman_positive": false,
+    "replication_gov_report_spearman_positive": false,
+    "replication_niah_single_1_spearman_positive": false,
+    "replication_pairwise_positive": false,
+    "replication_regret_positive": false,
+    "replication_spearman_positive": false
+  },
+  "experiment": "statekv_tf_fixed_decay_sketch_p0",
+  "method_scope": "fixed-decay recursive sketch over stored layer-27 direct action vectors; query-cosine decay and online direct-set execution are not tested",
+  "outcome": "history_sketch_not_stable_at_primary_configuration",
+  "passed": false,
+  "primary": {
+    "decay": 0.95,
+    "projection_dimension": 64,
+    "projection_seed": 42
+  },
+  "source_run": "results/temporal_cache_discovery/gauge_geometry_4bit_24seq_seed42_v1",
+  "status": "retrospective_real_model_analysis",
+  "values": {
+    "evaluation": {
+      "mean_normalized_regret_gain": -0.02281694946568742,
+      "mean_pairwise_accuracy_gain": -0.012413316191366678,
+      "mean_top1_accuracy_gain": -0.0228494623655914,
+      "median_spearman_gain": -0.01565217391304352
+    },
+    "replication": {
+      "mean_normalized_regret_gain": -0.013359333813552995,
+      "mean_pairwise_accuracy_gain": -0.01515992675705158,
+      "mean_top1_accuracy_gain": -0.024193548387096774,
+      "median_spearman_gain": -0.021739130434782573
+    }
+  }
+}

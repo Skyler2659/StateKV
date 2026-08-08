@@ -1,0 +1,141 @@
+{
+  "collection_elapsed_s": 135.149782,
+  "confirmatory_evidence": false,
+  "deployment_candidate_algorithms_run": 0,
+  "experiment": "statekv_risk_consistent_proxy_alignment_p22",
+  "fresh_selection_hashes_verified": true,
+  "gate": {
+    "eligible_proxies": [
+      "attention_mean_w1_shared"
+    ],
+    "gate_config": {
+      "maximum_mean_normalized_regret": 0.25,
+      "minimum_refresh_spearman": 0.2,
+      "minimum_task_median_action_spearman": 0.2
+    },
+    "passed": true,
+    "proxy_results": [
+      {
+        "checks": {
+          "all_task_action_spearman": true,
+          "both_tasks_refresh_nonharmful": true,
+          "overall_action_regret": true,
+          "overall_refresh_spearman": true
+        },
+        "overall_action_median_spearman": 0.7857142857142859,
+        "overall_mean_normalized_regret": 0.15184669242785193,
+        "overall_mean_teacher_refresh_benefit": 0.13874266838201846,
+        "overall_refresh_spearman": 0.3781331444075864,
+        "passed": true,
+        "proxy": "attention_mean_w1_shared"
+      },
+      {
+        "checks": {
+          "all_task_action_spearman": true,
+          "both_tasks_refresh_nonharmful": false,
+          "overall_action_regret": true,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": 0.8214285714285715,
+        "overall_mean_normalized_regret": 0.10793115863048756,
+        "overall_mean_teacher_refresh_benefit": 0.2016271837394513,
+        "overall_refresh_spearman": -0.15508686567868749,
+        "passed": false,
+        "proxy": "attention_head_peak_w4_shared"
+      },
+      {
+        "checks": {
+          "all_task_action_spearman": true,
+          "both_tasks_refresh_nonharmful": true,
+          "overall_action_regret": true,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": 0.8214285714285715,
+        "overall_mean_normalized_regret": 0.1103510377320529,
+        "overall_mean_teacher_refresh_benefit": 0.25316015158884425,
+        "overall_refresh_spearman": -0.19560113115092886,
+        "passed": false,
+        "proxy": "attention_temporal_volatility_w4_shared"
+      },
+      {
+        "checks": {
+          "all_task_action_spearman": false,
+          "both_tasks_refresh_nonharmful": false,
+          "overall_action_regret": false,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": 0.03571428571428572,
+        "overall_mean_normalized_regret": 0.42189239695570735,
+        "overall_mean_teacher_refresh_benefit": 0.039813278258492936,
+        "overall_refresh_spearman": -0.14201774778441606,
+        "passed": false,
+        "proxy": "key_diagonal_leverage_shared"
+      },
+      {
+        "checks": {
+          "all_task_action_spearman": false,
+          "both_tasks_refresh_nonharmful": false,
+          "overall_action_regret": false,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": -0.0892857142857143,
+        "overall_mean_normalized_regret": 0.39174207452068593,
+        "overall_mean_teacher_refresh_benefit": -0.004595262920938481,
+        "overall_refresh_spearman": -0.4399936357738044,
+        "passed": false,
+        "proxy": "value_diagonal_leverage_shared"
+      },
+      {
+        "checks": {
+          "all_task_action_spearman": false,
+          "both_tasks_refresh_nonharmful": false,
+          "overall_action_regret": false,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": -0.14285714285714288,
+        "overall_mean_normalized_regret": 0.535837344402046,
+        "overall_mean_teacher_refresh_benefit": -0.001525163386835023,
+        "overall_refresh_spearman": 0.10935771453487406,
+        "passed": false,
+        "proxy": "value_adjacent_change_shared"
+      },
+      {
+        "checks": {
+          "all_task_action_spearman": false,
+          "both_tasks_refresh_nonharmful": false,
+          "overall_action_regret": false,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": -0.19702760155977517,
+        "overall_mean_normalized_regret": 0.7063578020254759,
+        "overall_mean_teacher_refresh_benefit": -0.018070905956790284,
+        "overall_refresh_spearman": 0.025537348950269722,
+        "passed": false,
+        "proxy": "uniform_position_coverage_shared"
+      }
+    ],
+    "selected_proxy": "attention_mean_w1_shared"
+  },
+  "offline_candidate_panel_only": true,
+  "policies": [
+    "attention_mean_w1_shared",
+    "attention_head_peak_w4_shared",
+    "attention_temporal_volatility_w4_shared",
+    "key_diagonal_leverage_shared",
+    "value_diagonal_leverage_shared",
+    "value_adjacent_change_shared",
+    "uniform_position_coverage_shared"
+  ],
+  "samples": [
+    "gov_report:42",
+    "gov_report:43",
+    "gov_report:44",
+    "synthetic_niah_42",
+    "synthetic_niah_43",
+    "synthetic_niah_44"
+  ],
+  "scope": "Teacher-forced development audit on the reused P15 sample IDs. Cross-action labels come from the stored physical replay; stale actions are newly replayed at later anchors. This is not independent confirmation, free generation, or a deployment latency result.",
+  "selection_refresh_contract": "one additive retained-set proxy risk; selection minimizes it and refresh uses stale-action regret under the same proxy",
+  "source_run": "results/temporal_cache_discovery/statekv_direct_policy_signal_family_screen_p15_v1",
+  "status": "development_teacher_alignment_and_refresh_regret_audit"
+}

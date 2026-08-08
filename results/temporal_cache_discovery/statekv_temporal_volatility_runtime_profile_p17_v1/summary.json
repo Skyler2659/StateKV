@@ -1,0 +1,14 @@
+{
+  "bytes_per_context_token": 96.0,
+  "candidate_algorithms_run_per_decision": 0,
+  "diagnostic_layers": 6,
+  "experiment": "statekv_temporal_volatility_runtime_profile_p17",
+  "largest_refresh_median_ms": 2.8239795,
+  "largest_token_count": 32768,
+  "largest_update_per_decode_step_median_ms": 0.25107812500000004,
+  "query_heads": 12,
+  "scope": "CPU score arithmetic and persistent score state only; attention capture and end-to-end decode latency are excluded.",
+  "signal": "attention_temporal_volatility_w4_shared",
+  "status": "cpu_arithmetic_microbenchmark",
+  "window": 4
+}

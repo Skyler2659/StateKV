@@ -1,0 +1,119 @@
+{
+  "attention_capture_required": false,
+  "candidate_algorithms_run_per_deployment_decision": 0,
+  "candidates": {
+    "query_overlap_shared": {
+      "attention_hook_errors": 0,
+      "decode_throughput_tokens_per_second": 49.28601446916885,
+      "maximum_observed_cache": 128,
+      "nll_delta_vs_position": 0.2749176025390625,
+      "nll_delta_vs_random": 0.308197021484375,
+      "overall_mean_nll": 3.1773834228515625,
+      "peak_memory_bytes": 2065230984,
+      "peak_memory_ratio_vs_full": 1.0,
+      "quality_by_workload": {
+        "gov_report": {
+          "candidate": 9.845849999999999,
+          "delta_vs_position": 0.8032499999999985,
+          "delta_vs_random": 0.2461999999999982,
+          "position_control": 9.0426,
+          "random_control": 9.59965
+        },
+        "niah_single_1": {
+          "candidate": 0.0,
+          "delta_vs_position": 0.0,
+          "delta_vs_random": 0.0,
+          "position_control": 0.0,
+          "random_control": 0.0
+        }
+      },
+      "ruler_needles_recovered": 0,
+      "system_checks": {
+        "cache_budget_respected": true,
+        "peak_memory_no_more_than_105_percent_of_full": true,
+        "throughput_at_least_90_percent_of_position_control": true,
+        "zero_attention_hook_and_runner_errors": true
+      },
+      "system_eligible": true,
+      "throughput_ratio_vs_position": 1.1202823039902805
+    },
+    "token_rarity_shared": {
+      "attention_hook_errors": 0,
+      "decode_throughput_tokens_per_second": 45.37787896751249,
+      "maximum_observed_cache": 128,
+      "nll_delta_vs_position": -1.04949951171875,
+      "nll_delta_vs_random": -1.0162200927734375,
+      "overall_mean_nll": 1.85296630859375,
+      "peak_memory_bytes": 2065230984,
+      "peak_memory_ratio_vs_full": 1.0,
+      "quality_by_workload": {
+        "gov_report": {
+          "candidate": 10.87915,
+          "delta_vs_position": 1.836549999999999,
+          "delta_vs_random": 1.2794999999999987,
+          "position_control": 9.0426,
+          "random_control": 9.59965
+        },
+        "niah_single_1": {
+          "candidate": 100.0,
+          "delta_vs_position": 100.0,
+          "delta_vs_random": 100.0,
+          "position_control": 0.0,
+          "random_control": 0.0
+        }
+      },
+      "ruler_needles_recovered": 2,
+      "system_checks": {
+        "cache_budget_respected": true,
+        "peak_memory_no_more_than_105_percent_of_full": true,
+        "throughput_at_least_90_percent_of_position_control": true,
+        "zero_attention_hook_and_runner_errors": true
+      },
+      "system_eligible": true,
+      "throughput_ratio_vs_position": 1.0314494963214718
+    }
+  },
+  "controls": {
+    "position_coverage_shared": {
+      "decode_throughput_tokens_per_second": 43.994280989371454,
+      "maximum_peak_memory_bytes": 2065230984,
+      "overall_mean_nll": 2.9024658203125
+    },
+    "sink_recent_random": {
+      "decode_throughput_tokens_per_second": 32.87546988471825,
+      "maximum_peak_memory_bytes": 2065230984,
+      "overall_mean_nll": 2.8691864013671875
+    }
+  },
+  "experiment": "statekv_static_lexical_screen_p20",
+  "position_control": "position_coverage_shared",
+  "random_control": "sink_recent_random",
+  "runner_errors": 0,
+  "samples_per_method": 4,
+  "scope": {
+    "claims_excluded": [
+      "confirmatory_superiority",
+      "full_LongBench_official_result",
+      "cross_model_generalization",
+      "production_kernel_parity"
+    ],
+    "development_only": true,
+    "note": "Four samples per method support route triage only, not a population-level superiority claim."
+  },
+  "screen_passed": true,
+  "selected_for_independent_replication": "token_rarity_shared",
+  "source_files": {
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p20a_v1/config.yaml": "8456206ca0d769cd19f04441a3702bbd58617fd9d3088dab0a3a1b99f820df74",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p20a_v1/results.jsonl": "61a59a6393e87c3fc234848eceb95c836964e37707cc88e7f69a3d724ba67cf6",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p20a_v1/summary.json": "f26ca1f75ea53dc3f1ffda53d247745ffa48315c126568e3b875a2dbd35d710b",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p20b_v1/config.yaml": "449e7da3201fb0fa67953df24d418c500e655e1a19ad9832511c738c616f90da",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p20b_v1/results.jsonl": "d7b7c7f24d2e4f4e318cf46e9c0f669530c583120c2772d16a6df6607b5d0e30",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p20b_v1/summary.json": "fca6f0910ab02b87c88faf3e67db18cfce6ca64134a0ae8cfe3be23151ce9554"
+  },
+  "status": "completed_development_screen",
+  "upper_reference": "full",
+  "upper_reference_values": {
+    "maximum_peak_memory_bytes": 2065230984,
+    "overall_mean_nll": 1.6754608154296875
+  }
+}

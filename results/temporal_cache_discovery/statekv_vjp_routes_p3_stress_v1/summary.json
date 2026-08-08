@@ -1,0 +1,330 @@
+{
+  "anchors": [
+    16
+  ],
+  "baseline": "hidden_l2_action",
+  "candidate_count": 8,
+  "checks": {
+    "adjoint_identity": true,
+    "mean_normalized_regret_gain_positive": false,
+    "mean_pairwise_accuracy_gain_positive": false,
+    "median_spearman_gain_positive": false
+  },
+  "collection_elapsed_s": 57.789709583000004,
+  "collection_reverse_passes": 1572,
+  "collection_tail_forward_evaluations": 56,
+  "confirmatory_evidence": false,
+  "deployment_costs": [
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_gaussian_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_rademacher_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 32,
+      "route": "margin_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_gaussian_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_rademacher_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 16,
+      "route": "margin_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 8,
+      "route": "fisher_gaussian_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 8,
+      "route": "fisher_rademacher_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 8,
+      "route": "margin_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 4,
+      "route": "fisher_gaussian_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 4,
+      "route": "fisher_rademacher_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 4,
+      "route": "margin_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 8.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 64,
+      "route": "fisher_gaussian_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 8.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 64,
+      "route": "fisher_rademacher_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 8.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 64,
+      "route": "margin_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_gaussian_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_rademacher_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 32,
+      "route": "margin_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_gaussian_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_rademacher_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 16,
+      "route": "margin_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 8,
+      "route": "fisher_gaussian_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 8,
+      "route": "fisher_rademacher_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 8,
+      "route": "margin_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 16.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 128,
+      "route": "fisher_gaussian_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 16.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 128,
+      "route": "fisher_rademacher_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 16.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 128,
+      "route": "margin_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 8.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 64,
+      "route": "fisher_gaussian_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 8.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 64,
+      "route": "fisher_rademacher_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 8.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 64,
+      "route": "margin_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_gaussian_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_rademacher_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 32,
+      "route": "margin_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_gaussian_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_rademacher_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 16,
+      "route": "margin_vjp",
+      "width": 16
+    }
+  ],
+  "experiment": "statekv_vjp_routes_p3_stress",
+  "horizon": 8,
+  "maximum_adjoint_relative_error": 0.00045411590935556865,
+  "outcome": "shared_vjp_not_yet_a_low_cost_controller_metric",
+  "passed": false,
+  "primary": {
+    "method": "fisher_gaussian_vjp_action",
+    "refresh_interval": 4,
+    "width": 16
+  },
+  "samples": [
+    "gov_report:12",
+    "gov_report:13",
+    "synthetic_niah_12",
+    "synthetic_niah_13"
+  ],
+  "scope": "Final-boundary layer-27 VJPs on development sequences. Reverse passes are shared across candidates; this tests ranking, not candidate generation or end-to-end latency.",
+  "status": "bounded_model_backed_development_pilot",
+  "values": {
+    "mean_normalized_regret_gain": -0.06375946903622011,
+    "mean_pairwise_accuracy_gain": -0.015306122448979605,
+    "median_spearman_gain": 0.0
+  }
+}

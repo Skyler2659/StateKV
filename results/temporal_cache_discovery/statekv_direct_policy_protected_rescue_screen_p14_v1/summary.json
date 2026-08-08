@@ -1,0 +1,111 @@
+{
+  "action_radius_values": {
+    "configured_rescue_slots": 8,
+    "maximum_core_changes_vs_attention": 8
+  },
+  "anchors": [
+    16,
+    32,
+    48
+  ],
+  "baseline": "attention_mean_w1_shared",
+  "baseline_values": {
+    "cvar95_exact_kl": 3.2220807234446207,
+    "large_loss_rate": 0.08680555555555555,
+    "maximum_exact_kl": 5.795332431793213,
+    "mean_delta_nll": 0.2538431377709658,
+    "mean_exact_kl": 0.29580387782629275,
+    "mean_exact_kl_reduction": 0.0,
+    "mean_forward_time_s": 0.040452346399305734,
+    "median_exact_kl": 0.01997216511517763,
+    "p95_delta_nll": 2.115737399086354,
+    "p95_exact_kl": 1.8774003207683556,
+    "policy": "attention_mean_w1_shared",
+    "sequence_win_rate_vs_baseline": 0.0,
+    "sequences": 6,
+    "step_win_rate_vs_baseline": 0.0,
+    "steps": 288
+  },
+  "candidate_algorithms_run_per_decision": 0,
+  "checks": {
+    "budget_respected": true
+  },
+  "collection_elapsed_s": 99.084091291,
+  "confirmatory_evidence": false,
+  "data_seed": 20260726,
+  "diagnostic_layers": [
+    0,
+    7,
+    14,
+    15,
+    21,
+    27
+  ],
+  "experiment": "statekv_direct_policy_protected_rescue_screen_p14",
+  "gate_config": {
+    "minimum_anchor_mean_wins": 2
+  },
+  "gate_mode": "development_screen",
+  "horizon": 16,
+  "paired_tail_values": {
+    "baseline_tail_mean_exact_kl": 3.2220807234446207,
+    "baseline_tail_threshold": 1.8774003207683556,
+    "paired_baseline_tail_mean_reduction": 0.13128066683808962,
+    "primary_on_baseline_tail_mean_exact_kl": 3.0908000566065312,
+    "quantile": 0.95,
+    "steps": 15
+  },
+  "passed": true,
+  "policies": [
+    "attention_mean_w1_shared",
+    "protected_attention_rescue_m4_shared",
+    "protected_attention_rescue_m8_shared",
+    "protected_attention_rescue_m16_shared"
+  ],
+  "policies_evaluated_for_research": 4,
+  "primary": "protected_attention_rescue_m8_shared",
+  "primary_values": {
+    "cvar95_exact_kl": 3.2311749617258707,
+    "large_loss_rate": 0.09027777777777778,
+    "maximum_exact_kl": 6.314531326293945,
+    "mean_delta_nll": 0.26032093769147635,
+    "mean_exact_kl": 0.29366591671996867,
+    "mean_exact_kl_reduction": 0.00213796110632407,
+    "mean_forward_time_s": 0.04054268023263905,
+    "median_exact_kl": 0.017734148539602757,
+    "p95_delta_nll": 2.0572526037692986,
+    "p95_exact_kl": 1.608774191141126,
+    "policy": "protected_attention_rescue_m8_shared",
+    "sequence_win_rate_vs_baseline": 0.5,
+    "sequences": 6,
+    "step_win_rate_vs_baseline": 0.4722222222222222,
+    "steps": 288
+  },
+  "runtime_run_id": "independent_fisher_4bit_24newseq_seed20260726_v1",
+  "samples": [
+    "gov_report:18",
+    "gov_report:19",
+    "gov_report:20",
+    "synthetic_niah_18",
+    "synthetic_niah_19",
+    "synthetic_niah_20"
+  ],
+  "scope": "One shared retained set is generated from past query/value scenarios and applied to all 28 layers. Evaluation is teacher-forced physical cache replay with full-vocabulary KL, not free generation or latency.",
+  "status": "held_out_teacher_forced_physical_replay_pilot",
+  "stratified_values": {
+    "anchor_mean_improvement": {
+      "16": false,
+      "32": true,
+      "48": false
+    },
+    "anchor_mean_wins": 1,
+    "sample_anchor_nonworse_rate": 0.3888888888888889,
+    "sample_anchor_win_rate": 0.3888888888888889,
+    "task_mean_improvement": {
+      "gov_report": true,
+      "niah_single_1": true
+    }
+  },
+  "task_overrides": null,
+  "total_budget": 128
+}

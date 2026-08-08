@@ -1,0 +1,51 @@
+{
+  "baseline": "attention_mean_w1_shared",
+  "confirmatory_evidence": false,
+  "decision": "Freeze attention_temporal_volatility_w4_shared before evaluating the independent sample IDs.",
+  "development_sample_ids": [
+    "gov_report:42",
+    "gov_report:43",
+    "gov_report:44",
+    "synthetic_niah_42",
+    "synthetic_niah_43",
+    "synthetic_niah_44"
+  ],
+  "eligible_policies": [
+    "attention_temporal_volatility_w4_shared"
+  ],
+  "independent_run_authorized": true,
+  "objective": "maximum_mean_exact_kl_reduction",
+  "required_development_checks": [
+    "mean_exact_kl_improves",
+    "p95_exact_kl_nonworse",
+    "cvar95_exact_kl_nonworse",
+    "maximum_exact_kl_nonworse",
+    "large_loss_rate_nonworse",
+    "all_task_means_improve"
+  ],
+  "reserved_independent_sample_ids": [
+    "gov_report:45",
+    "gov_report:46",
+    "gov_report:47",
+    "gov_report:48",
+    "gov_report:49",
+    "gov_report:50",
+    "synthetic_niah_45",
+    "synthetic_niah_46",
+    "synthetic_niah_47",
+    "synthetic_niah_48",
+    "synthetic_niah_49",
+    "synthetic_niah_50"
+  ],
+  "selected_policy": "attention_temporal_volatility_w4_shared",
+  "signal_families": {
+    "attention_head_peak_w4_shared": "rare_head_recent_access",
+    "attention_temporal_volatility_w4_shared": "temporal_access_dynamics",
+    "key_diagonal_leverage_shared": "key_geometry",
+    "uniform_position_coverage_shared": "position_only_coverage",
+    "value_adjacent_change_shared": "representation_boundary",
+    "value_diagonal_leverage_shared": "value_geometry"
+  },
+  "status": "direct_policy_development_selection",
+  "tie_break": "policy_name_for_exact_numeric_ties"
+}

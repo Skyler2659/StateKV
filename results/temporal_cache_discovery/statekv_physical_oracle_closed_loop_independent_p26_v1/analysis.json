@@ -1,0 +1,81 @@
+{
+  "closed_loop_mechanics_passed": true,
+  "dense_alignment": [
+    {
+      "decision_units": 16,
+      "finite_spearman_units": 16,
+      "mean_spearman": 0.6959657190635451,
+      "median_spearman": 0.7976588628762542,
+      "strategy": "dense_quadratic_h1",
+      "top1_agreement": 0.5
+    },
+    {
+      "decision_units": 16,
+      "finite_spearman_units": 16,
+      "mean_spearman": 0.8202341137123745,
+      "median_spearman": 0.9565217391304348,
+      "strategy": "dense_quadratic_mean",
+      "top1_agreement": 0.9375
+    }
+  ],
+  "post_initial_refresh_events": 21,
+  "recovery_events": 21,
+  "strategy_aggregates": [
+    {
+      "control_cycles": 16,
+      "harmful_exact_mean_cycles": 2,
+      "maximum_active_cache_tokens": 128,
+      "mean_exact_kl_improvement": 0.036450945520904554,
+      "mean_selected_exact_kl": 0.36438423364745076,
+      "mean_stale_exact_kl": 0.4008351791683553,
+      "minimum_unique_candidate_cores": 4,
+      "post_initial_refresh_events": 6,
+      "recovery_events": 6,
+      "refresh_events": 7,
+      "sample_loops": 4,
+      "strategy": "dense_quadratic_h1"
+    },
+    {
+      "control_cycles": 16,
+      "harmful_exact_mean_cycles": 1,
+      "maximum_active_cache_tokens": 128,
+      "mean_exact_kl_improvement": 0.06892715846768438,
+      "mean_selected_exact_kl": 0.32811599429220906,
+      "mean_stale_exact_kl": 0.39704315275989344,
+      "minimum_unique_candidate_cores": 4,
+      "post_initial_refresh_events": 6,
+      "recovery_events": 6,
+      "refresh_events": 9,
+      "sample_loops": 4,
+      "strategy": "dense_quadratic_mean"
+    },
+    {
+      "control_cycles": 16,
+      "harmful_exact_mean_cycles": 1,
+      "maximum_active_cache_tokens": 128,
+      "mean_exact_kl_improvement": 0.054855571247824586,
+      "mean_selected_exact_kl": 0.3359323772224957,
+      "mean_stale_exact_kl": 0.3907879484703203,
+      "minimum_unique_candidate_cores": 4,
+      "post_initial_refresh_events": 5,
+      "recovery_events": 5,
+      "refresh_events": 8,
+      "sample_loops": 4,
+      "strategy": "exact_max"
+    },
+    {
+      "control_cycles": 16,
+      "harmful_exact_mean_cycles": 0,
+      "maximum_active_cache_tokens": 128,
+      "mean_exact_kl_improvement": 0.042447687695383096,
+      "mean_selected_exact_kl": 0.32261419523724044,
+      "mean_stale_exact_kl": 0.36506188293262354,
+      "minimum_unique_candidate_cores": 4,
+      "post_initial_refresh_events": 4,
+      "recovery_events": 4,
+      "refresh_events": 7,
+      "sample_loops": 4,
+      "strategy": "exact_mean"
+    }
+  ]
+}

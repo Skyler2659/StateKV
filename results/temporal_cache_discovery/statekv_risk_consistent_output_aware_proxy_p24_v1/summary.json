@@ -1,0 +1,78 @@
+{
+  "alignment_proxies": [
+    "attention_mean_w1_shared",
+    "contribution_mean_w4_shared"
+  ],
+  "collection_elapsed_s": 109.5259745,
+  "confirmatory_evidence": false,
+  "deployment_candidate_algorithms_run": 0,
+  "experiment": "statekv_risk_consistent_output_aware_proxy_p24",
+  "fresh_selection_hashes_verified": true,
+  "gate": {
+    "eligible_proxies": [],
+    "gate_config": {
+      "maximum_mean_normalized_regret": 0.25,
+      "minimum_refresh_spearman": 0.2,
+      "minimum_task_median_action_spearman": 0.2
+    },
+    "passed": false,
+    "proxy_results": [
+      {
+        "checks": {
+          "all_task_action_spearman": false,
+          "both_tasks_refresh_nonharmful": true,
+          "overall_action_regret": false,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": -0.9999999999999999,
+        "overall_mean_normalized_regret": 0.5277777777777778,
+        "overall_mean_teacher_refresh_benefit": 0.4339694310158442,
+        "overall_refresh_spearman": 0.16019554594943283,
+        "passed": false,
+        "proxy": "attention_mean_w1_shared"
+      },
+      {
+        "checks": {
+          "all_task_action_spearman": false,
+          "both_tasks_refresh_nonharmful": true,
+          "overall_action_regret": false,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": 0.9999999999999999,
+        "overall_mean_normalized_regret": 0.4722222222222222,
+        "overall_mean_teacher_refresh_benefit": 0.41561904789379445,
+        "overall_refresh_spearman": 0.010643500680030114,
+        "passed": false,
+        "proxy": "contribution_mean_w4_shared"
+      }
+    ],
+    "selected_proxy": null
+  },
+  "offline_candidate_panel_only": true,
+  "policies": [
+    "attention_mean_w1_shared",
+    "contribution_mean_w4_shared"
+  ],
+  "refresh_proxies": [
+    "attention_mean_w1_shared",
+    "contribution_mean_w4_shared"
+  ],
+  "samples": [
+    "gov_report:24",
+    "gov_report:25",
+    "gov_report:26",
+    "gov_report:27",
+    "gov_report:28",
+    "gov_report:29",
+    "synthetic_niah_24",
+    "synthetic_niah_25",
+    "synthetic_niah_26",
+    "synthetic_niah_27",
+    "synthetic_niah_28",
+    "synthetic_niah_29"
+  ],
+  "scope": "Teacher-forced development audit on the already-used P7 sequences. It asks whether a value-aware attention-contribution cost is a better unified proxy than latest attention. It is exploratory reuse, not independent confirmation, free generation, or a deployment latency result.",
+  "selection_refresh_contract": "one additive retained-set proxy risk; selection minimizes it and refresh uses stale-action regret under the same proxy",
+  "source_run": "results/temporal_cache_discovery/statekv_direct_policy_independent_multianchor_p7_v1",
+  "status": "retrospective-development-output-aware-proxy-audit"
+}

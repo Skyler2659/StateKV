@@ -1,0 +1,119 @@
+{
+  "anchors": [
+    16
+  ],
+  "baseline": "layer27_hidden_l2",
+  "candidate_count": 8,
+  "checks": {
+    "action_reconstruction": true,
+    "adjoint_identity": true,
+    "mean_normalized_regret_gain_positive": false,
+    "mean_pairwise_accuracy_gain_positive": false,
+    "median_spearman_gain_positive": false
+  },
+  "collection_elapsed_s": 52.062528166,
+  "collection_reverse_passes": 780,
+  "confirmatory_evidence": false,
+  "deployment_costs": [
+    {
+      "amortized_reverse_passes_per_token": 6.0,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 48,
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.5,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 12,
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.75,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 6,
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 12.0,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 96,
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 3.0,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 24,
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.5,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 12,
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 24.0,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 192,
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 6.0,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 48,
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 3.0,
+      "boundaries": 3,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 24,
+      "width": 8
+    }
+  ],
+  "experiment": "statekv_post_multiboundary_vjp_p5",
+  "horizon": 8,
+  "layers": [
+    0,
+    14,
+    27
+  ],
+  "maximum_action_reconstruction_relative_error": 0.0007168326477057172,
+  "maximum_adjoint_relative_error": 0.007133870514928097,
+  "passed": false,
+  "primary": {
+    "method": "post_multiboundary_vjp_sum",
+    "refresh_interval": 4,
+    "width": 8
+  },
+  "samples": [
+    "gov_report:12",
+    "gov_report:13",
+    "synthetic_niah_12",
+    "synthetic_niah_13"
+  ],
+  "scope": "Post-attention boundaries at layers 0, 14, and 27; candidate actions are reconstructed from fixed core masks and full-reference local attention. This remains a candidate-ranking development pilot.",
+  "status": "bounded_model_backed_development_pilot",
+  "values": {
+    "mean_normalized_regret_gain": -0.06685381763746115,
+    "mean_pairwise_accuracy_gain": -0.0586734693877551,
+    "median_spearman_gain": -0.08333333333333334
+  }
+}

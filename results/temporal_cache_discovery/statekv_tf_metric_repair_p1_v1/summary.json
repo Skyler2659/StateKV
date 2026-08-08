@@ -1,0 +1,57 @@
+{
+  "baseline": "raw_action",
+  "block_scales": [
+    0.992990291680471,
+    1.0045808655412207,
+    1.031100335335667,
+    1.1330204518021567,
+    0.9380447049015154,
+    0.9914164028586846,
+    0.8662689742923502,
+    0.958121144393603,
+    1.096319864568227,
+    1.1221176897739689,
+    0.902780229594793,
+    0.9222550655762503
+  ],
+  "calibration_action_rows": 9216,
+  "checks": {
+    "evaluation_mean_normalized_regret_gain_positive": false,
+    "evaluation_mean_pairwise_accuracy_gain_positive": true,
+    "evaluation_median_spearman_gain_positive": true,
+    "replication_mean_normalized_regret_gain_positive": true,
+    "replication_mean_pairwise_accuracy_gain_positive": true,
+    "replication_median_spearman_gain_positive": true
+  },
+  "confirmatory_evidence": false,
+  "diagonal_scale_max": 1.9851469622219349,
+  "diagonal_scale_min": 0.12927405173473847,
+  "experiment": "statekv_tf_metric_repair_p1",
+  "outcome": "freeze_metric_repair_without_model_probes",
+  "passed": false,
+  "primary": {
+    "method": "diagonal_rms_ema",
+    "projection_dimension": 64,
+    "projection_seed": 42
+  },
+  "scope": {
+    "block_rms": "contiguous layer-27 residual-coordinate blocks; not attention heads",
+    "diagonal_rms": "unlabeled calibration action second moments",
+    "output_fisher_oracle": "stored candidate-specific midpoint Fisher; diagnostic only"
+  },
+  "selection_disclosure": "Variants were inspected during development; evaluation and replication labels are descriptive partitions, not untouched confirmatory sets.",
+  "source_run": "results/temporal_cache_discovery/independent_fisher_4bit_24newseq_seed20260726_v1",
+  "status": "retrospective_development_screen",
+  "values": {
+    "evaluation": {
+      "mean_normalized_regret_gain": -0.006326266025372563,
+      "mean_pairwise_accuracy_gain": 0.005696457326892109,
+      "median_spearman_gain": 0.009565217391304314
+    },
+    "replication": {
+      "mean_normalized_regret_gain": 0.011331734482535423,
+      "mean_pairwise_accuracy_gain": 0.007347020933977453,
+      "median_spearman_gain": 0.012173913043478257
+    }
+  }
+}

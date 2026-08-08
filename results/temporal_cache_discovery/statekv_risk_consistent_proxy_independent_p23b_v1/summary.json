@@ -1,0 +1,61 @@
+{
+  "alignment_proxies": [
+    "attention_mean_w1_shared"
+  ],
+  "collection_elapsed_s": 74.431678334,
+  "confirmatory_evidence": false,
+  "deployment_candidate_algorithms_run": 0,
+  "experiment": "statekv_risk_consistent_proxy_independent_p23b",
+  "fresh_selection_hashes_verified": true,
+  "gate": {
+    "eligible_proxies": [],
+    "gate_config": {
+      "maximum_mean_normalized_regret": 0.25,
+      "minimum_refresh_spearman": 0.2,
+      "minimum_task_median_action_spearman": 0.2
+    },
+    "passed": false,
+    "proxy_results": [
+      {
+        "checks": {
+          "all_task_action_spearman": true,
+          "both_tasks_refresh_nonharmful": true,
+          "overall_action_regret": true,
+          "overall_refresh_spearman": false
+        },
+        "overall_action_median_spearman": 0.7500000000000002,
+        "overall_mean_normalized_regret": 0.11847352116777651,
+        "overall_mean_teacher_refresh_benefit": 0.1292404656087589,
+        "overall_refresh_spearman": -0.35025235956647394,
+        "passed": false,
+        "proxy": "attention_mean_w1_shared"
+      }
+    ],
+    "selected_proxy": null
+  },
+  "offline_candidate_panel_only": true,
+  "policies": [
+    "attention_mean_w1_shared",
+    "attention_head_peak_w4_shared",
+    "attention_temporal_volatility_w4_shared",
+    "key_diagonal_leverage_shared",
+    "value_diagonal_leverage_shared",
+    "value_adjacent_change_shared",
+    "uniform_position_coverage_shared"
+  ],
+  "refresh_proxies": [
+    "attention_mean_w1_shared"
+  ],
+  "samples": [
+    "gov_report:61",
+    "gov_report:62",
+    "gov_report:63",
+    "synthetic_niah_61",
+    "synthetic_niah_62",
+    "synthetic_niah_63"
+  ],
+  "scope": "Frozen-proxy audit on six previously untouched sequences. Cross-action labels come from a new physical replay and stale actions are newly replayed at later anchors. This is independent evidence for the scoped proxy gate, not free generation, cross-model confirmation, or a deployment latency result.",
+  "selection_refresh_contract": "one additive retained-set proxy risk; selection minimizes it and refresh uses stale-action regret under the same proxy",
+  "source_run": "results/temporal_cache_discovery/statekv_risk_consistent_proxy_independent_source_p23a_v1",
+  "status": "independent-new-sequence-frozen-proxy-audit"
+}

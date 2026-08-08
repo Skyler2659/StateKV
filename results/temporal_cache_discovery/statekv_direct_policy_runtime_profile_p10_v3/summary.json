@@ -1,0 +1,128 @@
+{
+  "amortized_by_refresh_interval": {
+    "16": {
+      "always_rolling_ms_per_decode_step": 5.135279328125,
+      "on_demand_batch_ms_per_decode_step": 1.2718489531250001,
+      "scheduled_fraction_of_forward_time": 0.05178247552588072,
+      "scheduled_last_window_rolling_ms_per_decode_step": 1.2993965
+    },
+    "32": {
+      "always_rolling_ms_per_decode_step": 5.1248948828125,
+      "on_demand_batch_ms_per_decode_step": 0.6359244765625001,
+      "scheduled_fraction_of_forward_time": 0.02589123776294036,
+      "scheduled_last_window_rolling_ms_per_decode_step": 0.64969825
+    },
+    "4": {
+      "always_rolling_ms_per_decode_step": 5.197586,
+      "on_demand_batch_ms_per_decode_step": 5.0873958125000005,
+      "scheduled_fraction_of_forward_time": 0.2071299021035229,
+      "scheduled_last_window_rolling_ms_per_decode_step": 5.197586
+    },
+    "8": {
+      "always_rolling_ms_per_decode_step": 5.15604821875,
+      "on_demand_batch_ms_per_decode_step": 2.5436979062500003,
+      "scheduled_fraction_of_forward_time": 0.10356495105176144,
+      "scheduled_last_window_rolling_ms_per_decode_step": 2.598793
+    }
+  },
+  "anchors": [
+    16,
+    32,
+    48
+  ],
+  "candidate_algorithms_run_per_decision": 0,
+  "collection_elapsed_s": 38.085365833000004,
+  "comparison_mean_forward_time_s": 0.025093363861111,
+  "compressed_decode_capture": {
+    "compressed": {
+      "current_research_diagnostics_median_forward_ms": 38.190166500000004,
+      "maximum_logit_absolute_difference": 0.0,
+      "minimal_cpu_one_query_contribution_median_ms": 0.8887290000000001,
+      "minimal_cpu_transfer_median_ms": 0.43087549999999997,
+      "minimal_direct_capture_median_forward_ms": 19.1982915,
+      "minimal_direct_capture_overhead_fraction": 0.016429100222951243,
+      "minimal_direct_capture_overhead_ms": 0.31031249999999844,
+      "minimal_vs_research_forward_time_reduction_fraction": 0.49729751767382324,
+      "no_capture_median_forward_ms": 18.887979,
+      "scheduled_last_window_cpu_fallback": {
+        "4": {
+          "cpu_fallback_ms_per_decode_step": 1.7129925625,
+          "fraction_of_no_capture_forward": 0.09069221024123332
+        },
+        "8": {
+          "cpu_fallback_ms_per_decode_step": 0.85649628125,
+          "fraction_of_no_capture_forward": 0.04534610512061666
+        },
+        "16": {
+          "cpu_fallback_ms_per_decode_step": 0.428248140625,
+          "fraction_of_no_capture_forward": 0.02267305256030833
+        },
+        "32": {
+          "cpu_fallback_ms_per_decode_step": 0.2141240703125,
+          "fraction_of_no_capture_forward": 0.011336526280154165
+        }
+      }
+    },
+    "full": {
+      "current_research_diagnostics_median_forward_ms": 54.15775,
+      "maximum_logit_absolute_difference": 0.0,
+      "minimal_cpu_one_query_contribution_median_ms": 6.0087915,
+      "minimal_cpu_transfer_median_ms": 2.520542,
+      "minimal_direct_capture_median_forward_ms": 26.6686875,
+      "minimal_direct_capture_overhead_fraction": 0.31343457537727265,
+      "minimal_direct_capture_overhead_ms": 6.364145499999999,
+      "minimal_vs_research_forward_time_reduction_fraction": 0.5075739390945894,
+      "no_capture_median_forward_ms": 20.304542,
+      "scheduled_last_window_cpu_fallback": {
+        "4": {
+          "cpu_fallback_ms_per_decode_step": 14.9765545625,
+          "fraction_of_no_capture_forward": 0.7375962758726593
+        },
+        "8": {
+          "cpu_fallback_ms_per_decode_step": 7.48827728125,
+          "fraction_of_no_capture_forward": 0.36879813793632965
+        },
+        "16": {
+          "cpu_fallback_ms_per_decode_step": 3.744138640625,
+          "fraction_of_no_capture_forward": 0.18439906896816483
+        },
+        "32": {
+          "cpu_fallback_ms_per_decode_step": 1.8720693203125,
+          "fraction_of_no_capture_forward": 0.09219953448408241
+        }
+      }
+    }
+  },
+  "confirmatory_evidence": false,
+  "contribution_weight": 0.25,
+  "diagnostic_layers": [
+    0,
+    7,
+    14,
+    15,
+    21,
+    27
+  ],
+  "maximum_observed_working_set_bytes": 157440,
+  "maximum_score_absolute_error": 0.0,
+  "median_batch_refresh_ms": 20.349583250000002,
+  "median_rolling_refresh_ms": 0.33230225,
+  "median_rolling_update_per_token_ms": 5.1145104375,
+  "minimum_selection_jaccard": 1.0,
+  "policy": "blend_attention_contribution_25_w4_shared",
+  "profile_units": 6,
+  "projected_rolling_working_set_mib": {
+    "131072": 15.0,
+    "32768": 3.75,
+    "4096": 0.46875
+  },
+  "rolling_bytes_per_context_token": 120.0,
+  "samples": [
+    "gov_report:30",
+    "synthetic_niah_30"
+  ],
+  "scenario_window": 4,
+  "scope": "CPU NumPy score/top-k timing plus separate MLX forward capture and CPU-transfer timing on full and compressed caches. It excludes an integrated fused MLX score kernel and full free-generation runs; the measurements diagnose feasibility, not end-to-end speedup.",
+  "status": "runtime_capture_and_arithmetic_microbenchmark",
+  "timing_repeats": 40
+}

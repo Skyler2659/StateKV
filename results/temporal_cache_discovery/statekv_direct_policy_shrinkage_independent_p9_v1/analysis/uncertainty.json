@@ -1,0 +1,19 @@
+{
+  "baseline": "attention_mean_w1_shared",
+  "bootstrap_mean_ci_95": [
+    0.00859154895234699,
+    0.052775643294145434
+  ],
+  "bootstrap_samples": 50000,
+  "confirmatory_evidence": false,
+  "interpretation": "The paired mean bootstrap is positive on this small development set, but the exact sign test is not significant; larger independent sequence replication remains required.",
+  "mean_exact_kl_reduction": 0.02781377163187348,
+  "median_exact_kl_reduction": 0.00793481048495022,
+  "primary": "blend_attention_contribution_25_w4_shared",
+  "seed": 20260814,
+  "sequence_count": 12,
+  "sequence_win_rate": 0.75,
+  "sequence_wins": 9,
+  "status": "paired_sequence_bootstrap_development_analysis",
+  "two_sided_sign_test_p": 0.14599609375
+}

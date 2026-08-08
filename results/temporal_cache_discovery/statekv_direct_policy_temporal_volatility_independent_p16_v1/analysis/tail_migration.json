@@ -1,0 +1,18 @@
+{
+  "baseline_tail_steps": 29,
+  "baseline_tail_threshold": 3.020750105381012,
+  "created_large_loss_steps": 10,
+  "escaped_tail_steps": 10,
+  "largest_step_harm": 9.8430972477654,
+  "new_primary_tail_steps": 10,
+  "paired_reduction_on_baseline_tail": 1.497986986847787,
+  "paired_reduction_on_new_primary_tail": -2.137905941216741,
+  "paired_reduction_on_primary_tail": -0.41536527180417987,
+  "primary_tail_steps": 29,
+  "primary_tail_threshold": 2.856525242328644,
+  "quantile": 0.95,
+  "removed_large_loss_steps": 18,
+  "shared_tail_steps": 19,
+  "steps": 576,
+  "tail_jaccard": 0.48717948717948717
+}

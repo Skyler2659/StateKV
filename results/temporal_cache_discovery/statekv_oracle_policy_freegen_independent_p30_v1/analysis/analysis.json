@@ -1,0 +1,200 @@
+{
+  "development_horizon_ablation": [
+    {
+      "control_horizon": 1,
+      "elapsed_s": 646.040529083,
+      "passed_joint_gate": true,
+      "statekv_govreport_rouge_l": 0.10821643286573146,
+      "statekv_mean_trajectory_exact_kl": 0.16438598347728273,
+      "statekv_niah_retrieval": 0.0
+    },
+    {
+      "control_horizon": 4,
+      "elapsed_s": 289.14363470899997,
+      "passed_joint_gate": false,
+      "statekv_govreport_rouge_l": 0.136,
+      "statekv_mean_trajectory_exact_kl": 0.26602841349652795,
+      "statekv_niah_retrieval": 0.0
+    },
+    {
+      "control_horizon": 8,
+      "elapsed_s": 189.307483583,
+      "passed_joint_gate": false,
+      "statekv_govreport_rouge_l": 0.08484848484848485,
+      "statekv_mean_trajectory_exact_kl": 0.23944453087551798,
+      "statekv_niah_retrieval": 0.0
+    }
+  ],
+  "free_generation_independent": {
+    "lower_trajectory_kl_than_each_fixed_policy": true,
+    "paired_comparisons": [
+      {
+        "baseline": "attention",
+        "govreport_rouge_l_statekv_minus_baseline": -0.002387076976462822,
+        "niah_retrieval_statekv_minus_baseline": 0.0,
+        "official_score_statekv_minus_baseline": -0.11934999999999985,
+        "trajectory_kl_baseline_minus_statekv": 0.27646122081977537
+      },
+      {
+        "baseline": "snapkv",
+        "govreport_rouge_l_statekv_minus_baseline": -0.005052663700843181,
+        "niah_retrieval_statekv_minus_baseline": 0.0,
+        "official_score_statekv_minus_baseline": -0.25262499999999966,
+        "trajectory_kl_baseline_minus_statekv": 0.06922503187250323
+      },
+      {
+        "baseline": "h2o",
+        "govreport_rouge_l_statekv_minus_baseline": 0.0022930297598421634,
+        "niah_retrieval_statekv_minus_baseline": 0.0,
+        "official_score_statekv_minus_baseline": 0.11465000000000014,
+        "trajectory_kl_baseline_minus_statekv": 0.2628383184038576
+      }
+    ],
+    "passed_joint_gate": false,
+    "policy_aggregates": [
+      {
+        "mean_govreport_rouge_l": 0.06284307823069024,
+        "mean_niah_retrieval": 0.0,
+        "mean_official_score": 3.14215,
+        "mean_trajectory_exact_kl": 0.4155845575637618,
+        "policy": "attention",
+        "samples": 4
+      },
+      {
+        "mean_govreport_rouge_l": 0.057645929218299925,
+        "mean_niah_retrieval": 1.0,
+        "mean_official_score": 52.8823,
+        "mean_trajectory_exact_kl": 0.0,
+        "policy": "full_cache",
+        "samples": 4
+      },
+      {
+        "mean_govreport_rouge_l": 0.058162971494385256,
+        "mean_niah_retrieval": 0.0,
+        "mean_official_score": 2.90815,
+        "mean_trajectory_exact_kl": 0.401961655147844,
+        "policy": "h2o",
+        "samples": 4
+      },
+      {
+        "mean_govreport_rouge_l": 0.0655086649550706,
+        "mean_niah_retrieval": 0.0,
+        "mean_official_score": 3.275425,
+        "mean_trajectory_exact_kl": 0.20834836861648964,
+        "policy": "snapkv",
+        "samples": 4
+      },
+      {
+        "mean_govreport_rouge_l": 0.06045600125422742,
+        "mean_niah_retrieval": 0.0,
+        "mean_official_score": 3.0228,
+        "mean_trajectory_exact_kl": 0.13912333674398641,
+        "policy": "statekv_exact_mean",
+        "samples": 4
+      }
+    ],
+    "relative_trajectory_kl_reduction": {
+      "attention": 0.665234585328303,
+      "h2o": 0.6538890340353087,
+      "snapkv": 0.3322561742728445
+    },
+    "sample_count": 4,
+    "sample_wins": {
+      "attention": 4,
+      "h2o": 4,
+      "snapkv": 2
+    },
+    "task_metrics_nonworse_than_each_fixed_policy": false
+  },
+  "teacher_forced_independent": {
+    "paired_comparisons": [
+      {
+        "baseline": "attention",
+        "baseline_mean_exact_kl": 0.30457865090732916,
+        "baseline_minus_statekv": 0.15637213241019943,
+        "sample_count": 4,
+        "statekv_mean_exact_kl": 0.14820651849712974,
+        "statekv_sample_wins": 4,
+        "ties": 0
+      },
+      {
+        "baseline": "snapkv",
+        "baseline_mean_exact_kl": 0.7246671870753403,
+        "baseline_minus_statekv": 0.5764606685782105,
+        "sample_count": 4,
+        "statekv_mean_exact_kl": 0.14820651849712974,
+        "statekv_sample_wins": 4,
+        "ties": 0
+      },
+      {
+        "baseline": "h2o",
+        "baseline_mean_exact_kl": 0.5195634481767399,
+        "baseline_minus_statekv": 0.3713569296796102,
+        "sample_count": 4,
+        "statekv_mean_exact_kl": 0.14820651849712974,
+        "statekv_sample_wins": 4,
+        "ties": 0
+      }
+    ],
+    "passed": true,
+    "policy_aggregates": [
+      {
+        "control_cycles": 16,
+        "mean_exact_kl": 0.30457865090732916,
+        "mean_policy_regret_to_teacher": 0.16073586241778592,
+        "median_exact_kl": 0.15129215860724798,
+        "policy": "attention",
+        "sample_loops": 4,
+        "sample_mean_exact_kl": {
+          "gov_report:67": 0.29765692652489406,
+          "gov_report:70": 0.6421272658249109,
+          "synthetic_niah_67": 0.2192111753647623,
+          "synthetic_niah_70": 0.05931923591474941
+        }
+      },
+      {
+        "control_cycles": 16,
+        "mean_exact_kl": 0.5195634481767399,
+        "mean_policy_regret_to_teacher": 0.3115290433319977,
+        "median_exact_kl": 0.39409878963488154,
+        "policy": "h2o",
+        "sample_loops": 4,
+        "sample_mean_exact_kl": {
+          "gov_report:67": 0.5788047350512784,
+          "gov_report:70": 0.9845833848812617,
+          "synthetic_niah_67": 0.3624735448307206,
+          "synthetic_niah_70": 0.15239212794369905
+        }
+      },
+      {
+        "control_cycles": 16,
+        "mean_exact_kl": 0.7246671870753403,
+        "mean_policy_regret_to_teacher": 0.37264049482105577,
+        "median_exact_kl": 0.6647822929517133,
+        "policy": "snapkv",
+        "sample_loops": 4,
+        "sample_mean_exact_kl": {
+          "gov_report:67": 0.8267377214122007,
+          "gov_report:70": 1.500138087227242,
+          "synthetic_niah_67": 0.495645050460098,
+          "synthetic_niah_70": 0.07614788920182036
+        }
+      },
+      {
+        "control_cycles": 16,
+        "mean_exact_kl": 0.14820651849712974,
+        "mean_policy_regret_to_teacher": 0.0,
+        "median_exact_kl": 0.10090207638586435,
+        "policy": "statekv_exact_mean",
+        "sample_loops": 4,
+        "sample_mean_exact_kl": {
+          "gov_report:67": 0.2940118007451531,
+          "gov_report:70": 0.16039443771023798,
+          "synthetic_niah_67": 0.0825306504427914,
+          "synthetic_niah_70": 0.05588918509033647
+        }
+      }
+    ]
+  },
+  "verdict": "The exact StateKV teacher improves distributional trajectory risk overall, but does not uniformly improve downstream generation quality or retrieval over fixed policies."
+}

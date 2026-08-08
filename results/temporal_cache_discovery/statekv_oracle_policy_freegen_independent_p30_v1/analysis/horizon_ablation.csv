@@ -1,0 +1,4 @@
+control_horizon,passed_joint_gate,statekv_mean_trajectory_exact_kl,statekv_govreport_rouge_l,statekv_niah_retrieval,elapsed_s
+1,True,0.16438598347728273,0.10821643286573146,0.0,646.040529083
+4,False,0.26602841349652795,0.136,0.0,289.14363470899997
+8,False,0.23944453087551798,0.08484848484848485,0.0,189.307483583

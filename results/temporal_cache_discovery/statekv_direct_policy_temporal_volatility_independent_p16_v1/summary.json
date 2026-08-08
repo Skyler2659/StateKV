@@ -1,0 +1,152 @@
+{
+  "action_radius_values": {
+    "applicable": false,
+    "configured_rescue_slots": null,
+    "maximum_core_changes_vs_attention": 47
+  },
+  "anchors": [
+    16,
+    32,
+    48
+  ],
+  "baseline": "attention_mean_w1_shared",
+  "baseline_values": {
+    "cvar95_exact_kl": 5.339944288648408,
+    "large_loss_rate": 0.1371527777777778,
+    "maximum_exact_kl": 13.196484565734863,
+    "mean_delta_nll": 0.5622354945266359,
+    "mean_exact_kl": 0.5241851555549446,
+    "mean_exact_kl_reduction": 0.0,
+    "mean_forward_time_s": 0.02763871006249976,
+    "median_exact_kl": 0.0219776201993227,
+    "p95_delta_nll": 3.628117185086012,
+    "p95_exact_kl": 3.020750105381012,
+    "policy": "attention_mean_w1_shared",
+    "sequence_win_rate_vs_baseline": 0.0,
+    "sequences": 12,
+    "step_win_rate_vs_baseline": 0.0,
+    "steps": 576
+  },
+  "candidate_algorithms_run_per_decision": 0,
+  "checks": {
+    "all_task_means_improve": true,
+    "anchor_mean_wins": true,
+    "budget_respected": true,
+    "cvar95_exact_kl_improves": true,
+    "large_loss_rate_nonworse": true,
+    "maximum_exact_kl_nonworse": true,
+    "mean_exact_kl_improves": true,
+    "p95_exact_kl_improves": true,
+    "paired_baseline_tail_improves": true
+  },
+  "collection_elapsed_s": 124.774247833,
+  "confirmatory_evidence": false,
+  "data_seed": 20260817,
+  "diagnostic_layers": [
+    0,
+    7,
+    14,
+    15,
+    21,
+    27
+  ],
+  "experiment": "statekv_direct_policy_temporal_volatility_independent_p16",
+  "gate_config": {
+    "minimum_anchor_mean_wins": 2,
+    "require_all_task_mean_improvement": true,
+    "require_large_loss_rate_nonworse": true,
+    "require_overall_cvar95_improvement": true,
+    "require_overall_maximum_nonworse": true,
+    "require_overall_mean_improvement": true,
+    "require_overall_p95_improvement": true,
+    "require_paired_baseline_tail_improvement": true
+  },
+  "gate_mode": "tail_risk",
+  "horizon": 16,
+  "paired_tail_values": {
+    "baseline_tail_mean_exact_kl": 5.339944288648408,
+    "baseline_tail_threshold": 3.020750105381012,
+    "paired_baseline_tail_mean_reduction": 1.497986986847787,
+    "primary_on_baseline_tail_mean_exact_kl": 3.841957301800621,
+    "quantile": 0.95,
+    "steps": 29
+  },
+  "passed": true,
+  "policies": [
+    "attention_mean_w1_shared",
+    "attention_temporal_volatility_w4_shared"
+  ],
+  "policies_evaluated_for_research": 2,
+  "primary": "attention_temporal_volatility_w4_shared",
+  "primary_values": {
+    "cvar95_exact_kl": 4.981843093345905,
+    "large_loss_rate": 0.1232638888888889,
+    "maximum_exact_kl": 12.845516204833984,
+    "mean_delta_nll": 0.49706975331068065,
+    "mean_exact_kl": 0.47115370400963624,
+    "mean_exact_kl_reduction": 0.05303145154530823,
+    "mean_forward_time_s": 0.027513965192708236,
+    "median_exact_kl": 0.01985584106296301,
+    "p95_delta_nll": 3.0763195627368987,
+    "p95_exact_kl": 2.856525242328644,
+    "policy": "attention_temporal_volatility_w4_shared",
+    "sequence_win_rate_vs_baseline": 0.5,
+    "sequences": 12,
+    "step_win_rate_vs_baseline": 0.4965277777777778,
+    "steps": 576
+  },
+  "runtime_run_id": "direct_policy_temporal_volatility_independent_seed20260817_v1",
+  "samples": [
+    "gov_report:45",
+    "gov_report:46",
+    "gov_report:47",
+    "gov_report:48",
+    "gov_report:49",
+    "gov_report:50",
+    "synthetic_niah_45",
+    "synthetic_niah_46",
+    "synthetic_niah_47",
+    "synthetic_niah_48",
+    "synthetic_niah_49",
+    "synthetic_niah_50"
+  ],
+  "scope": "One shared retained set is generated from past query/value scenarios and applied to all 28 layers. Evaluation is teacher-forced physical cache replay with full-vocabulary KL, not free generation or latency.",
+  "status": "held_out_teacher_forced_physical_replay_pilot",
+  "stratified_values": {
+    "anchor_mean_improvement": {
+      "16": true,
+      "32": true,
+      "48": true
+    },
+    "anchor_mean_wins": 3,
+    "sample_anchor_nonworse_rate": 0.5277777777777778,
+    "sample_anchor_win_rate": 0.5277777777777778,
+    "task_mean_improvement": {
+      "gov_report": true,
+      "niah_single_1": true
+    }
+  },
+  "task_overrides": {
+    "govreport_or_qmsum": {
+      "fallback_paragraphs": 24,
+      "max_words": 700,
+      "num_samples": 6,
+      "preferred": "gov_report",
+      "sample_indices": [
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
+      ],
+      "sample_strategy": "first"
+    },
+    "ruler_niah": {
+      "context_length": 768,
+      "num_samples": 6,
+      "sample_offset": 45
+    }
+  },
+  "total_budget": 128
+}

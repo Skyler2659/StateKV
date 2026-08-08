@@ -1,0 +1,137 @@
+{
+  "attention_capture_required": false,
+  "candidate_algorithms_run_per_deployment_decision": 0,
+  "candidates": {
+    "keydiff": {
+      "attention_hook_errors": 0,
+      "checks": {
+        "cache_budget_respected": true,
+        "not_worse_on_both_task_quality_means": true,
+        "peak_memory_no_more_than_125_percent_of_full": true,
+        "throughput_at_least_90_percent_of_control": false,
+        "zero_attention_hook_and_runner_errors": true
+      },
+      "control_overall_mean_nll": 2.79095458984375,
+      "decode_throughput_tokens_per_second": 15.585792762876892,
+      "eligible_for_replication": false,
+      "maximum_observed_cache": 128,
+      "overall_mean_nll": 1.870147705078125,
+      "overall_mean_nll_delta": -0.920806884765625,
+      "peak_memory_bytes": 2065230984,
+      "peak_memory_ratio_vs_full": 1.0,
+      "quality_by_workload": {
+        "gov_report": {
+          "candidate": 11.3245,
+          "control": 10.919550000000001,
+          "delta": 0.4049499999999995
+        },
+        "niah_single_1": {
+          "candidate": 0.0,
+          "control": 0.0,
+          "delta": 0.0
+        }
+      },
+      "strict_task_wins": 1,
+      "throughput_ratio_vs_control": 0.40595265166360384
+    },
+    "knorm": {
+      "attention_hook_errors": 0,
+      "checks": {
+        "cache_budget_respected": true,
+        "not_worse_on_both_task_quality_means": true,
+        "peak_memory_no_more_than_125_percent_of_full": true,
+        "throughput_at_least_90_percent_of_control": false,
+        "zero_attention_hook_and_runner_errors": true
+      },
+      "control_overall_mean_nll": 2.79095458984375,
+      "decode_throughput_tokens_per_second": 13.40706529717847,
+      "eligible_for_replication": false,
+      "maximum_observed_cache": 128,
+      "overall_mean_nll": 3.74835205078125,
+      "overall_mean_nll_delta": 0.9573974609375,
+      "peak_memory_bytes": 2065230984,
+      "peak_memory_ratio_vs_full": 1.0,
+      "quality_by_workload": {
+        "gov_report": {
+          "candidate": 3.6635999999999997,
+          "control": 10.919550000000001,
+          "delta": -7.255950000000001
+        },
+        "niah_single_1": {
+          "candidate": 0.0,
+          "control": 0.0,
+          "delta": 0.0
+        }
+      },
+      "strict_task_wins": 0,
+      "throughput_ratio_vs_control": 0.34920480409442184
+    },
+    "vnorml2": {
+      "attention_hook_errors": 0,
+      "checks": {
+        "cache_budget_respected": true,
+        "not_worse_on_both_task_quality_means": true,
+        "peak_memory_no_more_than_125_percent_of_full": true,
+        "throughput_at_least_90_percent_of_control": false,
+        "zero_attention_hook_and_runner_errors": true
+      },
+      "control_overall_mean_nll": 2.79095458984375,
+      "decode_throughput_tokens_per_second": 15.836342261673526,
+      "eligible_for_replication": false,
+      "maximum_observed_cache": 128,
+      "overall_mean_nll": 8.128326416015625,
+      "overall_mean_nll_delta": 5.337371826171875,
+      "peak_memory_bytes": 2065230984,
+      "peak_memory_ratio_vs_full": 1.0,
+      "quality_by_workload": {
+        "gov_report": {
+          "candidate": 0.0,
+          "control": 10.919550000000001,
+          "delta": -10.919550000000001
+        },
+        "niah_single_1": {
+          "candidate": 0.0,
+          "control": 0.0,
+          "delta": 0.0
+        }
+      },
+      "strict_task_wins": 0,
+      "throughput_ratio_vs_control": 0.41247854578762566
+    }
+  },
+  "control": "sink_recent_random",
+  "control_values": {
+    "decode_throughput_tokens_per_second": 38.39312959037448,
+    "maximum_peak_memory_bytes": 2065230984,
+    "overall_mean_nll": 2.79095458984375
+  },
+  "experiment": "statekv_attention_free_geometry_screen_p19",
+  "runner_errors": 0,
+  "samples_per_method": 4,
+  "scope": {
+    "claims_excluded": [
+      "confirmatory_superiority",
+      "full_LongBench_official_result",
+      "cross_model_generalization",
+      "production_kernel_parity"
+    ],
+    "development_only": true,
+    "note": "Four samples per method support route triage only, not a population-level superiority claim."
+  },
+  "screen_passed": false,
+  "selected_for_independent_replication": null,
+  "source_files": {
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p19a_v1/config.yaml": "84b2a6c738d92035f95c8af39548135c2aed04cdb997ff32b7c3863163b8b4c9",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p19a_v1/results.jsonl": "b460e42910531800d538d79bcee64ca52c89bead2298b12b18f2b960fc65156e",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p19a_v1/summary.json": "51b0d72e7e12113197e718b750302adda1404ed86bfd307a029257e25f849d24",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p19b_v1/config.yaml": "8b2ea4c9488c89dba06397268ff03b9c87785c3b2e9f86443d30ef623b0d6d66",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p19b_v1/results.jsonl": "d14f4cfab8b7e4ac86b1344d1e63f8f2abbdce93a03afb7b933e1490a5167636",
+    "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p19b_v1/summary.json": "a244ce44f769bafcb77ef1cee0b2099699a7050fe3aa1f52a96c08e661ca0c27"
+  },
+  "status": "completed_development_screen",
+  "upper_reference": "full",
+  "upper_reference_values": {
+    "maximum_peak_memory_bytes": 2065230984,
+    "overall_mean_nll": 1.548095703125
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "anchors": [
+    16
+  ],
+  "autodiff_jvp_supported": false,
+  "baseline": "hidden_l2_action",
+  "candidate_count": 8,
+  "checks": {
+    "mean_normalized_regret_gain_positive": false,
+    "mean_pairwise_accuracy_gain_positive": false,
+    "median_spearman_gain_positive": false
+  },
+  "collection_directional_probes": 64,
+  "collection_elapsed_s": 21.740867541999997,
+  "collection_tail_forward_evaluations": 144,
+  "confirmatory_evidence": false,
+  "deployment_costs": [
+    {
+      "amortized_directional_probes_per_token": 2.0,
+      "amortized_tail_forward_evaluations_per_token": 5.0,
+      "directional_probes_per_horizon": 16,
+      "rank": 2,
+      "refresh_interval": 1,
+      "tail_forward_evaluations_per_horizon": 40
+    },
+    {
+      "amortized_directional_probes_per_token": 1.0,
+      "amortized_tail_forward_evaluations_per_token": 2.5,
+      "directional_probes_per_horizon": 8,
+      "rank": 2,
+      "refresh_interval": 2,
+      "tail_forward_evaluations_per_horizon": 20
+    },
+    {
+      "amortized_directional_probes_per_token": 0.5,
+      "amortized_tail_forward_evaluations_per_token": 1.25,
+      "directional_probes_per_horizon": 4,
+      "rank": 2,
+      "refresh_interval": 4,
+      "tail_forward_evaluations_per_horizon": 10
+    },
+    {
+      "amortized_directional_probes_per_token": 0.25,
+      "amortized_tail_forward_evaluations_per_token": 0.625,
+      "directional_probes_per_horizon": 2,
+      "rank": 2,
+      "refresh_interval": 8,
+      "tail_forward_evaluations_per_horizon": 5
+    },
+    {
+      "amortized_directional_probes_per_token": 4.0,
+      "amortized_tail_forward_evaluations_per_token": 9.0,
+      "directional_probes_per_horizon": 32,
+      "rank": 4,
+      "refresh_interval": 1,
+      "tail_forward_evaluations_per_horizon": 72
+    },
+    {
+      "amortized_directional_probes_per_token": 2.0,
+      "amortized_tail_forward_evaluations_per_token": 4.5,
+      "directional_probes_per_horizon": 16,
+      "rank": 4,
+      "refresh_interval": 2,
+      "tail_forward_evaluations_per_horizon": 36
+    },
+    {
+      "amortized_directional_probes_per_token": 1.0,
+      "amortized_tail_forward_evaluations_per_token": 2.25,
+      "directional_probes_per_horizon": 8,
+      "rank": 4,
+      "refresh_interval": 4,
+      "tail_forward_evaluations_per_horizon": 18
+    },
+    {
+      "amortized_directional_probes_per_token": 0.5,
+      "amortized_tail_forward_evaluations_per_token": 1.125,
+      "directional_probes_per_horizon": 4,
+      "rank": 4,
+      "refresh_interval": 8,
+      "tail_forward_evaluations_per_horizon": 9
+    }
+  ],
+  "derivative_mode": "symmetric_finite_difference",
+  "experiment": "statekv_shared_jvp_pilot_p2",
+  "finite_difference_radius": 0.001,
+  "horizon": 8,
+  "outcome": "shared_jvp_not_yet_a_low_cost_controller_metric",
+  "passed": false,
+  "primary": {
+    "fisher_sketch_width": 32,
+    "method": "pullback_randomized_32_innovation",
+    "rank": 4,
+    "refresh_interval": 4,
+    "state_mode": "innovation"
+  },
+  "samples": [
+    "gov_report:12",
+    "synthetic_niah_12"
+  ],
+  "scope": "Final-boundary layer-27 pullback on two development sequences; not an end-to-end cache-controller or latency benchmark.",
+  "status": "bounded_model_backed_development_pilot",
+  "values": {
+    "mean_normalized_regret_gain": -0.04321087852466007,
+    "mean_pairwise_accuracy_gain": -0.028061224489795904,
+    "median_spearman_gain": 0.0
+  }
+}
