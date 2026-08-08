@@ -32,10 +32,10 @@ screening results rather than final benchmark evidence: the run contains ten
 samples and 64 generated tokens, retains a CPU full-KV backing store, and has not
 yet separated dynamic state alignment from a static layer-budget prior.
 
-![StateKV architecture](assets/statekv-architecture.png)
+![StateKV architecture](assets/proposals/statekv-control-architecture-v4.png)
 
-The editable [TikZ source](assets/statekv-architecture.tex) and vector
-[PDF](assets/statekv-architecture.pdf) are versioned with the repository.
+The editable [SVG source](assets/proposals/statekv-control-architecture-v4.svg)
+is versioned with the repository.
 
 ## Novelty boundary
 

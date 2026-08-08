@@ -1,0 +1,457 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="1280" viewBox="0 0 2048 1280" role="img" aria-labelledby="svg-title svg-desc">
+  <title id="svg-title">StateKV: physical oracle → direct layer-adaptive cache control</title>
+  <desc id="svg-desc">A publication-style system architecture with an observed compressed state on the left, an expensive physical oracle lane and a training-free B3 direct-controller lane in the center, a layer-wise cache action and next token on the right, a state feedback loop, and evidence milestones from P26, P31, and P32.</desc>
+
+  <defs>
+    <style>
+      text { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; fill: #13294B; }
+      .hero { font-size: 42px; font-weight: 780; letter-spacing: -0.7px; }
+      .subhero { font-size: 21px; font-weight: 460; fill: #536B82; }
+      .system-title { font-size: 25px; font-weight: 760; }
+      .lane-title { font-size: 24px; font-weight: 760; }
+      .module-title { font-size: 19px; font-weight: 720; }
+      .body { font-size: 16px; font-weight: 480; fill: #496278; }
+      .small { font-size: 14px; font-weight: 520; fill: #61788C; }
+      .tiny { font-size: 12px; font-weight: 600; fill: #61788C; }
+      .math { font-family: "STIX Two Math", "Times New Roman", serif; font-size: 20px; fill: #13294B; }
+      .badge { font-size: 13px; font-weight: 750; letter-spacing: 0.25px; }
+      .metric { font-size: 18px; font-weight: 780; }
+      .milestone { font-size: 20px; font-weight: 740; }
+      .outline { fill: #FFFFFF; stroke: #CBD9E4; stroke-width: 2; }
+      .icon-line { fill: none; stroke: #13294B; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+      .blue-line { fill: none; stroke: #0072B2; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+      .purple-line { fill: none; stroke: #7C63D6; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+      .teal-line { fill: none; stroke: #009E73; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+      .orange-line { fill: none; stroke: #E69F00; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+
+    <marker id="arrow-navy" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 11 5.5 L 0 11 z" fill="#13294B"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 11 5.5 L 0 11 z" fill="#0072B2"/>
+    </marker>
+    <marker id="arrow-purple" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 11 5.5 L 0 11 z" fill="#7C63D6"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 11 5.5 L 0 11 z" fill="#009E73"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 11 5.5 L 0 11 z" fill="#E69F00"/>
+    </marker>
+
+    <filter id="paper-shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="10" flood-color="#13294B" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="2048" height="1280" fill="#F5F8FB"/>
+  <rect x="24" y="24" width="2000" height="1232" rx="18" fill="#FFFFFF" stroke="#E1E9EF"/>
+
+  <g id="header">
+    <text x="64" y="72" class="hero">StateKV: physical oracle → direct layer-adaptive cache control</text>
+    <text x="64" y="108" class="subhero">History-conditioned actions share one evolving state; B3 emits one layer-wise action without candidate model rollouts.</text>
+    <g transform="translate(1598,46)">
+      <line x1="0" y1="13" x2="46" y2="13" stroke="#13294B" stroke-width="3" marker-end="url(#arrow-navy)"/>
+      <text x="60" y="19" class="small">execution</text>
+      <line x1="168" y1="13" x2="214" y2="13" stroke="#009E73" stroke-width="3" stroke-dasharray="8 6"/>
+      <text x="228" y="19" class="small">evaluation reference</text>
+      <line x1="0" y1="47" x2="46" y2="47" stroke="#E69F00" stroke-width="3" stroke-dasharray="8 6"/>
+      <text x="60" y="53" class="small">next evidence gate</text>
+    </g>
+  </g>
+
+  <g id="closed-loop-system">
+    <rect x="52" y="140" width="1944" height="824" rx="28" fill="#FCFEFF" stroke="#00A087" stroke-width="3" filter="url(#paper-shadow)"/>
+    <rect x="78" y="157" width="320" height="34" rx="17" fill="#E2F5F1"/>
+    <circle cx="97" cy="174" r="6" fill="#009E73"/>
+    <text x="112" y="181" class="badge" fill="#007E69">Shared closed-loop execution</text>
+
+    <!-- Left: state input -->
+    <g id="observed-state" transform="translate(82,212)">
+      <rect x="0" y="0" width="278" height="610" rx="22" fill="#FFFFFF" stroke="#0072B2" stroke-width="2.5"/>
+      <text x="24" y="39" class="system-title">Observed state at t</text>
+      <text x="24" y="67" class="body">The active cache encodes history.</text>
+
+      <g id="query-icon" transform="translate(24,92)">
+        <rect x="0" y="0" width="230" height="82" rx="15" fill="#F2F8FC" stroke="#A8CEE5"/>
+        <path d="M 20 43 Q 20 20 43 20 H 77 Q 100 20 100 43 Q 100 66 77 66 H 51 L 39 76 V 66 H 43 Q 20 66 20 43 Z" class="blue-line"/>
+        <circle cx="47" cy="43" r="3.5" fill="#0072B2"/>
+        <circle cx="60" cy="43" r="3.5" fill="#0072B2"/>
+        <circle cx="73" cy="43" r="3.5" fill="#0072B2"/>
+        <text x="119" y="37" class="module-title">Current query</text>
+        <text x="119" y="60" class="small">q<tspan baseline-shift="sub" font-size="10">t</tspan></text>
+      </g>
+
+      <g id="trajectory-icon" transform="translate(24,197)">
+        <text x="0" y="0" class="module-title">Compression history</text>
+        <text x="0" y="25" class="small">Paired reference and compressed paths</text>
+        <line x1="8" y1="61" x2="219" y2="61" stroke="#A4B6C5" stroke-width="2.5"/>
+        <g fill="#FFFFFF" stroke="#7B91A4" stroke-width="1.8">
+          <circle cx="18" cy="61" r="7"/><circle cx="58" cy="61" r="7"/><circle cx="98" cy="61" r="7"/><circle cx="138" cy="61" r="7"/><circle cx="178" cy="61" r="7"/><circle cx="218" cy="61" r="7"/>
+        </g>
+        <path d="M 8 94 C 62 94, 89 92, 119 106 S 179 130, 219 137" class="blue-line"/>
+        <g fill="#E6F3FA" stroke="#0072B2" stroke-width="1.8">
+          <circle cx="18" cy="94" r="7"/><circle cx="58" cy="94" r="7"/><circle cx="98" cy="98" r="7"/><circle cx="138" cy="114" r="7"/><circle cx="178" cy="128" r="7"/><circle cx="218" cy="137" r="7"/>
+        </g>
+        <circle cx="119" cy="106" r="5" fill="#E69F00"/>
+        <circle cx="159" cy="123" r="5" fill="#E69F00"/>
+        <text x="0" y="168" class="math">s<tspan baseline-shift="sub" font-size="13">t</tspan> = x<tspan baseline-shift="super" font-size="13">hist</tspan><tspan baseline-shift="sub" font-size="13">t</tspan> − x<tspan baseline-shift="super" font-size="13">ref</tspan><tspan baseline-shift="sub" font-size="13">t</tspan></text>
+      </g>
+
+      <g id="active-cache-icon" transform="translate(24,405)">
+        <rect x="0" y="0" width="230" height="138" rx="15" fill="#F8FAFC" stroke="#CBD9E4"/>
+        <text x="18" y="29" class="module-title">Active KV cache</text>
+        <text x="18" y="53" class="small">layer-specific retained positions</text>
+        <g transform="translate(18,72)">
+          <text x="0" y="14" class="tiny">L0</text>
+          <g transform="translate(28,0)">
+            <rect x="0" y="0" width="18" height="18" rx="4" fill="#0072B2"/><rect x="23" y="0" width="18" height="18" rx="4" fill="#0072B2"/><rect x="46" y="0" width="18" height="18" rx="4" fill="#DCE7EE"/><rect x="69" y="0" width="18" height="18" rx="4" fill="#0072B2"/><rect x="92" y="0" width="18" height="18" rx="4" fill="#DCE7EE"/><rect x="115" y="0" width="18" height="18" rx="4" fill="#0072B2"/><rect x="138" y="0" width="18" height="18" rx="4" fill="#0072B2"/>
+          </g>
+          <text x="0" y="47" class="tiny">Lk</text>
+          <g transform="translate(28,33)">
+            <rect x="0" y="0" width="18" height="18" rx="4" fill="#0072B2"/><rect x="23" y="0" width="18" height="18" rx="4" fill="#DCE7EE"/><rect x="46" y="0" width="18" height="18" rx="4" fill="#0072B2"/><rect x="69" y="0" width="18" height="18" rx="4" fill="#0072B2"/><rect x="92" y="0" width="18" height="18" rx="4" fill="#0072B2"/><rect x="115" y="0" width="18" height="18" rx="4" fill="#DCE7EE"/><rect x="138" y="0" width="18" height="18" rx="4" fill="#0072B2"/>
+          </g>
+        </g>
+      </g>
+
+      <rect x="14" y="562" width="250" height="28" rx="14" fill="#E6F3FA"/>
+      <text x="37" y="581" class="badge" fill="#006BA6">one state · two control routes</text>
+    </g>
+
+    <!-- Upper oracle lane -->
+    <g id="physical-oracle" transform="translate(392,206)">
+      <rect x="0" y="0" width="1248" height="304" rx="22" fill="#F8FCFF" stroke="#0072B2" stroke-width="2.5"/>
+      <text x="24" y="39" class="lane-title" fill="#006BA6">Physical oracle</text>
+      <rect x="204" y="16" width="236" height="29" rx="14.5" fill="#E6F3FA"/>
+      <text x="222" y="36" class="badge" fill="#006BA6">reference controller · P25–P31</text>
+      <text x="840" y="36" class="small">full-reference logits · candidate model rollouts</text>
+
+      <g id="candidate-panel" transform="translate(22,66)">
+        <rect x="0" y="0" width="222" height="212" rx="17" fill="#FFFFFF" stroke="#56B4E9" stroke-width="2"/>
+        <text x="18" y="30" class="module-title">Candidate action panel</text>
+        <text x="18" y="53" class="small">legal retained sets at budget B</text>
+        <g transform="translate(18,73)">
+          <text x="0" y="14" class="tiny">C1</text>
+          <g transform="translate(31,0)">
+            <rect x="0" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="22" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="44" y="0" width="17" height="17" rx="3" fill="#E8EEF2"/><rect x="66" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="88" y="0" width="17" height="17" rx="3" fill="#E8EEF2"/><rect x="110" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="132" y="0" width="17" height="17" rx="3" fill="#56B4E9"/>
+          </g>
+          <text x="0" y="47" class="tiny">C2</text>
+          <g transform="translate(31,33)">
+            <rect x="0" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="22" y="0" width="17" height="17" rx="3" fill="#E8EEF2"/><rect x="44" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="66" y="0" width="17" height="17" rx="3" fill="#E8EEF2"/><rect x="88" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="110" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="132" y="0" width="17" height="17" rx="3" fill="#56B4E9"/>
+          </g>
+          <text x="0" y="80" class="tiny">Cj</text>
+          <g transform="translate(31,66)">
+            <rect x="0" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="22" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="44" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="66" y="0" width="17" height="17" rx="3" fill="#E8EEF2"/><rect x="88" y="0" width="17" height="17" rx="3" fill="#56B4E9"/><rect x="110" y="0" width="17" height="17" rx="3" fill="#E8EEF2"/><rect x="132" y="0" width="17" height="17" rx="3" fill="#56B4E9"/>
+          </g>
+        </g>
+        <text x="18" y="181" class="tiny">stale · attention · SnapKV · H2O</text>
+        <text x="18" y="200" class="tiny">key/value norm · uniform</text>
+      </g>
+
+      <path d="M 251 172 L 278 172" stroke="#13294B" stroke-width="2.8" fill="none" marker-end="url(#arrow-navy)"/>
+
+      <g id="physical-rollouts" transform="translate(286,66)">
+        <rect x="0" y="0" width="228" height="212" rx="17" fill="#FFFFFF" stroke="#56B4E9" stroke-width="2"/>
+        <text x="18" y="30" class="module-title">Physical rollouts</text>
+        <text x="18" y="53" class="small">finite deletion + renormalization</text>
+        <g transform="translate(25,73)">
+          <g transform="translate(0,0)">
+            <rect x="0" y="0" width="36" height="72" rx="7" fill="#E6F3FA" stroke="#0072B2"/>
+            <rect x="9" y="9" width="36" height="72" rx="7" fill="#FFFFFF" stroke="#0072B2" stroke-width="2"/>
+            <text x="19" y="51" class="tiny" fill="#006BA6">C1</text>
+          </g>
+          <g transform="translate(67,0)">
+            <rect x="0" y="0" width="36" height="72" rx="7" fill="#E6F3FA" stroke="#0072B2"/>
+            <rect x="9" y="9" width="36" height="72" rx="7" fill="#FFFFFF" stroke="#0072B2" stroke-width="2"/>
+            <text x="19" y="51" class="tiny" fill="#006BA6">C2</text>
+          </g>
+          <g transform="translate(134,0)">
+            <rect x="0" y="0" width="36" height="72" rx="7" fill="#E6F3FA" stroke="#0072B2"/>
+            <rect x="9" y="9" width="36" height="72" rx="7" fill="#FFFFFF" stroke="#0072B2" stroke-width="2"/>
+            <text x="19" y="51" class="tiny" fill="#006BA6">Cj</text>
+          </g>
+          <path d="M 19 100 C 60 76, 120 76, 165 100" class="blue-line"/>
+          <path d="M 87 82 L 87 109" class="blue-line"/>
+        </g>
+        <text x="18" y="198" class="tiny">same state · legal physical actions</text>
+      </g>
+
+      <path d="M 521 172 L 548 172" stroke="#13294B" stroke-width="2.8" fill="none" marker-end="url(#arrow-navy)"/>
+
+      <g id="output-risk" transform="translate(556,66)">
+        <rect x="0" y="0" width="224" height="212" rx="17" fill="#FFFFFF" stroke="#56B4E9" stroke-width="2"/>
+        <text x="18" y="30" class="module-title">Full-vocabulary risk</text>
+        <text x="18" y="53" class="small">compare output distributions</text>
+        <g transform="translate(19,76)">
+          <path d="M 0 67 L 0 0 M 0 67 L 78 67" class="blue-line"/>
+          <path d="M 6 61 C 18 54, 24 18, 38 15 S 58 52, 73 59" class="blue-line"/>
+          <path d="M 97 67 L 97 0 M 97 67 L 175 67" class="teal-line"/>
+          <path d="M 103 60 C 118 52, 128 27, 141 23 S 162 48, 171 57" class="teal-line"/>
+          <text x="12" y="87" class="tiny">p<tspan baseline-shift="sub" font-size="9">ref</tspan></text>
+          <text x="128" y="87" class="tiny">p<tspan baseline-shift="sub" font-size="9">C</tspan></text>
+        </g>
+        <text x="16" y="183" class="math">R<tspan baseline-shift="sub" font-size="13">s</tspan>(C)</text>
+        <text x="72" y="183" class="small">exact KL · local risk</text>
+      </g>
+
+      <path d="M 787 172 L 814 172" stroke="#13294B" stroke-width="2.8" fill="none" marker-end="url(#arrow-navy)"/>
+
+      <g id="oracle-decision" transform="translate(822,66)">
+        <rect x="0" y="0" width="400" height="212" rx="17" fill="#FFFFFF" stroke="#56B4E9" stroke-width="2"/>
+        <text x="18" y="30" class="module-title">Select and refresh</text>
+        <text x="18" y="53" class="small">one risk object for action and staleness</text>
+        <g transform="translate(18,72)">
+          <rect x="0" y="0" width="184" height="54" rx="12" fill="#EAF6F2" stroke="#76C5AE"/>
+          <text x="13" y="22" class="tiny" fill="#007E69">lowest-risk action</text>
+          <text x="13" y="44" class="math">C* = arg min R<tspan baseline-shift="sub" font-size="12">s</tspan>(C)</text>
+          <rect x="198" y="0" width="166" height="54" rx="12" fill="#FFF7E8" stroke="#E9BB5D"/>
+          <text x="211" y="22" class="tiny" fill="#9A6500">stale-action regret</text>
+          <text x="211" y="44" class="math">G<tspan baseline-shift="sub" font-size="12">s</tspan>(C<tspan baseline-shift="sub" font-size="12">old</tspan>)</text>
+        </g>
+        <path d="M 58 154 L 314 154" stroke="#CCD8E2" stroke-width="8" stroke-linecap="round"/>
+        <path d="M 58 154 L 182 154" stroke="#E69F00" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="182" cy="154" r="10" fill="#FFFFFF" stroke="#E69F00" stroke-width="3"/>
+        <text x="18" y="188" class="tiny">refresh if G<tspan baseline-shift="sub" font-size="9">s</tspan>(C<tspan baseline-shift="sub" font-size="9">old</tspan>) &gt; τ</text>
+        <rect x="257" y="172" width="125" height="24" rx="12" fill="#E6F3FA"/>
+        <text x="272" y="189" class="tiny" fill="#006BA6">oracle controller</text>
+      </g>
+    </g>
+
+    <!-- Middle annotation -->
+    <g id="evaluation-reference" transform="translate(735,518)">
+      <path d="M 0 0 H 600" stroke="#009E73" stroke-width="2.5" stroke-dasharray="8 7"/>
+      <rect x="128" y="-14" width="344" height="28" rx="14" fill="#E2F5F1"/>
+      <text x="150" y="5" class="badge" fill="#007E69">evaluation reference · not an inference input</text>
+    </g>
+
+    <!-- Lower cheap controller lane -->
+    <g id="cheap-controller" transform="translate(392,544)">
+      <rect x="0" y="0" width="1248" height="326" rx="22" fill="#FCFAFF" stroke="#7C63D6" stroke-width="2.5"/>
+      <text x="24" y="39" class="lane-title" fill="#6449C5">B3 direct controller</text>
+      <rect x="272" y="16" width="224" height="29" rx="14.5" fill="#EEE9FC"/>
+      <text x="290" y="36" class="badge" fill="#6449C5">training-free candidate · P32</text>
+      <text x="886" y="36" class="small">one action · zero candidate model rollouts</text>
+
+      <g id="online-signals" transform="translate(20,67)">
+        <rect x="0" y="0" width="210" height="234" rx="17" fill="#FFFFFF" stroke="#9E8BE3" stroke-width="2"/>
+        <text x="17" y="30" class="module-title">Online signals</text>
+        <text x="17" y="52" class="small">from the current cache state</text>
+        <g transform="translate(18,71)">
+          <rect x="0" y="0" width="174" height="38" rx="10" fill="#F3F7FA" stroke="#C9D6E0"/>
+          <path d="M 12 28 C 29 20, 36 13, 50 18 S 74 27, 91 12 S 120 16, 153 8" class="blue-line"/>
+          <text x="102" y="30" class="tiny">attention</text>
+          <rect x="0" y="50" width="174" height="38" rx="10" fill="#F8F5FE" stroke="#D8CFF6"/>
+          <path d="M 12 77 L 29 65 L 44 74 L 62 57 L 79 71 L 98 55 L 118 69 L 153 60" class="purple-line"/>
+          <text x="100" y="80" class="tiny">volatility</text>
+          <rect x="0" y="100" width="174" height="38" rx="10" fill="#FFF8EA" stroke="#F0D69D"/>
+          <g fill="#E69F00"><circle cx="20" cy="123" r="5"/><circle cx="42" cy="116" r="7"/><circle cx="66" cy="126" r="4"/><circle cx="89" cy="112" r="8"/></g>
+          <text x="103" y="129" class="tiny">contribution</text>
+        </g>
+        <text x="17" y="222" class="tiny">observable · no labels</text>
+      </g>
+
+      <path d="M 237 184 L 259 184" stroke="#13294B" stroke-width="2.8" fill="none" marker-end="url(#arrow-navy)"/>
+
+      <g id="token-utility" transform="translate(267,67)">
+        <rect x="0" y="0" width="224" height="234" rx="17" fill="#FFFFFF" stroke="#9E8BE3" stroke-width="2"/>
+        <text x="17" y="30" class="module-title">Token utility</text>
+        <text x="17" y="52" class="small">direct cost for every layer/token</text>
+        <rect x="17" y="71" width="190" height="70" rx="12" fill="#F8F5FE"/>
+        <text x="31" y="99" class="math">q<tspan baseline-shift="sub" font-size="13">ℓ,i</tspan> = .50 a<tspan baseline-shift="sub" font-size="13">ℓ,i</tspan></text>
+        <text x="58" y="126" class="math">+ .30 ν<tspan baseline-shift="sub" font-size="13">ℓ,i</tspan> + .20 c<tspan baseline-shift="sub" font-size="13">ℓ,i</tspan></text>
+        <g transform="translate(18,157)">
+          <rect x="0" y="0" width="23" height="23" rx="5" fill="#7C63D6"/><rect x="29" y="0" width="23" height="23" rx="5" fill="#DDD5F7"/><rect x="58" y="0" width="23" height="23" rx="5" fill="#9E8BE3"/><rect x="87" y="0" width="23" height="23" rx="5" fill="#EEE9FC"/><rect x="116" y="0" width="23" height="23" rx="5" fill="#7C63D6"/><rect x="145" y="0" width="23" height="23" rx="5" fill="#B7A7EA"/><rect x="174" y="0" width="23" height="23" rx="5" fill="#EEE9FC"/>
+        </g>
+        <text x="17" y="216" class="tiny">high q means expensive to evict</text>
+      </g>
+
+      <path d="M 498 184 L 520 184" stroke="#13294B" stroke-width="2.8" fill="none" marker-end="url(#arrow-navy)"/>
+
+      <g id="layer-difficulty" transform="translate(528,67)">
+        <rect x="0" y="0" width="184" height="234" rx="17" fill="#FFFFFF" stroke="#9E8BE3" stroke-width="2"/>
+        <text x="16" y="30" class="module-title">Layer difficulty</text>
+        <text x="16" y="52" class="small">effective support of q</text>
+        <text x="16" y="82" class="math">d<tspan baseline-shift="sub" font-size="13">ℓ</tspan> = exp H(q<tspan baseline-shift="sub" font-size="13">ℓ</tspan>)</text>
+        <g transform="translate(20,98)">
+          <text x="0" y="12" class="tiny">L0</text><rect x="28" y="0" width="95" height="14" rx="7" fill="#E7E1FA"/><rect x="28" y="0" width="52" height="14" rx="7" fill="#7C63D6"/>
+          <text x="0" y="42" class="tiny">L9</text><rect x="28" y="30" width="95" height="14" rx="7" fill="#E7E1FA"/><rect x="28" y="30" width="82" height="14" rx="7" fill="#7C63D6"/>
+          <text x="0" y="72" class="tiny">L18</text><rect x="28" y="60" width="95" height="14" rx="7" fill="#E7E1FA"/><rect x="28" y="60" width="37" height="14" rx="7" fill="#7C63D6"/>
+          <text x="0" y="102" class="tiny">L27</text><rect x="28" y="90" width="95" height="14" rx="7" fill="#E7E1FA"/><rect x="28" y="90" width="68" height="14" rx="7" fill="#7C63D6"/>
+        </g>
+        <text x="16" y="222" class="tiny">state-dependent across layers</text>
+      </g>
+
+      <path d="M 719 184 L 741 184" stroke="#13294B" stroke-width="2.8" fill="none" marker-end="url(#arrow-navy)"/>
+
+      <g id="budget-allocator" transform="translate(749,67)">
+        <rect x="0" y="0" width="226" height="234" rx="17" fill="#FFFFFF" stroke="#E69F00" stroke-width="2"/>
+        <text x="17" y="30" class="module-title">Fixed-total allocator</text>
+        <text x="17" y="52" class="small">move capacity toward difficult layers</text>
+        <g transform="translate(25,76)">
+          <line x1="0" y1="92" x2="176" y2="92" class="orange-line"/>
+          <rect x="8" y="46" width="19" height="46" rx="4" fill="#F6CF7A" stroke="#E69F00"/>
+          <rect x="38" y="24" width="19" height="68" rx="4" fill="#E69F00"/>
+          <rect x="68" y="57" width="19" height="35" rx="4" fill="#F6CF7A" stroke="#E69F00"/>
+          <rect x="98" y="34" width="19" height="58" rx="4" fill="#E69F00"/>
+          <rect x="128" y="12" width="19" height="80" rx="4" fill="#E69F00"/>
+          <rect x="158" y="51" width="19" height="41" rx="4" fill="#F6CF7A" stroke="#E69F00"/>
+        </g>
+        <text x="17" y="201" class="math">Total core = 36 × 220</text>
+        <text x="17" y="221" class="tiny">per-layer core bound: 220 ± 44</text>
+      </g>
+
+      <path d="M 982 184 L 1004 184" stroke="#13294B" stroke-width="2.8" fill="none" marker-end="url(#arrow-navy)"/>
+
+      <g id="direct-topk" transform="translate(1012,67)">
+        <rect x="0" y="0" width="214" height="234" rx="17" fill="#FFFFFF" stroke="#9E8BE3" stroke-width="2"/>
+        <text x="17" y="30" class="module-title">Per-layer top-k</text>
+        <text x="17" y="52" class="small">emit one physical action</text>
+        <text x="17" y="82" class="math">C<tspan baseline-shift="sub" font-size="13">ℓ</tspan>* = Top<tspan baseline-shift="sub" font-size="13">Bℓ</tspan>(q<tspan baseline-shift="sub" font-size="13">ℓ</tspan>)</text>
+        <g transform="translate(18,104)">
+          <text x="0" y="14" class="tiny">L0</text>
+          <g transform="translate(29,0)"><rect x="0" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="20" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="40" y="0" width="16" height="16" rx="3" fill="#E7E1FA"/><rect x="60" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="80" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="100" y="0" width="16" height="16" rx="3" fill="#E7E1FA"/><rect x="120" y="0" width="16" height="16" rx="3" fill="#7C63D6"/></g>
+          <text x="0" y="45" class="tiny">Lk</text>
+          <g transform="translate(29,31)"><rect x="0" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="20" y="0" width="16" height="16" rx="3" fill="#E7E1FA"/><rect x="40" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="60" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="80" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="100" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="120" y="0" width="16" height="16" rx="3" fill="#7C63D6"/></g>
+          <text x="0" y="76" class="tiny">L35</text>
+          <g transform="translate(29,62)"><rect x="0" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="20" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="40" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="60" y="0" width="16" height="16" rx="3" fill="#E7E1FA"/><rect x="80" y="0" width="16" height="16" rx="3" fill="#7C63D6"/><rect x="100" y="0" width="16" height="16" rx="3" fill="#E7E1FA"/><rect x="120" y="0" width="16" height="16" rx="3" fill="#7C63D6"/></g>
+        </g>
+        <rect x="17" y="196" width="180" height="25" rx="12.5" fill="#EEE9FC"/>
+        <text x="36" y="214" class="tiny" fill="#6449C5">sink + core + recent tokens</text>
+      </g>
+    </g>
+
+    <!-- Connect state to both routes -->
+    <path d="M 360 392 H 376 V 358 H 391" stroke="#0072B2" stroke-width="2.8" fill="none" marker-end="url(#arrow-blue)"/>
+    <path d="M 360 614 H 376 V 708 H 391" stroke="#7C63D6" stroke-width="2.8" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Right action/output -->
+    <g id="cache-action-output" transform="translate(1664,212)">
+      <rect x="0" y="0" width="304" height="610" rx="22" fill="#FFFFFF" stroke="#009E73" stroke-width="2.5"/>
+      <text x="22" y="36" class="system-title" fill="#007E69">Layer-wise</text>
+      <text x="22" y="63" class="system-title" fill="#007E69">cache action</text>
+      <text x="22" y="89" class="body">Apply the chosen retained positions.</text>
+
+      <g id="layer-stack-action" transform="translate(26,111)">
+        <rect x="0" y="0" width="252" height="216" rx="16" fill="#F2FAF7" stroke="#A8D9CA"/>
+        <text x="18" y="27" class="module-title">Adaptive KV stack</text>
+        <g transform="translate(18,47)">
+          <text x="0" y="13" class="tiny">L0</text><rect x="31" y="0" width="164" height="17" rx="4" fill="#CDEDE3"/><rect x="31" y="0" width="104" height="17" rx="4" fill="#009E73"/>
+          <text x="0" y="40" class="tiny">L9</text><rect x="31" y="27" width="164" height="17" rx="4" fill="#CDEDE3"/><rect x="31" y="27" width="143" height="17" rx="4" fill="#009E73"/>
+          <text x="0" y="67" class="tiny">L18</text><rect x="31" y="54" width="164" height="17" rx="4" fill="#CDEDE3"/><rect x="31" y="54" width="83" height="17" rx="4" fill="#009E73"/>
+          <text x="0" y="94" class="tiny">L27</text><rect x="31" y="81" width="164" height="17" rx="4" fill="#CDEDE3"/><rect x="31" y="81" width="128" height="17" rx="4" fill="#009E73"/>
+          <text x="0" y="121" class="tiny">L35</text><rect x="31" y="108" width="164" height="17" rx="4" fill="#CDEDE3"/><rect x="31" y="108" width="151" height="17" rx="4" fill="#009E73"/>
+        </g>
+        <rect x="18" y="182" width="216" height="22" rx="11" fill="#E2F5F1"/>
+        <text x="24" y="198" class="tiny" fill="#007E69">fixed global budget · varying layers</text>
+      </g>
+
+      <path d="M 152 331 L 152 357" stroke="#13294B" stroke-width="2.8" fill="none" marker-end="url(#arrow-navy)"/>
+
+      <g id="decode-icon" transform="translate(26,363)">
+        <rect x="0" y="0" width="252" height="92" rx="16" fill="#FFFFFF" stroke="#A8D9CA"/>
+        <g transform="translate(18,17)">
+          <rect x="0" y="22" width="44" height="44" rx="8" fill="#E2F5F1" stroke="#009E73"/>
+          <rect x="10" y="12" width="44" height="44" rx="8" fill="#FFFFFF" stroke="#009E73" stroke-width="2"/>
+          <rect x="20" y="2" width="44" height="44" rx="8" fill="#FFFFFF" stroke="#009E73" stroke-width="2"/>
+          <text x="29" y="30" class="tiny" fill="#007E69">MLX</text>
+          <path d="M 86 34 H 122" class="teal-line" marker-end="url(#arrow-teal)"/>
+          <rect x="136" y="6" width="75" height="52" rx="12" fill="#F2FAF7" stroke="#009E73" stroke-width="2"/>
+          <text x="153" y="27" class="module-title">Next</text>
+          <text x="151" y="48" class="small">token</text>
+        </g>
+      </g>
+
+      <g id="cold-backing" transform="translate(26,472)">
+        <rect x="0" y="0" width="252" height="126" rx="16" fill="#FAFBFC" stroke="#AABAC7" stroke-width="2" stroke-dasharray="7 6"/>
+        <g transform="translate(14,16)">
+          <ellipse cx="34" cy="11" rx="28" ry="10" fill="#FFFFFF" stroke="#7B91A4" stroke-width="2"/>
+          <path d="M 6 11 V 58 C 6 71, 62 71, 62 58 V 11" fill="#F2F5F7" stroke="#7B91A4" stroke-width="2"/>
+          <ellipse cx="34" cy="58" rx="28" ry="10" fill="#F2F5F7" stroke="#7B91A4" stroke-width="2"/>
+          <path d="M 6 34 C 6 47, 62 47, 62 34" fill="none" stroke="#7B91A4" stroke-width="2"/>
+          <text x="70" y="32" class="module-title">Cold KV backing</text>
+        </g>
+        <text x="18" y="100" class="tiny">screening-harness recovery path</text>
+        <text x="18" y="117" class="tiny">the pure-eviction gate removes it</text>
+      </g>
+      <path d="M 278 540 H 292 V 244 H 280" stroke="#7B91A4" stroke-width="2.2" fill="none" stroke-dasharray="7 6" marker-end="url(#arrow-navy)"/>
+      <text x="222" y="467" class="tiny" fill="#61788C">recover</text>
+    </g>
+
+    <!-- Route outputs to action -->
+    <path d="M 1614 378 H 1646 V 350 H 1663" stroke="#0072B2" stroke-width="2.8" fill="none" marker-end="url(#arrow-blue)"/>
+    <path d="M 1614 728 H 1646 V 420 H 1663" stroke="#7C63D6" stroke-width="2.8" fill="none" marker-end="url(#arrow-purple)"/>
+
+    <!-- Feedback loop -->
+    <path d="M 1816 822 V 918 H 220 C 186 918, 171 897, 171 868 V 832" stroke="#009E73" stroke-width="2.8" fill="none" marker-end="url(#arrow-teal)"/>
+    <rect x="790" y="901" width="338" height="29" rx="14.5" fill="#E2F5F1"/>
+    <text x="824" y="921" class="badge" fill="#007E69">selected action becomes state s[t+1]</text>
+  </g>
+
+  <!-- Evidence milestones -->
+  <g id="evidence-strip" transform="translate(52,998)">
+    <text x="0" y="0" class="system-title">Evidence progression</text>
+    <text x="330" y="0" class="small">Qwen3-8B P31/P32 setting: 10 sequences · 64 generated tokens · nominal 256-token layer budget</text>
+
+    <g id="p26" transform="translate(0,27)">
+      <rect x="0" y="0" width="430" height="178" rx="20" fill="#F8FCFF" stroke="#0072B2" stroke-width="2"/>
+      <circle cx="42" cy="45" r="23" fill="#E6F3FA" stroke="#0072B2" stroke-width="2"/>
+      <path d="M 31 45 L 39 53 L 54 35" class="blue-line"/>
+      <text x="82" y="37" class="milestone">P26 · Mechanical loop</text>
+      <text x="82" y="62" class="small">independent teacher-forced replication</text>
+      <line x1="24" y1="82" x2="406" y2="82" stroke="#D7E7F0"/>
+      <text x="24" y="111" class="metric" fill="#006BA6">refresh + recovery executed</text>
+      <text x="24" y="137" class="body">selected MLX state is carried across periods</text>
+      <rect x="24" y="149" width="163" height="22" rx="11" fill="#E6F3FA"/>
+      <text x="43" y="165" class="tiny" fill="#006BA6">physical closed loop</text>
+    </g>
+
+    <path d="M 438 116 H 478" stroke="#13294B" stroke-width="2.8" marker-end="url(#arrow-navy)"/>
+
+    <g id="p31" transform="translate(486,27)">
+      <rect x="0" y="0" width="430" height="178" rx="20" fill="#F2FAF7" stroke="#009E73" stroke-width="2"/>
+      <circle cx="42" cy="45" r="23" fill="#E2F5F1" stroke="#009E73" stroke-width="2"/>
+      <path d="M 29 53 C 33 34, 48 29, 58 39 M 58 39 L 51 36 M 58 39 L 55 46" class="teal-line"/>
+      <text x="82" y="37" class="milestone">P31 · Oracle free generation</text>
+      <text x="82" y="62" class="small">state-conditioned per-token control</text>
+      <line x1="24" y1="82" x2="406" y2="82" stroke="#D3E9E2"/>
+      <text x="24" y="111" class="metric" fill="#007E69">mean trajectory KL 0.05057</text>
+      <text x="24" y="137" class="body">all five tested NIAH needles preserved</text>
+      <rect x="24" y="149" width="208" height="22" rx="11" fill="#E2F5F1"/>
+      <text x="44" y="165" class="tiny" fill="#007E69">expensive reference controller</text>
+    </g>
+
+    <path d="M 924 116 H 964" stroke="#13294B" stroke-width="2.8" marker-end="url(#arrow-navy)"/>
+
+    <g id="p32" transform="translate(972,27)">
+      <rect x="0" y="0" width="474" height="178" rx="20" fill="#FCFAFF" stroke="#7C63D6" stroke-width="2.5"/>
+      <circle cx="42" cy="45" r="23" fill="#EEE9FC" stroke="#7C63D6" stroke-width="2"/>
+      <path d="M 28 54 L 28 41 L 39 41 L 39 33 L 50 33 L 50 23 L 59 23" class="purple-line"/>
+      <text x="82" y="37" class="milestone">P32 · Cheap B3 screen</text>
+      <text x="82" y="62" class="small">direct action with layer-adaptive budgets</text>
+      <line x1="24" y1="82" x2="450" y2="82" stroke="#E4DFF5"/>
+      <text x="24" y="111" class="metric" fill="#6449C5">KL 0.114995 · zero rollouts</text>
+      <text x="24" y="137" class="body">fixed global allocation; best task-score point estimate</text>
+      <rect x="24" y="149" width="196" height="22" rx="11" fill="#EEE9FC"/>
+      <text x="44" y="165" class="tiny" fill="#6449C5">current B3 candidate</text>
+    </g>
+
+    <path d="M 1454 116 H 1494" stroke="#E69F00" stroke-width="2.8" stroke-dasharray="8 6" marker-end="url(#arrow-orange)"/>
+
+    <g id="next-gate" transform="translate(1502,27)">
+      <rect x="0" y="0" width="442" height="178" rx="20" fill="#FFFCF6" stroke="#E69F00" stroke-width="2.5" stroke-dasharray="9 7"/>
+      <circle cx="42" cy="45" r="23" fill="#FFF2D6" stroke="#E69F00" stroke-width="2"/>
+      <path d="M 31 55 L 42 29 L 53 55 Z M 42 38 V 47 M 42 52 V 53" class="orange-line"/>
+      <text x="82" y="37" class="milestone">Mechanism and deployment gate</text>
+      <text x="82" y="62" class="small">separate dynamic control from static priors</text>
+      <line x1="24" y1="82" x2="418" y2="82" stroke="#F1DEB9"/>
+      <text x="24" y="109" class="body">dynamic vs static · shuffled · stale budgets</text>
+      <text x="24" y="136" class="body">irreversible eviction without CPU cold recovery</text>
+      <rect x="24" y="149" width="157" height="22" rx="11" fill="#FFF2D6"/>
+      <text x="44" y="165" class="tiny" fill="#9A6500">current project gate</text>
+    </g>
+  </g>
+
+  <text x="64" y="1242" class="tiny">StateKV architecture v4 · evidence snapshot: P26 / P31 / P32</text>
+</svg>
