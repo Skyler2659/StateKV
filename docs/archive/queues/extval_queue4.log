@@ -1,0 +1,35 @@
++ cd /Users/wangsikai/l1-robust-kv-cache
++ export HF_HUB_OFFLINE=1
++ HF_HUB_OFFLINE=1
++ .venv/bin/python scripts/run_oracle_policy_freegen.py --config configs/stages/statekv_extval_3072_256_qwen25_7b.yaml
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+[freegen] loaded mlx-community/Qwen2.5-7B-Instruct-4bit with 28/28 attention hooks
+[freegen] sample 1/8 synthetic_niah_86 prompt_tokens=4718
+[freegen] sample 1/8 policy=qk_pool kl=0.004356 score=100.0000
+[freegen] sample 1/8 policy=uniform kl=2.001041 score=0.0000
+[freegen] sample 2/8 synthetic_niah_87 prompt_tokens=4722
+[freegen] sample 2/8 policy=qk_pool kl=0.009236 score=100.0000
+[freegen] sample 2/8 policy=uniform kl=0.909643 score=0.0000
+[freegen] sample 3/8 synthetic_niah_88 prompt_tokens=4720
+[freegen] sample 3/8 policy=qk_pool kl=0.004402 score=100.0000
+[freegen] sample 3/8 policy=uniform kl=1.216238 score=0.0000
+[freegen] sample 4/8 gov_report:86 prompt_tokens=3491
+[freegen] sample 4/8 policy=qk_pool kl=0.055403 score=6.8966
+[freegen] sample 4/8 policy=uniform kl=1.176317 score=6.2696
+[freegen] sample 5/8 gov_report:87 prompt_tokens=3408
+[freegen] sample 5/8 policy=qk_pool kl=0.017819 score=6.4412
+[freegen] sample 5/8 policy=uniform kl=1.149676 score=6.4725
+[freegen] sample 6/8 gov_report:88 prompt_tokens=3631
+[freegen] sample 6/8 policy=qk_pool kl=0.009141 score=6.3551
+[freegen] sample 6/8 policy=uniform kl=0.514281 score=8.8398
+[freegen] sample 7/8 reasoning_long_generation_0 prompt_tokens=3141
+[freegen] sample 7/8 policy=qk_pool kl=0.003234 score=0.0000
+[freegen] sample 7/8 policy=uniform kl=1.528129 score=0.0000
+[freegen] sample 8/8 reasoning_long_generation_1 prompt_tokens=3124
+[freegen] sample 8/8 policy=qk_pool kl=0.003024 score=0.0000
+[freegen] sample 8/8 policy=uniform kl=1.499783 score=0.0000
+/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_extval_3072_256_qwen25_7b_v1
++ echo QUEUE4_DONE
+QUEUE4_DONE

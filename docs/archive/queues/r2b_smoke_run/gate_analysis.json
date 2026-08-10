@@ -1,0 +1,153 @@
+{
+  "arms": [
+    "every",
+    "fixed_k2",
+    "never",
+    "trigger"
+  ],
+  "execution_valid": true,
+  "gate": {
+    "budget_flags": {
+      "global_kv_budget_respected": true,
+      "irreversible_set_inclusion": true
+    },
+    "budget_flags_hold": true,
+    "per_policy": [
+      {
+        "capture_margin": 0.05,
+        "condition_a_capture_positive": false,
+        "condition_b_beats_matched_fixed_k": false,
+        "condition_c_quality_within_tolerance": true,
+        "condition_d_budget_flags_hold": true,
+        "every_mean_exact_kl": 0.0024121895849020802,
+        "every_mean_official_score": 0.6803,
+        "gate_pass": false,
+        "matched_fixed_k": {
+          "interpolated": false,
+          "outside_fixed_k_range": true,
+          "reference_arm": "nearest_fixed_k_at_2.0",
+          "reference_capture": 0.07416981152856371
+        },
+        "never_mean_exact_kl": 0.002692425516329422,
+        "policy": "attention",
+        "trigger_mean_capture": 0.0,
+        "trigger_mean_official_score": 0.6803,
+        "trigger_mean_refresh_count": 1.0
+      },
+      {
+        "capture_margin": 0.05,
+        "condition_a_capture_positive": false,
+        "condition_b_beats_matched_fixed_k": false,
+        "condition_c_quality_within_tolerance": true,
+        "condition_d_budget_flags_hold": true,
+        "every_mean_exact_kl": 0.0006033870542978548,
+        "every_mean_official_score": 0.6803,
+        "gate_pass": false,
+        "matched_fixed_k": {
+          "interpolated": false,
+          "outside_fixed_k_range": true,
+          "reference_arm": "nearest_fixed_k_at_2.0",
+          "reference_capture": 0.023694311646232914
+        },
+        "never_mean_exact_kl": 0.0006818878052285982,
+        "policy": "b2_uniform",
+        "trigger_mean_capture": 0.0,
+        "trigger_mean_official_score": 0.6803,
+        "trigger_mean_refresh_count": 1.0
+      }
+    ],
+    "reason": "no policy satisfied all four predeclared conditions",
+    "refresh_efficiency": [
+      {
+        "arm": "every",
+        "capture_samples_valid": 1,
+        "mean_capture": 1.0,
+        "mean_exact_kl": 0.0024121895849020802,
+        "mean_official_score": 0.6803,
+        "mean_refresh_count": 4.0,
+        "policy": "attention",
+        "samples": 1
+      },
+      {
+        "arm": "fixed_k2",
+        "capture_samples_valid": 1,
+        "mean_capture": 0.07416981152856371,
+        "mean_exact_kl": 0.0026716404701119245,
+        "mean_official_score": 0.6803,
+        "mean_refresh_count": 2.0,
+        "policy": "attention",
+        "samples": 1
+      },
+      {
+        "arm": "never",
+        "capture_samples_valid": 1,
+        "mean_capture": 0.0,
+        "mean_exact_kl": 0.002692425516329422,
+        "mean_official_score": 0.6803,
+        "mean_refresh_count": 1.0,
+        "policy": "attention",
+        "samples": 1
+      },
+      {
+        "arm": "trigger",
+        "capture_samples_valid": 1,
+        "mean_capture": 0.0,
+        "mean_exact_kl": 0.002692425516329422,
+        "mean_official_score": 0.6803,
+        "mean_refresh_count": 1.0,
+        "policy": "attention",
+        "samples": 1
+      },
+      {
+        "arm": "every",
+        "capture_samples_valid": 1,
+        "mean_capture": 1.0,
+        "mean_exact_kl": 0.0006033870542978548,
+        "mean_official_score": 0.6803,
+        "mean_refresh_count": 4.0,
+        "policy": "b2_uniform",
+        "samples": 1
+      },
+      {
+        "arm": "fixed_k2",
+        "capture_samples_valid": 1,
+        "mean_capture": 0.023694311646232914,
+        "mean_exact_kl": 0.0006800277839715818,
+        "mean_official_score": 0.6803,
+        "mean_refresh_count": 2.0,
+        "policy": "b2_uniform",
+        "samples": 1
+      },
+      {
+        "arm": "never",
+        "capture_samples_valid": 1,
+        "mean_capture": 0.0,
+        "mean_exact_kl": 0.0006818878052285982,
+        "mean_official_score": 0.6803,
+        "mean_refresh_count": 1.0,
+        "policy": "b2_uniform",
+        "samples": 1
+      },
+      {
+        "arm": "trigger",
+        "capture_samples_valid": 1,
+        "mean_capture": 0.0,
+        "mean_exact_kl": 0.0006818878052285982,
+        "mean_official_score": 0.6803,
+        "mean_refresh_count": 1.0,
+        "policy": "b2_uniform",
+        "samples": 1
+      }
+    ],
+    "verdict": "fail"
+  },
+  "policies": [
+    "attention",
+    "b2_uniform"
+  ],
+  "predeclared_gate": "R2B PREDECLARED GATE (fixed before the run): per policy, PASS iff (a) trigger Capture > 0, where Capture = (KL_never - KL_X) / (KL_never - KL_fresh) per sample with fresh = every-refresh arm (|denominator| < 1e-9 -> NaN); (b) trigger mean Capture >= interpolated fixed-k mean Capture + 0.05 at the trigger's matched mean refresh count (linear interpolation between adjacent fixed-k arms in refresh-count space; if the trigger's count is outside the fixed-k range the nearest arm is used and the comparison is flagged); (c) trigger mean official_score >= every-arm mean official_score - 0.5; (d) all irreversibility/budget flags hold (irreversible_set_inclusion and global_kv_budget_respected on every cycle of every arm). Overall PASS = at least one policy passes AND the other policy still satisfies (d). If no trigger arm ran, verdict = 'no-trigger-frozen-interval-curve-only' and only the fixed-k curve plus the never/fresh bounds are reported.",
+  "samples": [
+    "gov_report:101"
+  ],
+  "stage": "r2b_selective_refresh_gate"
+}

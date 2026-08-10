@@ -1,0 +1,33 @@
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+{
+  "trajectory_kl_mean": 0.02143065686254901,
+  "B_mean": {
+    "jaccard_attn_delta": 0.9147386955492424,
+    "jaccard_attn_apv": 0.9154760495580807,
+    "recall_future_attn": 0.7153068382235049,
+    "recall_future_delta": 0.7012859247234247,
+    "recall_future_apv": 0.69778363997114
+  },
+  "C2": {
+    "pairs": 288,
+    "regret_mean": -3.5120106021926925e-06,
+    "regret_median": 7.599389867385398e-15,
+    "regret_p95_abs": 0.00016133394092321393,
+    "fraction_positive": 0.4201388888888889,
+    "fraction_negative": 0.3680555555555556,
+    "fraction_flat_1e-4": 0.9097222222222222,
+    "spearman_margin_vs_regret": 0.01115048724512475,
+    "spearman_delta_diff_vs_regret": -0.03273382523741204,
+    "partial_delta_given_margin": -0.032122963963203646,
+    "partial_pv_given_margin": -0.023315208436315706
+  },
+  "E_needle": {
+    "rows": 13031460,
+    "mean_attn": 0.00010352612650610987,
+    "in_core_rate": 0.05847779143703008,
+    "mean_fut_attn_4": 0.00010447002695512328,
+    "partial_delta_given_attn": -0.09198140360289593
+  }
+}
+tables written to /Users/wangsikai/l1-robust-kv-cache/analysis/tables

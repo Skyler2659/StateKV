@@ -1,0 +1,4 @@
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_retest_replay_era1_n24_v1

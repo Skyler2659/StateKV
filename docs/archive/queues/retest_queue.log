@@ -1,0 +1,296 @@
++ cd /Users/wangsikai/l1-robust-kv-cache
++ export HF_HUB_OFFLINE=1
++ HF_HUB_OFFLINE=1
++ export PYTHONPATH=benchmarks/mlx
++ PYTHONPATH=benchmarks/mlx
++ PY=.venv/bin/python
++ .venv/bin/python scripts/run_retest_freegen.py --config configs/stages/retest_freegen_smoke.yaml
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+[retest] loaded mlx-community/Qwen3-8B-4bit; policies=6 (cheap=2 tiered=1 panel=3)
+[retest] sample 1/2 synthetic_niah_118 prompt_tokens=1247
+[retest] sample 1/2 policy=attention kl=0.000005 score=0.0000
+[retest] sample 1/2 policy=qk_pool kl=0.000002 score=0.0000
+[retest] sample 1/2 policy=qk_tiered_v kl=0.000002 score=0.0000
+[retest] sample 1/2 policy=token_rarity kl=0.000004 score=0.0000
+[retest] sample 1/2 policy=a2_temporal_volatility kl=0.000003 score=0.0000
+[retest] sample 1/2 policy=b2_direct_action_generator kl=0.000004 score=0.0000
+[retest] sample 2/2 gov_report:118 prompt_tokens=890
+[retest] sample 2/2 policy=attention kl=0.000769 score=0.6557
+[retest] sample 2/2 policy=qk_pool kl=0.000453 score=0.6557
+[retest] sample 2/2 policy=qk_tiered_v kl=0.000444 score=0.6557
+[retest] sample 2/2 policy=token_rarity kl=0.574626 score=0.0000
+[retest] sample 2/2 policy=a2_temporal_volatility kl=0.000428 score=0.6557
+[retest] sample 2/2 policy=b2_direct_action_generator kl=0.000694 score=0.6557
+/Users/wangsikai/l1-robust-kv-cache/tmp/retest_smoke_run
++ .venv/bin/python scripts/run_retest_freegen.py --config configs/stages/retest_freegen_qwen3_8b_n20_protocol.yaml
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+[retest] loaded mlx-community/Qwen3-8B-4bit; policies=12 (cheap=5 tiered=1 panel=6)
+[retest] sample 1/20 synthetic_niah_118 prompt_tokens=1247
+[retest] sample 1/20 policy=attention kl=0.416695 score=100.0000
+[retest] sample 1/20 policy=snapkv kl=0.061811 score=100.0000
+[retest] sample 1/20 policy=h2o kl=1.588137 score=0.0000
+[retest] sample 1/20 policy=uniform kl=1.209243 score=0.0000
+[retest] sample 1/20 policy=qk_pool kl=0.012346 score=100.0000
+[retest] sample 1/20 policy=qk_tiered_v kl=0.011580 score=100.0000
+[retest] sample 1/20 policy=token_rarity kl=0.211168 score=100.0000
+[retest] sample 1/20 policy=a2_temporal_volatility kl=0.788556 score=0.0000
+[retest] sample 1/20 policy=a4_uncertainty_cascade kl=0.416695 score=100.0000
+[retest] sample 1/20 policy=b1_historical_tiny_ranker kl=0.266014 score=100.0000
+[retest] sample 1/20 policy=b2_direct_action_generator kl=0.065084 score=100.0000
+[retest] sample 1/20 policy=b3_layer_adaptive_budget kl=0.033645 score=100.0000
+[retest] sample 2/20 synthetic_niah_119 prompt_tokens=1247
+[retest] sample 2/20 policy=attention kl=0.220077 score=100.0000
+[retest] sample 2/20 policy=snapkv kl=0.042023 score=100.0000
+[retest] sample 2/20 policy=h2o kl=1.375956 score=0.0000
+[retest] sample 2/20 policy=uniform kl=2.154688 score=0.0000
+[retest] sample 2/20 policy=qk_pool kl=0.007109 score=100.0000
+[retest] sample 2/20 policy=qk_tiered_v kl=0.007761 score=100.0000
+[retest] sample 2/20 policy=token_rarity kl=0.228269 score=100.0000
+[retest] sample 2/20 policy=a2_temporal_volatility kl=0.017346 score=100.0000
+[retest] sample 2/20 policy=a4_uncertainty_cascade kl=0.220077 score=100.0000
+[retest] sample 2/20 policy=b1_historical_tiny_ranker kl=0.174328 score=100.0000
+[retest] sample 2/20 policy=b2_direct_action_generator kl=0.017510 score=100.0000
+[retest] sample 2/20 policy=b3_layer_adaptive_budget kl=0.017133 score=100.0000
+[retest] sample 3/20 synthetic_niah_120 prompt_tokens=1249
+[retest] sample 3/20 policy=attention kl=0.614341 score=100.0000
+[retest] sample 3/20 policy=snapkv kl=0.018437 score=100.0000
+[retest] sample 3/20 policy=h2o kl=1.612351 score=0.0000
+[retest] sample 3/20 policy=uniform kl=1.635606 score=0.0000
+[retest] sample 3/20 policy=qk_pool kl=0.009431 score=100.0000
+[retest] sample 3/20 policy=qk_tiered_v kl=0.011168 score=100.0000
+[retest] sample 3/20 policy=token_rarity kl=0.177822 score=100.0000
+[retest] sample 3/20 policy=a2_temporal_volatility kl=0.019649 score=100.0000
+[retest] sample 3/20 policy=a4_uncertainty_cascade kl=0.614341 score=100.0000
+[retest] sample 3/20 policy=b1_historical_tiny_ranker kl=0.293935 score=100.0000
+[retest] sample 3/20 policy=b2_direct_action_generator kl=0.028452 score=100.0000
+[retest] sample 3/20 policy=b3_layer_adaptive_budget kl=0.021127 score=100.0000
+[retest] sample 4/20 synthetic_niah_121 prompt_tokens=1247
+[retest] sample 4/20 policy=attention kl=0.354929 score=100.0000
+[retest] sample 4/20 policy=snapkv kl=0.231934 score=0.0000
+[retest] sample 4/20 policy=h2o kl=1.549444 score=0.0000
+[retest] sample 4/20 policy=uniform kl=0.746562 score=0.0000
+[retest] sample 4/20 policy=qk_pool kl=0.009528 score=100.0000
+[retest] sample 4/20 policy=qk_tiered_v kl=0.008106 score=100.0000
+[retest] sample 4/20 policy=token_rarity kl=0.244057 score=100.0000
+[retest] sample 4/20 policy=a2_temporal_volatility kl=0.049551 score=100.0000
+[retest] sample 4/20 policy=a4_uncertainty_cascade kl=0.354929 score=100.0000
+[retest] sample 4/20 policy=b1_historical_tiny_ranker kl=0.360070 score=100.0000
+[retest] sample 4/20 policy=b2_direct_action_generator kl=0.016524 score=100.0000
+[retest] sample 4/20 policy=b3_layer_adaptive_budget kl=0.017653 score=100.0000
+[retest] sample 5/20 synthetic_niah_122 prompt_tokens=1247
+[retest] sample 5/20 policy=attention kl=0.417506 score=100.0000
+[retest] sample 5/20 policy=snapkv kl=0.044040 score=100.0000
+[retest] sample 5/20 policy=h2o kl=1.694181 score=0.0000
+[retest] sample 5/20 policy=uniform kl=1.432242 score=0.0000
+[retest] sample 5/20 policy=qk_pool kl=0.008141 score=100.0000
+[retest] sample 5/20 policy=qk_tiered_v kl=0.010167 score=100.0000
+[retest] sample 5/20 policy=token_rarity kl=0.435952 score=100.0000
+[retest] sample 5/20 policy=a2_temporal_volatility kl=0.023137 score=100.0000
+[retest] sample 5/20 policy=a4_uncertainty_cascade kl=0.417506 score=100.0000
+[retest] sample 5/20 policy=b1_historical_tiny_ranker kl=0.300047 score=100.0000
+[retest] sample 5/20 policy=b2_direct_action_generator kl=0.022565 score=100.0000
+[retest] sample 5/20 policy=b3_layer_adaptive_budget kl=0.020411 score=100.0000
+[retest] sample 6/20 synthetic_niah_123 prompt_tokens=1249
+[retest] sample 6/20 policy=attention kl=0.350441 score=100.0000
+[retest] sample 6/20 policy=snapkv kl=0.024203 score=100.0000
+[retest] sample 6/20 policy=h2o kl=1.543833 score=0.0000
+[retest] sample 6/20 policy=uniform kl=2.188366 score=0.0000
+[retest] sample 6/20 policy=qk_pool kl=0.009455 score=100.0000
+[retest] sample 6/20 policy=qk_tiered_v kl=0.010668 score=100.0000
+[retest] sample 6/20 policy=token_rarity kl=0.404664 score=100.0000
+[retest] sample 6/20 policy=a2_temporal_volatility kl=0.084181 score=0.0000
+[retest] sample 6/20 policy=a4_uncertainty_cascade kl=0.350441 score=100.0000
+[retest] sample 6/20 policy=b1_historical_tiny_ranker kl=0.234030 score=100.0000
+[retest] sample 6/20 policy=b2_direct_action_generator kl=0.022357 score=100.0000
+[retest] sample 6/20 policy=b3_layer_adaptive_budget kl=0.021556 score=100.0000
+[retest] sample 7/20 synthetic_niah_124 prompt_tokens=1247
+[retest] sample 7/20 policy=attention kl=0.279567 score=100.0000
+[retest] sample 7/20 policy=snapkv kl=0.151134 score=0.0000
+[retest] sample 7/20 policy=h2o kl=0.589499 score=0.0000
+[retest] sample 7/20 policy=uniform kl=2.376002 score=0.0000
+[retest] sample 7/20 policy=qk_pool kl=0.009957 score=100.0000
+[retest] sample 7/20 policy=qk_tiered_v kl=0.010645 score=100.0000
+[retest] sample 7/20 policy=token_rarity kl=0.207422 score=100.0000
+[retest] sample 7/20 policy=a2_temporal_volatility kl=0.021060 score=100.0000
+[retest] sample 7/20 policy=a4_uncertainty_cascade kl=0.279567 score=100.0000
+[retest] sample 7/20 policy=b1_historical_tiny_ranker kl=0.308309 score=100.0000
+[retest] sample 7/20 policy=b2_direct_action_generator kl=0.021818 score=100.0000
+[retest] sample 7/20 policy=b3_layer_adaptive_budget kl=0.019784 score=100.0000
+[retest] sample 8/20 synthetic_niah_125 prompt_tokens=1247
+[retest] sample 8/20 policy=attention kl=0.256675 score=100.0000
+[retest] sample 8/20 policy=snapkv kl=0.046021 score=100.0000
+[retest] sample 8/20 policy=h2o kl=1.763184 score=0.0000
+[retest] sample 8/20 policy=uniform kl=1.210085 score=0.0000
+[retest] sample 8/20 policy=qk_pool kl=0.004755 score=100.0000
+[retest] sample 8/20 policy=qk_tiered_v kl=0.005369 score=100.0000
+[retest] sample 8/20 policy=token_rarity kl=0.394978 score=100.0000
+[retest] sample 8/20 policy=a2_temporal_volatility kl=0.018475 score=100.0000
+[retest] sample 8/20 policy=a4_uncertainty_cascade kl=0.256675 score=100.0000
+[retest] sample 8/20 policy=b1_historical_tiny_ranker kl=0.227091 score=100.0000
+[retest] sample 8/20 policy=b2_direct_action_generator kl=0.019627 score=100.0000
+[retest] sample 8/20 policy=b3_layer_adaptive_budget kl=0.021980 score=100.0000
+[retest] sample 9/20 synthetic_niah_126 prompt_tokens=1245
+[retest] sample 9/20 policy=attention kl=0.390081 score=100.0000
+[retest] sample 9/20 policy=snapkv kl=0.016250 score=100.0000
+[retest] sample 9/20 policy=h2o kl=1.419385 score=0.0000
+[retest] sample 9/20 policy=uniform kl=1.055851 score=0.0000
+[retest] sample 9/20 policy=qk_pool kl=0.012528 score=100.0000
+[retest] sample 9/20 policy=qk_tiered_v kl=0.012857 score=100.0000
+[retest] sample 9/20 policy=token_rarity kl=0.500355 score=100.0000
+[retest] sample 9/20 policy=a2_temporal_volatility kl=0.023437 score=100.0000
+[retest] sample 9/20 policy=a4_uncertainty_cascade kl=0.390081 score=100.0000
+[retest] sample 9/20 policy=b1_historical_tiny_ranker kl=0.251474 score=100.0000
+[retest] sample 9/20 policy=b2_direct_action_generator kl=0.018945 score=100.0000
+[retest] sample 9/20 policy=b3_layer_adaptive_budget kl=0.018538 score=100.0000
+[retest] sample 10/20 synthetic_niah_127 prompt_tokens=1243
+[retest] sample 10/20 policy=attention kl=0.295221 score=100.0000
+[retest] sample 10/20 policy=snapkv kl=0.249471 score=0.0000
+[retest] sample 10/20 policy=h2o kl=1.304928 score=0.0000
+[retest] sample 10/20 policy=uniform kl=2.471045 score=0.0000
+[retest] sample 10/20 policy=qk_pool kl=0.008249 score=100.0000
+[retest] sample 10/20 policy=qk_tiered_v kl=0.008954 score=100.0000
+[retest] sample 10/20 policy=token_rarity kl=0.379238 score=100.0000
+[retest] sample 10/20 policy=a2_temporal_volatility kl=0.047639 score=100.0000
+[retest] sample 10/20 policy=a4_uncertainty_cascade kl=0.295221 score=100.0000
+[retest] sample 10/20 policy=b1_historical_tiny_ranker kl=0.307125 score=100.0000
+[retest] sample 10/20 policy=b2_direct_action_generator kl=0.018540 score=100.0000
+[retest] sample 10/20 policy=b3_layer_adaptive_budget kl=0.019738 score=100.0000
+[retest] sample 11/20 gov_report:118 prompt_tokens=890
+[retest] sample 11/20 policy=attention kl=0.109638 score=6.6768
+[retest] sample 11/20 policy=snapkv kl=0.254943 score=6.6768
+[retest] sample 11/20 policy=h2o kl=0.060350 score=6.3636
+[retest] sample 11/20 policy=uniform kl=0.512312 score=7.2398
+[retest] sample 11/20 policy=qk_pool kl=0.004881 score=7.2508
+[retest] sample 11/20 policy=qk_tiered_v kl=0.005652 score=7.2508
+[retest] sample 11/20 policy=token_rarity kl=0.897114 score=5.7751
+[retest] sample 11/20 policy=a2_temporal_volatility kl=0.294155 score=7.5529
+[retest] sample 11/20 policy=a4_uncertainty_cascade kl=0.109638 score=6.6768
+[retest] sample 11/20 policy=b1_historical_tiny_ranker kl=0.093058 score=6.9592
+[retest] sample 11/20 policy=b2_direct_action_generator kl=0.184232 score=6.9697
+[retest] sample 11/20 policy=b3_layer_adaptive_budget kl=0.335485 score=7.5529
+[retest] sample 12/20 gov_report:119 prompt_tokens=997
+[retest] sample 12/20 policy=attention kl=0.445119 score=6.6561
+[retest] sample 12/20 policy=snapkv kl=0.093117 score=3.8898
+[retest] sample 12/20 policy=h2o kl=0.079162 score=3.2787
+[retest] sample 12/20 policy=uniform kl=0.574233 score=3.5831
+[retest] sample 12/20 policy=qk_pool kl=0.008693 score=2.9460
+[retest] sample 12/20 policy=qk_tiered_v kl=0.006555 score=2.9460
+[retest] sample 12/20 policy=token_rarity kl=0.614253 score=5.4140
+[retest] sample 12/20 policy=a2_temporal_volatility kl=0.251038 score=3.8898
+[retest] sample 12/20 policy=a4_uncertainty_cascade kl=0.445119 score=6.6561
+[retest] sample 12/20 policy=b1_historical_tiny_ranker kl=0.256984 score=6.0510
+[retest] sample 12/20 policy=b2_direct_action_generator kl=0.324206 score=4.2003
+[retest] sample 12/20 policy=b3_layer_adaptive_budget kl=0.232107 score=5.1200
+[retest] sample 13/20 gov_report:120 prompt_tokens=902
+[retest] sample 13/20 policy=attention kl=0.456765 score=6.2044
+[retest] sample 13/20 policy=snapkv kl=0.518393 score=6.4982
+[retest] sample 13/20 policy=h2o kl=0.263062 score=5.8288
+[retest] sample 13/20 policy=uniform kl=0.583797 score=6.8716
+[retest] sample 13/20 policy=qk_pool kl=0.005198 score=5.5046
+[retest] sample 13/20 policy=qk_tiered_v kl=0.005101 score=4.7532
+[retest] sample 13/20 policy=token_rarity kl=1.921734 score=6.5099
+[retest] sample 13/20 policy=a2_temporal_volatility kl=0.337489 score=6.1818
+[retest] sample 13/20 policy=a4_uncertainty_cascade kl=0.456765 score=6.2044
+[retest] sample 13/20 policy=b1_historical_tiny_ranker kl=0.390849 score=6.5814
+[retest] sample 13/20 policy=b2_direct_action_generator kl=0.159479 score=6.9217
+[retest] sample 13/20 policy=b3_layer_adaptive_budget kl=0.979644 score=5.8288
+[retest] sample 14/20 gov_report:121 prompt_tokens=973
+[retest] sample 14/20 policy=attention kl=0.207359 score=7.3684
+[retest] sample 14/20 policy=snapkv kl=0.269980 score=7.4336
+[retest] sample 14/20 policy=h2o kl=0.164395 score=8.0420
+[retest] sample 14/20 policy=uniform kl=1.000733 score=6.3604
+[retest] sample 14/20 policy=qk_pool kl=0.007200 score=8.0560
+[retest] sample 14/20 policy=qk_tiered_v kl=0.008569 score=8.0420
+[retest] sample 14/20 policy=token_rarity kl=1.009447 score=6.0606
+[retest] sample 14/20 policy=a2_temporal_volatility kl=0.171141 score=8.3916
+[retest] sample 14/20 policy=a4_uncertainty_cascade kl=0.207359 score=7.3684
+[retest] sample 14/20 policy=b1_historical_tiny_ranker kl=0.082167 score=7.7329
+[retest] sample 14/20 policy=b2_direct_action_generator kl=0.345741 score=7.0423
+[retest] sample 14/20 policy=b3_layer_adaptive_budget kl=0.038872 score=7.3555
+[retest] sample 15/20 gov_report:122 prompt_tokens=912
+[retest] sample 15/20 policy=attention kl=0.547850 score=7.5000
+[retest] sample 15/20 policy=snapkv kl=0.682338 score=6.8750
+[retest] sample 15/20 policy=h2o kl=0.192801 score=7.5000
+[retest] sample 15/20 policy=uniform kl=0.437385 score=5.0713
+[retest] sample 15/20 policy=qk_pool kl=0.006109 score=6.3191
+[retest] sample 15/20 policy=qk_tiered_v kl=0.007189 score=6.3191
+[retest] sample 15/20 policy=token_rarity kl=3.344872 score=4.7695
+[retest] sample 15/20 policy=a2_temporal_volatility kl=0.183110 score=5.3883
+[retest] sample 15/20 policy=a4_uncertainty_cascade kl=0.547850 score=7.5000
+[retest] sample 15/20 policy=b1_historical_tiny_ranker kl=0.432493 score=7.1875
+[retest] sample 15/20 policy=b2_direct_action_generator kl=0.117972 score=5.3797
+[retest] sample 15/20 policy=b3_layer_adaptive_budget kl=0.072997 score=5.3968
+[retest] sample 16/20 gov_report:123 prompt_tokens=922
+[retest] sample 16/20 policy=attention kl=0.068907 score=6.5421
+[retest] sample 16/20 policy=snapkv kl=0.540697 score=6.2893
+[retest] sample 16/20 policy=h2o kl=0.054640 score=6.2598
+[retest] sample 16/20 policy=uniform kl=0.440967 score=6.2208
+[retest] sample 16/20 policy=qk_pool kl=0.002277 score=6.2402
+[retest] sample 16/20 policy=qk_tiered_v kl=0.001776 score=6.2402
+[retest] sample 16/20 policy=token_rarity kl=1.171425 score=5.3459
+[retest] sample 16/20 policy=a2_temporal_volatility kl=0.121400 score=6.2402
+[retest] sample 16/20 policy=a4_uncertainty_cascade kl=0.068907 score=6.5421
+[retest] sample 16/20 policy=b1_historical_tiny_ranker kl=0.053760 score=6.8536
+[retest] sample 16/20 policy=b2_direct_action_generator kl=0.100591 score=6.5421
+[retest] sample 16/20 policy=b3_layer_adaptive_budget kl=0.121721 score=6.2500
+[retest] sample 17/20 gov_report:124 prompt_tokens=931
+[retest] sample 17/20 policy=attention kl=0.144858 score=4.3127
+[retest] sample 17/20 policy=snapkv kl=0.077529 score=4.8387
+[retest] sample 17/20 policy=h2o kl=0.179979 score=5.1007
+[retest] sample 17/20 policy=uniform kl=0.272475 score=5.3619
+[retest] sample 17/20 policy=qk_pool kl=0.002503 score=4.8452
+[retest] sample 17/20 policy=qk_tiered_v kl=0.003471 score=4.8452
+[retest] sample 17/20 policy=token_rarity kl=0.851292 score=4.8257
+[retest] sample 17/20 policy=a2_temporal_volatility kl=0.051341 score=4.5699
+[retest] sample 17/20 policy=a4_uncertainty_cascade kl=0.144858 score=4.3127
+[retest] sample 17/20 policy=b1_historical_tiny_ranker kl=0.053819 score=4.5760
+[retest] sample 17/20 policy=b2_direct_action_generator kl=0.120999 score=4.8387
+[retest] sample 17/20 policy=b3_layer_adaptive_budget kl=0.080929 score=4.8387
+[retest] sample 18/20 gov_report:125 prompt_tokens=977
+[retest] sample 18/20 policy=attention kl=0.130555 score=4.9383
+[retest] sample 18/20 policy=snapkv kl=0.141427 score=4.4017
+[retest] sample 18/20 policy=h2o kl=0.121573 score=4.6575
+[retest] sample 18/20 policy=uniform kl=0.808005 score=4.9248
+[retest] sample 18/20 policy=qk_pool kl=0.006265 score=4.3776
+[retest] sample 18/20 policy=qk_tiered_v kl=0.006408 score=4.3776
+[retest] sample 18/20 policy=token_rarity kl=1.284651 score=5.6988
+[retest] sample 18/20 policy=a2_temporal_volatility kl=0.972129 score=5.7065
+[retest] sample 18/20 policy=a4_uncertainty_cascade kl=0.130555 score=4.9383
+[retest] sample 18/20 policy=b1_historical_tiny_ranker kl=0.031889 score=4.9383
+[retest] sample 18/20 policy=b2_direct_action_generator kl=0.144260 score=4.9315
+[retest] sample 18/20 policy=b3_layer_adaptive_budget kl=0.159382 score=5.7065
+[retest] sample 19/20 gov_report:126 prompt_tokens=883
+[retest] sample 19/20 policy=attention kl=0.434492 score=3.7433
+[retest] sample 19/20 policy=snapkv kl=0.118022 score=5.0734
+[retest] sample 19/20 policy=h2o kl=0.146076 score=4.0107
+[retest] sample 19/20 policy=uniform kl=0.336478 score=4.7619
+[retest] sample 19/20 policy=qk_pool kl=0.007189 score=4.0000
+[retest] sample 19/20 policy=qk_tiered_v kl=0.007265 score=4.2667
+[retest] sample 19/20 policy=token_rarity kl=1.370520 score=4.5576
+[retest] sample 19/20 policy=a2_temporal_volatility kl=0.386847 score=4.0000
+[retest] sample 19/20 policy=a4_uncertainty_cascade kl=0.434492 score=3.7433
+[retest] sample 19/20 policy=b1_historical_tiny_ranker kl=0.325349 score=4.2724
+[retest] sample 19/20 policy=b2_direct_action_generator kl=0.862023 score=4.2724
+[retest] sample 19/20 policy=b3_layer_adaptive_budget kl=0.583382 score=4.0000
+[retest] sample 20/20 gov_report:127 prompt_tokens=1109
+[retest] sample 20/20 policy=attention kl=0.390897 score=6.5770
+[retest] sample 20/20 policy=snapkv kl=0.729304 score=5.3412
+[retest] sample 20/20 policy=h2o kl=0.229479 score=6.5672
+[retest] sample 20/20 policy=uniform kl=0.748339 score=5.6972
+[retest] sample 20/20 policy=qk_pool kl=0.010463 score=5.6886
+[retest] sample 20/20 policy=qk_tiered_v kl=0.012066 score=5.6886
+[retest] sample 20/20 policy=token_rarity kl=1.728483 score=6.1856
+[retest] sample 20/20 policy=a2_temporal_volatility kl=0.950250 score=6.2780
+[retest] sample 20/20 policy=a4_uncertainty_cascade kl=0.390897 score=6.5770
+[retest] sample 20/20 policy=b1_historical_tiny_ranker kl=0.261998 score=6.2780
+[retest] sample 20/20 policy=b2_direct_action_generator kl=1.074143 score=6.2687
+[retest] sample 20/20 policy=b3_layer_adaptive_budget kl=0.968635 score=6.2780
+/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_retest_freegen_qwen3_8b_n20_v1
++ .venv/bin/python analysis/build_retest_report.py
+/Users/wangsikai/l1-robust-kv-cache/analysis/statekv_retest_report.md
++ echo RETEST_QUEUE_DONE
+RETEST_QUEUE_DONE

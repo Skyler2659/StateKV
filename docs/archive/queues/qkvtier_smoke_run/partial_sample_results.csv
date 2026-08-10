@@ -1,0 +1,7 @@
+policy,cycles_completed,generated_tokens,mean_trajectory_exact_kl,refresh_events,recovery_events,all_budgets_respected,prompt_tokens,cache_budget,retained_prompt_fraction,sample_id,task,task_bucket,generation_text,generation_length_tokens,repetition_4gram_rate,rouge_l,rouge_1,rouge_2,official_score,needle_retrieval_accuracy,mean_recovered_fraction,mean_churn_layer_mean,mean_candidate_universe_size,pool_scoring_forward_time_total_s
+full_cache,8,8,0.0,0,0,True,1245,,1.0,synthetic_niah_86,niah_single_1,NIAH,"2171183
+
+",8,0.0,,,,100.0,1.0,,,,
+qk_tiered_v,8,8,7.178084295118934e-05,7,7,True,1245,256.0,0.20562248995983937,synthetic_niah_86,niah_single_1,NIAH,"2171183
+
+",8,0.0,,,,100.0,1.0,0.1667455808080808,41.92460317460318,1247.5,2.943427708999998

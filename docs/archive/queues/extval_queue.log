@@ -1,0 +1,131 @@
++ cd /Users/wangsikai/l1-robust-kv-cache
++ export HF_HUB_OFFLINE=1
++ HF_HUB_OFFLINE=1
++ PY=.venv/bin/python
++ .venv/bin/python scripts/run_oracle_policy_freegen.py --config configs/stages/statekv_extval_3072_256.yaml
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+[freegen] loaded mlx-community/Qwen3-8B-4bit with 36/36 attention hooks
+[freegen] sample 1/8 synthetic_niah_86 prompt_tokens=4701
+[freegen] sample 1/8 policy=qk_pool kl=0.019285 score=100.0000
+[freegen] sample 1/8 policy=quest_like kl=0.035752 score=100.0000
+[freegen] sample 1/8 policy=uniform kl=1.575976 score=0.0000
+[freegen] sample 2/8 synthetic_niah_87 prompt_tokens=4705
+[freegen] sample 2/8 policy=qk_pool kl=0.020138 score=100.0000
+[freegen] sample 2/8 policy=quest_like kl=0.035717 score=100.0000
+[freegen] sample 2/8 policy=uniform kl=1.866630 score=0.0000
+[freegen] sample 3/8 synthetic_niah_88 prompt_tokens=4703
+[freegen] sample 3/8 policy=qk_pool kl=0.018683 score=100.0000
+[freegen] sample 3/8 policy=quest_like kl=0.042208 score=100.0000
+[freegen] sample 3/8 policy=uniform kl=2.295316 score=0.0000
+[freegen] sample 4/8 gov_report:86 prompt_tokens=3474
+[freegen] sample 4/8 policy=qk_pool kl=0.020491 score=5.6782
+[freegen] sample 4/8 policy=quest_like kl=0.174680 score=4.1009
+[freegen] sample 4/8 policy=uniform kl=0.835894 score=5.9748
+[freegen] sample 5/8 gov_report:87 prompt_tokens=3391
+[freegen] sample 5/8 policy=qk_pool kl=0.030735 score=6.8182
+[freegen] sample 5/8 policy=quest_like kl=0.084672 score=6.4830
+[freegen] sample 5/8 policy=uniform kl=0.972701 score=7.0853
+[freegen] sample 6/8 gov_report:88 prompt_tokens=3614
+[freegen] sample 6/8 policy=qk_pool kl=0.047126 score=7.0764
+[freegen] sample 6/8 policy=quest_like kl=0.060138 score=6.3197
+[freegen] sample 6/8 policy=uniform kl=0.595904 score=6.7164
+[freegen] sample 7/8 reasoning_long_generation_0 prompt_tokens=3124
+[freegen] sample 7/8 policy=qk_pool kl=0.007289 score=0.0000
+[freegen] sample 7/8 policy=quest_like kl=0.023441 score=0.0000
+[freegen] sample 7/8 policy=uniform kl=0.683575 score=0.0000
+[freegen] sample 8/8 reasoning_long_generation_1 prompt_tokens=3107
+[freegen] sample 8/8 policy=qk_pool kl=0.007697 score=0.0000
+[freegen] sample 8/8 policy=quest_like kl=0.009622 score=0.0000
+[freegen] sample 8/8 policy=uniform kl=1.703813 score=0.0000
+/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_extval_3072_256_v1
++ .venv/bin/python scripts/run_oracle_policy_freegen.py --config configs/stages/statekv_extval_3072_256_h4.yaml
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+[freegen] loaded mlx-community/Qwen3-8B-4bit with 36/36 attention hooks
+[freegen] sample 1/8 synthetic_niah_86 prompt_tokens=4701
+[freegen] sample 1/8 policy=qk_pool kl=0.029334 score=100.0000
+[freegen] sample 2/8 synthetic_niah_87 prompt_tokens=4705
+[freegen] sample 2/8 policy=qk_pool kl=0.020111 score=100.0000
+[freegen] sample 3/8 synthetic_niah_88 prompt_tokens=4703
+[freegen] sample 3/8 policy=qk_pool kl=0.028382 score=100.0000
+[freegen] sample 4/8 gov_report:86 prompt_tokens=3474
+[freegen] sample 4/8 policy=qk_pool kl=0.131169 score=6.9291
+[freegen] sample 5/8 gov_report:87 prompt_tokens=3391
+[freegen] sample 5/8 policy=qk_pool kl=0.104301 score=7.3955
+[freegen] sample 6/8 gov_report:88 prompt_tokens=3614
+[freegen] sample 6/8 policy=qk_pool kl=0.037333 score=6.3197
+[freegen] sample 7/8 reasoning_long_generation_0 prompt_tokens=3124
+[freegen] sample 7/8 policy=qk_pool kl=0.008902 score=0.0000
+[freegen] sample 8/8 reasoning_long_generation_1 prompt_tokens=3107
+[freegen] sample 8/8 policy=qk_pool kl=0.011507 score=0.0000
+/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_extval_3072_256_h4_v1
++ .venv/bin/python scripts/run_oracle_policy_freegen.py --config configs/stages/statekv_extval_3072_256_h16.yaml
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+[freegen] loaded mlx-community/Qwen3-8B-4bit with 36/36 attention hooks
+[freegen] sample 1/8 synthetic_niah_86 prompt_tokens=4701
+[freegen] sample 1/8 policy=qk_pool kl=0.066898 score=100.0000
+[freegen] sample 2/8 synthetic_niah_87 prompt_tokens=4705
+[freegen] sample 2/8 policy=qk_pool kl=0.045821 score=100.0000
+[freegen] sample 3/8 synthetic_niah_88 prompt_tokens=4703
+[freegen] sample 3/8 policy=qk_pool kl=0.064296 score=100.0000
+[freegen] sample 4/8 gov_report:86 prompt_tokens=3474
+[freegen] sample 4/8 policy=qk_pool kl=0.753243 score=7.4883
+[freegen] sample 5/8 gov_report:87 prompt_tokens=3391
+[freegen] sample 5/8 policy=qk_pool kl=0.134943 score=7.1313
+[freegen] sample 6/8 gov_report:88 prompt_tokens=3614
+[freegen] sample 6/8 policy=qk_pool kl=0.051571 score=7.0764
+[freegen] sample 7/8 reasoning_long_generation_0 prompt_tokens=3124
+[freegen] sample 7/8 policy=qk_pool kl=0.023151 score=0.0000
+[freegen] sample 8/8 reasoning_long_generation_1 prompt_tokens=3107
+[freegen] sample 8/8 policy=qk_pool kl=0.027696 score=0.0000
+/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_extval_3072_256_h16_v1
++ .venv/bin/python scripts/run_oracle_policy_freegen.py --config configs/stages/statekv_extval_3072_64.yaml
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+[freegen] loaded mlx-community/Qwen3-8B-4bit with 36/36 attention hooks
+[freegen] sample 1/8 synthetic_niah_86 prompt_tokens=4701
+[freegen] sample 1/8 policy=qk_pool kl=0.067494 score=100.0000
+[freegen] sample 1/8 policy=uniform kl=2.188160 score=0.0000
+[freegen] sample 2/8 synthetic_niah_87 prompt_tokens=4705
+[freegen] sample 2/8 policy=qk_pool kl=0.065391 score=100.0000
+[freegen] sample 2/8 policy=uniform kl=2.185076 score=0.0000
+[freegen] sample 3/8 synthetic_niah_88 prompt_tokens=4703
+[freegen] sample 3/8 policy=qk_pool kl=0.066753 score=100.0000
+[freegen] sample 3/8 policy=uniform kl=2.322651 score=0.0000
+[freegen] sample 4/8 gov_report:86 prompt_tokens=3474
+[freegen] sample 4/8 policy=qk_pool kl=0.512727 score=5.0473
+[freegen] sample 4/8 policy=uniform kl=1.483550 score=5.0235
+[freegen] sample 5/8 gov_report:87 prompt_tokens=3391
+[freegen] sample 5/8 policy=qk_pool kl=0.127322 score=7.4675
+[freegen] sample 5/8 policy=uniform kl=1.042977 score=7.0740
+[freegen] sample 6/8 gov_report:88 prompt_tokens=3614
+[freegen] sample 6/8 policy=qk_pool kl=0.102620 score=6.7039
+[freegen] sample 6/8 policy=uniform kl=0.822645 score=7.8212
+[freegen] sample 7/8 reasoning_long_generation_0 prompt_tokens=3124
+[freegen] sample 7/8 policy=qk_pool kl=0.022905 score=0.0000
+[freegen] sample 7/8 policy=uniform kl=1.695870 score=0.0000
+[freegen] sample 8/8 reasoning_long_generation_1 prompt_tokens=3107
+[freegen] sample 8/8 policy=qk_pool kl=0.024238 score=0.0000
+[freegen] sample 8/8 policy=uniform kl=1.202012 score=0.0000
+/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_extval_3072_64_v1
++ .venv/bin/python scripts/run_qkv_decomposition.py --config configs/stages/statekv_extval_decomp_3072_256.yaml
+/Users/wangsikai/l1-robust-kv-cache/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Using the latest cached version of the module from /Users/wangsikai/.cache/huggingface/modules/datasets_modules/datasets/THUDM--LongBench/4a916a4bde5c3481ac49b84d5dde69a9d2eefcd67f884ef65b3d97ee7cc91f3e (last modified on Wed Jun 10 20:44:56 2026) since it couldn't be found locally at THUDM/LongBench
+[qkv] sample 1/8 synthetic_niah_86 kl=0.019285
+[qkv] sample 2/8 synthetic_niah_87 kl=0.020138
+[qkv] sample 3/8 synthetic_niah_88 kl=0.018683
+[qkv] sample 4/8 gov_report:86 kl=0.020491
+[qkv] sample 5/8 gov_report:87 kl=0.030735
+[qkv] sample 6/8 gov_report:88 kl=0.047126
+[qkv] sample 7/8 reasoning_long_generation_0 kl=0.007289
+[qkv] sample 8/8 reasoning_long_generation_1 kl=0.007697
+/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_extval_decomp_3072_256_v1
++ echo QUEUE_DONE
+QUEUE_DONE

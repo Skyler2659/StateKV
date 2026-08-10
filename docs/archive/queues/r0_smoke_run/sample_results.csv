@@ -1,0 +1,43 @@
+policy,cycles_completed,generated_tokens,mean_trajectory_exact_kl,refresh_events,recovery_events,all_budgets_respected,prompt_tokens,cache_budget,retained_prompt_fraction,sample_id,task,task_bucket,generation_text,generation_length_tokens,repetition_4gram_rate,rouge_l,rouge_1,rouge_2,official_score,needle_retrieval_accuracy,mean_recovered_fraction,mean_churn_layer_mean,mean_candidate_universe_size,pool_scoring_forward_time_total_s
+full_cache,8,8,0.0,0,0,True,1245,,1.0,synthetic_niah_86,niah_single_1,NIAH,"2171183
+
+",8,0.0,,,,100.0,1.0,,,,
+statekv_exact_mean,8,8,0.00027279304922392205,7,6,True,1245,256.0,0.20562248995983937,synthetic_niah_86,niah_single_1,NIAH,"2171183
+
+",8,0.0,,,,100.0,1.0,0.5484375,137.89285714285714,1247.5,2.123497001000004
+uniform,8,8,4.6875884491964825,8,7,True,1245,256.0,0.20562248995983937,synthetic_niah_86,niah_single_1,NIAH,"273
+
+The number 2",8,0.0,,,,0.0,0.0,0.4375,110.0,1247.5,0.0
+recency,8,8,0.4562064581550658,8,7,True,1245,256.0,0.20562248995983937,synthetic_niah_86,niah_single_1,NIAH,"23456
+
+The special",8,0.0,,,,0.0,0.0,0.003977272727272727,1.0,1247.5,0.0
+attention,8,8,3.413556383359224e-05,0,0,True,1245,256.0,0.20562248995983937,synthetic_niah_86,niah_single_1,NIAH,"2171183
+
+",8,0.0,,,,100.0,1.0,0.0,0.0,1247.5,0.0
+qk_pool,8,8,6.0878831712363615e-05,8,7,True,1245,256.0,0.20562248995983937,synthetic_niah_86,niah_single_1,NIAH,"2171183
+
+",8,0.0,,,,100.0,1.0,0.16625631313131314,41.801587301587304,1247.5,1.1393760419999666
+quest_like,8,8,5.12930730170165e-05,8,7,True,1245,256.0,0.20562248995983937,synthetic_niah_86,niah_single_1,NIAH,"2171183
+
+",8,0.0,,,,100.0,1.0,0.17099116161616162,42.992063492063494,1247.5,1.0635595410000462
+full_cache,8,8,0.0,0,0,True,912,,1.0,gov_report:86,gov_report,GovReport,"**Summary of the Government Agency Report**
+
+",8,0.0,0.01016949152542373,0.01016949152542373,0.003401360544217687,1.0169,,,,,
+statekv_exact_mean,8,8,0.004553427510309405,6,5,True,912,256.0,0.2807017543859649,gov_report:86,gov_report,GovReport,"**Summary of the Government Agency Report**
+
+",8,0.0,0.01016949152542373,0.01016949152542373,0.003401360544217687,1.0169,,0.4435606060606061,111.52380952380953,914.5,1.0240515819999985
+uniform,8,8,1.081951238569502,8,7,True,912,256.0,0.2807017543859649,gov_report:86,gov_report,GovReport,"**Summary of the Report**
+
+This report",8,0.0,0.01016949152542373,0.01016949152542373,0.003401360544217687,1.0169,,0.4375,110.0,914.5,0.0
+recency,8,8,0.3534480961643567,8,7,True,912,256.0,0.2807017543859649,gov_report:86,gov_report,GovReport,"**Summary:**
+
+This report outlines the",8,0.0,0.006791171477079795,0.006791171477079795,0.0,0.6791,,0.003977272727272727,1.0,914.5,0.0
+attention,8,8,0.008692354541381064,0,0,True,912,256.0,0.2807017543859649,gov_report:86,gov_report,GovReport,"**Summary of the Government Agency Report**
+
+",8,0.0,0.01016949152542373,0.01016949152542373,0.003401360544217687,1.0169,,0.0,0.0,914.5,0.0
+qk_pool,8,8,0.0008093350455169457,8,7,True,912,256.0,0.2807017543859649,gov_report:86,gov_report,GovReport,"**Summary of the Government Agency Report**
+
+",8,0.0,0.01016949152542373,0.01016949152542373,0.003401360544217687,1.0169,,0.16508838383838384,41.507936507936506,914.5,1.0447917499999733
+quest_like,8,8,0.006551732382945374,8,7,True,912,256.0,0.2807017543859649,gov_report:86,gov_report,GovReport,"**Summary of the Government Agency Report**
+
+",8,0.0,0.01016949152542373,0.01016949152542373,0.003401360544217687,1.0169,,0.16581439393939393,41.6904761904762,914.5,1.1172868759999517

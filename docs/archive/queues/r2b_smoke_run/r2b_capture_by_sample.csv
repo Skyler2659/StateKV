@@ -1,0 +1,9 @@
+sample_id,task,policy,arm,official_score,rouge_l,needle_retrieval_accuracy,mean_trajectory_exact_kl,refresh_count,capture
+gov_report:101,gov_report,attention,every,0.6803,0.0068027210884353,,0.0024121895849020802,4,1.0
+gov_report:101,gov_report,attention,never,0.6803,0.0068027210884353,,0.002692425516329422,1,0.0
+gov_report:101,gov_report,attention,fixed_k2,0.6803,0.0068027210884353,,0.0026716404701119245,2,0.07416981152856371
+gov_report:101,gov_report,attention,trigger,0.6803,0.0068027210884353,,0.002692425516329422,1,0.0
+gov_report:101,gov_report,b2_uniform,every,0.6803,0.0068027210884353,,0.0006033870542978548,4,1.0
+gov_report:101,gov_report,b2_uniform,never,0.6803,0.0068027210884353,,0.0006818878052285982,1,0.0
+gov_report:101,gov_report,b2_uniform,fixed_k2,0.6803,0.0068027210884353,,0.0006800277839715818,2,0.023694311646232914
+gov_report:101,gov_report,b2_uniform,trigger,0.6803,0.0068027210884353,,0.0006818878052285982,1,0.0

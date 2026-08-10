@@ -1,0 +1,1 @@
+{"name": "r2b_smoke_toy_rule", "clauses": [{"feature": "churn_jaccard_mean", "op": ">=", "threshold": 0.5}]}
