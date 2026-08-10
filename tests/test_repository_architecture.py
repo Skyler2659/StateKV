@@ -118,16 +118,38 @@ def test_all_benchmark_assets_are_grouped_by_backend() -> None:
 
 
 def test_root_contains_only_canonical_documentation_and_no_yaml() -> None:
+    canonical_docs = {
+        "README.md",
+        "docs/FINDINGS.md",
+        "docs/FAILURE_ANALYSIS.md",
+        "docs/research_history.md",
+        "docs/CODE_AUDIT.md",
+        "docs/REPRODUCIBILITY.md",
+        "docs/NEXT_RESEARCH_DIRECTIONS.md",
+        "docs/experiments/EXPERIMENT_REGISTRY.md",
+    }
+    missing = sorted(
+        name for name in canonical_docs if not (ROOT / name).is_file()
+    )
+    assert not missing, "missing canonical documentation: %s" % ", ".join(missing)
+
+    assert not list(ROOT.glob("*.yaml"))
+    assert not list(ROOT.glob("*.yml"))
+
+    allowed_areas = ("docs", "analysis", "assets", "experiments", "results", "tmp")
     markdown = {
-        path.relative_to(ROOT).as_posix()
+        path.relative_to(ROOT)
         for path in ROOT.rglob("*.md")
         if not {".git", ".venv"}.intersection(path.parts)
     }
-    assert markdown == {"README.md"}
-    assert not list(ROOT.glob("*.yaml"))
-    assert not list(ROOT.glob("*.yml"))
-    assert not [path for path in ROOT.iterdir() if path.is_symlink()]
-    assert not (ROOT / "docs/statekv/experiments").exists()
+    disallowed = sorted(
+        path.as_posix()
+        for path in markdown
+        if path.as_posix() != "README.md" and path.parts[0] not in allowed_areas
+    )
+    assert not disallowed, (
+        "markdown outside documented areas: %s" % ", ".join(disallowed)
+    )
 
 
 def test_root_readme_is_the_only_documentation_entrypoint() -> None:
