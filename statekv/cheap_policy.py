@@ -15,7 +15,11 @@ import numpy as np
 import pandas as pd
 
 from statekv.direct_policy_runtime import contribution_token_score
-from statekv.oracle_closed_loop import KVBackingStore, _top_core
+from statekv.oracle_closed_loop import (
+    KVBackingStore,
+    _normalize_on_eligible,
+    _top_core,
+)
 from statekv.oracle_policy_comparison import (
     AttentionPolicyMemory,
     _core_map,
@@ -33,17 +37,6 @@ CHEAP_POLICIES = (
     "b2_direct_action_generator",
     "b3_layer_adaptive_budget",
 )
-
-
-def _normalize_on_eligible(
-    score: np.ndarray, eligible_rows: np.ndarray
-) -> np.ndarray:
-    values = np.maximum(np.asarray(score, dtype=np.float64), 0.0)
-    output = np.zeros_like(values)
-    mass = float(values[eligible_rows].sum())
-    if mass > 0.0:
-        output[eligible_rows] = values[eligible_rows] / mass
-    return output
 
 
 def _eligible_rows(

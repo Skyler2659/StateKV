@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import random
 import string
+import sys
 from types import SimpleNamespace
 from typing import Any, Dict, List, Tuple
 
@@ -298,12 +299,19 @@ def load_discovery_tasks(
                     }
                 )
             except Exception as exc:
+                print(
+                    "[tasks] WARNING: LongBench load failed (%s: %s); "
+                    "using synthetic gov_report fallback"
+                    % (type(exc).__name__, exc),
+                    file=sys.stderr,
+                )
                 loaded = _fallback_reports(
                     seed,
                     count,
                     int(settings.get("fallback_paragraphs", 18)),
                 )
                 for sample in loaded:
+                    sample.metadata["dataset_fallback"] = True
                     sample.metadata["fallback_reason"] = "%s: %s" % (
                         type(exc).__name__,
                         exc,

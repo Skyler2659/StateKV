@@ -8,22 +8,10 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 import torch
 
 from statekv.backend import AnchorState
+from statekv.selectors import _relative_ridge
 
 
 FeatureKey = Tuple[str, str, Optional[int]]
-
-
-def _relative_ridge(
-    rows: torch.Tensor, coefficient: float, mode: str
-) -> float:
-    if mode == "absolute":
-        return max(float(coefficient), 1e-12)
-    trace = float((rows * rows).sum().item())
-    dimension = max(1, int(rows.shape[-1]))
-    return max(
-        float(coefficient) * max(trace / dimension, 1e-12),
-        1e-12,
-    )
 
 
 @dataclass

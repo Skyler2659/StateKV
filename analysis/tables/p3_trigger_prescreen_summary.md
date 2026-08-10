@@ -58,4 +58,4 @@ Bottom line: on this substrate the honest trigger policy is "recompute the ranki
 - `p3_trigger_prescreen_rules.csv` — 17 rules × 3 splits: precision/recall/F1/feature-AUC/alert-rate/mean-benefit-alerted-vs-not.
 - `p3_trigger_prescreen_horizon_positive_auc.csv`, `p3_trigger_prescreen_horizon_positive_rules.csv` — horizon>0-stratum analyses.
 - `p3_trigger_prescreen_frozen_rules.json` — frozen rule definitions with thresholds.
-- Script: `tmp/trigger_prescreen.py` (reproducible, read-only on experiment data).
+- Script: `analysis/tables/trigger_prescreen.py` (reproducible, read-only on experiment data).

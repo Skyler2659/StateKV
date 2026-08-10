@@ -4,6 +4,7 @@ from __future__ import annotations
 import gzip
 import json
 import subprocess
+import sys
 import time
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
@@ -59,7 +60,13 @@ def _git(command: List[str], cwd: Path) -> Optional[str]:
         return subprocess.check_output(
             command, cwd=str(cwd), stderr=subprocess.DEVNULL, text=True
         ).strip()
-    except Exception:
+    except Exception as exc:
+        print(
+            "[artifacts] WARNING: could not capture git provenance (%s) "
+            "with %r: %s: %s"
+            % (cwd, command, type(exc).__name__, exc),
+            file=sys.stderr,
+        )
         return None
 
 
