@@ -8,7 +8,9 @@ candidate at every boundary; fixed policies repeatedly commit their own action.
 from __future__ import annotations
 
 import hashlib
+import math
 import time
+from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
@@ -27,6 +29,8 @@ from statekv.oracle_closed_loop import (
     _stale_core,
     _top_core,
     deterministic_uniform_core,
+    quest_like_core,
+    recency_core,
 )
 from statekv.selectors import (
     CoreSelection,
@@ -51,6 +55,37 @@ def _score_on_universe(
         [float(score_by_position.get(int(position), 0.0)) for position in positions],
         dtype=np.float64,
     )
+
+
+def token_rarity_scores(
+    stream_token_ids: Sequence[int], positions: Sequence[int]
+) -> np.ndarray:
+    """Local span-smoothed inverse-frequency score of the observed stream.
+
+    Mirrors the frozen P20/P21 ``token_rarity_shared`` policy
+    (``benchmarks/mlx/src/runners/mlx_runner.py``): the score at position p
+    is the mean of ``log((t + 1) / (f(x_j) + 1))`` over the clipped local
+    span ``{p-2, ..., p+2}``, where ``f`` counts token ids in the observed
+    stream of length ``t``.  Positions outside the stream score 0.  The
+    score is model-free and identical across layers (one shared core).
+    """
+    ids = [int(value) for value in stream_token_ids]
+    counts = Counter(ids)
+    total = max(1, len(ids))
+    values: List[float] = []
+    for position in positions:
+        index = int(position)
+        if index < 0 or index >= len(ids):
+            values.append(0.0)
+            continue
+        start = max(0, index - 2)
+        end = min(len(ids), index + 3)
+        local = [
+            math.log((total + 1.0) / (max(1, counts[int(neighbor)]) + 1.0))
+            for neighbor in ids[start:end]
+        ]
+        values.append(float(sum(local) / max(1, len(local))))
+    return np.asarray(values, dtype=np.float64)
 
 
 @dataclass
@@ -311,6 +346,9 @@ def _physical_candidate_panel(
     core_budget: int,
     pooling_kernel: int,
     pooling_method: str,
+    pool_scores: Optional[Mapping[int, Mapping[int, float]]] = None,
+    quest_page_size: int = 16,
+    stream_token_ids: Optional[Sequence[int]] = None,
 ) -> Mapping[str, CoreSelection]:
     positions = backing.positions()
     _, _, eligible = mandatory_and_eligible(
@@ -380,6 +418,48 @@ def _physical_candidate_panel(
                 }
                 for position in core:
                     score[row_by_position[int(position)]] = 1.0
+            elif name == "recency":
+                core = recency_core(eligible, core_budget)
+                score = np.zeros(len(positions), dtype=np.float64)
+                row_by_position = {
+                    int(position): row
+                    for row, position in enumerate(positions)
+                }
+                for position in core:
+                    score[row_by_position[int(position)]] = 1.0
+            elif name in ("qk_pool", "quest_like", "qk_obswin"):
+                if pool_scores is None:
+                    raise ValueError(
+                        "%s candidate requires full-pool scores" % name
+                    )
+                score = _score_on_universe(
+                    pool_scores.get(int(layer), {}), positions
+                )
+                if name in ("qk_pool", "qk_obswin"):
+                    core = _top_core(
+                        positions, eligible, score, int(core_budget)
+                    )
+                else:
+                    score_by_position = {
+                        int(position): float(score[row])
+                        for row, position in enumerate(positions)
+                    }
+                    core = quest_like_core(
+                        eligible,
+                        score_by_position,
+                        int(quest_page_size),
+                        int(core_budget),
+                    )
+            elif name == "token_rarity":
+                if stream_token_ids is None:
+                    raise ValueError(
+                        "token_rarity candidate requires the observed stream "
+                        "token ids"
+                    )
+                score = token_rarity_scores(stream_token_ids, positions)
+                core = _top_core(
+                    positions, eligible, score, int(core_budget)
+                )
             elif name in source_scores:
                 score = source_scores[name]
                 core = _top_core(

@@ -1,0 +1,94 @@
+{
+  "anchors": [
+    16
+  ],
+  "baseline": "hidden_l2_action",
+  "candidate_count": 8,
+  "checks": {
+    "adjoint_identity": true,
+    "mean_normalized_regret_gain_positive": false,
+    "mean_pairwise_accuracy_gain_positive": false,
+    "median_spearman_gain_positive": false
+  },
+  "collection_elapsed_s": 98.110294292,
+  "collection_reverse_passes": 3144,
+  "collection_tail_forward_evaluations": 112,
+  "confirmatory_evidence": false,
+  "deployment_costs": [
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_gaussian_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_rademacher_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 16,
+      "route": "margin_vjp",
+      "width": 8
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_gaussian_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_rademacher_vjp",
+      "width": 16
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 32,
+      "route": "margin_vjp",
+      "width": 16
+    }
+  ],
+  "experiment": "statekv_retest_vjp_rademacher_replication",
+  "horizon": 8,
+  "maximum_adjoint_relative_error": 0.0008714925544536455,
+  "outcome": "shared_vjp_not_yet_a_low_cost_controller_metric",
+  "passed": false,
+  "primary": {
+    "method": "fisher_rademacher_vjp_action",
+    "refresh_interval": 4,
+    "width": 8
+  },
+  "samples": [
+    "gov_report:14",
+    "gov_report:15",
+    "gov_report:16",
+    "gov_report:17",
+    "synthetic_niah_14",
+    "synthetic_niah_15",
+    "synthetic_niah_16",
+    "synthetic_niah_17"
+  ],
+  "scope": "Final-boundary layer-27 VJPs on development sequences. Reverse passes are shared across candidates; this tests ranking, not candidate generation or end-to-end latency.",
+  "status": "bounded_model_backed_development_pilot",
+  "values": {
+    "mean_normalized_regret_gain": -0.014072593067456356,
+    "mean_pairwise_accuracy_gain": -0.02040816326530612,
+    "median_spearman_gain": -0.023809523809523836
+  }
+}

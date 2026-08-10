@@ -1,0 +1,112 @@
+experiment_name: statekv_retest_freegen_qwen3_8b_n20
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_retest_freegen_qwen3_8b_n20_v1
+data_seed: 20260810
+runtime_run_id: retest_freegen_qwen3_8b_n20_seed20260810_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+task_overrides:
+  ruler_niah:
+    num_samples: 10
+    context_length: 768
+    sample_offset: 118
+  govreport_or_qmsum:
+    num_samples: 10
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [118, 119, 120, 121, 122, 123, 124, 125, 126, 127]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:118"
+  - "gov_report:119"
+  - "gov_report:120"
+  - "gov_report:121"
+  - "gov_report:122"
+  - "gov_report:123"
+  - "gov_report:124"
+  - "gov_report:125"
+  - "gov_report:126"
+  - "gov_report:127"
+  - synthetic_niah_118
+  - synthetic_niah_119
+  - synthetic_niah_120
+  - synthetic_niah_121
+  - synthetic_niah_122
+  - synthetic_niah_123
+  - synthetic_niah_124
+  - synthetic_niah_125
+  - synthetic_niah_126
+  - synthetic_niah_127
+expected_sample_count: 20
+
+start_anchor: 0
+control_cycles: 64
+control_horizon: 1
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+a3_output_diagnostic_layers: [0, 9, 18, 27, 35]
+a4_cascade_margin: 0.15
+b3_adaptive_budget_delta: 44
+quest_page_size: 16
+
+value_tier:
+  hot: 96
+  bits: 4
+  group: 64
+
+policies:
+  - attention
+  - snapkv
+  - h2o
+  - uniform
+  - qk_pool
+  - qk_tiered_v
+  - token_rarity
+  - a2_temporal_volatility
+  - a4_uncertainty_cascade
+  - b1_historical_tiny_ranker
+  - b2_direct_action_generator
+  - b3_layer_adaptive_budget
+
+candidate_panel:
+  - stale
+  - attention
+  - snapkv
+  - h2o
+  - key_norm
+  - value_norm
+  - uniform
+  - qk_pool
+  - token_rarity
+
+b1_historical_trace: results/temporal_cache_discovery/statekv_oracle_policy_comparison_independent_p28_v1/candidate_step_rows.parquet
+b1_ridge: 0.001
+bootstrap_samples: 20000
+report_references: [attention, qk_pool]
+
+analysis_contract:
+  primary_endpoint: task_scores
+  diagnostics: [mean_trajectory_exact_kl, mean_delta_nll]
+  reporting: continuous_effect_sizes_with_paired_bootstrap_ci
+  hard_gates: false
+  note: >
+    Retrospective re-test of policies rejected by preregistered joint gates
+    (P16-P18 temporal volatility, P20-P21 token rarity, P32 cheap controllers,
+    QKV-tier).  Fresh sample offsets 118-127 (all prior gates used <= 105).
+    Non-inferiority reference lines only: NLL +0.01, ROUGE-L -0.5.

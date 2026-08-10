@@ -1,0 +1,101 @@
+analysis_contract:
+  hard_gates: false
+  note: 'Era-1 (Qwen2.5-1.5B shared-mask) no-gate re-screen of every direct replay
+    policy family (P7/P9/P13/P14/P15 lineage).  Fresh sample offsets 106-117.  No
+    selection gate: all 17 policies reported continuously.
+
+    '
+  primary_endpoint: per_policy_replay_metrics_continuous
+anchors:
+- 16
+- 32
+- 48
+base_config: configs/stages/direct_policy_independent_base.yaml
+baseline: attention_mean_w1_shared
+core_budget: 92
+data_seed: 20260810
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+experiment_name: statekv_retest_replay_era1_n24
+horizon: 16
+output_run: results/temporal_cache_discovery/statekv_retest_replay_era1_n24_v1
+policies:
+- attention_mean_w1_shared
+- attention_mean_w4_shared
+- contribution_mean_w1_shared
+- contribution_mean_w4_shared
+- contribution_q75_w4_shared
+- blend_attention_contribution_25_w4_shared
+- blend_attention_contribution_50_w4_shared
+- blend_attention_contribution_75_w4_shared
+- attention_head_peak_w4_shared
+- attention_temporal_volatility_w4_shared
+- key_diagonal_leverage_shared
+- value_diagonal_leverage_shared
+- value_adjacent_change_shared
+- uniform_position_coverage_shared
+- protected_attention_rescue_m4_shared
+- protected_attention_rescue_m8_shared
+- protected_attention_rescue_m16_shared
+primary: attention_temporal_volatility_w4_shared
+recent_size: 32
+runtime_run_id: retest_replay_era1_n24_seed20260810_v1
+sample_ids:
+- gov_report:106
+- gov_report:107
+- gov_report:108
+- gov_report:109
+- gov_report:110
+- gov_report:111
+- gov_report:112
+- gov_report:113
+- gov_report:114
+- gov_report:115
+- gov_report:116
+- gov_report:117
+- synthetic_niah_106
+- synthetic_niah_107
+- synthetic_niah_108
+- synthetic_niah_109
+- synthetic_niah_110
+- synthetic_niah_111
+- synthetic_niah_112
+- synthetic_niah_113
+- synthetic_niah_114
+- synthetic_niah_115
+- synthetic_niah_116
+- synthetic_niah_117
+scenario_windows:
+- 1
+- 4
+sink_size: 4
+task_overrides:
+  govreport_or_qmsum:
+    fallback_paragraphs: 24
+    max_words: 700
+    num_samples: 12
+    preferred: gov_report
+    sample_indices:
+    - 106
+    - 107
+    - 108
+    - 109
+    - 110
+    - 111
+    - 112
+    - 113
+    - 114
+    - 115
+    - 116
+    - 117
+    sample_strategy: first
+  ruler_niah:
+    context_length: 768
+    num_samples: 12
+    sample_offset: 106
+total_budget: 128
