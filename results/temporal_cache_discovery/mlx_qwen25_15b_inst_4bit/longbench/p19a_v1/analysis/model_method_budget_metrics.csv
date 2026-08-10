@@ -1,0 +1,6 @@
+accuracy,avg_evidence_recall,avg_official_score,avg_ppl,avg_primary_score,avg_tokens_per_second,budget,contains_ground_truth,method,model_name,n,official_accuracy
+0.0,0.0,8.72215,7.337358197437071,8.72215,74.91711009517854,128,0.0,full,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0
+0.0,0.0,11.3245,10.11017410812957,11.3245,76.83048624043084,128,0.0,keydiff,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0
+0.0,0.0,3.6635999999999997,186.2162317111047,3.6635999999999997,77.8093590750317,128,0.0,knorm,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0
+0.0,0.0,10.919550000000001,8.956572515686112,10.919550000000001,78.50412704838514,128,0.0,sink_recent_random,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0
+0.0,0.0,0.0,42751.11029516996,0.0,77.82988517087851,128,0.0,vnorml2,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0

@@ -1,0 +1,6 @@
+accuracy,avg_evidence_recall,avg_official_score,avg_primary_score,avg_tokens_per_second,method,model_name,n,official_accuracy
+0.0,0.0,9.11875,9.11875,81.6002637598782,full,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0
+0.0,0.0,9.0426,9.0426,84.48086904627272,position_coverage_shared,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0
+0.0,0.0,9.845849999999999,9.845849999999999,84.22984938567015,query_overlap_shared,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0
+0.0,0.0,9.59965,9.59965,85.14786029591453,sink_recent_random,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0
+0.0,0.0,10.87915,10.87915,84.32176997608579,token_rarity_shared,mlx-community/Qwen2.5-1.5B-Instruct-4bit,2,0.0

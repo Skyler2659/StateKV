@@ -1,0 +1,30 @@
+{
+  "trajectory_kl_mean": 0.008622821484542699,
+  "B_mean": {
+    "jaccard_attn_delta": 0.9323184974747474,
+    "jaccard_attn_apv": 0.9323374368686868,
+    "recall_future_attn": 0.7714636443803111,
+    "recall_future_delta": 0.7615740740740741,
+    "recall_future_apv": 0.7589927048260381
+  },
+  "C2": {
+    "pairs": 288,
+    "regret_mean": 5.306741643179473e-05,
+    "regret_median": 2.035697999058783e-15,
+    "regret_p95_abs": 0.0001920324983075256,
+    "fraction_positive": 0.3958333333333333,
+    "fraction_negative": 0.3854166666666667,
+    "fraction_flat_1e-4": 0.9201388888888888,
+    "spearman_margin_vs_regret": -0.05619173721697109,
+    "spearman_delta_diff_vs_regret": -0.05157909648794956,
+    "partial_delta_given_margin": -0.05074719988425787,
+    "partial_pv_given_margin": -0.0964422354307577
+  },
+  "E_needle": {
+    "rows": 5523192,
+    "mean_attn": 0.0003463262462001263,
+    "in_core_rate": 0.2244859494292431,
+    "mean_fut_attn_4": 0.00034903920402190244,
+    "partial_delta_given_attn": -0.09438400571082545
+  }
+}

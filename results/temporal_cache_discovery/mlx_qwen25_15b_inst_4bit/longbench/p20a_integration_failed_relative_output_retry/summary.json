@@ -1,0 +1,80 @@
+{
+  "num_results": 10,
+  "num_errors": 0,
+  "num_skipped": 0,
+  "backend": "mlx",
+  "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+  "benchmark": "longbench",
+  "by_method": {
+    "full": {
+      "n": 2,
+      "avg_ppl": 10.131392624037709,
+      "avg_official_score": 9.11875,
+      "avg_primary_score": 9.11875,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 80.42368324041553,
+      "avg_end_to_end_decode_tokens_per_second": 80.42368324041553,
+      "avg_eviction_overhead_fraction": 0.0,
+      "avg_final_kv_len": 1007.5
+    },
+    "position_coverage_shared": {
+      "n": 2,
+      "avg_ppl": 13.409764094682208,
+      "avg_official_score": 9.0426,
+      "avg_primary_score": 9.0426,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 84.26119412759104,
+      "avg_end_to_end_decode_tokens_per_second": 54.251500947850275,
+      "avg_eviction_overhead_fraction": 0.3561525753767866,
+      "avg_final_kv_len": 128.0
+    },
+    "query_overlap_shared": {
+      "n": 2,
+      "avg_ppl": 16.665501152562037,
+      "avg_official_score": 9.845849999999999,
+      "avg_primary_score": 9.845849999999999,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 84.49567604417457,
+      "avg_end_to_end_decode_tokens_per_second": 55.6456285110073,
+      "avg_eviction_overhead_fraction": 0.34143758917532985,
+      "avg_final_kv_len": 128.0
+    },
+    "sink_recent_random": {
+      "n": 2,
+      "avg_ppl": 13.182547829023257,
+      "avg_official_score": 9.59965,
+      "avg_primary_score": 9.59965,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 84.89075762624663,
+      "avg_end_to_end_decode_tokens_per_second": 40.04906090641984,
+      "avg_eviction_overhead_fraction": 0.5282289161505399,
+      "avg_final_kv_len": 128.0
+    },
+    "token_rarity_shared": {
+      "n": 2,
+      "avg_ppl": 14.96609583475755,
+      "avg_official_score": 10.87915,
+      "avg_primary_score": 10.87915,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 84.26953675910363,
+      "avg_end_to_end_decode_tokens_per_second": 55.633119551484285,
+      "avg_eviction_overhead_fraction": 0.339813155431196,
+      "avg_final_kv_len": 128.0
+    }
+  }
+}

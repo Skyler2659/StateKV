@@ -1,0 +1,72 @@
+experiment_name: statekv_opencorner_768_64_h16
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_opencorner_768_64_h16_v1
+data_seed: 20260808
+runtime_run_id: statekv_opencorner_768_64_h16_seed20260808_v1
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+task_overrides:
+  ruler_niah:
+    num_samples: 5
+    context_length: 768
+    sample_offset: 86
+  govreport_or_qmsum:
+    num_samples: 5
+    preferred: gov_report
+    max_words: 700
+    sample_indices:
+    - 86
+    - 87
+    - 88
+    - 89
+    - 90
+    sample_strategy: first
+    fallback_paragraphs: 24
+sample_ids:
+- gov_report:86
+- gov_report:87
+- gov_report:88
+- gov_report:89
+- gov_report:90
+- synthetic_niah_86
+- synthetic_niah_87
+- synthetic_niah_88
+- synthetic_niah_89
+- synthetic_niah_90
+expected_sample_count: 10
+start_anchor: 0
+control_cycles: 4
+control_horizon: 16
+total_budget: 64
+sink_size: 4
+recent_size: 32
+core_budget: 28
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+quest_page_size: 16
+policies:
+- qk_pool
+- uniform
+candidate_panel:
+- uniform
+- recency
+- qk_pool
+generation: greedy_policy_conditioned_one_step_receding_horizon
+bootstrap_samples: 20000
+primary_metrics:
+- policy_conditioned_full_vocabulary_exact_kl
+- paired_sample_win_tie_loss
+- step_kl_p95
+- govreport_rouge_l
+- niah_retrieval_accuracy
+evidence_status: open_search_hf1_regime_stress
+claims_excluded:
+- deployment_efficiency
+- cpu_gpu_transfer_latency

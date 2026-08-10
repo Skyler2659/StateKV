@@ -1,0 +1,6 @@
+accuracy,avg_evidence_recall,avg_official_score,avg_ppl,avg_primary_score,avg_tokens_per_second,contains_ground_truth,context_length,method,n,official_accuracy
+1.0,1.0,100.0,2.8432631591182274,100.0,18.63662670805369,1.0,15687,full,2,1.0
+0.0,0.0,0.0,25.417217719421664,0.0,51.10457094126066,0.0,15687,position_coverage_shared,2,0.0
+0.0,0.5681818181818183,0.0,37.85293397244822,0.0,83.58416701263364,0.0,15687,query_overlap_shared,2,0.0
+0.0,0.0,0.0,25.065311047804364,0.0,52.74759240529892,0.0,15687,sink_recent_random,2,0.0
+1.0,0.5,100.0,2.835249632539501,100.0,52.87183163503272,1.0,15687,token_rarity_shared,2,1.0

@@ -1,0 +1,66 @@
+# External-validity gate S1 ranking probe: QK-V decomposition + swap oracle
+# at 3072 ctx / budget 256.  Direct external-validity check of closure C-a
+# (at 768: swap marginals ~1e-4, I(target;V|QK) ~= 0).  Same samples/seed
+# as the S1 freegen run so results pair.
+experiment_name: statekv_extval_decomp_3072_256
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_extval_decomp_3072_256_v1
+data_seed: 20260808
+runtime_run_id: statekv_extval_decomp_3072_256_seed20260808_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+runtime_overrides:
+  max_prompt_tokens: 8192
+
+task_overrides:
+  ruler_niah:
+    num_samples: 3
+    context_length: 3072
+    sample_offset: 86
+  govreport_or_qmsum:
+    num_samples: 3
+    preferred: gov_report
+    max_words: 2800
+    sample_indices: [86, 87, 88]
+    sample_strategy: first
+    fallback_paragraphs: 24
+  reasoning_long_generation:
+    num_samples: 2
+    n_distractors: 280
+
+sample_ids:
+  - "gov_report:86"
+  - "gov_report:87"
+  - "gov_report:88"
+  - synthetic_niah_86
+  - synthetic_niah_87
+  - synthetic_niah_88
+  - reasoning_long_generation_0
+  - reasoning_long_generation_1
+expected_sample_count: 8
+
+control_cycles: 64
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+
+decomposition_probe:
+  dev_sample_ids:
+    - synthetic_niah_86
+    - "gov_report:86"
+    - reasoning_long_generation_0
+  head_cycle_stride: 4
+  swap_cycle_stride: 4
+  swap_offsets: [1, 2, 4, 8, 16, 32]
+  head_window: 16
+  head_top: 8
+  head_random: 16

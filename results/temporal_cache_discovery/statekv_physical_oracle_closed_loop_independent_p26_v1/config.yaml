@@ -1,0 +1,62 @@
+experiment_name: statekv_physical_oracle_closed_loop_independent_p26
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_physical_oracle_closed_loop_independent_p26_v1
+data_seed: 20260821
+runtime_run_id: physical_oracle_closed_loop_independent_seed20260821_v1
+task_overrides:
+  ruler_niah:
+    num_samples: 2
+    context_length: 768
+    sample_offset: 65
+  govreport_or_qmsum:
+    num_samples: 2
+    preferred: gov_report
+    max_words: 700
+    sample_indices:
+    - 65
+    - 66
+    sample_strategy: first
+    fallback_paragraphs: 24
+sample_ids:
+- gov_report:65
+- gov_report:66
+- synthetic_niah_65
+- synthetic_niah_66
+start_anchor: 16
+control_cycles: 4
+control_horizon: 8
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 21
+- 27
+candidate_panel:
+- stale
+- attention
+- attention_history
+- attention_value
+- key_norm
+- value_norm
+- uniform
+teacher_strategies:
+- dense_quadratic_h1
+- dense_quadratic_mean
+- exact_mean
+- exact_max
+frozen_from:
+  run: results/temporal_cache_discovery/statekv_physical_oracle_closed_loop_p25_v1
+  candidate_changes: none
+  strategy_changes: none
+  budget_changes: none
+  protocol_extension: two_new_samples_per_task_four_cycles_horizon_eight
+evidence_status: independent-physical-oracle-closed-loop
+claims_excluded:
+- free-generation quality
+- deployment latency
+- low-cost control
+- global retained-set optimality

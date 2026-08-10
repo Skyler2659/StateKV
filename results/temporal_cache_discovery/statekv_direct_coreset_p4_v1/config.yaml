@@ -1,0 +1,43 @@
+anchors:
+- 16
+base_config: configs/stages/independent_fisher_config.yaml
+baseline: attention_mean_w1
+claims_excluded:
+- end-to-end KL improvement
+- full KV quantization
+- cache-transfer latency
+- independent replication
+cold_value_bits:
+- 2
+- 3
+- 4
+evidence_status: bounded_model_backed_local_mechanism_pilot
+experiment_name: statekv_direct_coreset_p4
+horizon: 8
+layers:
+- 0
+- 14
+- 27
+merge_methods:
+- attention_mean_w1
+- contribution_mean_w8
+- contribution_max_w8
+output_run: results/temporal_cache_discovery/statekv_direct_coreset_p4_v1
+primary: contribution_max_w8
+random_seed: 20260807
+recent_size: 32
+sample_ids:
+- gov_report:12
+- gov_report:13
+- synthetic_niah_12
+- synthetic_niah_13
+scenario_windows:
+- 1
+- 4
+- 8
+- 16
+sink_size: 4
+tier_methods:
+- attention_mean_w1
+- contribution_max_w8
+total_budget: 128

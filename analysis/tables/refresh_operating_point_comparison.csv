@@ -1,0 +1,5 @@
+substrate,events,coverage_mass_mean,lag_identical_frac,benefit_mean,benefit_frac_pos,sum_benefit_over_sum_kl,note
+"qwen3-8b 768ctx 256/220 per-layer (v1, 10 samples)",1280,0.9979,1.0,0.000181,0.447,0.00151,degenerate; NIAH 1.0
+"qwen3-8b 768ctx 128/92 per-layer (v2, 1 sample)",256,0.9969,1.0,-0.002309,0.414,-0.00267,degenerate (early-stopped)
+"qwen3-8b 4Kctx 128/92 per-layer (v3, 4 samples)",512,0.9952,1.0,-0.002798,0.484,-0.0044,degenerate; NIAH 0.0 quality-invalid
+"qwen2.5-1.5b 4-8Kctx 128/92 shared-mask (P23b, 48 events)",48,0.6982,,0.12924,0.771,,staleness REAL (horizon-mean KL units)

@@ -1,0 +1,4 @@
+arm,paired,mean_arm_minus_qk256,wins_vs_qk256,losses_vs_qk256,ties
+qk_tiered_v_256,10,-0.00048057391598244016,6,4,0
+qk_pool_352,10,-0.00431892351350713,10,0,0
+qk_tiered_v_352,10,-0.00377824456828021,10,0,0

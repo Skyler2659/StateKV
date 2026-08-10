@@ -525,6 +525,9 @@ class DiscoveryConfig:
         elif self.model.backend == "mlx":
             supported_mlx_models = {
                 "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+                # Added for the external-validity model-family check after a
+                # hook-coverage smoke test (28/28) on 2026-08-10.
+                "mlx-community/Qwen2.5-7B-Instruct-4bit",
                 "mlx-community/Qwen3-8B-4bit",
             }
             if self.model.name not in supported_mlx_models:
@@ -1283,6 +1286,14 @@ def _strict_dataclass(cls: Type[T], value: Dict[str, Any], path: str) -> T:
     if unknown:
         raise ValueError("unknown fields at %s: %s" % (path, unknown))
     return cls(**value)
+
+
+def apply_named_overrides(target: Any, overrides: Any, kind: str) -> None:
+    """Apply stage-config overrides to a config section with strict key checks."""
+    for key, value in dict(overrides or {}).items():
+        if not hasattr(target, str(key)):
+            raise ValueError("unknown %s override: %s" % (kind, key))
+        setattr(target, str(key), value)
 
 
 def load_discovery_config(path: str) -> DiscoveryConfig:

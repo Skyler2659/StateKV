@@ -1,0 +1,37 @@
+anchors:
+- 16
+base_config: configs/stages/independent_fisher_config.yaml
+baseline: attention_mean_w1_shared
+claims_excluded:
+- free-generation quality
+- wall-clock speedup
+- independent cross-model confirmation
+- learned state-drift refresh
+core_budget: 92
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+evidence_status: held_out_teacher_forced_physical_replay_pilot
+experiment_name: statekv_direct_policy_physical_replay_p6
+horizon: 8
+output_run: results/temporal_cache_discovery/statekv_direct_policy_replay_p6_v1
+primary: contribution_mean_w4_shared
+recent_size: 32
+sample_ids:
+- gov_report:14
+- gov_report:15
+- gov_report:16
+- gov_report:17
+- synthetic_niah_14
+- synthetic_niah_15
+- synthetic_niah_16
+- synthetic_niah_17
+scenario_windows:
+- 1
+- 4
+sink_size: 4
+total_budget: 128

@@ -1,0 +1,63 @@
+experiment_name: statekv_oracle_policy_freegen_independent_p30
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_oracle_policy_freegen_independent_p30_v1
+data_seed: 20260830
+runtime_run_id: oracle_policy_freegen_independent_seed20260830_v1
+task_overrides:
+  ruler_niah:
+    num_samples: 2
+    context_length: 768
+    sample_offset: 71
+  govreport_or_qmsum:
+    num_samples: 2
+    preferred: gov_report
+    max_words: 700
+    sample_indices:
+    - 71
+    - 72
+    sample_strategy: first
+    fallback_paragraphs: 24
+sample_ids:
+- gov_report:71
+- gov_report:72
+- synthetic_niah_71
+- synthetic_niah_72
+start_anchor: 0
+control_cycles: 64
+control_horizon: 1
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+policies:
+- statekv_exact_mean
+- attention
+- snapkv
+- h2o
+candidate_panel:
+- stale
+- attention
+- snapkv
+- h2o
+- key_norm
+- value_norm
+- uniform
+generation: greedy_policy_conditioned_one_step_receding_horizon
+primary_metrics:
+- policy_conditioned_full_vocabulary_exact_kl
+- govreport_rouge_l
+- niah_retrieval_accuracy
+frozen_from:
+  run: results/temporal_cache_discovery/statekv_oracle_policy_freegen_h1_p29b_v1
+  policy_changes: none
+  candidate_changes: none
+  budget_changes: none
+  control_changes: none
+  sample_change: four_untouched_sequences
+evidence_status: independent-greedy-physical-closed-loop
+claims_excluded:
+- deployment efficiency
+- global retained-set optimality

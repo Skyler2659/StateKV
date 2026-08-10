@@ -1,0 +1,69 @@
+# Gate 0 on the P23b substrate: shared-mask / lower-coverage regime where the
+# refresh phenomenon was real (coverage ~0.70, 77% positive refresh benefits).
+#
+# Question: does the one-step state-conditioned physical teacher have headroom
+# over cheap selectors under strict pure eviction when the retained-mass
+# coverage is materially below the qwen3-8b per-layer regime (0.998)?
+# Substrate: Qwen2.5-1.5B-Instruct-4bit, budget 128/core 92, sink 4, recent 32,
+# samples gov_report:61-63 + synthetic_niah:61-63 (the P23b independent split),
+# 64 generated tokens.
+experiment_name: statekv_teacher_gate_p23b
+base_config: configs/stages/direct_policy_independent_base.yaml
+data_seed: 20260818
+runtime_run_id: statekv_teacher_gate_p23b_seed20260818_v1
+
+model_overrides:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: null
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+sink_size: 4
+recent_size: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+
+teacher_gate:
+  output_run: results/temporal_cache_discovery/statekv_teacher_gate_qwen25_15b_p23b_v1
+  control_cycles: 64
+  budgets:
+    - total_budget: 128
+      core_budget: 92
+      maximum_delta: 18
+  panel_policies:
+    - shared_attention
+    - attention
+    - uniform
+    - snapkv
+  task_overrides:
+    ruler_niah:
+      num_samples: 3
+      context_length: 768
+      sample_offset: 61
+    govreport_or_qmsum:
+      num_samples: 3
+      preferred: gov_report
+      max_words: 700
+      sample_indices: [61, 62, 63]
+      sample_strategy: first
+      fallback_paragraphs: 24
+  sample_ids:
+    - gov_report:61
+    - gov_report:62
+    - gov_report:63
+    - synthetic_niah_61
+    - synthetic_niah_62
+    - synthetic_niah_63
+
+tail_telemetry:
+  probability_labels:
+    token_17: ["17", " 17"]
+    token_14: ["14", " 14"]
+  evidence_phrases:
+    - "17 sailors"
+    - " 17 sailors"
+    - "loss of 17 sailors"
+    - "deaths of 17 sailors"

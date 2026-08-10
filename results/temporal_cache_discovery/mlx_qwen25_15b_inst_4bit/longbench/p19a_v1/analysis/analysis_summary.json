@@ -1,0 +1,8 @@
+{
+  "tables": {
+    "method_budget_accuracy_csv": "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p19a_v1/analysis/method_budget_accuracy.csv",
+    "method_context_accuracy_csv": "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p19a_v1/analysis/method_context_accuracy.csv",
+    "model_method_budget_metrics_csv": "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p19a_v1/analysis/model_method_budget_metrics.csv",
+    "model_method_metrics_csv": "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p19a_v1/analysis/model_method_metrics.csv"
+  }
+}

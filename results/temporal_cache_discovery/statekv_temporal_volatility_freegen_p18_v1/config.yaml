@@ -1,0 +1,62 @@
+experiment_name: statekv_temporal_volatility_free_generation_p18
+status: preregistered_before_execution
+frozen_policy:
+  name: temporal_volatility_shared
+  source_run: results/temporal_cache_discovery/statekv_direct_policy_temporal_volatility_independent_p16_v1
+  attention_window: 4
+  diagnostic_layers:
+  - 0
+  - 7
+  - 14
+  - 15
+  - 21
+  - 27
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+  runtime_candidate_algorithms: 0
+matched_baseline:
+  name: latest_attention_shared
+  difference_from_policy: score_signal_only
+upper_reference:
+  name: full
+  matched_budget: false
+workloads:
+- config: benchmarks/mlx/configs/experiments/statekv/qwen25_15b_govreport_temporal_volatility_p18a.yaml
+  run_dir: results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/v1
+  sample_ids:
+  - gov_report:51
+  - gov_report:52
+  - gov_report:53
+  scope: 700_word_project_workload_not_full_official_context
+- config: benchmarks/mlx/configs/experiments/statekv/qwen25_15b_ruler_temporal_volatility_p18b.yaml
+  run_dir: results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/v1
+  sample_ids:
+  - niah_single_1:51
+  - niah_single_1:52
+  - niah_single_1:53
+  scope: official_ruler_16k_samples
+primary_gate:
+  required:
+  - each_task_mean_official_score_nonworse
+  - overall_mean_teacher_forced_nll_nonworse
+  - overall_end_to_end_decode_throughput_at_least_90_percent_of_baseline
+  - overall_peak_memory_no_more_than_105_percent_of_baseline
+  - no_attention_hook_errors
+  - cache_budget_respected
+secondary_metrics:
+- generated_answer_f1
+- exact_match
+- contains_ground_truth
+- per_sample_official_score
+- prefill_time_s
+- decode_time_s
+- eviction_time_s
+- score_time_s
+- topk_time_s
+- peak_memory_bytes
+claims_excluded:
+- full_LongBench_official_result
+- cross_model_generalization
+- per_sample_superiority

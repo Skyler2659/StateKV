@@ -1,0 +1,396 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="1280" viewBox="0 0 2048 1280" role="img" aria-labelledby="title desc">
+  <title id="title">StateKV architecture: state-conditioned physical evaluation and a training-free direct policy</title>
+  <desc id="desc">A detailed scientific architecture diagram showing how compression history defines the current functional state, how candidate retained sets are physically evaluated and ranked, how selection feeds back into later states, and how the current training-free direct policy bypasses candidate enumeration.</desc>
+
+  <defs>
+    <style>
+      text { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; fill: #17324D; }
+      .title { font-size: 44px; font-weight: 760; letter-spacing: -0.8px; }
+      .subtitle { font-size: 22px; font-weight: 440; fill: #557085; }
+      .section-kicker { font-size: 16px; font-weight: 760; letter-spacing: 1.5px; }
+      .section-title { font-size: 25px; font-weight: 740; }
+      .card-title { font-size: 21px; font-weight: 720; }
+      .body { font-size: 18px; font-weight: 450; fill: #3D586D; }
+      .body-dark { font-size: 18px; font-weight: 520; fill: #17324D; }
+      .small { font-size: 16px; font-weight: 470; fill: #557085; }
+      .tiny { font-size: 14px; font-weight: 560; fill: #557085; }
+      .math { font-family: "STIX Two Math", "Times New Roman", serif; font-size: 23px; fill: #17324D; }
+      .mono { font-family: "SFMono-Regular", Consolas, monospace; font-size: 15px; font-weight: 600; }
+      .badge { font-size: 14px; font-weight: 760; letter-spacing: 0.35px; }
+      .step { font-size: 15px; font-weight: 780; letter-spacing: 0.8px; }
+    </style>
+
+    <marker id="arrow-ink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#17324D"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0072B2"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#009E73"/>
+    </marker>
+    <marker id="arrow-magenta" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#CC79A7"/>
+    </marker>
+
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#17324D" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="2048" height="1280" fill="#F7FAFC"/>
+
+  <g id="figure-header">
+    <text x="58" y="64" class="title">StateKV</text>
+    <text x="58" y="104" class="subtitle">State-conditioned physical risk connects retained-set selection, refresh, and a low-cost direct-policy route.</text>
+
+    <g id="status-legend" transform="translate(1480,36)">
+      <rect x="0" y="0" width="510" height="78" rx="16" fill="#FFFFFF" stroke="#D8E3EA"/>
+      <line x1="26" y1="28" x2="70" y2="28" stroke="#17324D" stroke-width="3"/>
+      <text x="84" y="34" class="small">Evaluated path</text>
+      <line x1="260" y1="28" x2="304" y2="28" stroke="#CC79A7" stroke-width="3" stroke-dasharray="8 7"/>
+      <text x="318" y="34" class="small">Open component</text>
+      <circle cx="28" cy="55" r="6" fill="#0072B2"/>
+      <text x="43" y="61" class="tiny">state</text>
+      <circle cx="116" cy="55" r="6" fill="#E69F00"/>
+      <text x="131" y="61" class="tiny">action</text>
+      <circle cx="225" cy="55" r="6" fill="#009E73"/>
+      <text x="240" y="61" class="tiny">risk</text>
+      <circle cx="322" cy="55" r="6" fill="#CC79A7"/>
+      <text x="337" y="61" class="tiny">direct policy</text>
+    </g>
+  </g>
+
+  <g id="teacher-evaluator" transform="translate(56,144)">
+    <rect x="0" y="0" width="1936" height="690" rx="28" fill="#FFFFFF" stroke="#D8E3EA" stroke-width="2" filter="url(#soft-shadow)"/>
+    <g id="teacher-label" transform="translate(28,24)">
+      <rect x="0" y="0" width="346" height="31" rx="15.5" fill="#E6F3FA"/>
+      <circle cx="17" cy="15.5" r="6" fill="#0072B2"/>
+      <text x="31" y="21" class="badge" fill="#006AA6">Reference-dependent teacher</text>
+    </g>
+
+    <line x1="410" y1="74" x2="410" y2="662" stroke="#D8E3EA" stroke-width="2"/>
+    <line x1="1398" y1="74" x2="1398" y2="662" stroke="#D8E3EA" stroke-width="2"/>
+
+    <g id="stage-state" transform="translate(28,80)">
+      <text x="0" y="0" class="section-kicker" fill="#0072B2">01 · Functional state</text>
+      <text x="0" y="34" class="section-title">History defines the</text>
+      <text x="0" y="62" class="section-title">operating point</text>
+
+      <g id="paired-trajectories" transform="translate(0,84)">
+        <rect x="0" y="0" width="354" height="235" rx="20" fill="#F5F9FC" stroke="#C9D8E2"/>
+        <text x="20" y="30" class="small">Paired trajectories at boundary b</text>
+
+        <text x="20" y="69" class="tiny">Full-cache reference</text>
+        <line x1="22" y1="92" x2="322" y2="92" stroke="#8AA2B4" stroke-width="4" stroke-linecap="round"/>
+        <g fill="#FFFFFF" stroke="#557085" stroke-width="1.5">
+          <circle cx="46" cy="92" r="10"/><circle cx="91" cy="92" r="10"/><circle cx="136" cy="92" r="10"/>
+          <circle cx="181" cy="92" r="10"/><circle cx="226" cy="92" r="10"/><circle cx="271" cy="92" r="10"/><circle cx="316" cy="92" r="10"/>
+        </g>
+        <text x="20" y="133" class="tiny">Compressed trajectory</text>
+        <path d="M 22 157 C 100 157, 135 157, 182 171 S 270 198, 322 198" fill="none" stroke="#0072B2" stroke-width="4" stroke-linecap="round"/>
+        <g fill="#E6F3FA" stroke="#0072B2" stroke-width="2">
+          <circle cx="46" cy="157" r="10"/><circle cx="91" cy="157" r="10"/><circle cx="136" cy="157" r="10"/>
+          <circle cx="181" cy="171" r="10"/><circle cx="226" cy="185" r="10"/><circle cx="271" cy="194" r="10"/><circle cx="316" cy="198" r="10"/>
+        </g>
+        <g fill="#E69F00" stroke="#FFFFFF" stroke-width="2">
+          <circle cx="158" cy="159" r="6"/><circle cx="210" cy="177" r="6"/>
+        </g>
+        <text x="238" y="224" class="tiny" fill="#0072B2">history-dependent drift</text>
+      </g>
+
+      <path d="M 177 333 L 177 352" fill="none" stroke="#0072B2" stroke-width="3" marker-end="url(#arrow-blue)"/>
+
+      <g id="functional-state-object" transform="translate(0,362)">
+        <rect x="0" y="0" width="354" height="154" rx="20" fill="#EAF5FB" stroke="#0072B2" stroke-width="2.5"/>
+        <text x="20" y="34" class="card-title" fill="#006AA6">Observed functional state</text>
+        <text x="20" y="75" class="math">s<tspan baseline-shift="sub" font-size="15">t,b</tspan> = x<tspan baseline-shift="super" font-size="15">hist</tspan><tspan baseline-shift="sub" font-size="15">t,b</tspan> − x<tspan baseline-shift="super" font-size="15">ref</tspan><tspan baseline-shift="sub" font-size="15">t,b</tspan></text>
+        <line x1="20" y1="94" x2="334" y2="94" stroke="#B8DCEB"/>
+        <text x="20" y="121" class="body">Every candidate is evaluated here,</text>
+        <text x="20" y="145" class="body">not on an untouched trajectory.</text>
+      </g>
+    </g>
+
+    <g id="stage-evaluate" transform="translate(440,80)">
+      <text x="0" y="0" class="section-kicker" fill="#E69F00">02 · Physical intervention</text>
+      <text x="0" y="34" class="section-title">Evaluate retained sets at the current state</text>
+
+      <g id="candidate-action" transform="translate(0,70)">
+        <rect x="0" y="0" width="244" height="214" rx="20" fill="#FFF9ED" stroke="#E69F00" stroke-width="2"/>
+        <text x="20" y="32" class="card-title" fill="#A96000">Candidate retained sets</text>
+        <text x="20" y="58" class="small">Fixed cache budget B</text>
+
+        <g id="candidate-row-a" transform="translate(20,82)">
+          <text x="0" y="16" class="tiny">C₁</text>
+          <g transform="translate(38,0)">
+            <rect x="0" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="28" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="56" y="0" width="22" height="22" rx="5" fill="#FFFFFF" stroke="#C9D8E2"/>
+            <rect x="84" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="112" y="0" width="22" height="22" rx="5" fill="#FFFFFF" stroke="#C9D8E2"/>
+            <rect x="140" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+          </g>
+        </g>
+        <g id="candidate-row-b" transform="translate(20,116)">
+          <text x="0" y="16" class="tiny">C₂</text>
+          <g transform="translate(38,0)">
+            <rect x="0" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="28" y="0" width="22" height="22" rx="5" fill="#FFFFFF" stroke="#C9D8E2"/>
+            <rect x="56" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="84" y="0" width="22" height="22" rx="5" fill="#FFFFFF" stroke="#C9D8E2"/>
+            <rect x="112" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="140" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+          </g>
+        </g>
+        <g id="candidate-row-c" transform="translate(20,150)">
+          <text x="0" y="16" class="tiny">C₃</text>
+          <g transform="translate(38,0)">
+            <rect x="0" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="28" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="56" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+            <rect x="84" y="0" width="22" height="22" rx="5" fill="#FFFFFF" stroke="#C9D8E2"/>
+            <rect x="112" y="0" width="22" height="22" rx="5" fill="#FFFFFF" stroke="#C9D8E2"/>
+            <rect x="140" y="0" width="22" height="22" rx="5" fill="#E69F00"/>
+          </g>
+        </g>
+        <text x="20" y="198" class="tiny">proposal sources remain baselines</text>
+      </g>
+
+      <path d="M 252 177 L 280 177" fill="none" stroke="#17324D" stroke-width="2.5" marker-end="url(#arrow-ink)"/>
+
+      <g id="exact-cache-action" transform="translate(290,70)">
+        <rect x="0" y="0" width="278" height="214" rx="20" fill="#FFFFFF" stroke="#E69F00" stroke-width="2.5"/>
+        <text x="20" y="32" class="card-title" fill="#A96000">Exact cache action</text>
+        <text x="20" y="61" class="body">Delete omitted tokens</text>
+        <text x="20" y="87" class="body">and renormalize attention</text>
+        <g transform="translate(22,111)">
+          <rect x="0" y="0" width="36" height="36" rx="8" fill="#E69F00"/>
+          <rect x="45" y="0" width="36" height="36" rx="8" fill="#E69F00"/>
+          <rect x="90" y="0" width="36" height="36" rx="8" fill="#F0F4F7" stroke="#A8BAC7" stroke-dasharray="5 4"/>
+          <path d="M 98 8 L 118 28 M 118 8 L 98 28" stroke="#D55E00" stroke-width="3"/>
+          <rect x="135" y="0" width="36" height="36" rx="8" fill="#E69F00"/>
+          <rect x="180" y="0" width="36" height="36" rx="8" fill="#F0F4F7" stroke="#A8BAC7" stroke-dasharray="5 4"/>
+          <path d="M 188 8 L 208 28 M 208 8 L 188 28" stroke="#D55E00" stroke-width="3"/>
+        </g>
+        <rect x="20" y="169" width="238" height="27" rx="13.5" fill="#FFF3D6"/>
+        <text x="33" y="188" class="tiny" fill="#8A5400">concrete set-level intervention</text>
+      </g>
+
+      <path d="M 576 177 L 604 177" fill="none" stroke="#17324D" stroke-width="2.5" marker-end="url(#arrow-ink)"/>
+
+      <g id="downstream-transport" transform="translate(614,70)">
+        <rect x="0" y="0" width="322" height="214" rx="20" fill="#F4F8FB" stroke="#0072B2" stroke-width="2"/>
+        <text x="20" y="32" class="card-title" fill="#006AA6">Finite downstream response</text>
+        <text x="20" y="60" class="body">Transport each action through</text>
+        <text x="20" y="85" class="body">the remaining network.</text>
+        <g id="layer-stack" transform="translate(22,88)">
+          <rect x="0" y="28" width="58" height="54" rx="8" fill="#DDECF5" stroke="#77ADCD"/>
+          <rect x="10" y="18" width="58" height="54" rx="8" fill="#EAF5FB" stroke="#4B97C3"/>
+          <rect x="20" y="8" width="58" height="54" rx="8" fill="#FFFFFF" stroke="#0072B2" stroke-width="2"/>
+          <text x="37" y="42" class="mono" fill="#006AA6">L>b</text>
+        </g>
+        <path d="M 115 135 C 145 135, 151 101, 183 101" fill="none" stroke="#0072B2" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+        <g transform="translate(190,90)">
+          <circle cx="18" cy="18" r="18" fill="#FFFFFF" stroke="#0072B2" stroke-width="2"/>
+          <circle cx="72" cy="18" r="18" fill="#FFFFFF" stroke="#0072B2" stroke-width="2"/>
+          <text x="12" y="24" class="mono" fill="#006AA6">½</text>
+          <text x="66" y="24" class="mono" fill="#006AA6">½</text>
+          <text x="0" y="67" class="tiny">two midpoint probes</text>
+        </g>
+        <rect x="18" y="175" width="286" height="27" rx="13.5" fill="#EAF5FB"/>
+        <text x="32" y="195" class="math">Δz(C)</text>
+        <text x="105" y="194" class="tiny">candidate logit response</text>
+      </g>
+
+      <path d="M 775 292 L 775 325" fill="none" stroke="#009E73" stroke-width="3" marker-end="url(#arrow-green)"/>
+
+      <g id="state-conditioned-risk" transform="translate(165,337)">
+        <rect x="0" y="0" width="606" height="190" rx="22" fill="#ECF8F4" stroke="#009E73" stroke-width="2.5"/>
+        <g transform="translate(20,18)">
+          <rect x="0" y="0" width="194" height="29" rx="14.5" fill="#CDEDE3"/>
+          <text x="14" y="20" class="badge" fill="#007C5B">Shared risk object</text>
+        </g>
+        <text x="20" y="76" class="card-title" fill="#007C5B">State-conditioned output risk</text>
+        <text x="20" y="117" class="math">R<tspan baseline-shift="sub" font-size="15">s</tspan>(C) = g<tspan baseline-shift="sub" font-size="15">s</tspan><tspan baseline-shift="super" font-size="15">T</tspan> Δz(C) + ½ Δz(C)<tspan baseline-shift="super" font-size="15">T</tspan> F<tspan baseline-shift="sub" font-size="15">s</tspan> Δz(C)</text>
+        <line x1="20" y1="138" x2="586" y2="138" stroke="#B5E1D4"/>
+        <text x="20" y="166" class="body">First-order direction + second-order local KL geometry</text>
+      </g>
+    </g>
+
+    <path id="state-to-action-flow" d="M 382 562 C 425 562, 428 327, 471 327" fill="none" stroke="#0072B2" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+    <rect x="391" y="432" width="110" height="26" rx="13" fill="#EAF5FB"/>
+    <text x="406" y="450" class="tiny" fill="#006AA6">condition on s</text>
+
+    <g id="stage-decide" transform="translate(1428,80)">
+      <text x="0" y="0" class="section-kicker" fill="#009E73">03 · Decide and revisit</text>
+      <text x="0" y="34" class="section-title">Use risk for both choices</text>
+
+      <g id="risk-ranking" transform="translate(0,70)">
+        <rect x="0" y="0" width="480" height="208" rx="20" fill="#F4FAF8" stroke="#B5E1D4"/>
+        <text x="20" y="31" class="card-title">Candidate risk ranking</text>
+        <text x="20" y="60" class="small">Lower is preferred at the current state</text>
+
+        <text x="20" y="98" class="tiny">C<tspan baseline-shift="super" font-size="11">*</tspan></text>
+        <rect x="58" y="82" width="272" height="22" rx="11" fill="#DCE7EC"/>
+        <rect x="58" y="82" width="94" height="22" rx="11" fill="#009E73"/>
+        <text x="345" y="99" class="small" fill="#007C5B">lowest</text>
+        <rect x="408" y="80" width="53" height="26" rx="13" fill="#CDEDE3"/>
+        <text x="421" y="98" class="badge" fill="#007C5B">min</text>
+
+        <text x="20" y="135" class="tiny">C<tspan baseline-shift="sub" font-size="11">j</tspan></text>
+        <rect x="58" y="119" width="272" height="22" rx="11" fill="#DCE7EC"/>
+        <rect x="58" y="119" width="166" height="22" rx="11" fill="#8BBEAA"/>
+        <text x="345" y="136" class="small">higher</text>
+
+        <text x="20" y="172" class="tiny">C<tspan baseline-shift="sub" font-size="11">k</tspan></text>
+        <rect x="58" y="156" width="272" height="22" rx="11" fill="#DCE7EC"/>
+        <rect x="58" y="156" width="224" height="22" rx="11" fill="#A7BCC8"/>
+        <text x="345" y="173" class="small">higher</text>
+        <text x="20" y="198" class="tiny">schematic ordering at the current state</text>
+      </g>
+
+      <path d="M 240 286 L 240 307" fill="none" stroke="#009E73" stroke-width="3" marker-end="url(#arrow-green)"/>
+
+      <g id="selection-decision" transform="translate(0,318)">
+        <rect x="0" y="0" width="480" height="118" rx="20" fill="#ECF8F4" stroke="#009E73" stroke-width="2.5"/>
+        <text x="20" y="34" class="card-title" fill="#007C5B">Select the lowest-risk action</text>
+        <text x="20" y="72" class="math">C*<tspan baseline-shift="sub" font-size="15">s</tspan> = arg min<tspan baseline-shift="sub" font-size="15">C</tspan> R<tspan baseline-shift="sub" font-size="15">s</tspan>(C)</text>
+        <text x="20" y="102" class="body">Apply C* and continue decoding.</text>
+      </g>
+
+      <path d="M 240 444 L 240 463" fill="none" stroke="#0072B2" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+
+      <g id="refresh-decision" transform="translate(0,474)">
+        <rect x="0" y="0" width="480" height="108" rx="20" fill="#FFFFFF" stroke="#0072B2" stroke-width="2"/>
+        <text x="20" y="32" class="card-title" fill="#006AA6">Re-evaluate after state evolution</text>
+        <text x="20" y="64" class="body">Refresh when the preferred retained set changes:</text>
+        <text x="20" y="94" class="math">C*(s[t]) ≠ C*(s[t−1])</text>
+      </g>
+    </g>
+
+    <path id="risk-to-ranking-flow" d="M 1208 607 C 1310 607, 1320 322, 1420 322" fill="none" stroke="#009E73" stroke-width="3" marker-end="url(#arrow-green)"/>
+    <rect x="1280" y="467" width="107" height="26" rx="13" fill="#ECF8F4"/>
+    <text x="1296" y="485" class="tiny" fill="#007C5B">rank actions</text>
+
+    <path id="refresh-feedback" d="M 1668 662 L 1668 666 L 212 666 C 191 666, 177 652, 177 631 L 177 603" fill="none" stroke="#0072B2" stroke-width="2.5" stroke-dasharray="9 8" marker-end="url(#arrow-blue)"/>
+    <rect x="792" y="647" width="287" height="27" rx="13.5" fill="#EAF5FB"/>
+    <text x="812" y="666" class="tiny" fill="#006AA6">selected action becomes future history</text>
+  </g>
+
+  <g id="direct-policy" transform="translate(56,866)">
+    <rect x="0" y="0" width="1422" height="356" rx="28" fill="#FFFFFF" stroke="#DDB3CE" stroke-width="2" filter="url(#soft-shadow)"/>
+    <g transform="translate(28,22)">
+      <rect x="0" y="0" width="364" height="31" rx="15.5" fill="#F7EAF2"/>
+      <circle cx="17" cy="15.5" r="6" fill="#CC79A7"/>
+      <text x="31" y="21" class="badge" fill="#A44F80">Training-free direct policy · Current candidate</text>
+    </g>
+    <text x="28" y="87" class="section-title">Generate one shared core—without runtime candidate enumeration</text>
+
+    <g id="capture-window" transform="translate(28,112)">
+      <rect x="0" y="0" width="260" height="142" rx="18" fill="#FBF5F9" stroke="#DDB3CE"/>
+      <text x="18" y="30" class="card-title" fill="#A44F80">Sparse capture</text>
+      <text x="18" y="58" class="small">Final W = 4 queries</text>
+      <text x="18" y="84" class="small">at six diagnostic layers</text>
+      <g transform="translate(18,104)">
+        <rect x="0" y="0" width="32" height="22" rx="6" fill="#EAD1E0"/><text x="11" y="16" class="tiny">0</text>
+        <rect x="38" y="0" width="32" height="22" rx="6" fill="#EAD1E0"/><text x="48" y="16" class="tiny">7</text>
+        <rect x="76" y="0" width="38" height="22" rx="6" fill="#EAD1E0"/><text x="84" y="16" class="tiny">14</text>
+        <rect x="120" y="0" width="38" height="22" rx="6" fill="#EAD1E0"/><text x="128" y="16" class="tiny">15</text>
+        <rect x="164" y="0" width="38" height="22" rx="6" fill="#EAD1E0"/><text x="172" y="16" class="tiny">21</text>
+        <rect x="208" y="0" width="38" height="22" rx="6" fill="#CC79A7"/><text x="216" y="16" class="tiny" fill="#FFFFFF">27</text>
+      </g>
+    </g>
+
+    <path d="M 296 183 L 326 183" fill="none" stroke="#CC79A7" stroke-width="2.5" marker-end="url(#arrow-magenta)"/>
+
+    <g id="shrinkage-score" transform="translate(336,112)">
+      <rect x="0" y="0" width="378" height="142" rx="18" fill="#FFFFFF" stroke="#CC79A7" stroke-width="2"/>
+      <text x="18" y="30" class="card-title" fill="#A44F80">Blend token evidence</text>
+      <g transform="translate(18,48)">
+        <rect x="0" y="0" width="151" height="30" rx="15" fill="#EAF5FB"/>
+        <text x="13" y="21" class="tiny" fill="#006AA6">latest attention aᵢ</text>
+        <text x="165" y="21" class="body-dark">+</text>
+        <rect x="190" y="0" width="170" height="30" rx="15" fill="#FFF3D6"/>
+        <text x="204" y="21" class="tiny" fill="#8A5400">value contribution cᵢ</text>
+      </g>
+      <text x="18" y="110" class="math">sᵢ = mean<tspan baseline-shift="sub" font-size="15">b</tspan> [(1−λ)aᵢ + λcᵢ]</text>
+      <text x="252" y="132" class="tiny" fill="#A44F80">λ = 0.25</text>
+    </g>
+
+    <path d="M 722 183 L 752 183" fill="none" stroke="#CC79A7" stroke-width="2.5" marker-end="url(#arrow-magenta)"/>
+
+    <g id="shared-core" transform="translate(762,112)">
+      <rect x="0" y="0" width="276" height="142" rx="18" fill="#FBF5F9" stroke="#DDB3CE"/>
+      <text x="18" y="30" class="card-title" fill="#A44F80">Build a shared core</text>
+      <g transform="translate(18,52)">
+        <rect x="0" y="0" width="166" height="27" rx="8" fill="#CC79A7"/>
+        <text x="13" y="19" class="tiny" fill="#FFFFFF">top-92 shared core</text>
+        <rect x="0" y="34" width="108" height="27" rx="8" fill="#0072B2"/>
+        <text x="13" y="53" class="tiny" fill="#FFFFFF">sink tokens</text>
+        <rect x="114" y="34" width="108" height="27" rx="8" fill="#E69F00"/>
+        <text x="127" y="53" class="tiny" fill="#FFFFFF">recent tokens</text>
+      </g>
+      <text x="18" y="130" class="tiny">one top-k operation</text>
+    </g>
+
+    <path d="M 1046 183 L 1076 183" fill="none" stroke="#CC79A7" stroke-width="2.5" marker-end="url(#arrow-magenta)"/>
+
+    <g id="shared-application" transform="translate(1086,112)">
+      <rect x="0" y="0" width="308" height="142" rx="18" fill="#FFFFFF" stroke="#CC79A7" stroke-width="2"/>
+      <text x="18" y="30" class="card-title" fill="#A44F80">Apply across 28 layers</text>
+      <g transform="translate(18,48)">
+        <rect x="0" y="42" width="210" height="32" rx="8" fill="#F3DFEB" stroke="#DDB3CE"/>
+        <rect x="12" y="30" width="210" height="32" rx="8" fill="#F7EAF2" stroke="#DDB3CE"/>
+        <rect x="24" y="18" width="210" height="32" rx="8" fill="#FFFFFF" stroke="#CC79A7" stroke-width="2"/>
+        <text x="43" y="40" class="tiny" fill="#A44F80">shared cache action C<tspan baseline-shift="super" font-size="11">direct</tspan></text>
+        <rect x="242" y="18" width="46" height="56" rx="12" fill="#F7EAF2"/>
+        <text x="251" y="42" class="badge" fill="#A44F80">×28</text>
+        <text x="252" y="61" class="tiny">layers</text>
+      </g>
+      <text x="18" y="130" class="tiny">zero candidate algorithms at runtime</text>
+    </g>
+
+    <g id="direct-policy-evidence" transform="translate(28,278)">
+      <rect x="0" y="0" width="1366" height="51" rx="15" fill="#F7EAF2"/>
+      <circle cx="24" cy="25.5" r="8" fill="#CC79A7"/>
+      <text x="44" y="22" class="body-dark">Held-out teacher-forced diagnostics</text>
+      <text x="44" y="42" class="tiny">Mean and tail KL decrease on new sequences.</text>
+      <line x1="548" y1="11" x2="548" y2="40" stroke="#DDB3CE"/>
+      <text x="574" y="22" class="body-dark">Evidence boundary</text>
+      <text x="574" y="42" class="tiny">Selective tail-risk route; the independent sample–anchor win-rate gate is not met.</text>
+    </g>
+  </g>
+
+  <g id="open-deployment" transform="translate(1506,866)">
+    <rect x="0" y="0" width="486" height="356" rx="28" fill="#FFFFFF" stroke="#CC79A7" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="28" y="45" class="section-kicker" fill="#CC79A7">Next evidence gate</text>
+    <text x="28" y="81" class="section-title">Close the online loop</text>
+    <text x="28" y="112" class="body">Validate the policy under free generation.</text>
+
+    <g transform="translate(28,139)">
+      <circle cx="15" cy="15" r="15" fill="#F7EAF2" stroke="#CC79A7"/>
+      <text x="10" y="21" class="badge" fill="#A44F80">1</text>
+      <text x="46" y="12" class="card-title">Training-free trigger</text>
+      <text x="46" y="35" class="small">detect when the retained set should change</text>
+    </g>
+    <line x1="43" y1="172" x2="43" y2="200" stroke="#CC79A7" stroke-width="2" stroke-dasharray="5 5"/>
+    <g transform="translate(28,197)">
+      <circle cx="15" cy="15" r="15" fill="#F7EAF2" stroke="#CC79A7"/>
+      <text x="10" y="21" class="badge" fill="#A44F80">2</text>
+      <text x="46" y="12" class="card-title">Closed-loop generation</text>
+      <text x="46" y="35" class="small">quality under repeated select–refresh cycles</text>
+    </g>
+    <line x1="43" y1="230" x2="43" y2="258" stroke="#CC79A7" stroke-width="2" stroke-dasharray="5 5"/>
+    <g transform="translate(28,255)">
+      <circle cx="15" cy="15" r="15" fill="#F7EAF2" stroke="#CC79A7"/>
+      <text x="10" y="21" class="badge" fill="#A44F80">3</text>
+      <text x="46" y="12" class="card-title">Matched-budget systems test</text>
+      <text x="46" y="35" class="small">latency · memory · throughput · overhead</text>
+    </g>
+
+    <rect x="28" y="315" width="430" height="25" rx="12.5" fill="#F7EAF2"/>
+    <text x="66" y="333" class="tiny" fill="#A44F80">dashed boundary = not yet established by this repository</text>
+  </g>
+
+  <text x="58" y="1260" class="tiny">StateKV overview · proposed README figure v2 · all modules and status boundaries trace to the repository README and versioned experiment summaries.</text>
+</svg>

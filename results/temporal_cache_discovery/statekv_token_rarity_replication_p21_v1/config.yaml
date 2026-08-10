@@ -1,0 +1,50 @@
+experiment_name: statekv_token_rarity_independent_replication_p21
+status: preregistered_before_execution
+frozen_candidate:
+  name: token_rarity_shared
+  source_run: results/temporal_cache_discovery/statekv_static_lexical_screen_p20_v1
+  signal: five_token_span_smoothed_inverse_observed_stream_frequency
+  total_budget: 128
+  sink_size: 4
+  recent_size: 32
+  selected_core_budget: 92
+  candidate_algorithms_run_per_deployment_decision: 0
+matched_strong_baseline:
+  name: latest_attention_shared
+  signal: latest_query_attention_six_layer_normalized_shared_set
+matched_low_cost_control:
+  name: position_coverage_shared
+upper_reference:
+  name: full
+workloads:
+- config: benchmarks/mlx/configs/experiments/statekv/qwen25_15b_govreport_token_rarity_replication_p21a.yaml
+  run_dir: results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/p21a_v1
+  sample_ids:
+  - gov_report:58
+  - gov_report:59
+  - gov_report:60
+  scope: 700_word_project_workload_not_full_official_context
+- config: benchmarks/mlx/configs/experiments/statekv/qwen25_15b_ruler_token_rarity_replication_p21b.yaml
+  run_dir: results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/ruler/p21b_v1
+  sample_ids:
+  - niah_single_1:58
+  - niah_single_1:59
+  - niah_single_1:60
+  scope: official_ruler_16k_samples
+primary_gate:
+- each_task_mean_official_score_nonworse_than_latest_attention
+- overall_mean_teacher_forced_nll_nonworse_than_latest_attention
+- decode_throughput_nonworse_than_latest_attention
+- maximum_peak_memory_lower_than_latest_attention
+- zero_attention_hook_errors
+- cache_budget_respected
+secondary:
+- paired_official_score_wins
+- paired_nll_wins
+- comparison_to_position_coverage
+- comparison_to_full_reference
+claims_excluded:
+- full_LongBench_official_result
+- cross_model_generalization
+- population_level_superiority
+- production_kernel_parity

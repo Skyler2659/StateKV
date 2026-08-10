@@ -168,6 +168,75 @@ def deterministic_uniform_core(
     return tuple(sorted(chosen[:take]))
 
 
+def recency_core(
+    eligible_positions: Sequence[int], budget: int
+) -> Tuple[int, ...]:
+    """Select the most recent eligible positions as the retained core."""
+
+    eligible = [int(value) for value in eligible_positions]
+    take = min(int(budget), len(eligible))
+    if take <= 0:
+        return tuple()
+    return tuple(eligible[len(eligible) - take :])
+
+
+def quest_like_core(
+    eligible_positions: Sequence[int],
+    score_by_position: Mapping[int, float],
+    page_size: int,
+    budget: int,
+) -> Tuple[int, ...]:
+    """Simplified Quest-style page-granular query-aware selection.
+
+    Pages are contiguous chunks of ``page_size`` over the sorted eligible
+    positions.  Pages are ranked by their maximum token score (the
+    upper-bound-flavoured page statistic, here computed from exact scores
+    rather than min/max key metadata).  Whole top pages are retained in
+    rank order; the page that crosses the budget is truncated to its
+    top-scored tokens so the core fills exactly ``min(budget, len(eligible))``
+    slots.  All tie-breaks are deterministic (lower page index, lower
+    position).
+    """
+
+    eligible = [int(value) for value in eligible_positions]
+    take = min(int(budget), len(eligible))
+    if take <= 0:
+        return tuple()
+    if int(page_size) <= 0:
+        raise ValueError("quest page size must be positive")
+    pages = [
+        eligible[index : index + int(page_size)]
+        for index in range(0, len(eligible), int(page_size))
+    ]
+    page_scores = [
+        max(float(score_by_position.get(int(position), 0.0)) for position in page)
+        for page in pages
+    ]
+    order = sorted(
+        range(len(pages)), key=lambda index: (-page_scores[index], index)
+    )
+    chosen: List[int] = []
+    remaining = int(take)
+    for index in order:
+        if remaining <= 0:
+            break
+        page = pages[index]
+        if len(page) <= remaining:
+            chosen.extend(page)
+            remaining -= len(page)
+        else:
+            ranked = sorted(
+                page,
+                key=lambda position: (
+                    -float(score_by_position.get(int(position), 0.0)),
+                    int(position),
+                ),
+            )
+            chosen.extend(ranked[:remaining])
+            remaining = 0
+    return tuple(sorted(chosen))
+
+
 def _normalize_on_eligible(
     values: np.ndarray, eligible_rows: np.ndarray
 ) -> np.ndarray:

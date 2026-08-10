@@ -1,0 +1,234 @@
+{
+  "anchors": [
+    16
+  ],
+  "baseline": "hidden_l2_action",
+  "candidate_count": 8,
+  "checks": {
+    "adjoint_identity": false,
+    "mean_normalized_regret_gain_positive": false,
+    "mean_pairwise_accuracy_gain_positive": false,
+    "median_spearman_gain_positive": false
+  },
+  "collection_elapsed_s": 36.527948084,
+  "collection_reverse_passes": 292,
+  "collection_tail_forward_evaluations": 40,
+  "confirmatory_evidence": false,
+  "deployment_costs": [
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 8,
+      "route": "fisher_vjp",
+      "width": 1
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 8,
+      "route": "margin_vjp",
+      "width": 1
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 4,
+      "route": "fisher_vjp",
+      "width": 1
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 4,
+      "route": "margin_vjp",
+      "width": 1
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.25,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 2,
+      "route": "fisher_vjp",
+      "width": 1
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.25,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 2,
+      "route": "margin_vjp",
+      "width": 1
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.125,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 1,
+      "route": "fisher_vjp",
+      "width": 1
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.125,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 1,
+      "route": "margin_vjp",
+      "width": 1
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_vjp",
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 16,
+      "route": "margin_vjp",
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 8,
+      "route": "fisher_vjp",
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 8,
+      "route": "margin_vjp",
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 4,
+      "route": "fisher_vjp",
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 4,
+      "route": "margin_vjp",
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.25,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 2,
+      "route": "fisher_vjp",
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.25,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 2,
+      "route": "margin_vjp",
+      "width": 2
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 32,
+      "route": "fisher_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 4.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 1,
+      "reverse_passes_per_horizon": 32,
+      "route": "margin_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 16,
+      "route": "fisher_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 2.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 2,
+      "reverse_passes_per_horizon": 16,
+      "route": "margin_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 8,
+      "route": "fisher_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 1.0,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 4,
+      "reverse_passes_per_horizon": 8,
+      "route": "margin_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 4,
+      "route": "fisher_vjp",
+      "width": 4
+    },
+    {
+      "amortized_reverse_passes_per_token": 0.5,
+      "candidate_dependent_reverse_passes": 0,
+      "refresh_interval": 8,
+      "reverse_passes_per_horizon": 4,
+      "route": "margin_vjp",
+      "width": 4
+    }
+  ],
+  "experiment": "statekv_vjp_routes_p3",
+  "horizon": 8,
+  "maximum_adjoint_relative_error": 0.0032440872951622225,
+  "outcome": "shared_vjp_not_yet_a_low_cost_controller_metric",
+  "passed": false,
+  "primary": {
+    "method": "fisher_vjp_action",
+    "refresh_interval": 4,
+    "width": 4
+  },
+  "samples": [
+    "gov_report:12",
+    "gov_report:13",
+    "synthetic_niah_12",
+    "synthetic_niah_13"
+  ],
+  "scope": "Final-boundary layer-27 VJPs on development sequences. Reverse passes are shared across candidates; this tests ranking, not candidate generation or end-to-end latency.",
+  "status": "bounded_model_backed_development_pilot",
+  "values": {
+    "mean_normalized_regret_gain": -0.016218110856993786,
+    "mean_pairwise_accuracy_gain": -0.03698979591836736,
+    "median_spearman_gain": -0.023809523809523878
+  }
+}

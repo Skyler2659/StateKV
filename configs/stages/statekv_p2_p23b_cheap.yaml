@@ -1,0 +1,58 @@
+# Cheap committed trajectories on the P23b substrate (Qwen2.5-1.5B, budget
+# 128/core 92, samples 61-63) — the matched comparison for the P23b teacher
+# gate (statekv_teacher_gate_qwen25_15b_p23b_v1).
+experiment_name: statekv_p2_p23b_cheap
+base_config: configs/stages/direct_policy_independent_base.yaml
+data_seed: 20260818
+runtime_run_id: statekv_p2_p23b_cheap_seed20260818_v1
+
+model_overrides:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: null
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+sink_size: 4
+recent_size: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+
+p2:
+  output_run: results/temporal_cache_discovery/statekv_p2_qwen25_15b_p23b_cheap_v1
+  control_cycles: 64
+  budgets:
+    - total_budget: 128
+      core_budget: 92
+      maximum_delta: 18
+  task_overrides:
+    ruler_niah:
+      num_samples: 3
+      context_length: 768
+      sample_offset: 61
+    govreport_or_qmsum:
+      num_samples: 3
+      preferred: gov_report
+      max_words: 700
+      sample_indices: [61, 62, 63]
+      sample_strategy: first
+      fallback_paragraphs: 24
+  sample_ids:
+    - gov_report:61
+    - gov_report:62
+    - gov_report:63
+    - synthetic_niah_61
+    - synthetic_niah_62
+    - synthetic_niah_63
+
+tail_telemetry:
+  probability_labels:
+    token_17: ["17", " 17"]
+    token_14: ["14", " 14"]
+  evidence_phrases:
+    - "17 sailors"
+    - " 17 sailors"
+    - "loss of 17 sailors"
+    - "deaths of 17 sailors"

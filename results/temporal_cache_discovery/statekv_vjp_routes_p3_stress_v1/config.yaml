@@ -1,0 +1,53 @@
+adjoint_error_tolerance: 0.001
+adjoint_fd_radii:
+- 0.0003
+- 0.001
+- 0.003
+anchors:
+- 16
+base_config: configs/stages/independent_fisher_config.yaml
+baseline: hidden_l2_action
+candidate_sources:
+- attention
+- direct_energy_greedy
+- v_ridge
+- aor
+- preceding_anchor_old_core
+- stratified_random_00
+- stratified_random_01
+- stratified_random_02
+claims_excluded:
+- independent replication
+- end-to-end controller quality
+- candidate-generation cost
+- wall-clock speedup
+- full-model multi-boundary pullback
+decay: 0.95
+evidence_status: bounded_model_backed_development_stress_test
+experiment_name: statekv_vjp_routes_p3_stress
+fisher_probe_families:
+- gaussian
+- rademacher
+horizon: 8
+minimum_horizon: 2
+output_run: results/temporal_cache_discovery/statekv_vjp_routes_p3_stress_v1
+primary:
+  method: fisher_gaussian_vjp_action
+  refresh_interval: 4
+  width: 16
+random_seed: 202608071
+refresh_intervals:
+- 1
+- 2
+- 4
+- 8
+sample_ids:
+- gov_report:12
+- gov_report:13
+- synthetic_niah_12
+- synthetic_niah_13
+source_run: results/temporal_cache_discovery/independent_fisher_4bit_24newseq_seed20260726_v1
+widths:
+- 4
+- 8
+- 16

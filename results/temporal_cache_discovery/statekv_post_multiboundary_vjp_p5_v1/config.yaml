@@ -1,0 +1,53 @@
+action_reconstruction_tolerance: 0.005
+adjoint_error_tolerance: 0.02
+adjoint_fd_radii:
+- 0.001
+- 0.003
+- 0.01
+anchors:
+- 16
+base_config: configs/stages/independent_fisher_config.yaml
+baseline: layer27_hidden_l2
+candidate_sources:
+- attention
+- direct_energy_greedy
+- v_ridge
+- aor
+- preceding_anchor_old_core
+- stratified_random_00
+- stratified_random_01
+- stratified_random_02
+claims_excluded:
+- independent replication
+- direct cache-set generation
+- end-to-end controller speedup
+evidence_status: bounded_model_backed_development_pilot
+experiment_name: statekv_post_multiboundary_vjp_p5
+horizon: 8
+layers:
+- 0
+- 14
+- 27
+minimum_horizon: 2
+output_run: results/temporal_cache_discovery/statekv_post_multiboundary_vjp_p5_v1
+primary:
+  method: post_multiboundary_vjp_sum
+  refresh_interval: 4
+  width: 8
+random_seed: 20260809
+recent_size: 32
+refresh_intervals:
+- 1
+- 4
+- 8
+sample_ids:
+- gov_report:12
+- gov_report:13
+- synthetic_niah_12
+- synthetic_niah_13
+sink_size: 4
+source_run: results/temporal_cache_discovery/independent_fisher_4bit_24newseq_seed20260726_v1
+widths:
+- 2
+- 4
+- 8

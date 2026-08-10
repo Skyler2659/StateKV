@@ -1,0 +1,45 @@
+baseline: raw_action
+decay: 0.95
+evidence_status: retrospective_development_screen
+experiment_name: statekv_tf_metric_repair_p1
+method_scope:
+  block_rms: 12 contiguous layer-27 residual-coordinate blocks, not heads
+  diagonal_rms: unlabeled calibration action second moments
+  ema: m_next = decay * m + (1 - decay) * phi_t
+  fisher_oracle: stored candidate-specific midpoint Fisher, diagnostic only
+  innovation: m_next = decay * m + (phi_t - phi_previous)
+minimum_horizon: 2
+output_run: results/temporal_cache_discovery/statekv_tf_metric_repair_p1_v1
+primary:
+  method: diagonal_rms_ema
+  projection_dimension: 64
+  projection_seed: 42
+projection_dimensions:
+- 32
+- 64
+- 128
+projection_seeds:
+- 42
+- 31415
+- 271828
+residual_blocks: 12
+selection_disclosure: Method variants were inspected during development. The named
+  evaluation and replication partitions are descriptive stress splits, not untouched
+  confirmatory evidence.
+source_run: results/temporal_cache_discovery/independent_fisher_4bit_24newseq_seed20260726_v1
+splits:
+  calibration:
+  - 12
+  - 13
+  - 14
+  - 15
+  evaluation:
+  - 16
+  - 17
+  - 18
+  - 19
+  replication:
+  - 20
+  - 21
+  - 22
+  - 23

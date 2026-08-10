@@ -1,0 +1,82 @@
+experiment_name: statekv_risk_consistent_proxy_independent_p23b
+base_config: configs/stages/direct_policy_independent_base.yaml
+source_run: results/temporal_cache_discovery/statekv_risk_consistent_proxy_independent_source_p23a_v1
+output_run: results/temporal_cache_discovery/statekv_risk_consistent_proxy_independent_p23b_v1
+data_seed: 20260818
+runtime_run_id: risk_consistent_proxy_independent_seed20260818_v1
+task_overrides:
+  ruler_niah:
+    num_samples: 3
+    context_length: 768
+    sample_offset: 61
+  govreport_or_qmsum:
+    num_samples: 3
+    preferred: gov_report
+    max_words: 700
+    sample_indices:
+    - 61
+    - 62
+    - 63
+    sample_strategy: first
+    fallback_paragraphs: 24
+sample_ids:
+- gov_report:61
+- gov_report:62
+- gov_report:63
+- synthetic_niah_61
+- synthetic_niah_62
+- synthetic_niah_63
+anchors:
+- 16
+- 32
+- 48
+evaluation_horizons:
+- 1
+- 4
+- 8
+- 16
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+scenario_windows:
+- 1
+- 4
+total_budget: 128
+sink_size: 4
+recent_size: 32
+core_budget: 92
+policies:
+- attention_mean_w1_shared
+- attention_head_peak_w4_shared
+- attention_temporal_volatility_w4_shared
+- key_diagonal_leverage_shared
+- value_diagonal_leverage_shared
+- value_adjacent_change_shared
+- uniform_position_coverage_shared
+proxies:
+- attention_mean_w1_shared
+refresh_proxies:
+- attention_mean_w1_shared
+gate:
+  minimum_task_median_action_spearman: 0.2
+  maximum_mean_normalized_regret: 0.25
+  minimum_refresh_spearman: 0.2
+frozen_from:
+  run: results/temporal_cache_discovery/statekv_risk_consistent_proxy_alignment_p22_v1
+  selected_proxy: attention_mean_w1_shared
+  threshold_changes: none
+  gate_changes: none
+evidence_status: independent-new-sequence-frozen-proxy-audit
+scope: Frozen-proxy audit on six previously untouched sequences. Cross-action labels
+  come from a new physical replay and stale actions are newly replayed at later anchors.
+  This is independent evidence for the scoped proxy gate, not free generation, cross-model
+  confirmation, or a deployment latency result.
+claims_excluded:
+- free-generation quality
+- deployment latency
+- cross-model confirmation
+- novelty of latest-attention scoring

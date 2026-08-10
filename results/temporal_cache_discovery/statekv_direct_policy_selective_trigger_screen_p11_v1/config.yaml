@@ -1,0 +1,50 @@
+alternative: blend_attention_contribution_25_w4_shared
+anchors:
+- 16
+- 32
+- 48
+base_config: configs/stages/independent_fisher_config.yaml
+baseline: attention_mean_w1_shared
+claims_excluded:
+- independent trigger validation
+- free-generation quality
+- end-to-end speedup
+contribution_policy: contribution_mean_w4_shared
+core_budget: 92
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+evidence_status: trigger_development_only
+experiment_name: statekv_direct_policy_selective_trigger_screen_p11
+mode: screen
+output_run: results/temporal_cache_discovery/statekv_direct_policy_selective_trigger_screen_p11_v1
+recent_size: 32
+sample_ids:
+- gov_report:18
+- gov_report:19
+- gov_report:20
+- synthetic_niah_18
+- synthetic_niah_19
+- synthetic_niah_20
+scenario_windows:
+- 1
+- 4
+screen_directions:
+- high
+- low
+screen_features:
+- score_tv
+- score_cosine
+- selection_disagreement
+- contribution_rescue_mass
+- entropy_difference
+screen_quantiles:
+- 0.25
+- 0.5
+- 0.75
+sink_size: 4
+source_replay_run: results/temporal_cache_discovery/statekv_direct_policy_shrinkage_screen_p8_v1

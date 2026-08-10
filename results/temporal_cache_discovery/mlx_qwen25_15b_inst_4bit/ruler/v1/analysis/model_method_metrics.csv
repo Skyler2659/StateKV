@@ -1,0 +1,4 @@
+accuracy,avg_evidence_recall,avg_official_score,avg_primary_score,avg_tokens_per_second,method,model_name,n,official_accuracy
+1.0,1.0,100.0,100.0,23.949251831469997,full,mlx-community/Qwen2.5-1.5B-Instruct-4bit,3,1.0
+1.0,0.0,100.0,100.0,68.07085341844805,latest_attention_shared,mlx-community/Qwen2.5-1.5B-Instruct-4bit,3,1.0
+1.0,0.04227053140096618,100.0,100.0,65.70459498226889,temporal_volatility_shared,mlx-community/Qwen2.5-1.5B-Instruct-4bit,3,1.0

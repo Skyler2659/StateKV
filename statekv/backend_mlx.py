@@ -5,7 +5,7 @@ import gc
 import math
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
+from typing import Any, Dict, FrozenSet, List, Mapping, Optional, Sequence, Set, Tuple
 
 import numpy as np
 import torch
@@ -783,6 +783,10 @@ class MLXTemporalModel:
         anchor: AnchorState,
         selection: CoreSelection,
         cache_config: Optional[CacheDiscoveryConfig] = None,
+        *,
+        cold_positions: Optional[Mapping[int, FrozenSet[int]]] = None,
+        quant_bits: int = 4,
+        quant_group: int = 64,
     ) -> Tuple[MLXReplayState, Dict[int, Set[int]]]:
         import mlx.core as mx
         from mlx_lm.models.cache import KVCache
@@ -816,10 +820,30 @@ class MLXTemporalModel:
             rows = torch.tensor(
                 [row_by_position[position] for position in keep_positions]
             )
+            selected_keys = key.index_select(2, rows)
+            selected_values = value.index_select(2, rows)
+            if cold_positions is not None:
+                cold = cold_positions.get(int(layer)) or frozenset()
+                if cold:
+                    cold_columns = [
+                        row
+                        for row, position in enumerate(keep_positions)
+                        if int(position) in cold
+                    ]
+                    if cold_columns:
+                        from statekv.value_tier import quantize_dequantize
+
+                        selected_values[:, :, cold_columns, :] = (
+                            quantize_dequantize(
+                                selected_values[:, :, cold_columns, :],
+                                bits=int(quant_bits),
+                                group=int(quant_group),
+                            )
+                        )
             layer_cache = KVCache()
             layer_cache.state = (
-                mx.array(key.index_select(2, rows).numpy()),
-                mx.array(value.index_select(2, rows).numpy()),
+                mx.array(selected_keys.numpy()),
+                mx.array(selected_values.numpy()),
             )
             layer_cache.logical_offset = current_position
             caches.append(layer_cache)
@@ -831,6 +855,103 @@ class MLXTemporalModel:
             MLXReplayState(caches, maps, current_position),
             fixed,
         )
+
+    @staticmethod
+    def shallow_clone_state(state: MLXReplayState) -> MLXReplayState:
+        """Duplicate replay bookkeeping while sharing immutable KV arrays.
+
+        MLX arrays are lazy, immutable values, so the clone and the source
+        state can reference the same keys/values.  The clone must be pruned
+        (``apply_selection_in_place`` replaces the shared arrays with fresh
+        ``mx.take`` outputs sized to the retained rows) before any forward,
+        which guarantees its ``update_and_fetch`` allocates new buffers and
+        never writes into the source state's storage.
+        """
+        from mlx_lm.models.cache import KVCache
+
+        caches = []
+        for layer_cache in state.cache:
+            clone = KVCache()
+            clone.keys = layer_cache.keys
+            clone.values = layer_cache.values
+            clone.offset = int(layer_cache.offset)
+            clone.logical_offset = int(getattr(layer_cache, "logical_offset", 0))
+            caches.append(clone)
+        return MLXReplayState(
+            caches,
+            {
+                int(layer): value.clone()
+                for layer, value in state.position_maps.items()
+            },
+            int(state.logical_next_position),
+        )
+
+    def apply_selection_in_place(
+        self,
+        state: MLXReplayState,
+        selection: CoreSelection,
+        cache_config: Optional[CacheDiscoveryConfig] = None,
+    ) -> Dict[int, Set[int]]:
+        """Irreversibly prune an active MLX state without a CPU KV backing store."""
+        import mlx.core as mx
+
+        cache_cfg = cache_config or self.cfg.cache
+        recent_before_query = max(0, int(cache_cfg.recent_size) - 1)
+        fixed_by_layer: Dict[int, Set[int]] = {}
+        for layer, layer_cache in enumerate(state.cache):
+            positions = [
+                int(item) for item in state.position_maps[int(layer)].tolist()
+            ]
+            available = set(positions)
+            selected = set(
+                int(value)
+                for value in selection.by_layer[int(layer)].selected_positions
+            )
+            if not selected <= available:
+                missing = sorted(selected - available)
+                raise RuntimeError(
+                    "pure eviction attempted to restore deleted positions: %s"
+                    % missing[:8]
+                )
+            sink = positions[: min(len(positions), int(cache_cfg.sink_size))]
+            recent = (
+                positions[-recent_before_query:]
+                if recent_before_query > 0
+                else []
+            )
+            fixed = set(sink) | selected
+            keep_positions = sorted(fixed | set(recent))
+            if len(keep_positions) > int(cache_cfg.total_budget) - 1:
+                raise RuntimeError(
+                    "pure-eviction cache exceeds total_budget - 1 before query"
+                )
+            row_by_position = {
+                position: row for row, position in enumerate(positions)
+            }
+            rows = mx.array(
+                [row_by_position[position] for position in keep_positions]
+            )
+            offset = int(layer_cache.offset)
+            layer_cache.keys = mx.take(
+                layer_cache.keys[:, :, :offset, :], rows, axis=2
+            )
+            layer_cache.values = mx.take(
+                layer_cache.values[:, :, :offset, :], rows, axis=2
+            )
+            layer_cache.offset = len(keep_positions)
+            layer_cache.logical_offset = int(state.logical_next_position)
+            state.position_maps[int(layer)] = torch.tensor(
+                keep_positions, dtype=torch.long
+            )
+            fixed_by_layer[int(layer)] = fixed
+        mx.eval(
+            *[
+                value
+                for layer_cache in state.cache
+                for value in (layer_cache.keys, layer_cache.values)
+            ]
+        )
+        return fixed_by_layer
 
     def prune_recent_before_query(
         self,

@@ -1,0 +1,54 @@
+anchors:
+- 16
+- 32
+- 48
+base_config: configs/stages/direct_policy_independent_base.yaml
+capture_anchor: 48
+capture_full_timing_repeats: 10
+capture_timing_repeats: 20
+claims_excluded:
+- end-to-end latency speedup
+- GPU or MLX fused-kernel timing
+- free-generation quality
+comparison_policy: blend_attention_contribution_25_w4_shared
+comparison_run: results/temporal_cache_discovery/statekv_direct_policy_shrinkage_independent_p9_v1
+contribution_weight: 0.25
+core_budget: 92
+data_seed: 20260813
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+evidence_status: runtime_microbenchmark_not_quality_evidence
+experiment_name: statekv_direct_policy_runtime_profile_p10
+output_run: results/temporal_cache_discovery/statekv_direct_policy_runtime_profile_p10_v3
+recent_size: 32
+refresh_intervals:
+- 4
+- 8
+- 16
+- 32
+runtime_run_id: direct_policy_runtime_profile_seed20260813_v1
+sample_ids:
+- gov_report:30
+- synthetic_niah_30
+scenario_window: 4
+sink_size: 4
+task_overrides:
+  govreport_or_qmsum:
+    fallback_paragraphs: 24
+    max_words: 700
+    num_samples: 1
+    preferred: gov_report
+    sample_indices:
+    - 30
+    sample_strategy: first
+  ruler_niah:
+    context_length: 768
+    num_samples: 1
+    sample_offset: 30
+timing_repeats: 40
+total_budget: 128

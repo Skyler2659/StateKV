@@ -1,0 +1,60 @@
+{
+  "schema_version": 2,
+  "aggregation": "macro_over_layer_head_units_then_samples",
+  "pairs": {
+    "latest_attention_shared_vs_temporal_volatility_shared": {
+      "pearson": 0.8113717003134155,
+      "spearman": 0.790376426364996,
+      "kendall_tau_b": 0.6066569463239919
+    }
+  },
+  "confidence_intervals": {
+    "latest_attention_shared_vs_temporal_volatility_shared": {
+      "pearson": {
+        "mean": 0.8113717003134155,
+        "ci95_low": 0.7935176358556394,
+        "ci95_high": 0.8292772525474982,
+        "n": 3
+      },
+      "spearman": {
+        "mean": 0.790376426364996,
+        "ci95_low": 0.7655464159558508,
+        "ci95_high": 0.8119198542393505,
+        "n": 3
+      },
+      "kendall_tau_b": {
+        "mean": 0.6066569463239919,
+        "ci95_low": 0.5830802320806345,
+        "ci95_high": 0.6249982806559053,
+        "n": 3
+      }
+    }
+  },
+  "correlation_budget_curve": {
+    "latest_attention_shared_vs_temporal_volatility_shared|budget=128": {
+      "pearson": {
+        "mean": 0.8113717003134155,
+        "ci95_low": 0.7935176358556394,
+        "ci95_high": 0.8292772525474982,
+        "n": 3
+      },
+      "spearman": {
+        "mean": 0.790376426364996,
+        "ci95_low": 0.7655464159558508,
+        "ci95_high": 0.8119198542393505,
+        "n": 3
+      },
+      "kendall_tau_b": {
+        "mean": 0.6066569463239919,
+        "ci95_low": 0.5830802320806345,
+        "ci95_high": 0.6249982806559053,
+        "n": 3
+      }
+    }
+  },
+  "unit_detail_path": "results/temporal_cache_discovery/mlx_qwen25_15b_inst_4bit/longbench/v1/analysis/rank_per_sample_layer_head.csv",
+  "skipped_artifacts": {
+    "missing_score_artifact": 3
+  },
+  "mismatched_pairs": []
+}

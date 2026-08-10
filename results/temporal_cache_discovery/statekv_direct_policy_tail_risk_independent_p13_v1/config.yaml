@@ -1,0 +1,76 @@
+anchors:
+- 16
+- 32
+- 48
+base_config: configs/stages/direct_policy_independent_base.yaml
+baseline: attention_mean_w1_shared
+claims_excluded:
+- majority-unit superiority
+- free-generation quality
+- wall-clock speedup
+- cross-model confirmation
+core_budget: 92
+data_seed: 20260815
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+evidence_status: independent_new_sequence_tail_risk_validation
+experiment_name: statekv_direct_policy_tail_risk_independent_p13
+gate:
+  minimum_anchor_mean_wins: 2
+  require_all_task_mean_improvement: true
+  require_large_loss_rate_nonworse: true
+  require_overall_cvar95_improvement: true
+  require_overall_maximum_nonworse: true
+  require_overall_mean_improvement: true
+  require_overall_p95_improvement: true
+  require_paired_baseline_tail_improvement: true
+gate_mode: tail_risk
+horizon: 16
+output_run: results/temporal_cache_discovery/statekv_direct_policy_tail_risk_independent_p13_v1
+policies:
+- attention_mean_w1_shared
+- blend_attention_contribution_25_w4_shared
+primary: blend_attention_contribution_25_w4_shared
+recent_size: 32
+runtime_run_id: direct_policy_tail_risk_independent_seed20260815_v1
+sample_ids:
+- gov_report:36
+- gov_report:37
+- gov_report:38
+- gov_report:39
+- gov_report:40
+- gov_report:41
+- synthetic_niah_36
+- synthetic_niah_37
+- synthetic_niah_38
+- synthetic_niah_39
+- synthetic_niah_40
+- synthetic_niah_41
+scenario_windows:
+- 1
+- 4
+sink_size: 4
+task_overrides:
+  govreport_or_qmsum:
+    fallback_paragraphs: 24
+    max_words: 700
+    num_samples: 6
+    preferred: gov_report
+    sample_indices:
+    - 36
+    - 37
+    - 38
+    - 39
+    - 40
+    - 41
+    sample_strategy: first
+  ruler_niah:
+    context_length: 768
+    num_samples: 6
+    sample_offset: 36
+total_budget: 128

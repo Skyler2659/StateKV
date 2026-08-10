@@ -1,0 +1,48 @@
+experiment_name: statekv_extval_7b_smoke
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_extval_7b_smoke_v1
+data_seed: 20260808
+runtime_run_id: statekv_extval_7b_smoke_seed20260808_v1
+model_overrides:
+  name: mlx-community/Qwen2.5-7B-Instruct-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: c26a38f6a37d0a51b4e9a1eb3026530fa35d9fed
+  prompt_format: chat_template
+runtime_overrides:
+  max_prompt_tokens: 8192
+task_overrides:
+  ruler_niah:
+    num_samples: 1
+    context_length: 768
+    sample_offset: 86
+sample_ids:
+- synthetic_niah_86
+expected_sample_count: 1
+start_anchor: 0
+control_cycles: 4
+control_horizon: 1
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+quest_page_size: 16
+policies:
+- qk_pool
+candidate_panel:
+- uniform
+- recency
+- qk_pool
+- quest_like
+generation: greedy_policy_conditioned_one_step_receding_horizon
+bootstrap_samples: 20000
+primary_metrics:
+- policy_conditioned_full_vocabulary_exact_kl
+- niah_retrieval_accuracy
+evidence_status: external_validity_model_smoke
+claims_excluded:
+- deployment_efficiency
+- cpu_gpu_transfer_latency

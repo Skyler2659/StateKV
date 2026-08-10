@@ -1,0 +1,53 @@
+{
+  "backend": "mlx",
+  "by_method": {
+    "full": {
+      "total_time_s": 4.8129066045,
+      "generation_time_s": 2.4199173335,
+      "prefill_time_s": 0.8642625420000001,
+      "decode_time_s": 1.5495756059999968,
+      "eviction_time_s": 0.0,
+      "decode_loop_time_s": 1.5495756059999968,
+      "score_time_s": 0.0,
+      "topk_time_s": 0.0,
+      "cache_rebuild_time_s": 0.0,
+      "tokens_per_second": 82.63825798462584,
+      "end_to_end_decode_tokens_per_second": 82.63825798462584,
+      "eviction_overhead_fraction": 0.0,
+      "avg_ms_per_token": 12.106059421874974,
+      "ppl_time_s": 2.3929892710000007,
+      "ppl_prefill_time_s": 0.8584518545000002,
+      "ppl_decode_time_s": 1.525978517999993,
+      "ppl_eviction_time_s": 0.0,
+      "ppl_score_time_s": 0.0,
+      "ppl_end_to_end_decode_tokens_per_second": 84.03467373631534,
+      "ppl_eviction_overhead_fraction": 0.0,
+      "score_update_count": 0.0,
+      "eviction_count": 879.5
+    },
+    "sink_recent_random": {
+      "total_time_s": 8.160040625,
+      "generation_time_s": 4.074701,
+      "prefill_time_s": 0.8796602915000005,
+      "decode_time_s": 1.502288039999999,
+      "eviction_time_s": 1.681427881999996,
+      "decode_loop_time_s": 3.183715921999995,
+      "score_time_s": 0.0016216480000208477,
+      "topk_time_s": 0.2845338735000782,
+      "cache_rebuild_time_s": 0.7313861919999542,
+      "tokens_per_second": 85.20350796142739,
+      "end_to_end_decode_tokens_per_second": 40.20495507924499,
+      "eviction_overhead_fraction": 0.5281276862548479,
+      "avg_ms_per_token": 11.736625312499992,
+      "ppl_time_s": 4.085339625,
+      "ppl_prefill_time_s": 0.8790182505000015,
+      "ppl_decode_time_s": 1.4992739805000053,
+      "ppl_eviction_time_s": 1.6943409804999767,
+      "ppl_score_time_s": 0.0016195019999969418,
+      "ppl_end_to_end_decode_tokens_per_second": 40.08015928311079,
+      "ppl_eviction_overhead_fraction": 0.5305380051616901,
+      "score_update_count": 0.0,
+      "eviction_count": 3612.0
+    }
+  }
+}

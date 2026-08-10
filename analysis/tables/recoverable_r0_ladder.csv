@@ -1,0 +1,20 @@
+stage,arm,mean_trajectory_kl
+irreversible (Gate 0 pure eviction),pure_a2_temporal_volatility,0.2637625886835279
+irreversible (Gate 0 pure eviction),pure_attention,0.09758068291238264
+irreversible (Gate 0 pure eviction),pure_b2_uniform,0.0960895936624186
+irreversible (Gate 0 pure eviction),pure_dynamic_b3,0.11877535443925784
+irreversible (Gate 0 pure eviction),pure_snapkv,0.15963503570223847
+irreversible (Gate 0 pure eviction),pure_teacher_panel,0.23215639493562223
+recoverable simple/control,rec_attention,0.3458008332503006
+ceiling,rec_full_cache,0.0
+recoverable query-aware,rec_qk_pool,0.0086228214845427
+recoverable query-aware,rec_quest_like,0.0242600132006154
+recoverable simple/control,rec_recency,0.7951893731194557
+recoverable teacher,rec_statekv_exact_mean,0.02130021197146382
+recoverable simple/control,rec_uniform,0.8951955785282127
+,,
+decomposition,"D1 recoverability, same rule (attention)",-0.24822015033791794
+decomposition,"D1 recoverability, best cheap (pure b2_uniform -> rec qk_pool)",0.08746677217787589
+decomposition,"D1 recoverability, teacher (pure -> recoverable)",0.21085618296415842
+decomposition,D2 query-aware retrieval (simple -> qk/quest),0.786566551634913
+decomposition,D3 physical-risk scorer (B* -> teacher),-0.012677390486921118

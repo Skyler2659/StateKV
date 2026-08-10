@@ -1,0 +1,5 @@
+rule,dataset,alert_rate,precision,spearman,rank_auc,precision_at_0.25
+conj(panel_margin_proxy>=0.0189026 AND panel_spread_proxy>=0.554093),p22,0.25,0.9166666666666666,,,
+product(rank panel_margin_proxy x rank panel_spread_proxy),p22,,,0.3524305458821859,0.6953125,0.6666666666666666
+conj(panel_margin_proxy>=0.0189026 AND panel_spread_proxy>=0.554093),p23b,0.0,,,,
+product(rank panel_margin_proxy x rank panel_spread_proxy),p23b,,,-0.2443844870873123,0.31818181818181823,0.5833333333333334

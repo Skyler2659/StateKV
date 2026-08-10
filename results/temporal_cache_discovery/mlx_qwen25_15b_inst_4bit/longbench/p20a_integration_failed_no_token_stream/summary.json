@@ -1,0 +1,38 @@
+{
+  "num_results": 10,
+  "num_errors": 6,
+  "num_skipped": 0,
+  "backend": "mlx",
+  "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+  "benchmark": "longbench",
+  "by_method": {
+    "full": {
+      "n": 2,
+      "avg_ppl": 10.131392624037709,
+      "avg_official_score": 9.11875,
+      "avg_primary_score": 9.11875,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 82.63825798462584,
+      "avg_end_to_end_decode_tokens_per_second": 82.63825798462584,
+      "avg_eviction_overhead_fraction": 0.0,
+      "avg_final_kv_len": 1007.5
+    },
+    "sink_recent_random": {
+      "n": 2,
+      "avg_ppl": 13.182547829023257,
+      "avg_official_score": 9.59965,
+      "avg_primary_score": 9.59965,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 85.20350796142739,
+      "avg_end_to_end_decode_tokens_per_second": 40.20495507924499,
+      "avg_eviction_overhead_fraction": 0.5281276862548479,
+      "avg_final_kv_len": 128.0
+    }
+  }
+}

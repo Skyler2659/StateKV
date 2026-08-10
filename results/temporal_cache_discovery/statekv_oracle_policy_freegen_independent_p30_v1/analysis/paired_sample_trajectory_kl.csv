@@ -1,0 +1,13 @@
+baseline,sample_id,baseline_minus_statekv_trajectory_kl,statekv_wins
+attention,gov_report:71,0.4078924267288047,True
+attention,gov_report:72,0.3135171313575817,True
+attention,synthetic_niah_71,0.1612828138173475,True
+attention,synthetic_niah_72,0.22315251137536762,True
+snapkv,gov_report:71,0.13716151250265268,True
+snapkv,gov_report:72,0.16451963535473801,True
+snapkv,synthetic_niah_71,-0.023120159306479787,False
+snapkv,synthetic_niah_72,-0.0016608610608978974,False
+h2o,gov_report:71,0.19615575060722978,True
+h2o,gov_report:72,0.10305973517779418,True
+h2o,synthetic_niah_71,0.5751365738785539,True
+h2o,synthetic_niah_72,0.17700121395185242,True

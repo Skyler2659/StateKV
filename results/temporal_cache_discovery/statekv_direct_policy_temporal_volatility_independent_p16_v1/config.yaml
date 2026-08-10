@@ -1,0 +1,80 @@
+anchors:
+- 16
+- 32
+- 48
+base_config: configs/stages/direct_policy_independent_base.yaml
+baseline: attention_mean_w1_shared
+claims_excluded:
+- free-generation quality
+- wall-clock speedup
+- cross-model confirmation
+core_budget: 92
+data_seed: 20260817
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+evidence_status: independent_new_sequence_temporal_volatility_validation
+experiment_name: statekv_direct_policy_temporal_volatility_independent_p16
+frozen_from:
+  changes_after_selection: none
+  run: results/temporal_cache_discovery/statekv_direct_policy_signal_family_screen_p15_v1
+  selected_policy: attention_temporal_volatility_w4_shared
+  selection: analysis/signal_family_selection.json
+gate:
+  minimum_anchor_mean_wins: 2
+  require_all_task_mean_improvement: true
+  require_large_loss_rate_nonworse: true
+  require_overall_cvar95_improvement: true
+  require_overall_maximum_nonworse: true
+  require_overall_mean_improvement: true
+  require_overall_p95_improvement: true
+  require_paired_baseline_tail_improvement: true
+gate_mode: tail_risk
+horizon: 16
+output_run: results/temporal_cache_discovery/statekv_direct_policy_temporal_volatility_independent_p16_v1
+policies:
+- attention_mean_w1_shared
+- attention_temporal_volatility_w4_shared
+primary: attention_temporal_volatility_w4_shared
+recent_size: 32
+runtime_run_id: direct_policy_temporal_volatility_independent_seed20260817_v1
+sample_ids:
+- gov_report:45
+- gov_report:46
+- gov_report:47
+- gov_report:48
+- gov_report:49
+- gov_report:50
+- synthetic_niah_45
+- synthetic_niah_46
+- synthetic_niah_47
+- synthetic_niah_48
+- synthetic_niah_49
+- synthetic_niah_50
+scenario_windows:
+- 1
+- 4
+sink_size: 4
+task_overrides:
+  govreport_or_qmsum:
+    fallback_paragraphs: 24
+    max_words: 700
+    num_samples: 6
+    preferred: gov_report
+    sample_indices:
+    - 45
+    - 46
+    - 47
+    - 48
+    - 49
+    - 50
+    sample_strategy: first
+  ruler_niah:
+    context_length: 768
+    num_samples: 6
+    sample_offset: 45
+total_budget: 128

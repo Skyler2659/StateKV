@@ -1,0 +1,208 @@
+{
+  "all_physical_loops_passed": true,
+  "candidate_panel": [
+    "stale",
+    "attention",
+    "snapkv",
+    "h2o",
+    "key_norm",
+    "value_norm",
+    "uniform"
+  ],
+  "collection_elapsed_s": 99.834696291,
+  "control_cycles": 4,
+  "control_horizon": 8,
+  "experiment": "statekv_oracle_policy_comparison_p27",
+  "paired_comparisons": [
+    {
+      "baseline": "attention",
+      "baseline_mean_exact_kl": 0.927890463548074,
+      "baseline_minus_statekv": 0.5922920845883004,
+      "sample_count": 2,
+      "statekv_mean_exact_kl": 0.3355983789597736,
+      "statekv_sample_wins": 2,
+      "ties": 0
+    },
+    {
+      "baseline": "snapkv",
+      "baseline_mean_exact_kl": 0.9238507882364981,
+      "baseline_minus_statekv": 0.5882524092767245,
+      "sample_count": 2,
+      "statekv_mean_exact_kl": 0.3355983789597736,
+      "statekv_sample_wins": 2,
+      "ties": 0
+    },
+    {
+      "baseline": "h2o",
+      "baseline_mean_exact_kl": 0.8424913184800813,
+      "baseline_minus_statekv": 0.5068929395203077,
+      "sample_count": 2,
+      "statekv_mean_exact_kl": 0.3355983789597736,
+      "statekv_sample_wins": 2,
+      "ties": 0
+    }
+  ],
+  "passed": true,
+  "policies": [
+    "statekv_exact_mean",
+    "attention",
+    "snapkv",
+    "h2o"
+  ],
+  "policy_aggregates": [
+    {
+      "control_cycles": 8,
+      "mean_exact_kl": 0.927890463548074,
+      "mean_policy_regret_to_teacher": 0.583475900847179,
+      "median_exact_kl": 0.5806358155604698,
+      "policy": "attention",
+      "sample_loops": 2,
+      "sample_mean_exact_kl": {
+        "gov_report:65": 1.3501602762516711,
+        "synthetic_niah_65": 0.5056206508444769
+      }
+    },
+    {
+      "control_cycles": 8,
+      "mean_exact_kl": 0.8424913184800813,
+      "mean_policy_regret_to_teacher": 0.5167244499402788,
+      "median_exact_kl": 0.5546780436852714,
+      "policy": "h2o",
+      "sample_loops": 2,
+      "sample_mean_exact_kl": {
+        "gov_report:65": 0.8456172553569559,
+        "synthetic_niah_65": 0.8393653816032067
+      }
+    },
+    {
+      "control_cycles": 8,
+      "mean_exact_kl": 0.9238507882364981,
+      "mean_policy_regret_to_teacher": 0.46535520807136876,
+      "median_exact_kl": 0.31474838256644233,
+      "policy": "snapkv",
+      "sample_loops": 2,
+      "sample_mean_exact_kl": {
+        "gov_report:65": 1.7690584587180638,
+        "synthetic_niah_65": 0.07864311775493249
+      }
+    },
+    {
+      "control_cycles": 8,
+      "mean_exact_kl": 0.3355983789597736,
+      "mean_policy_regret_to_teacher": 0.0,
+      "median_exact_kl": 0.1309212783471594,
+      "policy": "statekv_exact_mean",
+      "sample_loops": 2,
+      "sample_mean_exact_kl": {
+        "gov_report:65": 0.6511764687656978,
+        "synthetic_niah_65": 0.020020289153849458
+      }
+    }
+  ],
+  "policy_sample_summaries": [
+    {
+      "closed_loop_passed": true,
+      "cycles_completed": 4,
+      "mean_exact_kl": 0.020020289153849458,
+      "mean_policy_regret_to_teacher": 0.0,
+      "policy": "statekv_exact_mean",
+      "recovery_events": 2,
+      "refresh_events": 2,
+      "sample_id": "synthetic_niah_65",
+      "task": "niah_single_1",
+      "teacher_top1_agreement": 1.0
+    },
+    {
+      "closed_loop_passed": true,
+      "cycles_completed": 4,
+      "mean_exact_kl": 0.5056206508444769,
+      "mean_policy_regret_to_teacher": 0.48604424546019764,
+      "policy": "attention",
+      "recovery_events": 0,
+      "refresh_events": 0,
+      "sample_id": "synthetic_niah_65",
+      "task": "niah_single_1",
+      "teacher_top1_agreement": 0.5
+    },
+    {
+      "closed_loop_passed": true,
+      "cycles_completed": 4,
+      "mean_exact_kl": 0.07864311775493249,
+      "mean_policy_regret_to_teacher": 0.03288233544770236,
+      "policy": "snapkv",
+      "recovery_events": 3,
+      "refresh_events": 4,
+      "sample_id": "synthetic_niah_65",
+      "task": "niah_single_1",
+      "teacher_top1_agreement": 0.5
+    },
+    {
+      "closed_loop_passed": true,
+      "cycles_completed": 4,
+      "mean_exact_kl": 0.8393653816032067,
+      "mean_policy_regret_to_teacher": 0.7787789011272146,
+      "policy": "h2o",
+      "recovery_events": 2,
+      "refresh_events": 3,
+      "sample_id": "synthetic_niah_65",
+      "task": "niah_single_1",
+      "teacher_top1_agreement": 0.0
+    },
+    {
+      "closed_loop_passed": true,
+      "cycles_completed": 4,
+      "mean_exact_kl": 0.6511764687656978,
+      "mean_policy_regret_to_teacher": 0.0,
+      "policy": "statekv_exact_mean",
+      "recovery_events": 3,
+      "refresh_events": 4,
+      "sample_id": "gov_report:65",
+      "task": "gov_report",
+      "teacher_top1_agreement": 1.0
+    },
+    {
+      "closed_loop_passed": true,
+      "cycles_completed": 4,
+      "mean_exact_kl": 1.3501602762516711,
+      "mean_policy_regret_to_teacher": 0.6809075562341604,
+      "policy": "attention",
+      "recovery_events": 0,
+      "refresh_events": 0,
+      "sample_id": "gov_report:65",
+      "task": "gov_report",
+      "teacher_top1_agreement": 0.25
+    },
+    {
+      "closed_loop_passed": true,
+      "cycles_completed": 4,
+      "mean_exact_kl": 1.7690584587180638,
+      "mean_policy_regret_to_teacher": 0.8978280806950352,
+      "policy": "snapkv",
+      "recovery_events": 3,
+      "refresh_events": 4,
+      "sample_id": "gov_report:65",
+      "task": "gov_report",
+      "teacher_top1_agreement": 0.0
+    },
+    {
+      "closed_loop_passed": true,
+      "cycles_completed": 4,
+      "mean_exact_kl": 0.8456172553569559,
+      "mean_policy_regret_to_teacher": 0.25466999875334295,
+      "policy": "h2o",
+      "recovery_events": 2,
+      "refresh_events": 3,
+      "sample_id": "gov_report:65",
+      "task": "gov_report",
+      "teacher_top1_agreement": 0.25
+    }
+  ],
+  "samples": [
+    "gov_report:65",
+    "synthetic_niah_65"
+  ],
+  "scope": "Matched teacher-forced generation with independent compressed states and a common full-cache token trajectory. Cost is ignored; free-generation task quality is evaluated separately.",
+  "statekv_lower_overall_mean_than_each_fixed_policy": true,
+  "status": "teacher_forced_matched_physical_closed_loop_comparison",
+  "total_budget": 128
+}

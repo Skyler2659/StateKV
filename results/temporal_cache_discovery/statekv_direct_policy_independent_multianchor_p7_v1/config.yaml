@@ -1,0 +1,52 @@
+anchors:
+- 16
+- 32
+- 48
+base_config: configs/stages/direct_policy_independent_base.yaml
+baseline: attention_mean_w1_shared
+claims_excluded:
+- free-generation quality
+- wall-clock speedup
+- cross-model confirmation
+core_budget: 92
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+evidence_status: independent_new_sequence_multianchor_teacher_forced_replay
+experiment_name: statekv_direct_policy_independent_multianchor_p7
+gate:
+  minimum_anchor_mean_wins: 2
+  minimum_sample_anchor_win_rate: 0.55
+  require_all_task_mean_improvement: true
+  require_overall_maximum_improvement: true
+  require_overall_mean_improvement: true
+  require_overall_p95_improvement: true
+horizon: 16
+output_run: results/temporal_cache_discovery/statekv_direct_policy_independent_multianchor_p7_v1
+policies:
+- attention_mean_w1_shared
+- contribution_mean_w4_shared
+primary: contribution_mean_w4_shared
+recent_size: 32
+sample_ids:
+- gov_report:24
+- gov_report:25
+- gov_report:26
+- gov_report:27
+- gov_report:28
+- gov_report:29
+- synthetic_niah_24
+- synthetic_niah_25
+- synthetic_niah_26
+- synthetic_niah_27
+- synthetic_niah_28
+- synthetic_niah_29
+scenario_windows:
+- 1
+- 4
+sink_size: 4
+total_budget: 128

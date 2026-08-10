@@ -1,0 +1,78 @@
+# Gate 0 / Gate 1: strict-pure-eviction teacher headroom on the P35 substrate.
+#
+# The teacher arm (refresh_mode="teacher") commits, at every cycle, the
+# minimum exact-KL action from a fixed panel of cheap legal actions
+# (attention / b2_uniform / a2_temporal_volatility / uniform / snapkv /
+# stale_prev), each evaluated as a counterfactual clone of the SURVIVING
+# cache.  The committed trajectory is the strict-pure-eviction teacher
+# closed loop; the per-candidate one-step KL rows (panel_rows.parquet) are
+# the fixed-action-space oracle regret table (Gate 1).
+#
+# Samples and substrate are exactly the P35 p2 split (gov_report:86-90 +
+# synthetic_niah:86-90, 768 ctx, budget 256/core 220) so the teacher arm is
+# matched against the existing P35 cheap trajectories on the same samples.
+experiment_name: statekv_teacher_gate_g0
+base_config: configs/stages/direct_policy_independent_base.yaml
+data_seed: 20260808
+runtime_run_id: statekv_teacher_gate_g0_seed20260808_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+sink_size: 4
+recent_size: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+
+teacher_gate:
+  output_run: results/temporal_cache_discovery/statekv_teacher_gate_qwen3_8b_g0_v1
+  control_cycles: 64
+  budgets:
+    - total_budget: 256
+      core_budget: 220
+      maximum_delta: 44
+  panel_policies:
+    - attention
+    - b2_uniform
+    - a2_temporal_volatility
+    - uniform
+    - snapkv
+  task_overrides:
+    ruler_niah:
+      num_samples: 5
+      context_length: 768
+      sample_offset: 86
+    govreport_or_qmsum:
+      num_samples: 5
+      preferred: gov_report
+      max_words: 700
+      sample_indices: [86, 87, 88, 89, 90]
+      sample_strategy: first
+      fallback_paragraphs: 24
+  sample_ids:
+    - gov_report:86
+    - gov_report:87
+    - gov_report:88
+    - gov_report:89
+    - gov_report:90
+    - synthetic_niah_86
+    - synthetic_niah_87
+    - synthetic_niah_88
+    - synthetic_niah_89
+    - synthetic_niah_90
+
+tail_telemetry:
+  probability_labels:
+    token_17: ["17", " 17"]
+    token_14: ["14", " 14"]
+  evidence_phrases:
+    - "17 sailors"
+    - " 17 sailors"
+    - "loss of 17 sailors"
+    - "deaths of 17 sailors"

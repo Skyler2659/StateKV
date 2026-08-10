@@ -1,0 +1,37 @@
+{
+  "baseline": "attention_mean_w1_shared",
+  "bootstrap_mean_ci_95": [
+    -0.013414654331205818,
+    0.021416209096124728
+  ],
+  "bootstrap_samples": 50000,
+  "confirmatory_evidence": false,
+  "interpretation": "The mean paired reduction is positive, but its sequence-bootstrap interval crosses zero; the run does not establish a stable mean gain.",
+  "mean_exact_kl_reduction": 0.002137961106324063,
+  "median_exact_kl_reduction": -0.0012635514344764495,
+  "primary": "protected_attention_rescue_m8_shared",
+  "seed": 20260810,
+  "sequence_count": 6,
+  "sequence_win_rate": 0.5,
+  "sequence_wins": 3,
+  "status": "paired_sequence_bootstrap_development_analysis",
+  "tail_migration": {
+    "baseline_tail_steps": 15,
+    "baseline_tail_threshold": 1.8774003207683556,
+    "created_large_loss_steps": 2,
+    "escaped_tail_steps": 1,
+    "largest_step_harm": 0.6333361864089966,
+    "new_primary_tail_steps": 1,
+    "paired_reduction_on_baseline_tail": 0.13128066683808962,
+    "paired_reduction_on_new_primary_tail": -0.2954270839691162,
+    "paired_reduction_on_primary_tail": -0.1213070551554362,
+    "primary_tail_steps": 15,
+    "primary_tail_threshold": 1.608774191141126,
+    "quantile": 0.95,
+    "removed_large_loss_steps": 1,
+    "shared_tail_steps": 14,
+    "steps": 288,
+    "tail_jaccard": 0.875
+  },
+  "two_sided_sign_test_p": 1.0
+}

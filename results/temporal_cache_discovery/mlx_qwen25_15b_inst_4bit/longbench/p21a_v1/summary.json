@@ -1,0 +1,66 @@
+{
+  "num_results": 12,
+  "num_errors": 0,
+  "num_skipped": 0,
+  "backend": "mlx",
+  "model": "mlx-community/Qwen2.5-1.5B-Instruct-4bit",
+  "benchmark": "longbench",
+  "by_method": {
+    "full": {
+      "n": 3,
+      "avg_ppl": 7.32268969774492,
+      "avg_official_score": 12.930233333333334,
+      "avg_primary_score": 12.930233333333334,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 82.81215309013145,
+      "avg_end_to_end_decode_tokens_per_second": 82.81215309013145,
+      "avg_eviction_overhead_fraction": 0.0,
+      "avg_final_kv_len": 1131.6666666666667
+    },
+    "latest_attention_shared": {
+      "n": 3,
+      "avg_ppl": 10.418381799847449,
+      "avg_official_score": 8.918166666666666,
+      "avg_primary_score": 8.918166666666666,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 71.79238847937502,
+      "avg_end_to_end_decode_tokens_per_second": 44.32851757563558,
+      "avg_eviction_overhead_fraction": 0.38219797594890287,
+      "avg_final_kv_len": 128.0
+    },
+    "position_coverage_shared": {
+      "n": 3,
+      "avg_ppl": 10.015729099383945,
+      "avg_official_score": 9.908266666666666,
+      "avg_primary_score": 9.908266666666666,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 82.9588801862803,
+      "avg_end_to_end_decode_tokens_per_second": 53.78617210737345,
+      "avg_eviction_overhead_fraction": 0.351649310809095,
+      "avg_final_kv_len": 128.0
+    },
+    "token_rarity_shared": {
+      "n": 3,
+      "avg_ppl": 10.35155968243216,
+      "avg_official_score": 8.092966666666667,
+      "avg_primary_score": 8.092966666666667,
+      "official_accuracy": 0.0,
+      "accuracy": 0.0,
+      "contains_ground_truth_rate": 0.0,
+      "avg_evidence_recall": 0.0,
+      "avg_tokens_per_second": 83.02539397557076,
+      "avg_end_to_end_decode_tokens_per_second": 55.12884172721672,
+      "avg_eviction_overhead_fraction": 0.33599286924793237,
+      "avg_final_kv_len": 128.0
+    }
+  }
+}

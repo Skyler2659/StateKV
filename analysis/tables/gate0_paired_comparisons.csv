@@ -1,0 +1,6 @@
+policy,paired_samples,mean_teacher_minus_cheap_kl,teacher_wins,ties,teacher_losses,teacher_mean_niah,cheap_mean_niah
+a2_temporal_volatility,10,-0.031606193747905714,4,0,6,1.0,1.0
+attention,10,0.1345757120232396,1,0,9,1.0,1.0
+b2_uniform,10,0.13606680127320364,2,0,8,1.0,1.0
+dynamic_b3,10,0.1133810404963644,2,0,8,1.0,1.0
+snapkv,10,0.07252135923338376,4,0,6,1.0,0.8

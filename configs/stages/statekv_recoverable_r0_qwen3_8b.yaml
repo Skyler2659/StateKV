@@ -1,0 +1,108 @@
+# Recoverable Gate R0: unified recoverable-semantics headroom test.
+#
+# Question (preregistered in analysis/statekv_recoverable_r0_protocol.md):
+# under identical recoverable backing-store semantics and identical active
+# budget, does the state-conditioned physical-risk teacher retain oracle
+# headroom over query-aware retrieval (qk_pool / quest_like) and simple
+# recoverable controls (uniform / recency)?
+#
+# All arms share: KVBackingStore full-history pool, budget 256 = sink 4 +
+# recent 32 + core 220 per layer, refresh every cycle (horizon 1), the same
+# backing candidate universe, greedy generation, and same-input exact-KL
+# evaluation.  Samples are byte-identical to Gate 0 (seed, offsets, ids) so
+# the decomposition ladder pairs with the pure-eviction runs.
+experiment_name: statekv_recoverable_r0_qwen3_8b
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_recoverable_r0_qwen3_8b_v1
+data_seed: 20260808
+runtime_run_id: statekv_recoverable_r0_qwen3_8b_seed20260808_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+task_overrides:
+  ruler_niah:
+    num_samples: 5
+    context_length: 768
+    sample_offset: 86
+  govreport_or_qmsum:
+    num_samples: 5
+    preferred: gov_report
+    max_words: 700
+    sample_indices: [86, 87, 88, 89, 90]
+    sample_strategy: first
+    fallback_paragraphs: 24
+
+sample_ids:
+  - "gov_report:86"
+  - "gov_report:87"
+  - "gov_report:88"
+  - "gov_report:89"
+  - "gov_report:90"
+  - synthetic_niah_86
+  - synthetic_niah_87
+  - synthetic_niah_88
+  - synthetic_niah_89
+  - synthetic_niah_90
+expected_sample_count: 10
+
+start_anchor: 0
+control_cycles: 64
+control_horizon: 1
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+quest_page_size: 16
+
+policies:
+  - statekv_exact_mean
+  - uniform
+  - recency
+  - attention
+  - qk_pool
+  - quest_like
+
+candidate_panel:
+  - stale
+  - attention
+  - snapkv
+  - h2o
+  - key_norm
+  - value_norm
+  - uniform
+  - recency
+  - qk_pool
+  - quest_like
+
+generation: greedy_policy_conditioned_one_step_receding_horizon
+bootstrap_samples: 20000
+primary_decision:
+  protocol: analysis/statekv_recoverable_r0_protocol.md
+  verdict_rules: preregistered_G1_to_G5
+  strongest_cheap_recoverable: min_mean_trajectory_kl_among_non_teacher_budgeted_arms
+primary_metrics:
+  - policy_conditioned_full_vocabulary_exact_kl
+  - paired_sample_win_tie_loss
+  - paired_bootstrap_95ci
+  - step_kl_p95
+  - govreport_rouge_l
+  - niah_retrieval_accuracy
+  - recovery_churn_reentry_telemetry
+  - scorer_cost_accounting
+
+evidence_status: r0_recoverable_headroom_gate
+claims_excluded:
+  - deployment_efficiency
+  - cpu_gpu_transfer_latency
+  - quest_production_reproduction

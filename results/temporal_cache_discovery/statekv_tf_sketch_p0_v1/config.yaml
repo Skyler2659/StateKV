@@ -1,0 +1,54 @@
+claims:
+- comparison: recursive_state_sketch_vs_action_energy_only
+  id: history_sketch_increment
+  primary_metrics:
+  - median_spearman_gain
+  - mean_pairwise_accuracy_gain
+  - mean_normalized_regret_gain
+  stop_condition: Stop before online benchmark expansion if the predeclared history
+    term does not improve both evaluation and replication, including both tasks.
+decays:
+- 0.5
+- 0.8
+- 0.95
+- 1.0
+experiment_name: statekv_tf_fixed_decay_sketch_p0
+method_scope:
+  action_signature: stored layer-27 direct projected action vector
+  excludes:
+  - query-cosine decay
+  - online direct-set execution
+  - end-to-end generation quality
+  - latency or memory claims
+  state_update: m_next = decay * m + action_signature
+  teacher_target: stored source_exact_kl
+minimum_horizon: 2
+output_run: results/temporal_cache_discovery/statekv_tf_sketch_p0_v1
+primary:
+  decay: 0.95
+  projection_dimension: 64
+  projection_seed: 42
+projection_dimensions:
+- 16
+- 32
+- 64
+- 128
+projection_seeds:
+- 42
+source_run: results/temporal_cache_discovery/gauge_geometry_4bit_24seq_seed42_v1
+splits:
+  calibration:
+  - 0
+  - 1
+  - 2
+  - 3
+  evaluation:
+  - 4
+  - 5
+  - 6
+  - 7
+  replication:
+  - 8
+  - 9
+  - 10
+  - 11

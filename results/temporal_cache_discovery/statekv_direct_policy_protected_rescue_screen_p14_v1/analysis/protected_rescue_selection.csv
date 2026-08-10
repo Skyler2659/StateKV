@@ -1,0 +1,4 @@
+policy,rescue_slots,mean_exact_kl,mean_exact_kl_reduction,p95_exact_kl,cvar95_exact_kl,maximum_exact_kl,large_loss_rate,maximum_core_changes_vs_attention,mean_exact_kl_improves,p95_exact_kl_nonworse,cvar95_exact_kl_nonworse,maximum_exact_kl_nonworse,large_loss_rate_nonworse,all_task_means_improve,action_radius_respected,eligible
+protected_attention_rescue_m4_shared,4,0.3247244341517512,-0.02892055632545848,1.8155431210994717,3.8108429352442426,10.93212604522705,0.0902777777777777,4,False,True,False,False,False,False,True,False
+protected_attention_rescue_m8_shared,8,0.2936659167199686,0.002137961106324082,1.608774191141126,3.2311749617258707,6.314531326293945,0.0902777777777777,8,True,True,False,False,False,True,True,False
+protected_attention_rescue_m16_shared,16,0.3002670916675643,-0.004463213841271629,1.6750698685646035,3.024289878209432,5.755293846130371,0.1006944444444444,15,False,True,True,True,False,False,True,False

@@ -1,0 +1,58 @@
+anchors:
+- 16
+- 32
+- 48
+base_config: configs/stages/independent_fisher_config.yaml
+baseline: attention_mean_w1_shared
+claims_excluded:
+- independent confirmation
+- free-generation quality
+- end-to-end speedup
+core_budget: 92
+development_selection:
+  candidates:
+  - 4
+  - 8
+  - 16
+  objective: maximum_mean_exact_kl_reduction
+  required:
+  - mean_exact_kl_improves
+  - p95_exact_kl_nonworse
+  - cvar95_exact_kl_nonworse
+  - maximum_exact_kl_nonworse
+  - large_loss_rate_nonworse
+  - all_task_means_improve
+  tie_break: smaller_rescue_slot_count
+diagnostic_layers:
+- 0
+- 7
+- 14
+- 15
+- 21
+- 27
+evidence_status: protected_rescue_development_screen
+experiment_name: statekv_direct_policy_protected_rescue_screen_p14
+gate:
+  minimum_anchor_mean_wins: 2
+gate_mode: development_screen
+horizon: 16
+output_run: results/temporal_cache_discovery/statekv_direct_policy_protected_rescue_screen_p14_v1
+policies:
+- attention_mean_w1_shared
+- protected_attention_rescue_m4_shared
+- protected_attention_rescue_m8_shared
+- protected_attention_rescue_m16_shared
+primary: protected_attention_rescue_m8_shared
+recent_size: 32
+sample_ids:
+- gov_report:18
+- gov_report:19
+- gov_report:20
+- synthetic_niah_18
+- synthetic_niah_19
+- synthetic_niah_20
+scenario_windows:
+- 1
+- 4
+sink_size: 4
+total_budget: 128

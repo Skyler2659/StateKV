@@ -1,0 +1,3 @@
+accuracy,avg_evidence_recall,avg_official_score,avg_ppl,avg_primary_score,avg_tokens_per_second,budget,contains_ground_truth,method,n,official_accuracy
+0.0,0.0,9.11875,10.131392624037709,9.11875,82.63825798462584,128,0.0,full,2,0.0
+0.0,0.0,9.59965,13.182547829023257,9.59965,85.20350796142739,128,0.0,sink_recent_random,2,0.0

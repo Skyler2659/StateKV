@@ -1,0 +1,57 @@
+{
+  "anchors": [
+    16
+  ],
+  "baseline": "attention_mean_w1",
+  "baseline_values": {
+    "mean_projected_relative_error": 0.10519580755944387,
+    "p95_projected_relative_error": 0.3094672947448005
+  },
+  "candidate_algorithms_run_per_decision": 0,
+  "checks": {
+    "majority_local_win_rate": false,
+    "mean_local_error_improves": false,
+    "merge_bound_holds": true,
+    "p95_local_error_improves": false
+  },
+  "cold_value_tier": {
+    "bits": [
+      2,
+      3,
+      4
+    ],
+    "note": "Only V is quantized; K/routing and transfer latency are not tested.",
+    "rows": 576
+  },
+  "collection_elapsed_s": 39.660159584,
+  "confirmatory_evidence": false,
+  "experiment": "statekv_direct_coreset_p4",
+  "horizon": 8,
+  "layers": [
+    0,
+    14,
+    27
+  ],
+  "merge": {
+    "maximum_bound_violation": 5.622078288378804e-17,
+    "rows": 288,
+    "win_rate_vs_deletion": 0.9895833333333334
+  },
+  "method_count": 34,
+  "passed": false,
+  "primary": "contribution_max_w8",
+  "primary_values": {
+    "mean_projected_relative_error": 0.13349498205047897,
+    "p95_projected_relative_error": 0.6910966216082808,
+    "win_rate_vs_baseline": 0.4270833333333333
+  },
+  "samples": [
+    "gov_report:12",
+    "gov_report:13",
+    "synthetic_niah_12",
+    "synthetic_niah_13"
+  ],
+  "scope": "Selections are generated directly from past attention/value scenarios at three diagnostic layers and evaluated on future local attention-output error. No future query enters selection, and no end-to-end KL or latency claim is made.",
+  "status": "bounded_model_backed_local_mechanism_pilot",
+  "total_budget": 128
+}

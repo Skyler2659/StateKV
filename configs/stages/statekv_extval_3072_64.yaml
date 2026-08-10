@@ -1,0 +1,84 @@
+# External-validity gate S2: 3072 ctx / budget 64 (~2% coverage) — locate
+# where qk_pool itself breaks at long context and classify the failure
+# (coverage vs ranking) via the S1 swap oracle.  Same samples/seed as S1.
+experiment_name: statekv_extval_3072_64
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/temporal_cache_discovery/statekv_extval_3072_64_v1
+data_seed: 20260808
+runtime_run_id: statekv_extval_3072_64_seed20260808_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+runtime_overrides:
+  max_prompt_tokens: 8192
+
+task_overrides:
+  ruler_niah:
+    num_samples: 3
+    context_length: 3072
+    sample_offset: 86
+  govreport_or_qmsum:
+    num_samples: 3
+    preferred: gov_report
+    max_words: 2800
+    sample_indices: [86, 87, 88]
+    sample_strategy: first
+    fallback_paragraphs: 24
+  reasoning_long_generation:
+    num_samples: 2
+    n_distractors: 280
+
+sample_ids:
+  - "gov_report:86"
+  - "gov_report:87"
+  - "gov_report:88"
+  - synthetic_niah_86
+  - synthetic_niah_87
+  - synthetic_niah_88
+  - reasoning_long_generation_0
+  - reasoning_long_generation_1
+expected_sample_count: 8
+
+start_anchor: 0
+control_cycles: 64
+control_horizon: 1
+total_budget: 64
+sink_size: 4
+recent_size: 32
+core_budget: 28
+
+snapkv_observation_window: 32
+snapkv_pooling_kernel: 63
+snapkv_pooling: max
+quest_page_size: 16
+
+policies:
+  - qk_pool
+  - uniform
+
+candidate_panel:
+  - uniform
+  - recency
+  - qk_pool
+  - quest_like
+
+generation: greedy_policy_conditioned_one_step_receding_horizon
+bootstrap_samples: 20000
+primary_metrics:
+  - policy_conditioned_full_vocabulary_exact_kl
+  - paired_sample_win_tie_loss
+  - step_kl_p95
+  - govreport_rouge_l
+  - niah_retrieval_accuracy
+
+evidence_status: external_validity_s2
+claims_excluded:
+  - deployment_efficiency
+  - cpu_gpu_transfer_latency

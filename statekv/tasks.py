@@ -2,11 +2,12 @@
 from __future__ import annotations
 
 import random
+import string
 from types import SimpleNamespace
 from typing import Any, Dict, List, Tuple
 
 from kvbench.benchmarks.longbench import LongBenchBenchmark
-from kvbench.benchmarks.ruler import _synthetic_niah
+from kvbench.benchmarks.ruler import _synthetic_niah, _word
 from statekv.config import DiscoveryConfig
 from kvbench.types import BenchmarkSample
 
@@ -85,7 +86,74 @@ _DISTRACTORS = [
 ]
 
 
-def _reasoning_samples(seed: int, count: int, distractors: int) -> List[BenchmarkSample]:
+def _synthetic_niah_multikey(
+    seed: int, count: int, context_length: int, n_keys: int
+) -> List[BenchmarkSample]:
+    """Multi-fact retrieval: several needles at spread depths, all requested.
+
+    Same filler family as _synthetic_niah (repetitive, QK-easy background),
+    so the discriminative content is the number of spatially separated
+    small targets a working set must hold simultaneously.
+    """
+    samples = []
+    for index in range(count):
+        rng = random.Random(seed + index * 1009)
+        keys = []
+        values = []
+        while len(keys) < n_keys:
+            key = "%s-%s" % (_word(rng), _word(rng, 5))
+            if key not in keys:
+                keys.append(key)
+                values.append("".join(rng.choice(string.digits) for _ in range(7)))
+        needles = [
+            "The special magic number for %s is %s." % (key, value)
+            for key, value in zip(keys, values)
+        ]
+        repeats = max(16, int(context_length) // 6)
+        filler = ["The sky is blue and grass is green."] * repeats
+        # Spread needle depths deterministically across the filler with a
+        # per-sample jitter, avoiding adjacent insertions.
+        slots = [
+            min(repeats - 1, int((i + 0.5) * repeats / n_keys) + rng.randrange(-8, 9))
+            for i in range(n_keys)
+        ]
+        for slot, needle in zip(slots, needles):
+            filler.insert(slot, needle)
+        context = " ".join(filler)
+        question_lines = "\n".join(
+            "What is the special magic number for %s?" % key for key in keys
+        )
+        prompt = (
+            context
+            + "\n\n"
+            + question_lines
+            + "\nAnswer with only the numbers, one per line, in the order asked."
+        )
+        samples.append(
+            BenchmarkSample(
+                sample_id="synthetic_niah_multikey_%d" % index,
+                prompt=prompt,
+                references=list(values),
+                task="niah_multikey_1",
+                answer_text=" ".join(values),
+                full_text=prompt + " " + " ".join(values),
+                metadata={
+                    "dataset_official": False,
+                    "source": "repository_synthetic_ruler_niah_multikey",
+                    "evidence_texts": needles,
+                    "n_keys": int(n_keys),
+                    "needle_depths": [
+                        float(slot) / max(1, repeats - 1) for slot in slots
+                    ],
+                },
+            )
+        )
+    return samples
+
+
+def _reasoning_samples(
+    seed: int, count: int, distractors: int, answer_first: bool = False
+) -> List[BenchmarkSample]:
     samples = []
     for index in range(count):
         rng = random.Random(seed + index * 3571)
@@ -101,14 +169,28 @@ def _reasoning_samples(seed: int, count: int, distractors: int) -> List[Benchmar
         filler = [rng.choice(_DISTRACTORS) for _ in range(distractors)]
         insert = rng.randrange(max(1, distractors // 4), max(2, 3 * distractors // 4))
         filler.insert(insert, "[Problem] " + problem)
+        if answer_first:
+            # The 64-token decode cap in free-generation gates truncates any
+            # "derive for 100+ words then answer" prompt before the answer
+            # appears, making the task score unreadable.  Answer-first makes
+            # the task quality-valid at fixed decode length.
+            instruction = (
+                "\nGive the final numeric answer on the first line, then a "
+                "careful step-by-step derivation, a second arithmetic check, "
+                "and a note on which quantities are relevant.\nAnswer:"
+            )
+        else:
+            instruction = (
+                "\nGive a careful step-by-step derivation, check the arithmetic in "
+                "a second way, discuss which quantities are relevant, and state the "
+                "final answer. Continue the explanation for at least 100 words.\nAnswer:"
+            )
         prompt = (
             "Read the material and solve the embedded arithmetic problem.\n\n"
             + " ".join(filler)
             + "\n\nProblem: "
             + problem
-            + "\nGive a careful step-by-step derivation, check the arithmetic in "
-            "a second way, discuss which quantities are relevant, and state the "
-            "final answer. Continue the explanation for at least 100 words.\nAnswer:"
+            + instruction
         )
         samples.append(
             BenchmarkSample(
@@ -122,6 +204,7 @@ def _reasoning_samples(seed: int, count: int, distractors: int) -> List[Benchmar
                     "problem": problem,
                     "answer": str(answer),
                     "n_distractors": distractors,
+                    "answer_first": bool(answer_first),
                 },
             )
         )
@@ -177,6 +260,29 @@ def load_discovery_tasks(
                     "sample_offset": sample_offset,
                 }
             )
+        elif task_name == "ruler_niah_multikey":
+            sample_offset = int(settings.get("sample_offset", 0))
+            if sample_offset < 0:
+                raise ValueError(
+                    "ruler_niah_multikey sample_offset must be non-negative"
+                )
+            loaded = _synthetic_niah_multikey(
+                seed,
+                count + sample_offset,
+                int(settings.get("context_length", 3072)),
+                int(settings.get("n_keys", 4)),
+            )[sample_offset : sample_offset + count]
+            loaded = [_extend_retrieval_prompt(sample) for sample in loaded]
+            events.append(
+                {
+                    "task": task_name,
+                    "source": "repository_synthetic_ruler_niah_multikey",
+                    "dataset_official": False,
+                    "count": len(loaded),
+                    "sample_offset": sample_offset,
+                    "n_keys": int(settings.get("n_keys", 4)),
+                }
+            )
         elif task_name in {"govreport_or_qmsum", "gov_report", "qmsum"}:
             preferred = str(settings.get("preferred", "gov_report"))
             try:
@@ -219,6 +325,7 @@ def load_discovery_tasks(
                 seed,
                 count,
                 int(settings.get("n_distractors", 24)),
+                bool(settings.get("answer_first", False)),
             )
             events.append(
                 {

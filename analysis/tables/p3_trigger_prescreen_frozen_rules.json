@@ -1,0 +1,195 @@
+[
+  {
+    "name": "compressed_sketch_l2_gt_18.2819",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "compressed_sketch_l2",
+    "direction": "gt",
+    "threshold": 18.2819383801841
+  },
+  {
+    "name": "retained_overlap_le_0.992248",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "retained_overlap",
+    "direction": "le",
+    "threshold": 0.9922480620155039
+  },
+  {
+    "name": "recent_window_exits_gt_0.015625",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "recent_window_exits",
+    "direction": "gt",
+    "threshold": 0.015625
+  },
+  {
+    "name": "horizon_gt_0.5",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "horizon",
+    "direction": "gt",
+    "threshold": 0.5
+  },
+  {
+    "name": "top_reused_one_midpoint_shift_gt_0.0371001",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "top_reused_one_midpoint_shift",
+    "direction": "gt",
+    "threshold": 0.0371001155222854
+  },
+  {
+    "name": "query_norm_drift_gt_0.000249287",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "query_norm_drift",
+    "direction": "gt",
+    "threshold": 0.00024928721164441933
+  },
+  {
+    "name": "action_to_compressed_state_ratio_gt_0.00168489",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "action_to_compressed_state_ratio",
+    "direction": "gt",
+    "threshold": 0.0016848893268162314
+  },
+  {
+    "name": "cheap_rank_disagreement_gt_0.549356",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "cheap_rank_disagreement",
+    "direction": "gt",
+    "threshold": 0.5493557163488221
+  },
+  {
+    "name": "key_query_alignment_mean_le_0.287031",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "key_query_alignment_mean",
+    "direction": "le",
+    "threshold": 0.2870313396575302
+  },
+  {
+    "name": "AND(compressed_sketch_l2_gt_18.2819,retained_overlap_le_0.992248)",
+    "kind": "and",
+    "primary_label": "refresh_benefit > 0",
+    "parts": [
+      {
+        "feature": "compressed_sketch_l2",
+        "direction": "gt",
+        "threshold": 18.2819383801841
+      },
+      {
+        "feature": "retained_overlap",
+        "direction": "le",
+        "threshold": 0.9922480620155039
+      }
+    ]
+  },
+  {
+    "name": "AND(compressed_sketch_l2_gt_18.2819,recent_window_exits_gt_0.015625)",
+    "kind": "and",
+    "primary_label": "refresh_benefit > 0",
+    "parts": [
+      {
+        "feature": "compressed_sketch_l2",
+        "direction": "gt",
+        "threshold": 18.2819383801841
+      },
+      {
+        "feature": "recent_window_exits",
+        "direction": "gt",
+        "threshold": 0.015625
+      }
+    ]
+  },
+  {
+    "name": "AND(compressed_sketch_l2_gt_18.2819,horizon_gt_0.5)",
+    "kind": "and",
+    "primary_label": "refresh_benefit > 0",
+    "parts": [
+      {
+        "feature": "compressed_sketch_l2",
+        "direction": "gt",
+        "threshold": 18.2819383801841
+      },
+      {
+        "feature": "horizon",
+        "direction": "gt",
+        "threshold": 0.5
+      }
+    ]
+  },
+  {
+    "name": "AND(retained_overlap_le_0.992248,recent_window_exits_gt_0.015625)",
+    "kind": "and",
+    "primary_label": "refresh_benefit > 0",
+    "parts": [
+      {
+        "feature": "retained_overlap",
+        "direction": "le",
+        "threshold": 0.9922480620155039
+      },
+      {
+        "feature": "recent_window_exits",
+        "direction": "gt",
+        "threshold": 0.015625
+      }
+    ]
+  },
+  {
+    "name": "AND(retained_overlap_le_0.992248,horizon_gt_0.5)",
+    "kind": "and",
+    "primary_label": "refresh_benefit > 0",
+    "parts": [
+      {
+        "feature": "retained_overlap",
+        "direction": "le",
+        "threshold": 0.9922480620155039
+      },
+      {
+        "feature": "horizon",
+        "direction": "gt",
+        "threshold": 0.5
+      }
+    ]
+  },
+  {
+    "name": "AND(recent_window_exits_gt_0.015625,horizon_gt_0.5)",
+    "kind": "and",
+    "primary_label": "refresh_benefit > 0",
+    "parts": [
+      {
+        "feature": "recent_window_exits",
+        "direction": "gt",
+        "threshold": 0.015625
+      },
+      {
+        "feature": "horizon",
+        "direction": "gt",
+        "threshold": 0.5
+      }
+    ]
+  },
+  {
+    "name": "PROD(retained_overlap,key_query_alignment_mean)",
+    "kind": "product",
+    "primary_label": "refresh_benefit > 0",
+    "f1": "retained_overlap",
+    "f2": "key_query_alignment_mean",
+    "sign1": -1.0,
+    "sign2": -1.0,
+    "scaling": "minmax_on_calibration_after_sign_orientation",
+    "threshold": 0.004393628133350378
+  },
+  {
+    "name": "REF_frozen_query_norm_drift",
+    "kind": "single",
+    "primary_label": "refresh_benefit > 0",
+    "feature": "query_norm_drift",
+    "direction": "gt",
+    "threshold": 0.0005792366292015205
+  }
+]

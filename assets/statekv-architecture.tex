@@ -48,9 +48,9 @@
 \begin{document}
 \begin{tikzpicture}[node distance=8mm and 8mm]
   \node[font=\sffamily\bfseries\Large, text=ink] (title)
-    {StateKV: state-conditioned risk as a common selection--refresh objective};
+    {StateKV: physical retained-set risk and its deployable proxy};
   \node[font=\sffamily\small, text=muted, below=1.5mm of title] (subtitle)
-    {Solid blocks are implemented or supported in controlled diagnostics; dashed blocks are the next research gate.};
+    {The teacher supplies physical risk labels; one low-cost proxy produces both the retained set and its refresh regret.};
 
   \node[block, below=10mm of subtitle, xshift=-78mm] (history) {
     \textbf{Compression history}\\[1.2mm]
@@ -82,15 +82,18 @@
   \draw[flow] (response) -- (risk);
 
   \node[note, below=8mm of action] (candidates) {
-    \textbf{Candidate generators}\\
-    Attention, leverage, recency, SnapKV, H2O, random, and other baselines
+    \textbf{Candidate panel + recovery}\\
+    Attention/history, Value/Key norms, and uniform coverage; cold K/V rows are
+    rehydrated before execution
   };
   \draw[flow] (candidates) -- (action);
 
   \node[risk, below=8mm of risk] (decision) {
-    \textbf{Selection and oracle refresh}\\[1.1mm]
+    \textbf{Teacher decisions}\\[1.1mm]
     $\displaystyle C^{\star}_{\mathbf s}=\arg\min_C\widehat{\mathcal R}_{\mathbf s}(C)$\\[-0.2mm]
-    Re-evaluate when state evolution changes the preferred action
+    $\displaystyle G_{\mathbf s}(C_{\rm old})=
+      \widehat{\mathcal R}_{\mathbf s}(C_{\rm old})-
+      \min_C\widehat{\mathcal R}_{\mathbf s}(C)$
   };
   \draw[flow] (risk) -- (decision);
   \draw[feedback] (decision.south) -- ++(0,-4mm) -|
@@ -104,25 +107,31 @@
   \end{scope}
 
   \node[future, below=23mm of candidates, xshift=-40mm] (distill) {
-    \textbf{Low-cost risk estimator}\\
-    Distill the teacher without full-cache references or per-candidate deep probes\\
-    \emph{TBD}
+    \textbf{One proxy risk}\\
+    $\displaystyle \widetilde{\mathcal R}_{t}(C)=
+      \sum_{i\notin C}q_{t,i}$\\
+    One observable cost vector; no model training
   };
   \node[future, right=of distill] (drift) {
-    \textbf{State-drift trigger}\\
-    Predict when action ordering may have changed\\
-    \emph{TBD}
+    \textbf{One controller}\\
+    $\displaystyle \widetilde C_t=\arg\min_C
+      \widetilde{\mathcal R}_t(C)$\\[-0.2mm]
+    $\displaystyle \widetilde G_t=
+      \widetilde{\mathcal R}_t(C_{t^-})-
+      \widetilde{\mathcal R}_t(\widetilde C_t)$
   };
   \node[future, right=of drift] (online) {
-    \textbf{Closed-loop policy}\\
-    Online selection, refresh, and budget-aware execution\\
-    \emph{TBD}
+    \textbf{Single-action execution}\\
+    Refresh iff $\widetilde G_t>\tau$; otherwise reuse $C_{t^-}$\\
+    Run one cache action, not a policy portfolio
   };
   \draw[feedback] (distill) -- (drift);
   \draw[feedback] (drift) -- (online);
   \draw[feedback] (decision.south) -- ++(0,-12mm) -| (distill.north);
 
-  \node[font=\sffamily\bfseries\small, text=futurepurple, below=3mm of drift]
-    {Next research gate: deployability, end-to-end quality, memory, latency, throughput, and refresh overhead};
+  \node[font=\sffamily\bfseries\small, text=futurepurple, below=3mm of drift,
+    text width=130mm, align=center]
+    {P28/P30: the exact teacher lowers closed-loop distribution risk;\\
+    P30: lower risk does not yet imply universal task-quality gains};
 \end{tikzpicture}
 \end{document}

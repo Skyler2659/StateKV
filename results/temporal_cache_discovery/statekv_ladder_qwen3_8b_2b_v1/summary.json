@@ -1,0 +1,357 @@
+{
+  "all_irreversible_set_inclusions_hold": true,
+  "budgets": [
+    {
+      "core_budget": 220,
+      "maximum_delta": 44,
+      "total_budget": 256
+    }
+  ],
+  "collection_elapsed_s": 0.06898891700000043,
+  "execution_valid": true,
+  "experiment": "statekv_ladder_2b",
+  "horizons": [
+    1,
+    2,
+    4
+  ],
+  "ladder_aggregates": [
+    {
+      "candidate": "a2_temporal_volatility",
+      "horizon": 1,
+      "mean_cumulative_kl": 9.032173637554603,
+      "mean_exact_kl": 9.032173637554603,
+      "p95_exact_kl": 36.89078750610348,
+      "rows": 160
+    },
+    {
+      "candidate": "a2_temporal_volatility",
+      "horizon": 2,
+      "mean_cumulative_kl": 5.7971810353723665,
+      "mean_exact_kl": 2.5621884331901272,
+      "p95_exact_kl": 18.47229213714599,
+      "rows": 160
+    },
+    {
+      "candidate": "a2_temporal_volatility",
+      "horizon": 4,
+      "mean_cumulative_kl": 3.2766591325996757,
+      "mean_exact_kl": 0.5103964551674808,
+      "p95_exact_kl": 2.249801409244532,
+      "rows": 160
+    },
+    {
+      "candidate": "attention",
+      "horizon": 1,
+      "mean_cumulative_kl": 9.030311532953068,
+      "mean_exact_kl": 9.030311532953068,
+      "p95_exact_kl": 36.88902931213376,
+      "rows": 160
+    },
+    {
+      "candidate": "attention",
+      "horizon": 2,
+      "mean_cumulative_kl": 5.796112237949901,
+      "mean_exact_kl": 2.561912942946735,
+      "p95_exact_kl": 18.476814270019524,
+      "rows": 160
+    },
+    {
+      "candidate": "attention",
+      "horizon": 4,
+      "mean_cumulative_kl": 3.276151809801849,
+      "mean_exact_kl": 0.5101462704890799,
+      "p95_exact_kl": 2.2512027740478464,
+      "rows": 160
+    },
+    {
+      "candidate": "b2_uniform",
+      "horizon": 1,
+      "mean_cumulative_kl": 9.031747407160239,
+      "mean_exact_kl": 9.031747407160239,
+      "p95_exact_kl": 36.888908958435024,
+      "rows": 160
+    },
+    {
+      "candidate": "b2_uniform",
+      "horizon": 2,
+      "mean_cumulative_kl": 5.7967005457372,
+      "mean_exact_kl": 2.5616536843141597,
+      "p95_exact_kl": 18.4692865371704,
+      "rows": 160
+    },
+    {
+      "candidate": "b2_uniform",
+      "horizon": 4,
+      "mean_cumulative_kl": 3.276404295584083,
+      "mean_exact_kl": 0.5103113064444369,
+      "p95_exact_kl": 2.250513720512385,
+      "rows": 160
+    },
+    {
+      "candidate": "snapkv",
+      "horizon": 1,
+      "mean_cumulative_kl": 9.034559616972082,
+      "mean_exact_kl": 9.034559616972082,
+      "p95_exact_kl": 36.88920021057125,
+      "rows": 160
+    },
+    {
+      "candidate": "snapkv",
+      "horizon": 2,
+      "mean_cumulative_kl": 5.859122957628847,
+      "mean_exact_kl": 2.6836862982856102,
+      "p95_exact_kl": 18.502552700042717,
+      "rows": 160
+    },
+    {
+      "candidate": "snapkv",
+      "horizon": 4,
+      "mean_cumulative_kl": 3.307499155658846,
+      "mean_exact_kl": 0.511608208454909,
+      "p95_exact_kl": 2.2447942852973886,
+      "rows": 160
+    },
+    {
+      "candidate": "uniform",
+      "horizon": 1,
+      "mean_cumulative_kl": 9.083709961605582,
+      "mean_exact_kl": 9.083709961605582,
+      "p95_exact_kl": 36.89170818328854,
+      "rows": 160
+    },
+    {
+      "candidate": "uniform",
+      "horizon": 2,
+      "mean_cumulative_kl": 5.958511488630629,
+      "mean_exact_kl": 2.833313015655678,
+      "p95_exact_kl": 19.043848514556846,
+      "rows": 160
+    },
+    {
+      "candidate": "uniform",
+      "horizon": 4,
+      "mean_cumulative_kl": 3.4855934919497726,
+      "mean_exact_kl": 0.8161935887106366,
+      "p95_exact_kl": 4.003085446357716,
+      "rows": 160
+    }
+  ],
+  "ladder_cycle_step": 4,
+  "model_info": {
+    "anchor_query_replay": "rewind_one_token",
+    "attention_hook_adapter": "qwen_projection_flow_v2",
+    "attention_hook_classes": [
+      "mlx_lm.models.qwen3.Attention"
+    ],
+    "attention_hook_expected_layers": 36,
+    "attention_hook_installed": true,
+    "attention_hooked_layers": 36,
+    "backend": "mlx",
+    "bos_token_id": null,
+    "cache_format": "mlx_kv",
+    "chat_template": true,
+    "default_prompt_format": "plain",
+    "device_resolved": "mps",
+    "eos_token_id": 151645,
+    "generation_config": {},
+    "gqa_mapping": {
+      "0": 0,
+      "1": 0,
+      "10": 2,
+      "11": 2,
+      "12": 3,
+      "13": 3,
+      "14": 3,
+      "15": 3,
+      "16": 4,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "2": 0,
+      "20": 5,
+      "21": 5,
+      "22": 5,
+      "23": 5,
+      "24": 6,
+      "25": 6,
+      "26": 6,
+      "27": 6,
+      "28": 7,
+      "29": 7,
+      "3": 0,
+      "30": 7,
+      "31": 7,
+      "4": 1,
+      "5": 1,
+      "6": 1,
+      "7": 1,
+      "8": 2,
+      "9": 2
+    },
+    "gqa_query_heads_per_kv_head": 4,
+    "hidden_size": 4096,
+    "load_time_s": 1.9769092920000002,
+    "max_context_length": 40960,
+    "max_position_embeddings": 40960,
+    "mlx_weight_quantize": false,
+    "model_family": "qwen",
+    "model_load_s": 2.0154006669999998,
+    "model_name": "mlx-community/Qwen3-8B-4bit",
+    "model_type": "qwen3",
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,
+    "num_layers": 36,
+    "pad_token_id": 151643,
+    "quant_bits": 4,
+    "quant_group_size": 64,
+    "quantize_time_s": 0.0,
+    "quantized_layers": 0,
+    "requested_bfloat16_overridden_by_user": true,
+    "rope_type": null,
+    "selected_diagnostic_layers": [
+      0,
+      7,
+      14,
+      15,
+      21,
+      27
+    ],
+    "selected_diagnostic_query_heads": {
+      "0": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "7": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "14": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "15": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "21": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "27": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    },
+    "supports_attention_output": true,
+    "supports_hidden_states": false,
+    "supports_mlx_cache_edit": true,
+    "tokenizer_class": "Qwen2TokenizerFast",
+    "tokenizer_type": "Qwen2TokenizerFast",
+    "uses_rope": true,
+    "vocab_size": 151936,
+    "weight_precision": "4bit"
+  },
+  "panel_policies": [
+    "attention",
+    "b2_uniform",
+    "a2_temporal_volatility",
+    "uniform",
+    "snapkv"
+  ],
+  "persistent_cpu_kv_backing": false,
+  "policy_aggregates": [
+    {
+      "cvar95_exact_kl": 47.34427535533905,
+      "maximum_actual_global_kv": 9216,
+      "maximum_layer_capacity": 256,
+      "mean_controller_decode_tokens_per_s": 10.760669500635784,
+      "mean_controller_overhead_fraction": 0.0,
+      "mean_decode_tokens_per_s": 10.760669500635784,
+      "mean_end_to_end_tokens_per_s": 0.956920381762162,
+      "mean_exact_kl": 10.612601518221933,
+      "mean_govreport_rouge_l": 0.05840586427504516,
+      "mean_niah_retrieval": 1.0,
+      "mean_official_score": 52.92029,
+      "p95_exact_kl": 40.00957832336424,
+      "peak_accelerator_bytes": 0,
+      "peak_cpu_rss_bytes": 0,
+      "policy": "attention",
+      "samples": 10,
+      "total_budget": 256
+    }
+  ],
+  "samples": [
+    "gov_report:101",
+    "gov_report:102",
+    "gov_report:103",
+    "gov_report:104",
+    "gov_report:105",
+    "synthetic_niah_101",
+    "synthetic_niah_102",
+    "synthetic_niah_103",
+    "synthetic_niah_104",
+    "synthetic_niah_105"
+  ],
+  "stage": "ladder"
+}

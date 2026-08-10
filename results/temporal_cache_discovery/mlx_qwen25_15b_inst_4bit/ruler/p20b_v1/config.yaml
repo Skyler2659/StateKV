@@ -1,0 +1,183 @@
+experiment_name: statekv_freegen_ruler_static_lexical_p20b
+model:
+  name: mlx-community/Qwen2.5-1.5B-Instruct-4bit
+  family: qwen
+  backend: mlx
+  dtype: auto
+  device: mps
+  quant_bits: 4
+  quant_group_size: 64
+  mlx_weight_quantize: false
+  mlx_cache_type: kv
+  prefill_step_size: 512
+  trust_remote_code: false
+  attn_implementation: null
+  enable_pos_shift: true
+  output_attentions: false
+  output_hidden_states: false
+  local_files_only: true
+  revision: null
+  tokenizer_type: null
+  chat_template: null
+  bos_token_id: null
+  eos_token_id: null
+  pad_token_id: null
+  max_context_length: null
+  rope_type: null
+  uses_rope: null
+  cache_format: null
+  supports_attention_output: null
+  supports_hidden_states: null
+  supports_mlx_cache_edit: null
+  default_prompt_format: plain
+  prompt_format:
+    mode: plain
+    system_prompt: null
+  generation: {}
+eviction:
+  method: position_coverage_shared
+  methods: null
+  cache_size: 128
+  cache_budget_ratio: null
+  sink_size: 4
+  recent_size: 32
+  score_source: lexical
+  sketch_dim: 1024
+  update_interval: 1
+  update_policy: every_n_steps
+  seed: 20260824
+  use_reweight: false
+  score_normalization: none
+  hybrid_mode: budget_split
+  lambda_attn: 0.5
+  attn_budget_ratio: 0.3
+  l1_budget_ratio: 0.3
+  geom_budget_ratio: null
+  recent_budget_ratio: 0.3
+  sink_budget_ratio: 0.1
+  geometry_method: l1
+  attention_method: accumulated
+  components: null
+  layer_strategy: all
+  selected_layers: null
+  head_strategy: shared
+  direct_policy_layers: null
+  pyramid_mode: funnel
+  pyramid_beta: 20
+  n_clusters: 64
+  n_iters: 5
+  clustering_method: farthest_point
+  h2o_recent_size: null
+  window_size: 32
+  attention_window: 32
+  decay_gamma: 0.95
+  observation_window: 32
+  kernel_size: 5
+  pooling_kernel: 5
+  pooling_method: avgpool
+  adakv_safeguard_alpha: 0.2
+  curdkv_projection_dim: 20
+  curdkv_num_sink: 4
+  keydiff_recent_ratio: 0.0
+  conditional_ridge_lambda: 0.001
+  conditional_leverage_lambda: 0.001
+  attention_residual_ridge_lambda: 0.001
+  attention_residual_budget_ratio: 0.5
+  attention_weighted_ridge_lambda: 0.001
+  attention_weight_epsilon: 0.0001
+  joint_kv_gamma: 0.5
+  joint_kv_ridge_lambda: 1.0e-06
+  ridge_budget_lambda_floor: 0.0001
+  diversity_ridge_lambda: 0.001
+  diversity_candidate_multiplier: 4
+  compactor_sketch_dim: 48
+  compactor_chunk_size: 0
+  compactor_attention_chunk_size: 128
+  compactor_accum_blending: 0.5
+  compactor_protected_first_tokens: null
+  compactor_protected_last_tokens: null
+  ridge_lambda: 0.001
+  projection_dim: 64
+  covariance_mode: diagonal
+  distance_metric: cosine
+  debug_budget: false
+benchmark:
+  name: ruler
+  needle_pos: 400
+  needle_depth: 0.5
+  prefix_repeat: 40
+  context_length: 4096
+  num_needles: 1
+  depths: null
+  max_words: 4000
+  needles_per_depth: 3
+  n_samples: 10
+  n_depths: 20
+  use_synthetic_haystack: true
+  haystack_repeats: 120
+  ruler_task: retrieval
+  ruler_num_samples: 100
+  tasks:
+  - niah_single_1
+  n_samples_per_task: 2
+  seq_words: 2000
+  use_official_dataset: true
+  require_official_dataset: true
+  hf_dataset_name: xAlg-AI/att-hub-ruler-16k
+  hf_dataset_config: null
+  hf_split: null
+  sample_strategy: explicit
+  official_sample_indices:
+  - 56
+  - 57
+  longbench_task: narrativeqa
+  longbench_max_length: 4096
+  dataset: hotpotqa
+  split: validation
+  n_distractors: 50
+  max_steps: 32768
+  max_new_tokens: 128
+  num_samples: 2
+  eval_target_only: true
+  evaluation: both
+  use_official_prompt: false
+  prompt_style: null
+  qa_sample_idx: 0
+profiling:
+  enabled: true
+  track_memory: true
+  track_timing: true
+  warmup_steps: 5
+  log_every: 100
+  repeats: 3
+analysis:
+  overlap: false
+  rank_correlation: false
+  evidence_recall: false
+  counterfactual_deletion: false
+  restoration: false
+  leave_one_out: false
+  residual_explanation: false
+  case_study: false
+  case_study_count: 5
+  include_oracle: false
+  output_dir: results/analysis
+cache_budgets:
+- 128
+cache_budget_ratios: null
+context_lengths: null
+update_intervals: null
+methods:
+- full
+- sink_recent_random
+- position_coverage_shared
+- token_rarity_shared
+- query_overlap_shared
+output_dir: results/temporal_cache_discovery
+save_selected_tokens: false
+save_scores: false
+save_prompt_text: false
+progress_every: 64
+seed: 20260824
+overwrite: true
+run_id: p20b_v1
