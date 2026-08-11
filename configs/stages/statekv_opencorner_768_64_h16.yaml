@@ -1,6 +1,6 @@
 # Open-search HF1 regime stress: qk_pool under tight coverage (768 ctx).
 #
-# Question (analysis/statekv_open_search_log.md, HF1): does qk_pool's
+# Question (docs/evidence/statekv_open_search_log.md, HF1): does qk_pool's
 # near-oracle status survive when coverage drops from 23% to ~8-15%?
 # Arms are the strongest reference (qk_pool), its page approximation
 # (quest_like), and a scale reference (uniform recoverable).  Same samples,

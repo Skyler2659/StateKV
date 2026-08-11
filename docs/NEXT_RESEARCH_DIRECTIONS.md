@@ -15,7 +15,7 @@ the original StateKV deployability hypothesis — it is falsified (see
   observation-window scoring; per-head splits; selective refresh triggers
   on high-coverage substrates; dynamic layer budgets; the listed
   training-free estimators (TF-P0/P1, P2, P3, P5, Rademacher VJP).
-- Full list with evidence: `analysis/statekv_gate_retrospective_catalog.md`
+- Full list with evidence: `docs/evidence/statekv_gate_retrospective_catalog.md`
   (41 entries) and `docs/FINDINGS.md` §D.
 
 ## 2. Empirical gaps worth building the next project on
@@ -89,7 +89,7 @@ search identified.
 - **Frozen mechanistic phases**: `experiments/` with registries and tests.
 - **Methodological assets**: the preregistered-protocol habit, the
   gate-retrospective catalog format, and the retest program's no-gate
-  continuous-reporting contract (`analysis/statekv_retest_report.md`).
+  continuous-reporting contract (`docs/evidence/statekv_retest_report.md`).
 
 ## 4. Methodological lessons the next project should inherit
 

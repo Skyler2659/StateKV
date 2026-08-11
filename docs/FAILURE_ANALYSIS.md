@@ -28,7 +28,7 @@ one-step risk is numerically tied for every good action at every horizon
 future-queried token missing from the state: risk ~2, binary) that become
 visible only 2–4 steps ahead — after every cheap selector has already
 dropped the token and pure eviction forbids recovery
-(`analysis/statekv_teacher_closure_2026-08-09.md` §5).
+(`docs/evidence/statekv_teacher_closure_2026-08-09.md` §5).
 
 In the vocabulary of the audit categories: this is neither proxy failure
 nor optimization failure. It is a structural property of the operating
@@ -45,7 +45,7 @@ semantics (strict pure eviction), the same teacher loses to the best cheap
 policy (0.232 vs 0.096, paired 2/10). The gap between "teacher-forced
 oracle with history access" and "deployable policy" was not a performance
 gap; it was an access-to-forbidden-information gap
-(`analysis/statekv_gate0_1step_teacher_negative.md`).
+(`docs/evidence/statekv_gate0_1step_teacher_negative.md`).
 
 Corollary that survives: under recoverable semantics, the comparison is
 honest — and there the exact per-query full-pool router (qk_pool) beats the
@@ -97,7 +97,7 @@ the robust part.
 
 **SUPPORTED BY EVIDENCE** (documented, corrected): the ladder 2B committed
 probe KLs were inflated by a different-input metric after a one-token phase
-shift (`analysis/statekv_ladder_2b_deep_risk.md`); the headwise probe
+shift (`docs/evidence/statekv_ladder_2b_deep_risk.md`); the headwise probe
 recorder had an indentation bug recording only layer 35 (fixed, rerun);
 `open_stress_compare.py` mixed GovReport≈6 with NIAH=100 in one average
 (caught). None changed earlier conclusions, but see CODE_AUDIT.md for the

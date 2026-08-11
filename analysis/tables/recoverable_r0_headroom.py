@@ -1,6 +1,6 @@
 """Recoverable Gate R0: headroom analysis and preregistered verdict.
 
-Question (analysis/statekv_recoverable_r0_protocol.md): under unified
+Question (docs/evidence/statekv_recoverable_r0_protocol.md): under unified
 recoverable backing-store semantics (all arms share the full-history pool,
 budget 256, refresh every cycle), does the state-conditioned physical-risk
 teacher retain oracle headroom over the strongest cheap recoverable
@@ -52,6 +52,7 @@ DEFAULT_P35_RUN = (
     ROOT / "results/temporal_cache_discovery/statekv_pure_eviction_qwen3_8b_p35_v1"
 )
 OUT_DIR = ROOT / "analysis/tables"
+MD_DIR = ROOT / "docs/evidence/tables"
 
 # ---- preregistered verdict constants (protocol section 7; do not tune) ----
 TEACHER_POLICY = "statekv_exact_mean"
@@ -341,7 +342,7 @@ def main() -> None:
         "# StateKV Recoverable Gate R0 — unified recoverable-semantics headroom",
         "",
         f"Run: `{r0_run}`; ladder references: `{p35_run}` (pure cheap) and `{g0_run}` (pure teacher), same samples.",
-        f"Protocol: analysis/statekv_recoverable_r0_protocol.md (G1-G5 preregistered).",
+        f"Protocol: docs/evidence/statekv_recoverable_r0_protocol.md (G1-G5 preregistered).",
         "",
         "## Per-arm aggregates",
         "",
@@ -375,7 +376,7 @@ def main() -> None:
         decomposition.to_markdown(index=False),
         "",
     ]
-    (OUT_DIR / "recoverable_r0_main.md").write_text(
+    (MD_DIR / "recoverable_r0_main.md").write_text(
         "\n".join(note), encoding="utf-8"
     )
     ladder_note = [
@@ -386,7 +387,7 @@ def main() -> None:
         decomposition.to_markdown(index=False),
         "",
     ]
-    (OUT_DIR / "recoverable_r0_ladder.md").write_text(
+    (MD_DIR / "recoverable_r0_ladder.md").write_text(
         "\n".join(ladder_note), encoding="utf-8"
     )
     print("\n".join(note))

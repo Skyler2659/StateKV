@@ -147,9 +147,9 @@ signal to distill.
 
 | Gate | Config | Raw results | Analysis |
 |---|---|---|---|
-| Gate 0/1 | configs/stages/statekv_teacher_gate_g0.yaml | results/temporal_cache_discovery/statekv_teacher_gate_qwen3_8b_g0_v1/ | analysis/tables/gate0_teacher_headroom.{md,csv}, gate0_paired_comparisons.csv, gate1_fixed_action_space.csv; analysis/statekv_gate0_1step_teacher_negative.md |
-| 2B/2C | configs/stages/statekv_ladder_2b.yaml | results/temporal_cache_discovery/statekv_ladder_qwen3_8b_2b_v1/ | analysis/tables/ladder_2b_risk_depth.{md,csv}; analysis/statekv_ladder_2b_deep_risk.md |
-| Refresh arms | configs/stages/statekv_refresh_arms_qwen3_8b_768_256.yaml | results/temporal_cache_discovery/statekv_refresh_arms_qwen3_8b_768_256_v1/ | analysis/tables/refresh_arms_summary.{md,csv} |
+| Gate 0/1 | configs/stages/statekv_teacher_gate_g0.yaml | results/temporal_cache_discovery/statekv_teacher_gate_qwen3_8b_g0_v1/ | docs/evidence/tables/gate0_teacher_headroom.md (+ analysis/tables/gate0_*.csv, gate1_fixed_action_space.csv); docs/evidence/statekv_gate0_1step_teacher_negative.md |
+| 2B/2C | configs/stages/statekv_ladder_2b.yaml | results/temporal_cache_discovery/statekv_ladder_qwen3_8b_2b_v1/ | docs/evidence/tables/ladder_2b_risk_depth.md (+ analysis/tables/ladder_2b_*.csv); docs/evidence/statekv_ladder_2b_deep_risk.md |
+| Refresh arms | configs/stages/statekv_refresh_arms_qwen3_8b_768_256.yaml | results/temporal_cache_discovery/statekv_refresh_arms_qwen3_8b_768_256_v1/ | docs/evidence/tables/refresh_arms_summary.md (+ analysis/tables/refresh_arms_*.csv) |
 | P23b gate | configs/stages/statekv_teacher_gate_p23b.yaml, statekv_p2_p23b_cheap.yaml | results/temporal_cache_discovery/statekv_teacher_gate_qwen25_15b_p23b_v1/, statekv_p2_qwen25_15b_p23b_cheap_v1/ | (this document, section 2) |
 | Machinery | statekv/statekv_gate_runner.py (teacher mode, ladder, marginal), statekv/budget_dynamics.py (uniform, shared_attention), tests/test_teacher_gate.py | | 43 tests pass |
 

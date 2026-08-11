@@ -1,6 +1,6 @@
 # External-validity gate S1: 3072 ctx / budget 256 (~8% coverage, same
 # pressure as the 768/64 corner at 4x context), three tasks, per-step
-# refresh.  Preregistered in analysis/statekv_external_validity_log.md.
+# refresh.  Preregistered in docs/evidence/statekv_external_validity_log.md.
 experiment_name: statekv_extval_3072_256_h4
 base_config: configs/stages/direct_policy_independent_base.yaml
 output_run: results/temporal_cache_discovery/statekv_extval_3072_256_h4_v1

@@ -200,7 +200,7 @@ closure pattern is not Qwen3-specific.
 
 | artifact | path |
 |---|---|
-| Protocol + search log | analysis/statekv_external_validity_log.md |
+| Protocol + search log | docs/evidence/statekv_external_validity_log.md |
 | Main tables | analysis/tables/extval_{main,paired,telemetry,cadence}.csv |
 | Probes | analysis/tables/extval_{coverage_classification,hard_cycle_predictability,swap_regret}.csv, extval_probes_summary.json |
 | Residual battery @3072 | analysis/tables/extval_qkv_*.csv/json |

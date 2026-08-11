@@ -203,7 +203,8 @@ KV compression".  The only licensed claim shape is §1's question.
   equality, budget invariants, same-input KL, quest page rule, recency
   rule, pool-score requirement, cadence).
 - Results: `results/temporal_cache_discovery/statekv_recoverable_r0_qwen3_8b_v1/`.
-- Analysis: `analysis/tables/recoverable_r0_headroom.{md,csv}` (+ ladder
-  table), built by `analysis/tables/recoverable_r0_headroom.py`.
-- Results doc: `analysis/statekv_recoverable_r0_results.md`.
+- Analysis: `docs/evidence/tables/recoverable_r0_main.md` (+ ladder
+  table), CSVs in `analysis/tables/recoverable_r0_*.csv`, built by
+  `analysis/tables/recoverable_r0_headroom.py`.
+- Results doc: `docs/evidence/statekv_recoverable_r0_results.md`.
 - Claim registry: `configs/ccfa.yaml` sync.

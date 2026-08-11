@@ -631,7 +631,7 @@ def _run_free_policy(
             }
         elif policy == "qk_tiered_v":
             # QK-route, V-tier: identical selection to qk_pool; the commit
-            # carries cold-tier V precision (see analysis/statekv_qkvtier_gate.md).
+            # carries cold-tier V precision (see docs/evidence/statekv_qkvtier_gate.md).
             selected_name = str(policy)
             selected_selection = panel["qk_pool"]
             selection_diagnostics = {}

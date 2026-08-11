@@ -4,7 +4,7 @@ Reconstructed 2026-08-10 from git history (81 commits), the claims registry
 (`configs/ccfa.yaml`), the frozen experiment registry
 (`experiments/frozen_registry.yaml`), the closure documents in `analysis/`,
 and the verified rejection catalog
-(`analysis/statekv_gate_retrospective_catalog.md`).
+(`docs/evidence/statekv_gate_retrospective_catalog.md`).
 
 This document deliberately separates **what was believed at the time** from
 **what is known now**. Where the two differ, both are stated.
@@ -104,7 +104,7 @@ sequences (0.394 vs attention 0.408, 54–58% wins) — the P9 55%-win-rate
 gate was miscalibrated. Token rarity's retrieval specificity replicates
 cross-model (NIAH 10/10 on Qwen3-8B) but its GovReport gap is real.
 Temporal volatility is *not* competitive on Era-2 (NIAH 0.8). See
-`analysis/statekv_retest_report.md`.
+`docs/evidence/statekv_retest_report.md`.
 
 ### Phase 3 — physical oracle and cheap controllers (P25–P35, Era 2 substrate)
 
@@ -166,7 +166,7 @@ A no-hard-gate re-evaluation of the marginally rejected policies (fresh
 sample offsets, continuous reporting): Era-1 contribution family confirmed
 competitive; qk_tiered_v confirmed at matched budget; token_rarity boundary
 confirmed; temporal volatility disconfirmed on Era-2; Rademacher VJP
-disconfirmed. See `analysis/statekv_retest_report.md`.
+disconfirmed. See `docs/evidence/statekv_retest_report.md`.
 
 ---
 

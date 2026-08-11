@@ -2,7 +2,7 @@
 """Build the no-gate retest report across all retest tracks.
 
 Reads whichever retest artifacts exist and emits
-``analysis/statekv_retest_report.md``.  The report contains only continuous
+``docs/evidence/statekv_retest_report.md``.  The report contains only continuous
 effect sizes (point estimates, paired bootstrap CIs, win/tie/loss) — no
 pass/fail verdicts.  Sections preserve the original phase grouping so each
 stage's content stays visible.

@@ -1,7 +1,7 @@
 """External-validity substrate invariant tests.
 
 Covers the machinery guards added for the long-context external-validity
-gate (analysis/statekv_external_validity_log.md): stage-config runtime
+gate (docs/evidence/statekv_external_validity_log.md): stage-config runtime
 overrides, the silent prompt-truncation hard fail, and the reasoning-task
 metric bucketing.
 """

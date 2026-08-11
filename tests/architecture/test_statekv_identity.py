@@ -13,7 +13,7 @@ def test_readme_first_screen_establishes_statekv_identity() -> None:
     # positive and negative results; the original method line is closed.
     assert "negative result" in first_screen
     assert "research" in first_screen
-    assert "docs/research_history.md" in text
+    assert "docs/RESEARCH_HISTORY.md" in text
     assert "docs/FINDINGS.md".lower() in text.lower()
 
 

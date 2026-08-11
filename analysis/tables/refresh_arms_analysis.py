@@ -34,6 +34,7 @@ DEFAULT_RUN = (
     / "results/temporal_cache_discovery/statekv_refresh_arms_qwen3_8b_768_256_v1"
 )
 OUT_DIR = ROOT / "analysis/tables"
+MD_DIR = ROOT / "docs/evidence/tables"
 
 NEVER_MIN_RELATIVE_GAIN = 0.30
 NEVER_MIN_NIAH_WINS = 4
@@ -122,7 +123,7 @@ def main() -> None:
         f"**Verdicts (predeclared): " + "; ".join(f"{k}: {v}" for k, v in verdicts.items()) + "**",
         "",
     ]
-    (OUT_DIR / "refresh_arms_summary.md").write_text("\n".join(note), encoding="utf-8")
+    (MD_DIR / "refresh_arms_summary.md").write_text("\n".join(note), encoding="utf-8")
     print("\n".join(note))
 
 

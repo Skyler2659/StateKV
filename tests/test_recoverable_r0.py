@@ -1,6 +1,6 @@
 """Recoverable Gate R0 semantics tests.
 
-Covers the fairness invariants of analysis/statekv_recoverable_r0_protocol.md:
+Covers the fairness invariants of docs/evidence/statekv_recoverable_r0_protocol.md:
 re-entry legality, shared candidate universe, budget fill, same-input KL,
 and the new recoverable selection rules (recency / qk_pool / quest_like).
 """

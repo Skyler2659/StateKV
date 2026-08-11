@@ -1,7 +1,7 @@
 # StateKV Recoverable Gate R0 — unified recoverable-semantics headroom
 
 Run: `/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_recoverable_r0_qwen3_8b_v1`; ladder references: `/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_pure_eviction_qwen3_8b_p35_v1` (pure cheap) and `/Users/wangsikai/l1-robust-kv-cache/results/temporal_cache_discovery/statekv_teacher_gate_qwen3_8b_g0_v1` (pure teacher), same samples.
-Protocol: analysis/statekv_recoverable_r0_protocol.md (G1-G5 preregistered).
+Protocol: docs/evidence/statekv_recoverable_r0_protocol.md (G1-G5 preregistered).
 
 ## Per-arm aggregates
 

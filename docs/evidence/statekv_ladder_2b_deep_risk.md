@@ -79,7 +79,8 @@ state-conditioned physical-risk surrogate at this operating point.
 
 - Ladder run: results/temporal_cache_discovery/statekv_ladder_qwen3_8b_2b_v1/
 - Refresh arms: results/temporal_cache_discovery/statekv_refresh_arms_qwen3_8b_768_256_v1/
-- Analysis: analysis/tables/ladder_2b_risk_depth.{md,csv}, refresh_arms_summary.{md,csv}
+- Analysis: docs/evidence/tables/ladder_2b_risk_depth.md, refresh_arms_summary.md
+  (CSVs of the same names in analysis/tables/)
 - Machinery: statekv/statekv_gate_runner.py (_ladder_rollout, _marginal_measurement,
   _swap_selection, run_ladder stage), tests/test_teacher_gate.py
 - Configs: configs/stages/statekv_ladder_2b.yaml, statekv_refresh_arms_qwen3_8b_768_256.yaml

@@ -12,7 +12,7 @@ negative results.**
 > (exact per-query full-pool QK routing), a mapped coverage × cadence
 > failure frontier, a systematically falsified search space (41 rejected
 > strategies with verified numbers), and a reusable evaluation
-> infrastructure. Read [`docs/research_history.md`](docs/research_history.md)
+> infrastructure. Read [`docs/RESEARCH_HISTORY.md`](docs/RESEARCH_HISTORY.md)
 > first, then [`docs/FINDINGS.md`](docs/FINDINGS.md).
 
 ## What was investigated
@@ -67,7 +67,7 @@ no-gate retest of every marginally rejected policy.
   observation-window scoring.
 - Full falsified list: [`docs/FINDINGS.md`](docs/FINDINGS.md) §D and the
   verified 41-entry catalog
-  [`analysis/statekv_gate_retrospective_catalog.md`](analysis/statekv_gate_retrospective_catalog.md).
+  [`docs/evidence/statekv_gate_retrospective_catalog.md`](docs/evidence/statekv_gate_retrospective_catalog.md).
 - Why the early experiments looked successful while the final policy had no
   advantage: [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md).
 
@@ -88,16 +88,19 @@ no-gate retest of every marginally rejected policy.
 
 | Document | Content |
 |---|---|
-| [`docs/research_history.md`](docs/research_history.md) | Phase-by-phase history, believed-then vs known-now |
+| [`docs/README.md`](docs/README.md) | Documentation index and reading order |
+| [`docs/RESEARCH_HISTORY.md`](docs/RESEARCH_HISTORY.md) | Phase-by-phase history, believed-then vs known-now |
 | [`docs/FINDINGS.md`](docs/FINDINGS.md) | Graded findings (strong / conditional / observations / negative / open) |
 | [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) | Evidence-graded explanation of the main line's failure |
-| [`docs/experiments/EXPERIMENT_REGISTRY.md`](docs/experiments/EXPERIMENT_REGISTRY.md) | Every experiment: question, substrate, config, result, status |
+| [`docs/EXPERIMENT_REGISTRY.md`](docs/EXPERIMENT_REGISTRY.md) | Every experiment: question, substrate, config, result, status |
 | [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) | Finding → config → script → raw-result chain audit |
 | [`docs/CODE_AUDIT.md`](docs/CODE_AUDIT.md) | Module classification, defensive-code risks, duplicates |
 | [`docs/NEXT_RESEARCH_DIRECTIONS.md`](docs/NEXT_RESEARCH_DIRECTIONS.md) | Empirical gaps worth building on |
+| [`docs/evidence/`](docs/evidence/) | Raw experiment protocols, logs, closure reports, gate verdicts |
+| [`docs/proposals/`](docs/proposals/) | Architecture/design notes |
 | [`experiments/frozen_registry.yaml`](experiments/frozen_registry.yaml) | Frozen phase protocols, manifests, result links |
 | [`configs/ccfa.yaml`](configs/ccfa.yaml) | Claims registry with per-claim evidence paths |
-| [`analysis/`](analysis/) | Closure reports, gate verdicts, derived tables |
+| [`analysis/`](analysis/) | Analysis code and derived CSV/parquet tables |
 
 ## Repository map
 
@@ -162,7 +165,7 @@ HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_cheap_policy_freegen.py \
 
 Earlier-phase reproduction commands (P4–P28) are unchanged from the
 previous README revision (git history) and are catalogued with their
-configs and result paths in `docs/experiments/EXPERIMENT_REGISTRY.md`.
+configs and result paths in `docs/EXPERIMENT_REGISTRY.md`.
 
 ## Core Python API
 

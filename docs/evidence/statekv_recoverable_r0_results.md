@@ -176,7 +176,7 @@ physical-risk scoring.
 
 | artifact | path |
 |---|---|
-| Protocol (preregistered) | analysis/statekv_recoverable_r0_protocol.md |
+| Protocol (preregistered) | docs/evidence/statekv_recoverable_r0_protocol.md |
 | Raw results | results/temporal_cache_discovery/statekv_recoverable_r0_qwen3_8b_v1/ (sample_results.csv, cycle_rows.parquet, step_rows.parquet, summary.json, config.yaml) |
 | Config | configs/stages/statekv_recoverable_r0_qwen3_8b.yaml |
 | Analysis | analysis/tables/recoverable_r0_main.{csv,md}, recoverable_r0_paired.csv, recoverable_r0_ladder.{csv,md} (builder: recoverable_r0_headroom.py) |

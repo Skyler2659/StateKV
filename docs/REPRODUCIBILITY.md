@@ -1,7 +1,7 @@
 # StateKV Reproducibility Audit
 
 Chain audit — **finding → config → script → raw result** — for every entry in
-[`docs/experiments/EXPERIMENT_REGISTRY.md`](experiments/EXPERIMENT_REGISTRY.md).
+[`docs/EXPERIMENT_REGISTRY.md`](EXPERIMENT_REGISTRY.md).
 Compiled 2026-08-10; every path below was existence-checked on disk
 (`test -f` / directory listing), not taken on trust.
 
@@ -138,14 +138,14 @@ gate commands are derivable (`run_statekv_gates.py <stage> --config <yaml>`).
 | Teacher gate G0/G1 | `statekv_teacher_gate_g0.yaml` → `run_statekv_gates.py teacher-gate` | PARTIALLY REPRODUCIBLE | Command derivable; analysis builders in `analysis/tables/gate0_*.py`, `gate1_*` |
 | Teacher gate substrate B | `statekv_teacher_gate_p23b.yaml` → `run_statekv_gates.py teacher-gate` | PARTIALLY REPRODUCIBLE | Era-1 substrate: needs Qwen2.5-1.5B weights |
 | P2 cheap panel (P23b) | `statekv_p2_p23b_cheap.yaml` → `run_statekv_gates.py p2` | PARTIALLY REPRODUCIBLE | |
-| Ladder 2B / marginal 2C | `statekv_ladder_2b.yaml` → `run_statekv_gates.py ladder` | PARTIALLY REPRODUCIBLE | The stored run contains the probe-metric defect (post-phase-shift committed KLs are a different-input metric); a rerun with the same config reproduces raw rows, and the corrected analysis is `analysis/tables/ladder_2b_risk_depth.py` + `analysis/statekv_ladder_2b_deep_risk.md` (pre-shift cycles only) |
+| Ladder 2B / marginal 2C | `statekv_ladder_2b.yaml` → `run_statekv_gates.py ladder` | PARTIALLY REPRODUCIBLE | The stored run contains the probe-metric defect (post-phase-shift committed KLs are a different-input metric); a rerun with the same config reproduces raw rows, and the corrected analysis is `analysis/tables/ladder_2b_risk_depth.py` + `docs/evidence/statekv_ladder_2b_deep_risk.md` (pre-shift cycles only) |
 | Refresh arms 101–105 | `statekv_refresh_arms_qwen3_8b_768_256.yaml` → `run_statekv_gates.py r2b-gate` | PARTIALLY REPRODUCIBLE | A second config `statekv_selective_refresh_r2b.yaml` also exists; the run dir matches the refresh-arms config |
 | Refresh-gap R0 | offline: `scripts/analyze_refresh_gap_decomposition.py` over P23b parquets → `analysis/tables/refresh_gap_decomposition_summary.csv` ✓ | PARTIALLY REPRODUCIBLE | No config file (offline analysis); needs the P23b run present |
-| R1 prescreen | offline: `analysis/tables/build_trigger_feature_screen.py`, `fit_refresh_trigger.py` → `analysis/tables/trigger_screen_report.md` ✓ | PARTIALLY REPRODUCIBLE | Offline; depends on decomposition records |
+| R1 prescreen | offline: `analysis/tables/build_trigger_feature_screen.py`, `fit_refresh_trigger.py` → `docs/evidence/tables/trigger_screen_report.md` ✓ | PARTIALLY REPRODUCIBLE | Offline; depends on decomposition records |
 | R2a labels v1 | `statekv_selective_refresh_r2a.yaml` → `run_statekv_gates.py r2a-labels` → `statekv_selective_refresh_labels_r2a_v1/` ✓ | PARTIALLY REPRODUCIBLE | |
 | R2a labels v2 | `statekv_selective_refresh_r2a_v2.yaml` → same → `statekv_selective_refresh_labels_r2a_v2/partial_*` ✓ | REQUIRES RERUN | Early-stopped; only partial parquets, no `summary.json`/`config.yaml` in the curated dir. Result-as-evidence stands (degenerate operating point), but the run itself is incomplete |
 | R2a labels v3 | `statekv_selective_refresh_r2a_v3.yaml` → same → `statekv_selective_refresh_labels_r2a_v3/partial_*` ✓ | REQUIRES RERUN | Same: partial artifacts only |
-| R2 trigger verdict | offline analysis over R2a labels → `analysis/tables/selective_refresh_negative_result_r2.md`, `refresh_operating_point_comparison.csv`, `refresh_trigger_no_freeze.json` ✓ | PARTIALLY REPRODUCIBLE | Depends on R2a v1 (+ partial v2/v3) artifacts |
+| R2 trigger verdict | offline analysis over R2a labels → `docs/evidence/tables/selective_refresh_negative_result_r2.md`, `refresh_operating_point_comparison.csv`, `refresh_trigger_no_freeze.json` ✓ | PARTIALLY REPRODUCIBLE | Depends on R2a v1 (+ partial v2/v3) artifacts |
 | Recoverable R0 | `statekv_recoverable_r0_qwen3_8b.yaml` → `run_oracle_policy_freegen.py` (recoverable mode) | PARTIALLY REPRODUCIBLE | Mode dispatch verified in `statekv/oracle_policy_freegen.py`; regression test `tests/test_recoverable_r0.py` exists |
 | QK–V battery | `statekv_qkv_decomposition_qwen3_8b.yaml` → `run_qkv_decomposition.py` | PARTIALLY REPRODUCIBLE | Derived tables `analysis/tables/qkv_*.csv` regenerable from the run rows |
 | qk_tiered_v 256t / 352f / 352t | `statekv_qkvtier_gate_{256t,352f,352t}.yaml` → `run_oracle_policy_freegen.py` (tier mode) | PARTIALLY REPRODUCIBLE | Tier logic in `statekv/oracle_policy_freegen.py`; gate test `tests/test_qkvtier_gate.py`; spot-checked chain intact. Arm memories must match exactly for G5 comparability |

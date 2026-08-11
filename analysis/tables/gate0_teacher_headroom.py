@@ -62,6 +62,7 @@ DEFAULT_P35_RUN = (
     / "results/temporal_cache_discovery/statekv_pure_eviction_qwen3_8b_p35_v1"
 )
 OUT_DIR = ROOT / "analysis/tables"
+MD_DIR = ROOT / "docs/evidence/tables"
 
 # ---- predeclared analysis constants (do not tune after seeing results) ----
 TEACHER_POLICY = "teacher_panel"
@@ -305,7 +306,7 @@ def main() -> None:
         ),
         "",
     ]
-    (OUT_DIR / "gate0_teacher_headroom.md").write_text("\n".join(note), encoding="utf-8")
+    (MD_DIR / "gate0_teacher_headroom.md").write_text("\n".join(note), encoding="utf-8")
     print("\n".join(note))
     print(f"\nVERDICT Gate0: {headroom_verdict} | Gate1: {gate1_verdict}")
 

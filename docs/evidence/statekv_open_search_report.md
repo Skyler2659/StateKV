@@ -161,8 +161,8 @@ implemented.  Literature: Ada-KV/HeadKV/KV-Compress cover this family.
 
 | artifact | path |
 |---|---|
-| Search log (full tree) | analysis/statekv_open_search_log.md |
-| Corner gate (preregistered + verdict) | analysis/statekv_corner_gate.md |
+| Search log (full tree) | docs/evidence/statekv_open_search_log.md |
+| Corner gate (preregistered + verdict) | docs/evidence/statekv_corner_gate.md |
 | Probe builder | analysis/tables/open_search_probes.py (outputs open_hf1_*/open_hf2_*/open_hf3_*.csv) |
 | Stress runs | results/.../statekv_openstress_768_{128,64}_v1/ |
 | Corner runs | results/.../statekv_opencorner_768_64_{h4,h16}_v1/, statekv_corner_obswin_768_64_h16_v1/ |

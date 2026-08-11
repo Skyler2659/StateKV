@@ -531,7 +531,9 @@ def main() -> None:
         "Any frozen trigger must beat these alerted-mean-benefit numbers at comparable alert rates.",
         "",
     ]
-    (args.out_dir / "refresh_trigger_fit_summary.md").write_text("\n".join(lines))
+    md_dir = ROOT / "docs/evidence/tables" if args.out_dir == OUT_DIR else args.out_dir
+    md_dir.mkdir(parents=True, exist_ok=True)
+    (md_dir / "refresh_trigger_fit_summary.md").write_text("\n".join(lines))
 
     # ---- console summary ----
     print(f"rows={len(df)} samples={n_samples} policies={sorted(df['policy'].unique())}")

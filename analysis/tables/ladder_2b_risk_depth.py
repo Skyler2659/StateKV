@@ -45,6 +45,7 @@ DEFAULT_ARMS_RUN = (
     ROOT / "results/temporal_cache_discovery/statekv_refresh_arms_qwen3_8b_768_256_v1"
 )
 OUT_DIR = ROOT / "analysis/tables"
+MD_DIR = ROOT / "docs/evidence/tables"
 
 # ---- predeclared analysis constants (do not tune after seeing results) ----
 TIE_EPS = 1.0e-3  # candidate KL spread below this = tied
@@ -271,7 +272,7 @@ def main() -> None:
         f"**2B verdict (predeclared): {verdict}**",
         "",
     ]
-    (OUT_DIR / "ladder_2b_risk_depth.md").write_text("\n".join(note), encoding="utf-8")
+    (MD_DIR / "ladder_2b_risk_depth.md").write_text("\n".join(note), encoding="utf-8")
     print("\n".join(note))
     print(f"VERDICT 2B: {verdict}")
 

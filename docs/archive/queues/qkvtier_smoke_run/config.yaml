@@ -48,7 +48,7 @@ candidate_panel:
 generation: greedy_policy_conditioned_one_step_receding_horizon
 bootstrap_samples: 20000
 primary_decision:
-  protocol: analysis/statekv_recoverable_r0_protocol.md
+  protocol: docs/evidence/statekv_recoverable_r0_protocol.md
   verdict_rules: preregistered_G1_to_G5
   strongest_cheap_recoverable: min_mean_trajectory_kl_among_non_teacher_budgeted_arms
 primary_metrics:

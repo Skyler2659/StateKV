@@ -1,7 +1,7 @@
 # StateKV Corner Gate — coverage × cadence cliff (preregistered)
 
 Status: preregistered 2026-08-10, before any method-arm results.
-Context: `analysis/statekv_open_search_log.md` (HF1/HF3 corner findings).
+Context: `docs/evidence/statekv_open_search_log.md` (HF1/HF3 corner findings).
 
 ## 1. Finding that motivates this gate
 

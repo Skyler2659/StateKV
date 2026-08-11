@@ -15,7 +15,7 @@ No — because on this model family and selector family the premise is absent:
 
 1. Offline pre-screen (R1, no model runs):
    - `experiments/p3_decision_validity` event table (3 splits): only transferable signal is the structural bit "state changed since selection" (≡ always-refresh-when-stale); every selective action-conditioned feature fails out-of-sample (boundary features AUC 0.32–0.49; best generic scalar sink_attention_mass AUC ~0.68). `analysis/tables/p3_trigger_prescreen_*`
-   - P22→P23b frozen transfer: no dev-selectable feature beats the failed proxy_regret baseline (P23b AUC 0.249). churn features are not computable offline (cores/scores never persisted). One post-hoc lead (early stale-trajectory KL slope, P23b AUC 0.878) is dev-invisible and teacher-side — not a cheap trigger. `analysis/tables/trigger_screen_report.md`
+   - P22→P23b frozen transfer: no dev-selectable feature beats the failed proxy_regret baseline (P23b AUC 0.249). churn features are not computable offline (cores/scores never persisted). One post-hoc lead (early stale-trajectory KL slope, P23b AUC 0.878) is dev-invisible and teacher-side — not a cheap trigger. `docs/evidence/tables/trigger_screen_report.md`
 
 2. Online instrumentation (R2a, new machinery): per-step cheap features (core churn Jaccard, boundary margin, score TV, coverage mass) + teacher labels (refresh_benefit = stale_exact_kl − fresh_exact_kl via shallow-clone counterfactual forwards; proven non-perturbing, max |ΔKL|=0) under strict pure eviction. 36 unit tests + smoke identity checks pass.
 

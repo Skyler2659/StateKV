@@ -1,5 +1,5 @@
 """QK-route, V-tier method gate analysis (preregistered in
-analysis/statekv_qkvtier_gate.md section 4; thresholds hard-coded, do not
+docs/evidence/statekv_qkvtier_gate.md section 4; thresholds hard-coded, do not
 tune after seeing results).
 
 P  premise: tiered-256 KL <= 1.10 x qk256 KL and quality non-worse
@@ -36,6 +36,7 @@ RUNS = {
     / "results/temporal_cache_discovery/statekv_qkvtier_gate_352t_v1",
 }
 OUT = ROOT / "analysis/tables"
+MD_DIR = ROOT / "docs/evidence/tables"
 
 P_MAX_RATIO = 1.10
 G1_MAX_RATIO = 0.80
@@ -155,7 +156,7 @@ def main() -> None:
         f"**Gate verdict (preregistered): {verdict}**" + ("" if go else f" ({subclass})"),
         "",
     ]
-    (OUT / "qkvtier_gate_main.md").write_text("\n".join(note), encoding="utf-8")
+    (MD_DIR / "qkvtier_gate_main.md").write_text("\n".join(note), encoding="utf-8")
     print("\n".join(note))
 
 

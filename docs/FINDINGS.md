@@ -6,7 +6,7 @@ Compiled 2026-08-10. Every entry links its evidence. Grades:
 **D** negative (explicitly falsified) · **E** open question.
 
 The companion `FAILURE_ANALYSIS.md` explains *why* the main line failed;
-`experiments/EXPERIMENT_REGISTRY.md` lists every experiment behind these
+`EXPERIMENT_REGISTRY.md` lists every experiment behind these
 entries.
 
 ---
@@ -31,29 +31,29 @@ entries.
   coverage stress (NIAH 1.0 down to 8% coverage at 768 ctx; down to 1.4%
   at 3–4.7K ctx), the open search (7 hypothesis families), and external
   validity (two model families).
-  Evidence: `analysis/statekv_recoverable_r0_results.md`,
-  `analysis/statekv_open_search_report.md`,
-  `analysis/statekv_external_validity_report.md`.
+  Evidence: `docs/evidence/statekv_recoverable_r0_results.md`,
+  `docs/evidence/statekv_open_search_report.md`,
+  `docs/evidence/statekv_external_validity_report.md`.
 - **A5. The state-conditioned physical-risk teacher has no deployable
   headroom over cheap selectors under strict pure eviction.** Teacher KL
   0.232 vs best cheap 0.096 (paired 2/10); the action space is degenerate
   (oracle regret 1.7%); the P31 headroom was a full-history-access
   artifact. Supported on two substrates.
-  Evidence: `analysis/statekv_teacher_closure_2026-08-09.md`,
-  `analysis/tables/gate0_*`.
+  Evidence: `docs/evidence/statekv_teacher_closure_2026-08-09.md`,
+  `docs/evidence/tables/gate0_teacher_headroom.md`, `analysis/tables/gate0_*`.
 - **A6. One-step risk is a plateau; long-run risk is a cliff.** 61.6% of
   cycles tie numerically (48.1% hard-tied); swap marginals ~1e-5–1e-4 with
   exactly zero pair interactions; the cliff becomes visible only 2–4 steps
   before the future query, shared by all panel actions.
-  Evidence: `analysis/statekv_ladder_2b_deep_risk.md`,
+  Evidence: `docs/evidence/statekv_ladder_2b_deep_risk.md`,
   `analysis/tables/ladder_2b_*`, `analysis/tables/qkv_c2_swap_by_offset.csv`.
 - **A7. The coverage × cadence interaction cliff is the dominant failure
   mode of working-set control.** At 768 ctx / 64 budget: h1 KL 0.082 /
   NIAH 1.0 → h4 0.376 / 0.2 → h16 0.844 / 0.0; reproduces at 3072 ctx; the
   controlling variable is the absolute core budget; no refresh-time
   observable rescues slow cadence (observation-window scoring is *worse*).
-  Evidence: `analysis/statekv_corner_gate.md`,
-  `analysis/statekv_external_validity_report.md`.
+  Evidence: `docs/evidence/statekv_corner_gate.md`,
+  `docs/evidence/statekv_external_validity_report.md`.
 - **A8. Token-level exactness cannot be recovered by page-granular
   metadata.** Page-max recall upper bound of the exact top-220 core: 0.674
   (p4) → 0.543 (p32); quest_like collapses at budget 64 (KL 0.71 vs 0.08).
@@ -64,15 +64,15 @@ entries.
   scores (n=20 fresh, recoverable freegen); tiered-256 beat qk_pool-256
   6/10 in the original gate. Its original NO_GO rested on an unequal-memory
   comparison (G5 vs 1.375×-memory FP16-352).
-  Evidence: `analysis/statekv_qkvtier_gate.md`,
+  Evidence: `docs/evidence/statekv_qkvtier_gate.md`,
   `results/temporal_cache_discovery/statekv_retest_freegen_qwen3_8b_n20_v1/`.
 - **A10. Binary task metrics saturate long before distribution fidelity
   does.** Across the retest panel (n=20), 9 of 12 compressed policies score
   NIAH 10/10 while their mean KL spans 0.008–0.87; GovReport ROUGE-L spans
   0.055–0.061. KL/tail metrics detected every eventual task collapse
   earlier than task scores did.
-  Evidence: `analysis/statekv_retest_report.md` (Track B),
-  `analysis/statekv_open_search_report.md` §3.
+  Evidence: `docs/evidence/statekv_retest_report.md` (Track B),
+  `docs/evidence/statekv_open_search_report.md` §3.
 
 ## B. Conditional findings
 
@@ -93,7 +93,7 @@ entries.
   substrates.** P23b (coverage 0.698) shows real staleness (benefit 0.129,
   77% positive); Qwen3-8B per-layer at coverage 0.995+ is time-invariant.
   Evidence: `analysis/tables/refresh_operating_point_comparison.csv`,
-  `analysis/tables/selective_refresh_negative_result_r2.md`.
+  `docs/evidence/tables/selective_refresh_negative_result_r2.md`.
 - **B4. P32 cheap controllers (B1/B2/B3) keep NIAH 10/10 with KL
   0.18–0.24 vs attention 0.33 on Qwen3-8B 768-ctx freegen** — but B3's
   dynamic layer-budget *mechanism* is refuted (loses to shuffled static
@@ -109,7 +109,7 @@ entries.
 
 - **C1.** qk_pool residual KL is event-driven (top-10% cycles carry 76.5%
   of KL mass) but hard cycles are not predictable from runtime observables
-  (correlations ≤ 0.36). Evidence: `analysis/statekv_open_search_report.md` §3.5.
+  (correlations ≤ 0.36). Evidence: `docs/evidence/statekv_open_search_report.md` §3.5.
 - **C2.** Per-KV-head own-top-k gains +0.96pp captured mass (p95 +3.6pp,
   diffuse early layers) — below the pre-committed action threshold;
   literature-covered (Ada-KV/HeadKV). Evidence:
@@ -130,9 +130,9 @@ Each of these was a live hypothesis with a designed test:
 - **D1.** Deployable state-conditioned risk distillation (Gate 0–2, R0;
   A5/A6 above).
 - **D2.** V-side residual signal given QK: partial Spearman −0.05…−0.10 in
-  every cutoff bucket; I(target;V|QK) ≈ 0. `analysis/statekv_qkv_discovery_results.md`.
+  every cutoff bucket; I(target;V|QK) ≈ 0. `docs/evidence/statekv_qkv_discovery_results.md`.
 - **D3.** Selective refresh triggers on Qwen3-8B per-layer (premise absent;
-  LOSO AUC < 0.65). `analysis/tables/selective_refresh_negative_result_r2.md`.
+  LOSO AUC < 0.65). `docs/evidence/tables/selective_refresh_negative_result_r2.md`.
 - **D4.** Dynamic per-layer budget allocation (P34; loses to shuffled
   static and stale controls).
 - **D5.** Training-free cheap estimators as controller metrics: Euclidean

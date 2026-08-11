@@ -189,7 +189,7 @@ The layer-35-only partial data (NOT decision-grade): own top-k captures
 +0.62pp attention mass over the shared core at that layer, own/shared
 overlap 0.653.  No conclusion drawn yet.
 
-### Corner gate launched (preregistered: analysis/statekv_corner_gate.md)
+### Corner gate launched (preregistered: docs/evidence/statekv_corner_gate.md)
 
 Corner result (h16@64, 10 samples): qk_pool mean KL ~0.96, NIAH 0/5 —
 quality-INVALID; 16-step-stale core at tight budget is catastrophic, while
@@ -246,4 +246,4 @@ the backward-looking window is stale-biased and scores WORSE than the
 freshest single token.  Per preregistered rules the corner closes as a
 boundary condition: at tight coverage, exact routing needs (near) per-step
 refresh; no cheap refresh-time scoring rescues slow cadence.  Gate doc:
-analysis/statekv_corner_gate.md.
+docs/evidence/statekv_corner_gate.md.

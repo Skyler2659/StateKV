@@ -167,7 +167,7 @@ consistent, not a tiny numerical perturbation of qk_pool.
 
 - Dataset runs: `results/temporal_cache_discovery/statekv_qkv_decomposition_*`
 - Analysis: `analysis/tables/qkv_*.csv/md` (+ figures if informative)
-- Results: `analysis/statekv_qkv_discovery_results.md`
-- If method: `analysis/statekv_<method>_gate.md`, minimal implementation,
+- Results: `docs/evidence/statekv_qkv_discovery_results.md`
+- If method: `docs/evidence/statekv_<method>_gate.md`, minimal implementation,
   tests, `configs/stages/statekv_<method>_gate.yaml`
 - ccfa.yaml sync at the end.

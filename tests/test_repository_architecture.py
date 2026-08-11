@@ -120,13 +120,14 @@ def test_all_benchmark_assets_are_grouped_by_backend() -> None:
 def test_root_contains_only_canonical_documentation_and_no_yaml() -> None:
     canonical_docs = {
         "README.md",
+        "docs/README.md",
         "docs/FINDINGS.md",
         "docs/FAILURE_ANALYSIS.md",
-        "docs/research_history.md",
+        "docs/RESEARCH_HISTORY.md",
         "docs/CODE_AUDIT.md",
         "docs/REPRODUCIBILITY.md",
         "docs/NEXT_RESEARCH_DIRECTIONS.md",
-        "docs/experiments/EXPERIMENT_REGISTRY.md",
+        "docs/EXPERIMENT_REGISTRY.md",
     }
     missing = sorted(
         name for name in canonical_docs if not (ROOT / name).is_file()
@@ -136,7 +137,10 @@ def test_root_contains_only_canonical_documentation_and_no_yaml() -> None:
     assert not list(ROOT.glob("*.yaml"))
     assert not list(ROOT.glob("*.yml"))
 
-    allowed_areas = ("docs", "analysis", "assets", "experiments", "results", "tmp")
+    # Markdown documentation lives in docs/ (plus the root README). The only
+    # exceptions are generated run reports co-located with their raw results
+    # (results/**/report.md) and scratch output under tmp/.
+    allowed_areas = ("docs", "results", "tmp")
     markdown = {
         path.relative_to(ROOT)
         for path in ROOT.rglob("*.md")

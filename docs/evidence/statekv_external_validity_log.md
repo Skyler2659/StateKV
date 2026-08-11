@@ -396,4 +396,4 @@ degeneracy.  GovReport official-score saturation replicates on the
 second family.  All reopen rules (R-A…R-E) evaluated negative across
 2 contexts x 2 budgets x 3 cadences x 4 task structures x 2 model
 families.  Verdict: FINAL CLOSE.  See
-analysis/statekv_external_validity_report.md.
+docs/evidence/statekv_external_validity_report.md.

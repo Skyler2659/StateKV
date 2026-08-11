@@ -96,7 +96,7 @@ claims:
   - id: "selective-refresh-trigger-qwen3-8b"
     status: "refuted-substrate-bound-rankings-time-invariant-per-layer-selection-coverage-0.995-vs-p23b-0.698"
     evidence:
-      - "analysis/tables/selective_refresh_negative_result_r2.md"
+      - "docs/evidence/tables/selective_refresh_negative_result_r2.md"
       - "analysis/tables/refresh_operating_point_comparison.csv"
       - "analysis/tables/refresh_trigger_no_freeze.json"
       - "results/temporal_cache_discovery/statekv_selective_refresh_labels_r2a_v1/refresh_event_rows.parquet"
@@ -104,7 +104,7 @@ claims:
   - id: "one-step-greedy-pure-eviction-teacher-headroom"
     status: "refuted-teacher-kl-0.232-vs-best-cheap-0.096-paired-2-of-10-wins-action-space-dominant-regret-1.7-percent"
     evidence:
-      - "analysis/tables/gate0_teacher_headroom.md"
+      - "docs/evidence/tables/gate0_teacher_headroom.md"
       - "analysis/tables/gate0_teacher_headroom.csv"
       - "analysis/tables/gate0_paired_comparisons.csv"
       - "analysis/tables/gate1_fixed_action_space.csv"
@@ -118,28 +118,28 @@ claims:
   - id: "p31-cheap-baselines-were-quasi-irreversible"
     status: "supported-p31-attention-snapkv-score-active-set-only-evicted-positions-score-zero-cannot-reenter"
     evidence:
-      - "analysis/statekv_recoverable_r0_protocol.md"
+      - "docs/evidence/statekv_recoverable_r0_protocol.md"
       - "statekv/oracle_policy_comparison.py"
       - "results/temporal_cache_discovery/statekv_recoverable_r0_qwen3_8b_v1/cycle_rows.parquet"
   - id: "recoverable-teacher-headroom-r0"
     status: "refuted-no-headroom-qk-pool-kl-0.0086-vs-teacher-0.0213-paired-0-of-10-wins-tail-worse-pivot-stopped"
     evidence:
-      - "analysis/statekv_recoverable_r0_results.md"
-      - "analysis/statekv_recoverable_r0_protocol.md"
-      - "analysis/tables/recoverable_r0_main.md"
+      - "docs/evidence/statekv_recoverable_r0_results.md"
+      - "docs/evidence/statekv_recoverable_r0_protocol.md"
+      - "docs/evidence/tables/recoverable_r0_main.md"
       - "analysis/tables/recoverable_r0_paired.csv"
-      - "analysis/tables/recoverable_r0_ladder.md"
+      - "docs/evidence/tables/recoverable_r0_ladder.md"
       - "results/temporal_cache_discovery/statekv_recoverable_r0_qwen3_8b_v1/summary.json"
       - "tests/test_recoverable_r0.py"
   - id: "recoverable-qk-pool-strongest-working-set-policy"
     status: "supported-r0-substrate-exact-full-pool-query-aware-topk-kl-0.0086-niah-1.0-beats-all-arms"
     evidence:
-      - "analysis/tables/recoverable_r0_main.md"
+      - "docs/evidence/tables/recoverable_r0_main.md"
       - "results/temporal_cache_discovery/statekv_recoverable_r0_qwen3_8b_v1/summary.json"
   - id: "v-routing-residual-given-qk"
     status: "refuted-zero-or-negative-residual-all-cutoff-buckets-layers-heads-token-types-horizons-swap-oracle-flat"
     evidence:
-      - "analysis/statekv_qkv_discovery_results.md"
+      - "docs/evidence/statekv_qkv_discovery_results.md"
       - "analysis/tables/qkv_c1_neartie_partial.csv"
       - "analysis/tables/qkv_c2_swap_by_offset.csv"
       - "analysis/tables/qkv_d_layer_residual.csv"
@@ -151,12 +151,12 @@ claims:
     evidence:
       - "analysis/tables/qkv_a_dynamic_range.csv"
       - "analysis/tables/qkv_d_head_decoupling.csv"
-      - "analysis/statekv_qkv_discovery_results.md"
+      - "docs/evidence/statekv_qkv_discovery_results.md"
   - id: "qk-route-v-tier-method"
     status: "refuted-gate-nogo-tiering-lossy-4bit-costs-12.6-percent-of-coverage-gain-coverage-fp16-dominates-0.499x"
     evidence:
-      - "analysis/statekv_qkvtier_gate.md"
-      - "analysis/tables/qkvtier_gate_main.md"
+      - "docs/evidence/statekv_qkvtier_gate.md"
+      - "docs/evidence/tables/qkvtier_gate_main.md"
       - "analysis/tables/qkvtier_gate_paired.csv"
       - "results/temporal_cache_discovery/statekv_qkvtier_gate_256t_v1/summary.json"
       - "results/temporal_cache_discovery/statekv_qkvtier_gate_352f_v1/summary.json"
@@ -165,7 +165,7 @@ claims:
   - id: "coverage-is-the-binding-constraint"
     status: "supported-qk-pool-352-fp16-kl-0.499x-of-256-baseline-10-of-10-wins-tail-better"
     evidence:
-      - "analysis/tables/qkvtier_gate_main.md"
+      - "docs/evidence/tables/qkvtier_gate_main.md"
       - "results/temporal_cache_discovery/statekv_qkvtier_gate_352f_v1/summary.json"
   - id: "training-free-euclidean-history-sketch"
     status: "not-supported-retrospective"
@@ -245,7 +245,7 @@ claims:
   - id: "open-search-cadence-coverage-cliff"
     status: "done-qkpool-h16-at-64-catastrophic-kl-0.84-niah-0-obswin-worse-1.07-no-go-corner-slow-refresh-unsafe-at-tight-coverage"
     evidence:
-      - "analysis/statekv_corner_gate.md"
+      - "docs/evidence/statekv_corner_gate.md"
       - "results/temporal_cache_discovery/statekv_opencorner_768_64_h4_v1/sample_results.csv"
       - "results/temporal_cache_discovery/statekv_opencorner_768_64_h16_v1/sample_results.csv"
       - "results/temporal_cache_discovery/statekv_corner_obswin_768_64_h16_v1/sample_results.csv"
@@ -258,14 +258,14 @@ claims:
     status: "done-page-max-recall-upper-bound-0.59-at-p16-token-level-exactness-unrecoverable-by-page-metadata-gap-widens-at-tight-budget"
     evidence:
       - "analysis/tables/open_hf2_page_recall.csv"
-      - "analysis/statekv_open_search_log.md"
+      - "docs/evidence/statekv_open_search_log.md"
   - id: "extval-long-context-qkpool-validity"
     status: "done-qkpool-task-perfect-at-4.7k-ctx-h1-down-to-1.4pct-coverage-niah-3of3-multikey-3of3-govreport-kl-only-degradation-coverage-driven"
     evidence:
       - "results/temporal_cache_discovery/statekv_extval_3072_256_v1/sample_results.csv"
       - "results/temporal_cache_discovery/statekv_extval_3072_64_v1/sample_results.csv"
       - "results/temporal_cache_discovery/statekv_extval_3072_256_mk_v1/sample_results.csv"
-      - "analysis/statekv_external_validity_report.md"
+      - "docs/evidence/statekv_external_validity_report.md"
   - id: "extval-ranking-regret-context-invariant"
     status: "done-swap-oracle-flat-at-3072-91pct-pairs-below-1e-4-median-regret-7.6e-15-no-ranking-headroom-at-4x-context"
     evidence:
@@ -282,12 +282,12 @@ claims:
     status: "done-hard-cycle-features-rho-le-0.36-at-3072-replicates-768-single-task-entropy-anomaly-below-preregistered-bar"
     evidence:
       - "analysis/tables/extval_hard_cycle_predictability.csv"
-      - "analysis/statekv_external_validity_log.md"
+      - "docs/evidence/statekv_external_validity_log.md"
   - id: "extval-substrate-guards"
     status: "done-runtime-overrides-plus-prompt-truncation-hard-fail-guard-regression-tested-artifact-3-4-5-recorded"
     evidence:
       - "tests/test_external_validity_substrate.py"
-      - "analysis/statekv_external_validity_log.md"
+      - "docs/evidence/statekv_external_validity_log.md"
   - id: "extval-qwen25-7b-family-confirmation"
     status: "done-qkpool-niah-3of3-kl-0.004-0.009-govreport-0.009-0.055-uniform-fails-closure-pattern-not-qwen3-specific"
     evidence:
@@ -296,7 +296,7 @@ claims:
     status: "retested-n24-fresh-contribution-q75-mean-kl-0.3938-vs-attention-0.4085-seq-wins-54-to-58pct-p7-p9-veto-not-confirmed-on-fresh-data"
     evidence:
       - "results/temporal_cache_discovery/statekv_retest_replay_era1_n24_v1/metrics.csv"
-      - "analysis/statekv_retest_report.md"
+      - "docs/evidence/statekv_retest_report.md"
   - id: "retest-qk-tiered-v-matched-budget"
     status: "retested-n20-fresh-kl-0.008066-vs-qkpool-0.007614-niah-10of10-task-scores-identical-g5-veto-was-unequal-memory-comparison"
     evidence:
@@ -319,7 +319,7 @@ claims:
     status: "replication-negative-all-gains-negative-on-8-fresh-sequences-dev-posthoc-gain-was-development-set-artifact"
     evidence:
       - "results/temporal_cache_discovery/statekv_retest_vjp_rademacher_replication_v1/metrics.csv"
-      - "analysis/statekv_retest_report.md"
+      - "docs/evidence/statekv_retest_report.md"
 experiments:
   - id: "teacher-evaluator"
     status: "done-controlled-setting"
