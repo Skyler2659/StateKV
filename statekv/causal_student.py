@@ -679,7 +679,6 @@ def _train_student_mlp(
     device: str = "cpu",
 ) -> MultiHorizonMLP:
     """Same objective as causal_predictors._train_neural, device-pinned."""
-
     torch.manual_seed(int(seed))
     device_obj = torch.device(str(device))
     model = MultiHorizonMLP(int(features.shape[1]), int(horizons)).to(device_obj)
@@ -717,6 +716,138 @@ def _train_student_mlp(
             loss.backward()
             optimizer.step()
         print(f"[causal-student] mlp epoch {epoch + 1}/{epochs}", flush=True)
+    return model.cpu()
+
+
+def _v2_boundary_targets(
+    truth: np.ndarray,
+    boundary_ids: np.ndarray,
+    cutoff_budgets: Sequence[int],
+) -> Tuple[np.ndarray, Dict[int, Dict[int, np.ndarray]]]:
+    """Percentile targets and cutoff-straddling pairs per boundary.
+
+    The v1 objective scores "is this token in the teacher top-220" and pairs
+    tokens by arbitrary cyclic shift.  Deployment, however, only cares about
+    the eviction ordering near the retention cutoff, at core budgets 92
+    (budget 128) and 220 (budget 256).  v2 therefore trains channel 0 on the
+    within-boundary teacher percentile (a scale-free soft label) and builds
+    pair lists that straddle each deployment cutoff.
+    """
+
+    horizons = int(truth.shape[1])
+    percentile = np.zeros_like(truth, dtype=np.float32)
+    pairs: Dict[int, Dict[int, np.ndarray]] = {}
+    for boundary_id in np.unique(boundary_ids):
+        rows = np.flatnonzero(boundary_ids == boundary_id)
+        boundary_pairs: Dict[int, List[Tuple[int, int]]] = {
+            int(budget): [] for budget in cutoff_budgets
+        }
+        for column in range(horizons):
+            values = truth[rows, column]
+            order = np.argsort(values, kind="stable")
+            ranks = np.empty(len(rows), dtype=np.float32)
+            ranks[order] = np.arange(len(rows), dtype=np.float32)
+            percentile[rows, column] = ranks / max(float(len(rows) - 1), 1.0)
+            if column != horizons - 1:
+                # Cutoff pairs are built on the deployment horizon only; the
+                # loss is applied to every horizon column of the same rows.
+                continue
+            for budget in cutoff_budgets:
+                keep = min(int(budget), max(len(rows) - 1, 1))
+                top_rows = rows[order[-keep:]]
+                bottom_rows = rows[order[:-keep]]
+                if not len(top_rows) or not len(bottom_rows):
+                    continue
+                # Every retained token against its nearest evicted neighbours
+                # dominates the eviction decision; cap the pair count so the
+                # per-boundary loss stays cheap.
+                closest = bottom_rows[
+                    np.argsort(values[order[:-keep]])[ -min(keep, len(bottom_rows)): ]
+                ]
+                pair_list = [
+                    (int(high), int(low))
+                    for high in top_rows
+                    for low in closest
+                ]
+                boundary_pairs[int(budget)] = pair_list[
+                    : min(len(pair_list), 4 * int(budget))
+                ]
+        pairs[int(boundary_id)] = {
+            int(budget): np.asarray(pair_list, dtype=np.int64).reshape(-1, 2)
+            for budget, pair_list in boundary_pairs.items()
+        }
+    return percentile, pairs
+
+
+def _train_student_mlp_v2(
+    features: np.ndarray,
+    truth: np.ndarray,
+    boundary_ids: np.ndarray,
+    horizons: int,
+    seed: int,
+    epochs: int,
+    cutoff_budgets: Sequence[int],
+    pairwise_weight: float,
+    device: str = "cpu",
+) -> MultiHorizonMLP:
+    """Cutoff-aware ranking objective on top of the v1 architecture.
+
+    Channel 0 regresses the within-boundary teacher percentile (BCE on soft
+    labels); channel 1 keeps the v1 log-utility regression.  A pairwise
+    logistic loss on cutoff-straddling pairs at each deployment core budget
+    directly optimizes the retention/eviction ordering the closed loop uses.
+    """
+
+    torch.manual_seed(int(seed))
+    device_obj = torch.device(str(device))
+    model = MultiHorizonMLP(int(features.shape[1]), int(horizons)).to(device_obj)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=2.0e-3, weight_decay=1.0e-4)
+    bce = torch.nn.BCEWithLogitsLoss()
+    smooth = torch.nn.SmoothL1Loss()
+    regression = np.log1p(truth / np.maximum(truth.mean(axis=0), 1.0e-9))
+    percentile, pairs = _v2_boundary_targets(truth, boundary_ids, cutoff_budgets)
+    rng = np.random.default_rng(int(seed))
+    for epoch in range(int(epochs)):
+        groups = [
+            (int(boundary_id), np.flatnonzero(boundary_ids == boundary_id))
+            for boundary_id in rng.permutation(np.unique(boundary_ids))
+        ]
+        for boundary_id, rows in groups:
+            x = torch.from_numpy(features[rows]).to(device_obj)
+            y_soft = torch.from_numpy(percentile[rows]).to(device_obj)
+            y_reg = torch.from_numpy(regression[rows].astype(np.float32)).to(device_obj)
+            output = model(
+                x, torch.zeros((len(rows), 1, 2), dtype=torch.float32, device=device_obj)
+            )
+            loss = bce(output[:, :, 0], y_soft) + 0.25 * smooth(
+                output[:, :, 1], y_reg
+            )
+            row_lookup = {
+                int(global_row): local_row
+                for local_row, global_row in enumerate(rows.tolist())
+            }
+            for budget in cutoff_budgets:
+                pair_array = pairs.get(boundary_id, {}).get(int(budget))
+                if pair_array is None or not len(pair_array):
+                    continue
+                local_pairs = np.asarray(
+                    [
+                        (row_lookup[int(high)], row_lookup[int(low)])
+                        for high, low in pair_array.tolist()
+                    ],
+                    dtype=np.int64,
+                )
+                high = torch.from_numpy(local_pairs[:, 0]).to(device_obj)
+                low = torch.from_numpy(local_pairs[:, 1]).to(device_obj)
+                difference = output[high, :, 0] - output[low, :, 0]
+                pairwise = torch.nn.functional.softplus(-difference).mean()
+                loss = loss + float(pairwise_weight) * pairwise
+            optimizer.zero_grad(set_to_none=True)
+            loss.backward()
+            optimizer.step()
+        print(
+            f"[causal-student] mlp-v2 epoch {epoch + 1}/{epochs}", flush=True
+        )
     return model.cpu()
 
 
@@ -822,13 +953,58 @@ def train_students(config_path: Path, repository_root: Path) -> Path:
         },
     )
 
-    logits_checkpoint = load_student_checkpoint(mlp_checkpoint)
-    logits_checkpoint["score_channel"] = 0
+    checkpoints = {
+        "hist_gbdt": str(gbdt_checkpoint.relative_to(repository_root)),
+        "mlp": str(mlp_checkpoint.relative_to(repository_root)),
+    }
     scorers = {
         "student_hist_gbdt": StudentScorer(load_student_checkpoint(gbdt_checkpoint)),
         "student_mlp": StudentScorer(load_student_checkpoint(mlp_checkpoint)),
-        "student_mlp_logits": StudentScorer(logits_checkpoint),
     }
+    objective = str(config["student"].get("objective", "v1"))
+    if objective == "v2":
+        mlp_v2 = _train_student_mlp_v2(
+            normalized,
+            truth,
+            boundary_ids,
+            len(horizons),
+            seed + 43,
+            epochs=int(config["student"]["mlp_epochs"]),
+            cutoff_budgets=[
+                int(value)
+                for value in config["student"].get(
+                    "cutoff_budgets", [92, int(config["core_budget"])]
+                )
+            ],
+            pairwise_weight=float(config["student"].get("pairwise_weight", 1.0)),
+            device=str(config["student"].get("device", "cpu")),
+        )
+        mlp_v2_checkpoint = save_student_checkpoint(
+            output_root / "r2_student_mlp_v2.pt",
+            kind="mlp",
+            models=mlp_v2.state_dict(),
+            scaler=scaler,
+            horizons=horizons,
+            projector_seed=seed,
+            score_channel=int(config["student"].get("v2_score_channel", 0)),
+            metadata={
+                "teacher": R2_TEACHER,
+                "objective": (
+                    "percentile BCE + log-utility regression + "
+                    "cutoff-straddling pairwise ranking at "
+                    f"{config['student'].get('cutoff_budgets', [92, int(config['core_budget'])])}"
+                ),
+                "train_sequences": len(artifact_paths),
+                "sampled_token_rows": int(len(features)),
+                "runtime_future_access": False,
+            },
+        )
+        checkpoints["mlp_v2"] = str(mlp_v2_checkpoint.relative_to(repository_root))
+        scorers["student_mlp_v2"] = StudentScorer(
+            load_student_checkpoint(mlp_v2_checkpoint)
+        )
+    elif objective != "v1":
+        raise RuntimeError(f"unknown student objective: {objective}")
     rows = evaluate_students(config, repository_root, scorers)
     frame = pd.DataFrame(rows)
     atomic_frame(frame, output_root / "validation_boundary_metrics.parquet")
@@ -857,10 +1033,8 @@ def train_students(config_path: Path, repository_root: Path) -> Path:
             },
             "dropped_features_no_runtime_source": [],
             "horizons": horizons,
-            "checkpoints": {
-                "hist_gbdt": str(gbdt_checkpoint.relative_to(repository_root)),
-                "mlp": str(mlp_checkpoint.relative_to(repository_root)),
-            },
+            "objective": objective,
+            "checkpoints": checkpoints,
             "elapsed_s": float(time.perf_counter() - started),
         },
     )

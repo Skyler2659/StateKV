@@ -108,6 +108,7 @@ def sample_id_for(task_family: str, index: int) -> str:
         "ruler_variable_tracking": "synthetic_vt_",
         "passage_retrieval_en": "passage_retrieval_en:",
         "hotpotqa": "hotpotqa:",
+        "2wikimqa": "2wikimqa:",
     }
     if task_family not in prefixes:
         raise ValueError(f"unsupported existence-study task family: {task_family}")
@@ -174,7 +175,7 @@ def task_overrides(config: Mapping[str, Any]) -> Dict[str, Dict[str, Any]]:
             "ruler_variable_tracking",
         }:
             settings["sample_offset"] = int(all_indices[0])
-        elif family in {"govreport_or_qmsum", "passage_retrieval_en", "hotpotqa"}:
+        elif family in {"govreport_or_qmsum", "passage_retrieval_en", "hotpotqa", "2wikimqa"}:
             # LongBench rows are addressed by dataset index; the local
             # THUDM/LongBench snapshot has 200 rows per task, so indices
             # beyond 199 fail loudly at selection time.

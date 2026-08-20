@@ -27,5 +27,9 @@ distillation:
 
 student:
   gbdt_max_iter: 160
-  mlp_epochs: 4
+  mlp_epochs: 12
   device: cpu
+  objective: v2
+  cutoff_budgets: [92, 220]
+  pairwise_weight: 1.0
+  v2_score_channel: 0

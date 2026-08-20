@@ -1,0 +1,63 @@
+# Dev-scale strict closed-loop PK: StateKV student vs strong baselines.
+#
+# Synthetic panel only (multi-key / multi-query NIAH + variable tracking).
+# LongBench families live in the sibling config because task_overrides
+# requires one contiguous synthetic index block per config.  Dev runs use
+# --split train with --cycle-limit; the fresh closed_loop_test allocation
+# below follows the preregistered split registry and stays sealed.
+experiment_name: statekv_pk_dev_synthetic_qwen3_8b
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/statekv_counterfactual/pk_dev_synthetic_v1
+data_seed: 20260820
+runtime_run_id: statekv_pk_dev_synthetic_qwen3_8b_seed20260820_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+task_families:
+  - ruler_niah_multikey
+  - ruler_niah_multiquery
+  - ruler_variable_tracking
+task_settings:
+  ruler_niah_multikey:
+    context_length: 768
+    n_keys: 4
+  ruler_niah_multiquery:
+    context_length: 768
+    n_queries: 4
+  ruler_variable_tracking:
+    context_length: 768
+    n_variables: 8
+split_indices:
+  train: [200, 201, 202, 203, 204, 205, 206, 207, 208, 209]
+closed_loop_test_indices: [250, 251, 252, 253, 254, 255, 256, 257, 258, 259]
+
+control_cycles: 64
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+diagnostic_query_heads: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+
+closed_loop:
+  budgets: [128, 256]
+  rollout_horizon: 1
+  refresh_frequency: 2
+  validation_refresh_frequencies: [1, 2, 4, 8]
+  policies:
+    - STRICT_QK_CURRENT
+    - STRICT_H2O_CUMULATIVE
+    - STRICT_SNAPKV_OBSWIN
+    - STRICT_BEST_PER_HEAD_FIXED_EMA
+    - STRICT_STATEKV_STUDENT
+  primary_baseline: STRICT_BEST_PER_HEAD_FIXED_EMA
+  snapkv_window: 32
+  snapkv_pooling_kernel: 63
+  student_model_path: results/statekv_counterfactual/student_models/r2_student_mlp_v2.pt
