@@ -61,28 +61,58 @@ Gate C test data (151–160) may be read for mechanism development only;
 no confirmatory claim uses it. Each fresh test opening is recorded in a
 ledger with a one-opening limit, same discipline as the previous phase.
 
-## 4. Reactivation Index (RI)
+## 4. Reactivation Index (RI) — full causal timeline
 
-Computed **only from full-cache attention trajectories** (existing
-collection format: per-cycle attention over all KV positions,
-`artifacts/<split>/*.npz`). No proposed-method output is read.
+Computed **only from full-cache trajectories**; no compressed-policy output
+is read. The timeline spans BOTH prefill query positions and decode cycles:
+for each historical token i we record its received-attention trajectory
+a_i(q) over subsequent query positions q (prefill queries aggregated into
+fixed-size blocks, decode queries per cycle). Prefill is NOT collapsed into
+a single scalar — that would average the filler dormancy and the
+question-time reactivation together.
 
-Definitions (parameters in brackets selected on train+validation, then
-frozen before any test):
+Definitions (parameters [K, L, τ_low, τ_high / rank quantiles, block size]
+selected on train/validation only, then frozen before any test):
 
-- A token is **future-important** at cycle t if it enters the aggregated
-  (layer/head-mean) attention top-K [K] at any cycle in (t, t+H].
-- It is **dormant** before that if its importance rank stayed below rank
-  threshold [ρ] for at least [L] consecutive cycles.
-- `RI_count` = # dormant→future-important events;
-  `RI_fraction` = RI_count / # future-important events;
-  plus reactivation distance, dormancy duration, reactivation amplitude.
-- Sequence-level RI = RI_fraction; task-level RI = median over sequences.
+- **Dormancy**: token i stays below τ_low (or out of top-K) for ≥ L
+  consecutive query positions/blocks.
+- **Reactivation**: afterwards its rank crosses τ_high (or re-enters
+  top-K) at some query/state q′.
+- **Event** = dormant→important transition; per event record dormancy
+  duration D_i, reactivation distance, amplitude A_i = r_{i,q′} − recent
+  historical level.
+- `RI_count` / `RI_fraction` (= events / all future-important events),
+  sequence- and task-level.
 
-Pre-registered sanity requirement: RI must separate task families on
-train/validation (Tier A > GovReport). If it does not, the RI definition
-may be revised **on train/validation only**; the version frozen before the
-fresh diagnostic test is final.
+Reactivation TYPE is reported per event (mechanism decomposition, not
+separate hypotheses):
+
+- **Type I — prompt-boundary**: dormancy ends at late-prefill query
+  positions (canonical NIAH: needle dormant through filler, reactivated
+  when the question is read).
+- **Type II — decode-state**: dormancy ends during decode (variable
+  tracking / sequential reasoning — the purest state-conditioned case).
+- **Type III — persistent importance** (never dormant) is tracked as the
+  complementary non-target pattern.
+
+Expected task signature (to be verified on train/validation, NOT assumed):
+single NIAH = high Type I / low Type II; multi-key NIAH = high I / medium
+II; variable tracking = medium I / high II; GovReport = low/dispersed.
+
+Mandatory sanity check before trusting any RI scalar: plot single-token
+attention trajectories (needle, filler, GovReport-salient, VT variable
+tokens) over the full prefill+decode timeline on train samples — a needle
+must show "visible at insertion → long low plateau → sharp spike at
+question/state change". If trajectories do not show this, the RI
+definition is wrong, not the hypothesis.
+
+Pre-registered revision rule: RI parameters may be revised on
+train/validation only; the version frozen before the fresh diagnostic test
+is final. Corrected hypothesis statement (supersedes any decode-only
+framing):
+
+**StateKV targets state-triggered relevance reactivation after dormancy,
+regardless of whether the transition occurs during prefill or decoding.**
 
 ## 5. Pre-registered H1 prediction
 
