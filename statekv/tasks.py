@@ -340,7 +340,7 @@ def _longbench_config(task: str, settings: Dict[str, Any]) -> Any:
         num_samples=int(settings.get("num_samples", 1)),
         sample_strategy=str(settings.get("sample_strategy", "first")),
         sample_indices=settings.get("sample_indices"),
-        data_path=None,
+        data_path=settings.get("data_path"),
     )
 
 
@@ -445,7 +445,7 @@ def load_discovery_tasks(
                     "n_variables": int(settings.get("n_variables", 8)),
                 }
             )
-        elif task_name in {"passage_retrieval_en", "hotpotqa"}:
+        elif task_name in {"passage_retrieval_en", "hotpotqa", "2wikimqa"}:
             # Official-data-only families: unlike govreport_or_qmsum there is
             # no synthetic fallback, so a load failure must raise.
             loaded = LongBenchBenchmark(

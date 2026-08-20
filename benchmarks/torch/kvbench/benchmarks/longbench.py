@@ -137,15 +137,23 @@ class LongBenchBenchmark(BenchmarkAdapter):
             raise ValueError("unsupported/non-English LongBench task: %s" % task)
         from datasets import load_dataset
 
-        kwargs: Dict[str, Any] = {
-            "path": self.cfg.dataset_name or "THUDM/LongBench",
-            "name": self.cfg.dataset_config or task,
-            "split": self.cfg.split or "test",
-            "trust_remote_code": True,
-        }
-        if self.cfg.dataset_revision:
-            kwargs["revision"] = self.cfg.dataset_revision
-        dataset = load_dataset(**kwargs)
+        if self.cfg.data_path:
+            # Local jsonl fallback for offline environments where the HF hub
+            # copy of the task was never prepared (e.g. 2wikimqa). The file
+            # must be the official LongBench jsonl for this task.
+            dataset = load_dataset(
+                "json", data_files=str(self.cfg.data_path), split="train"
+            )
+        else:
+            kwargs: Dict[str, Any] = {
+                "path": self.cfg.dataset_name or "THUDM/LongBench",
+                "name": self.cfg.dataset_config or task,
+                "split": self.cfg.split or "test",
+                "trust_remote_code": True,
+            }
+            if self.cfg.dataset_revision:
+                kwargs["revision"] = self.cfg.dataset_revision
+            dataset = load_dataset(**kwargs)
         samples: List[BenchmarkSample] = []
         if not self.cfg.use_official_prompt:
             raise RuntimeError(
