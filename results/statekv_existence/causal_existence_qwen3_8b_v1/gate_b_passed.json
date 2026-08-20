@@ -1,0 +1,116 @@
+{
+  "closed_loop_authorized": true,
+  "evaluated_at": "2026-08-19T22:37:13.135014+00:00",
+  "fresh_test_openings": 1,
+  "gate_a_ci": [
+    0.1845497700956953,
+    0.2435912676338714
+  ],
+  "gate_a_learned_predictability": false,
+  "gate_a_recovery": 0.2138667118507034,
+  "gate_a_selected_horizon": 32,
+  "gate_a_selected_method": "hist_gbdt",
+  "gate_a_sequence_win_rate": 1.0,
+  "gate_b_any_causal_teacher": true,
+  "gate_b_ci_lower_threshold": 0.0,
+  "gate_b_requires_majority_sequence_wins": true,
+  "gate_b_threshold": 0.25,
+  "passing_methods": [
+    {
+      "future_horizon": 4,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R2_PREFIX_RECOMPUTE",
+      "oracle_gap_recovery": 0.9623986232908848,
+      "recovery_ci_high": 0.9930641938968208,
+      "recovery_ci_low": 0.9223835047645867,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 8,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R2_PREFIX_RECOMPUTE",
+      "oracle_gap_recovery": 0.9596685372792556,
+      "recovery_ci_high": 0.9876618724465712,
+      "recovery_ci_low": 0.9236065387221224,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 2,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R2_PREFIX_RECOMPUTE",
+      "oracle_gap_recovery": 0.9554554870149126,
+      "recovery_ci_high": 0.995819790494518,
+      "recovery_ci_low": 0.8969288917160186,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 4,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R1_FULL_SHADOW",
+      "oracle_gap_recovery": 0.9549988840995328,
+      "recovery_ci_high": 0.989227767393114,
+      "recovery_ci_low": 0.9132827182473324,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 2,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R1_FULL_SHADOW",
+      "oracle_gap_recovery": 0.95126168383094,
+      "recovery_ci_high": 0.992916513371676,
+      "recovery_ci_low": 0.8927417222347201,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 1,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R2_PREFIX_RECOMPUTE",
+      "oracle_gap_recovery": 0.9512230416483008,
+      "recovery_ci_high": 0.998712278003903,
+      "recovery_ci_low": 0.8821239242577413,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 1,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R1_FULL_SHADOW",
+      "oracle_gap_recovery": 0.9512171421362728,
+      "recovery_ci_high": 0.9987318082901082,
+      "recovery_ci_low": 0.8821774190665505,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 8,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R1_FULL_SHADOW",
+      "oracle_gap_recovery": 0.9492479870960028,
+      "recovery_ci_high": 0.9839438628551158,
+      "recovery_ci_low": 0.9065374530885733,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 16,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R2_PREFIX_RECOMPUTE",
+      "oracle_gap_recovery": 0.9331948973498928,
+      "recovery_ci_high": 0.9766262944909496,
+      "recovery_ci_low": 0.8761198728795934,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 32,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R2_PREFIX_RECOMPUTE",
+      "oracle_gap_recovery": 0.9257160084636584,
+      "recovery_ci_high": 0.975671686533214,
+      "recovery_ci_low": 0.8634147074895733,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 16,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R1_FULL_SHADOW",
+      "oracle_gap_recovery": 0.919495805573534,
+      "recovery_ci_high": 0.9731647356895946,
+      "recovery_ci_low": 0.8527855358802974,
+      "sequence_win_rate": 1.0
+    },
+    {
+      "future_horizon": 32,
+      "method": "CAUSAL_EXPENSIVE_ROLLOUT_R1_FULL_SHADOW",
+      "oracle_gap_recovery": 0.9085002866168588,
+      "recovery_ci_high": 0.9720607197865462,
+      "recovery_ci_low": 0.8313721732049135,
+      "sequence_win_rate": 1.0
+    }
+  ]
+}

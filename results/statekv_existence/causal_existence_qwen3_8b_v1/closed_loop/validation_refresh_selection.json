@@ -1,0 +1,43 @@
+{
+  "budget": 128,
+  "candidates": [
+    {
+      "ci_high": 2.590657653985529,
+      "ci_low": 0.4333859953120652,
+      "mean_kl_improvement": 1.4042219328632513,
+      "refresh_frequency": 1,
+      "sequence_win_rate": 0.8333333333333334
+    },
+    {
+      "ci_high": 2.6162537922386626,
+      "ci_low": 0.4411415346828897,
+      "mean_kl_improvement": 1.4268303716754305,
+      "refresh_frequency": 2,
+      "sequence_win_rate": 0.8333333333333334
+    },
+    {
+      "ci_high": 2.337346562181569,
+      "ci_low": 0.2345206205952092,
+      "mean_kl_improvement": 1.0731105212659873,
+      "refresh_frequency": 4,
+      "sequence_win_rate": 0.8333333333333334
+    },
+    {
+      "ci_high": 2.286503883338128,
+      "ci_low": 0.2088871020904525,
+      "mean_kl_improvement": 1.017329373310335,
+      "refresh_frequency": 8,
+      "sequence_win_rate": 1.0
+    }
+  ],
+  "closed_loop_test_seen": false,
+  "cycle_limit": 16,
+  "primary_metric": "mean_exact_kl_improvement_vs_best_per_head_fixed_ema",
+  "sample_indices": [
+    185,
+    186
+  ],
+  "selected_refresh_frequency": 2,
+  "selection_rule": "maximize_primary_metric_then_prefer_lower_compute",
+  "selection_split": "validation"
+}

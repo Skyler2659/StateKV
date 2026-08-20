@@ -1,0 +1,14 @@
+{
+  "closed_at": "2026-08-19T22:37:13.124445+00:00",
+  "components": [
+    "learned_predictors",
+    "causal_rollout",
+    "nonlinear_feature_ablations_h32",
+    "rollout_distilled_student"
+  ],
+  "events": [],
+  "fresh_test_evaluations": 1,
+  "fresh_test_open_limit": 1,
+  "opened_at": "2026-08-19T21:06:41.553833+00:00",
+  "status": "closed"
+}

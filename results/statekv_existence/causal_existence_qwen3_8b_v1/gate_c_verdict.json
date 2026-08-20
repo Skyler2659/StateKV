@@ -1,0 +1,166 @@
+{
+  "evaluated_at": "2026-08-20T05:03:59.263315+00:00",
+  "gate_c_verdict": "FAIL",
+  "gate_c_closed_loop_usefulness": false,
+  "rule": {
+    "primary_baseline": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+    "require_all_budgets": true,
+    "require_ci_lower_above": 0.0,
+    "require_majority_sequence_wins": true,
+    "bootstrap_repetitions": 20000
+  },
+  "budget_results": [
+    {
+      "baseline_policy": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+      "budget": 128,
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "ci_high": 0.7119037799493334,
+      "ci_low": -0.0171529461390853,
+      "mean_kl_improvement": 0.3434573902137802,
+      "passes": false,
+      "primary_comparison": true,
+      "sequence_win_rate": 0.6666666666666666,
+      "sequences": 30
+    },
+    {
+      "baseline_policy": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+      "budget": 256,
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "ci_high": 0.3341678000132187,
+      "ci_low": -0.0621216049696065,
+      "mean_kl_improvement": 0.1325562314856986,
+      "passes": false,
+      "primary_comparison": true,
+      "sequence_win_rate": 0.5333333333333333,
+      "sequences": 30
+    }
+  ],
+  "all_baseline_comparisons": [
+    {
+      "budget": 128,
+      "baseline_policy": "STRICT_QK_CURRENT",
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "primary_comparison": false,
+      "mean_kl_improvement": 0.4387146401209495,
+      "ci_low": 0.0112020592751601,
+      "ci_high": 0.8949723825303674,
+      "sequence_win_rate": 0.6,
+      "sequences": 30
+    },
+    {
+      "budget": 128,
+      "baseline_policy": "STRICT_H2O_CUMULATIVE",
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "primary_comparison": false,
+      "mean_kl_improvement": 0.4393403215226553,
+      "ci_low": -0.028785915974359,
+      "ci_high": 0.9051815757354832,
+      "sequence_win_rate": 0.6,
+      "sequences": 30
+    },
+    {
+      "budget": 128,
+      "baseline_policy": "STRICT_SNAPKV_OBSWIN",
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "primary_comparison": false,
+      "mean_kl_improvement": -0.4632469683003215,
+      "ci_low": -0.9311390408294964,
+      "ci_high": -0.0281031324399221,
+      "sequence_win_rate": 0.4,
+      "sequences": 30
+    },
+    {
+      "budget": 128,
+      "baseline_policy": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "primary_comparison": true,
+      "mean_kl_improvement": 0.3434573902137802,
+      "ci_low": -0.0171529461390853,
+      "ci_high": 0.7119037799493334,
+      "sequence_win_rate": 0.6666666666666666,
+      "sequences": 30
+    },
+    {
+      "budget": 256,
+      "baseline_policy": "STRICT_QK_CURRENT",
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "primary_comparison": false,
+      "mean_kl_improvement": 0.146804362113745,
+      "ci_low": -0.0498086880645792,
+      "ci_high": 0.3608386779332761,
+      "sequence_win_rate": 0.5333333333333333,
+      "sequences": 30
+    },
+    {
+      "budget": 256,
+      "baseline_policy": "STRICT_H2O_CUMULATIVE",
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "primary_comparison": false,
+      "mean_kl_improvement": 1.0547492778563303,
+      "ci_low": 0.6861045258555423,
+      "ci_high": 1.432775648992718,
+      "sequence_win_rate": 0.8333333333333334,
+      "sequences": 30
+    },
+    {
+      "budget": 256,
+      "baseline_policy": "STRICT_SNAPKV_OBSWIN",
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "primary_comparison": false,
+      "mean_kl_improvement": -0.0458383691997881,
+      "ci_low": -0.2170276161713269,
+      "ci_high": 0.1289622922861077,
+      "sequence_win_rate": 0.4333333333333333,
+      "sequences": 30
+    },
+    {
+      "budget": 256,
+      "baseline_policy": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "primary_comparison": true,
+      "mean_kl_improvement": 0.1325562314856986,
+      "ci_low": -0.0621216049696065,
+      "ci_high": 0.3341678000132187,
+      "sequence_win_rate": 0.5333333333333333,
+      "sequences": 30
+    }
+  ],
+  "task_breakdown_primary": [
+    {
+      "budget": 128,
+      "task_bucket": "GovReport",
+      "n_sequences": 10,
+      "mean_kl_improvement": -0.10118915392765346,
+      "median_kl_improvement": -0.12712231708299127,
+      "win_rate": 0.5
+    },
+    {
+      "budget": 128,
+      "task_bucket": "NIAH",
+      "n_sequences": 20,
+      "mean_kl_improvement": 0.565780662284497,
+      "median_kl_improvement": 0.44415675882542227,
+      "win_rate": 0.75
+    },
+    {
+      "budget": 256,
+      "task_bucket": "GovReport",
+      "n_sequences": 10,
+      "mean_kl_improvement": 0.08961608806493082,
+      "median_kl_improvement": 0.014778276315617525,
+      "win_rate": 0.5
+    },
+    {
+      "budget": 256,
+      "task_bucket": "NIAH",
+      "n_sequences": 20,
+      "mean_kl_improvement": 0.1540263031960826,
+      "median_kl_improvement": 0.04578978446062664,
+      "win_rate": 0.55
+    }
+  ],
+  "artifacts": {
+    "merged_dir": "results/statekv_existence/causal_existence_qwen3_8b_v1/closed_loop/closed_loop_test",
+    "official_gate_file": "gate_c_failed.json"
+  }
+}

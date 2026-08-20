@@ -1,0 +1,37 @@
+{
+  "available_artifacts": 117,
+  "cycles_this_invocation": 64,
+  "elapsed_s": 1432.067943583,
+  "experiment": "statekv_causal_existence_qwen3_8b",
+  "feature_time_boundary": "current prefix before next-token generation",
+  "future_information_in_features": false,
+  "future_information_in_labels": true,
+  "publication_artifact": true,
+  "requested_samples": 24,
+  "requested_splits": [
+    "fresh_test"
+  ],
+  "task_events": [
+    {
+      "count": 39,
+      "dataset_official": false,
+      "sample_offset": 161,
+      "source": "repository_synthetic_ruler_niah",
+      "task": "ruler_niah"
+    },
+    {
+      "count": 39,
+      "dataset_official": true,
+      "source": "official_longbench_gov_report",
+      "task": "govreport_or_qmsum"
+    },
+    {
+      "count": 39,
+      "dataset_official": false,
+      "n_keys": 4,
+      "sample_offset": 161,
+      "source": "repository_synthetic_ruler_niah_multikey",
+      "task": "ruler_niah_multikey"
+    }
+  ]
+}

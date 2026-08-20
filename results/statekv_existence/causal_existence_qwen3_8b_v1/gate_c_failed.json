@@ -1,0 +1,33 @@
+{
+  "budget_results": [
+    {
+      "baseline_policy": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+      "budget": 128,
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "ci_high": 0.7119037799493334,
+      "ci_low": -0.0171529461390853,
+      "mean_kl_improvement": 0.3434573902137802,
+      "passes": false,
+      "primary_comparison": true,
+      "sequence_win_rate": 0.6666666666666666,
+      "sequences": 30
+    },
+    {
+      "baseline_policy": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+      "budget": 256,
+      "causal_policy": "STRICT_CAUSAL_ROLLOUT_R2",
+      "ci_high": 0.3341678000132187,
+      "ci_low": -0.0621216049696065,
+      "mean_kl_improvement": 0.1325562314856986,
+      "passes": false,
+      "primary_comparison": true,
+      "sequence_win_rate": 0.5333333333333333,
+      "sequences": 30
+    }
+  ],
+  "evaluated_at": "2026-08-20T05:03:59.263315+00:00",
+  "gate_c_closed_loop_usefulness": false,
+  "primary_baseline": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+  "require_all_budgets": true,
+  "strict_pure_eviction": true
+}

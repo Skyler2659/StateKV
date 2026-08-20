@@ -159,7 +159,8 @@ def test_root_contains_only_canonical_documentation_and_no_yaml() -> None:
         and not (
             path.parts[0] == "notes"
             and path.name.startswith(
-                ("adaptive_temporal_", "statekv_existence_")
+                ("adaptive_temporal_", "statekv_existence_",
+                 "statekv_counterfactual_")
             )
         )
     )

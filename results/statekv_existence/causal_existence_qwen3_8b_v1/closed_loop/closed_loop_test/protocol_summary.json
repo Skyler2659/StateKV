@@ -1,0 +1,35 @@
+{
+  "budgets": [
+    128,
+    256
+  ],
+  "cold_token_recovery": false,
+  "full_cache_reference_exact_kl": 0.0,
+  "merged_shards": [
+    "shard0",
+    "shard1"
+  ],
+  "persistent_full_shadow": false,
+  "policies": [
+    "STRICT_QK_CURRENT",
+    "STRICT_H2O_CUMULATIVE",
+    "STRICT_SNAPKV_OBSWIN",
+    "STRICT_BEST_PER_HEAD_FIXED_EMA",
+    "STRICT_CAUSAL_ROLLOUT_R2"
+  ],
+  "primary_baseline": "STRICT_BEST_PER_HEAD_FIXED_EMA",
+  "publication_artifact": true,
+  "refresh_frequency": 2,
+  "score_layers": [
+    0,
+    7,
+    14,
+    15,
+    21,
+    27
+  ],
+  "sequences": 30,
+  "shared_token_core_across_layers": true,
+  "strict_pure_eviction": true,
+  "temporary_prefix_recomputation": true
+}

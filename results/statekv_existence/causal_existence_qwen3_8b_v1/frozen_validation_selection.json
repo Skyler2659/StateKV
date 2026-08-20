@@ -1,0 +1,13 @@
+{
+  "all_preregistered_methods_evaluated_in_one_test_opening": true,
+  "frozen_at": "2026-08-19T20:32:42.406459+00:00",
+  "selected_horizon": 32,
+  "selected_method": "hist_gbdt",
+  "selection_metric": "validation oracle_gap_recovery at H=32",
+  "test_results_seen": false,
+  "validation_recovery": 0.1901381575053052,
+  "validation_recovery_ci": [
+    0.14774706959802592,
+    0.23345783104399898
+  ]
+}
