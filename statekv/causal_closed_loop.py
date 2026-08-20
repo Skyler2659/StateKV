@@ -14,6 +14,7 @@ import yaml
 
 from statekv.candidate_pullback import CandidatePullbackRunner
 from statekv.causal_existence import (
+    _scoring_forward,
     causal_prefix_reference,
     expand_split_ids,
     sample_id_for,
@@ -21,6 +22,11 @@ from statekv.causal_existence import (
 )
 from statekv.causal_predictors import _rho_key
 from statekv.causal_rollout import _causal_self_rollout, _prefix_recompute_state
+from statekv.causal_student import (
+    RuntimeStudentScorer,
+    load_student_checkpoint,
+    runtime_observation_from_record,
+)
 from statekv.config import CacheDiscoveryConfig, apply_named_overrides, load_discovery_config
 from statekv.oracle_closed_loop import KVBackingStore
 from statekv.oracle_policy_comparison import _selection_from_scores
@@ -198,7 +204,14 @@ def _strict_policy_run(
     snapkv_window: int,
     snapkv_pooling_kernel: int,
     refresh_frequency: int,
+    student: Optional[RuntimeStudentScorer] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    if policy == "STRICT_STATEKV_STUDENT":
+        if student is None:
+            raise RuntimeError(
+                "STRICT_STATEKV_STUDENT requires a loaded student checkpoint"
+            )
+        student.reset(int(cycles))
     anchor = reference.anchors[0]
     full_selection = runner._all_history_selection(reference, 0)
     full_cache = CacheDiscoveryConfig(
@@ -245,9 +258,23 @@ def _strict_policy_run(
         # Dropped positions never survive to the next decision boundary.
         active_backing = KVBackingStore()
         active_backing.update(runner, state)
-        per_head, positions, scoring_s = _scoring_forward_per_head(
-            runner, state, active_backing, current_token
-        )
+        record = None
+        logits = None
+        if policy == "STRICT_STATEKV_STUDENT":
+            # The student rebuilds artifact_boundary features at runtime and
+            # needs the diagnostic record (queries, hidden states) and logits
+            # in addition to the pooled per-head attention.
+            per_head_raw, positions, record, logits, scoring_s = _scoring_forward(
+                runner, state, active_backing, current_token
+            )
+            per_head = {
+                int(layer): np.asarray(values, dtype=np.float64)
+                for layer, values in per_head_raw.items()
+            }
+        else:
+            per_head, positions, scoring_s = _scoring_forward_per_head(
+                runner, state, active_backing, current_token
+            )
         _, _, eligible = mandatory_and_eligible(
             positions, int(sink_size), max(0, int(recent_size) - 1)
         )
@@ -363,6 +390,31 @@ def _strict_policy_run(
                 if int(position) in set(eligible):
                     shared_scores[index] = float(
                         cached_rollout_scores.get(int(position), current_shared[index])
+                    )
+        elif policy == "STRICT_STATEKV_STUDENT":
+            student_started = time.perf_counter()
+            observation = runtime_observation_from_record(
+                record,
+                logits,
+                active_backing,
+                score_layers,
+                int(student.query_heads),
+            )
+            predicted = student.observe_and_score(
+                cycle=int(cycle),
+                positions=positions,
+                per_head_attention={
+                    int(layer): per_head[int(layer)] for layer in score_layers
+                },
+                **observation,
+            )
+            teacher_s = float(time.perf_counter() - student_started)
+            shared_scores = np.full(len(positions), -np.inf, dtype=np.float64)
+            eligible_set = {int(value) for value in eligible}
+            for index, position in enumerate(positions):
+                if int(position) in eligible_set:
+                    shared_scores[index] = float(
+                        predicted.get(int(position), current_shared[index])
                     )
         else:
             raise ValueError(f"unknown strict closed-loop policy: {policy}")
@@ -578,6 +630,26 @@ def run_strict_causal_closed_loop(
     }:
         raise ValueError("refresh frequency is outside the preregistered sweep")
     score_layers = [int(value) for value in config["diagnostic_layers"]]
+    student_checkpoint: Optional[Dict[str, Any]] = None
+    if "STRICT_STATEKV_STUDENT" in policies:
+        student_path = str(config["closed_loop"].get("student_model_path") or "")
+        if not student_path:
+            raise RuntimeError(
+                "STRICT_STATEKV_STUDENT requires closed_loop.student_model_path"
+            )
+        # Fails loudly when the checkpoint is missing or its feature contract
+        # (width, horizons) mismatches the runtime feature construction.
+        student_checkpoint = load_student_checkpoint(
+            repository_root / student_path
+        )
+        # The student rebuilds artifact_boundary features at runtime and needs
+        # per-head post-RoPE queries plus hidden states on every score layer.
+        cfg.diagnostics.explicit_layers = [
+            int(value) for value in config["diagnostic_layers"]
+        ]
+        cfg.diagnostics.explicit_heads = [
+            int(value) for value in config["diagnostic_query_heads"]
+        ]
     fixed_baseline_path = (
         repository_root
         / str(config["output_run"])
@@ -646,6 +718,17 @@ def run_strict_causal_closed_loop(
     all_rows: List[Dict[str, Any]] = []
     summaries: List[Dict[str, Any]] = []
     runner.model.load()
+    student_scorer: Optional[RuntimeStudentScorer] = None
+    if student_checkpoint is not None:
+        student_scorer = RuntimeStudentScorer(
+            student_checkpoint,
+            score_layers=score_layers,
+            kv_heads=int(runner.model.model_info["num_key_value_heads"]),
+            query_heads=int(runner.model.model_info["num_attention_heads"]),
+            sink_size=int(config["sink_size"]),
+            recent_size=int(config["recent_size"]),
+            horizon=int(config["closed_loop"]["rollout_horizon"]),
+        )
     try:
         total = len(selected_sample_ids) * len(run_budgets) * len(policies)
         ordinal = 0
@@ -691,6 +774,7 @@ def run_strict_causal_closed_loop(
                             int(config["closed_loop"]["snapkv_window"]),
                             int(config["closed_loop"]["snapkv_pooling_kernel"]),
                             run_refresh_frequency,
+                            student=student_scorer,
                         )
                         all_rows.extend(rows)
                         summaries.append(summary)

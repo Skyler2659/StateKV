@@ -1,0 +1,31 @@
+# R2 student training for the StateKV counterfactual-utility study.
+#
+# Read-only inputs: the frozen existence run's full-cache artifacts and the
+# repackaged per-token R2 teacher scores.  All outputs land under
+# results/statekv_counterfactual/student_models/.
+experiment_name: statekv_r2_student_qwen3_8b
+data_seed: 20260820
+
+source_run: results/statekv_existence/causal_existence_qwen3_8b_v1
+teacher_scores: results/statekv_counterfactual/teacher_scores
+output_models: results/statekv_counterfactual/student_models
+
+task_families:
+  - ruler_niah
+  - govreport_or_qmsum
+  - ruler_niah_multikey
+
+sink_size: 4
+recent_size: 32
+core_budget: 220
+future_utility_horizons: [1, 4, 16, 32]
+
+distillation:
+  train_indices: [165, 166, 167, 168, 169, 170, 171, 172, 173, 174]
+  expected_train_sequences: 30
+  teacher: CAUSAL_EXPENSIVE_ROLLOUT_R2_PREFIX_RECOMPUTE
+
+student:
+  gbdt_max_iter: 160
+  mlp_epochs: 4
+  device: cpu

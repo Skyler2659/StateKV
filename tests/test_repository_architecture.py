@@ -118,6 +118,7 @@ def test_all_benchmark_assets_are_grouped_by_backend() -> None:
         "temporal_cache_discovery",
         "adaptive_temporal",
         "statekv_existence",
+        "statekv_counterfactual",
     }
 
 

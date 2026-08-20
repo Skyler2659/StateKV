@@ -2,7 +2,7 @@ experiment_name: statekv_reactivation_timeline_trainval_longbench
 base_config: configs/stages/direct_policy_independent_base.yaml
 output_run: results/statekv_counterfactual/timeline_trainval_longbench_v1
 data_seed: 20260820
-runtime_run_id: statekv_reactivation_timeline_trainval_longbench_seed20260820_v2
+runtime_run_id: statekv_reactivation_timeline_trainval_longbench_seed20260820_v3
 
 model_overrides:
   name: mlx-community/Qwen3-8B-4bit
@@ -17,7 +17,7 @@ model_overrides:
 # cap; the collector fails loudly on truncated prompts, so raise the cap
 # for this full-cache trajectory collection (no eviction is simulated).
 runtime_overrides:
-  max_prompt_tokens: 4096
+  max_prompt_tokens: 8192
 
 # Preregistered Phase-1 panel (LongBench families, amended split table):
 # train rows 0-19, validation rows 30-39 (local snapshot has 200 rows/task;
