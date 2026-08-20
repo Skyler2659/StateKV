@@ -3685,6 +3685,7 @@ class MLXRunner(BaseRunner):
         self.attention_state["hook_error_events"] = []
         self.attention_state["query_counts"] = {}
         self.attention_state["temporal_queries"] = {}
+        self.attention_state["temporal_queries_post_rope"] = {}
         self.attention_state["temporal_attention_outputs"] = {}
         self.attention_state["temporal_attention_distributions"] = {}
         self.attention_state["temporal_new_values"] = {}
@@ -3996,6 +3997,9 @@ class MLXRunner(BaseRunner):
                     temporal_state.setdefault("temporal_queries", {})[
                         temporal_layer
                     ] = queries_pre_rope[0, selected_heads, -1, :]
+                    temporal_state.setdefault(
+                        "temporal_queries_post_rope", {}
+                    )[temporal_layer] = queries[0, selected_heads, -1, :]
                     temporal_state.setdefault(
                         "temporal_attention_distributions", {}
                     )[temporal_layer] = last_attention[0, selected_heads, :]

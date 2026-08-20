@@ -1,0 +1,30 @@
+experiment_name: adaptive_temporal_tuning_qwen3_8b
+source_run: results/temporal_cache_discovery/statekv_qkv_decomposition_qwen3_8b_v1
+offline_run: results/adaptive_temporal/offline_qwen3_8b_v1
+output_run: results/adaptive_temporal/tuning_qwen3_8b_v1
+seed: 20260819
+development_samples:
+  - synthetic_niah_86
+  - synthetic_niah_87
+  - gov_report:86
+tuning_layers: [0, 7, 14, 15, 21, 27]
+future_horizons: [1, 4, 16, 32]
+topk: 220
+grid:
+  state_pairs:
+    - [0.0, 0.9, 0.0, 0.9]
+    - [0.5, 0.95, 0.5, 0.95]
+    - [0.5, 0.99, 0.5, 0.99]
+    - [0.8, 0.99, 0.8, 0.99]
+    - [0.5, 0.99, 0.8, 0.99]
+    - [0.8, 0.99, 0.5, 0.99]
+  variance_rhos: [0.5, 0.9]
+  thresholds: [0.25, 1.0, 4.0]
+  smooth_alpha: 4.0
+  epsilon: 1.0e-8
+variants:
+  - adaptive_discrete
+  - adaptive_smooth
+  - dual_memory
+  - rank_adaptive_smooth
+

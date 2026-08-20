@@ -1,0 +1,8 @@
+paper,year,venue_or_status,direct_relevance,method,primary_url
+"In-context KV-Cache Eviction for LLMs via Attention-Gate",2024,"arXiv v3 (2025)",medium,"Global-context learned per-head/layer eviction gates",https://arxiv.org/abs/2410.12876
+"Lookahead Q-Cache: Achieving More Consistent KV Cache Eviction via Pseudo Query",2025,"EMNLP 2025 Main",high,"Causal pseudo-lookahead queries approximate decoding-stage queries",https://arxiv.org/abs/2505.20334
+"Draft-based Approximate Inference for LLMs",2025,"ICLR 2026",high,"SpecKV uses a smaller draft model for lookahead KV dropping",https://arxiv.org/abs/2506.08373
+"ForesightKV: Optimizing KV Cache Eviction for Reasoning Models by Learning Long-Term Contribution",2026,"ICML 2026",very_high,"Future-attention Golden Eviction distilled with pairwise ranking and refined with GRPO",https://arxiv.org/abs/2602.03203
+"Predicting Future Utility: Global Combinatorial Optimization for Task-Agnostic KV Cache Eviction",2026,"arXiv v2",high,"Long-horizon marginal utility and heterogeneous head-level budget allocation",https://arxiv.org/abs/2602.08585
+"Learning to Evict from Key-Value Cache",2026,"ICML 2026",very_high,"Per-head RL ranking from K/V/position using future-utility reward",https://arxiv.org/abs/2602.10238
+"LookaheadKV: Fast and Accurate KV Cache Eviction by Glimpsing into the Future without Generation",2026,"ICLR 2026",very_high,"Learned lookahead tokens and LoRA distill true future-response attention",https://arxiv.org/abs/2603.10899

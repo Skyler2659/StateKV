@@ -1,0 +1,21 @@
+{
+  "searched_at": "2026-08-20",
+  "scope": [
+    "learned KV-cache eviction",
+    "future-attention and future-utility prediction",
+    "query-conditioned cache selection",
+    "reinforcement-learning eviction",
+    "draft, rollout, and lookahead eviction",
+    "counterfactual token utility"
+  ],
+  "sources": ["arXiv", "OpenReview", "ACL Anthology"],
+  "exclusions": ["MDPI", "secondary-only claims"],
+  "queries": [
+    "learned KV cache eviction future attention prediction transformer inference",
+    "query conditioned KV cache token selection",
+    "rollout lookahead KV cache eviction",
+    "KV cache learned eviction reinforcement learning",
+    "SpecKV draft model KV cache eviction",
+    "future attention KV cache eviction learned ranking"
+  ]
+}

@@ -104,6 +104,7 @@ class QueryRecord:
         default_factory=dict
     )
     layer_outputs: Dict[int, torch.Tensor] = field(default_factory=dict)
+    post_rope_queries: Dict[str, torch.Tensor] = field(default_factory=dict)
 
 
 @dataclass

@@ -114,7 +114,11 @@ def test_all_benchmark_assets_are_grouped_by_backend() -> None:
         for directory in (ROOT / "results").iterdir()
         if directory.is_dir()
     }
-    assert statekv_results <= {"temporal_cache_discovery"}
+    assert statekv_results <= {
+        "temporal_cache_discovery",
+        "adaptive_temporal",
+        "statekv_existence",
+    }
 
 
 def test_root_contains_only_canonical_documentation_and_no_yaml() -> None:
@@ -138,8 +142,9 @@ def test_root_contains_only_canonical_documentation_and_no_yaml() -> None:
     assert not list(ROOT.glob("*.yml"))
 
     # Markdown documentation lives in docs/ (plus the root README). The only
-    # exceptions are generated run reports co-located with their raw results
-    # (results/**/report.md) and scratch output under tmp/.
+    # exceptions are generated run reports co-located with their raw results,
+    # scratch output under tmp/, and the explicitly isolated adaptive-temporal
+    # research notes required by that branch's artifact contract.
     allowed_areas = ("docs", "results", "tmp")
     markdown = {
         path.relative_to(ROOT)
@@ -149,7 +154,14 @@ def test_root_contains_only_canonical_documentation_and_no_yaml() -> None:
     disallowed = sorted(
         path.as_posix()
         for path in markdown
-        if path.as_posix() != "README.md" and path.parts[0] not in allowed_areas
+        if path.as_posix() != "README.md"
+        and path.parts[0] not in allowed_areas
+        and not (
+            path.parts[0] == "notes"
+            and path.name.startswith(
+                ("adaptive_temporal_", "statekv_existence_")
+            )
+        )
     )
     assert not disallowed, (
         "markdown outside documented areas: %s" % ", ".join(disallowed)

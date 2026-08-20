@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import dataclass
 from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
 
@@ -41,6 +42,121 @@ PURE_EVICTION_POLICIES = (
     "uniform",
     "shared_attention",
 )
+
+TEMPORAL_POLICIES = (
+    "fixed_ema",
+    "adaptive_dual",
+)
+
+
+@dataclass
+class OnlineTemporalScoreMemory:
+    """Causal per-layer/token score state for live pure-eviction runs."""
+
+    fixed_rho: float
+    fast_rho: float
+    slow_rho: float
+    variance_rho: float
+    threshold: float
+    smooth_alpha: float
+    epsilon: float
+
+    def __post_init__(self) -> None:
+        self.last_cycle = -1
+        self.fixed: Dict[int, Dict[int, float]] = {}
+        self.fast: Dict[int, Dict[int, float]] = {}
+        self.slow: Dict[int, Dict[int, float]] = {}
+        self.variance: Dict[int, Dict[int, float]] = {}
+        self.dual: Dict[int, Dict[int, float]] = {}
+        self.rho: Dict[int, Dict[int, float]] = {}
+
+    def update(
+        self,
+        memory: AttentionPolicyMemory,
+        view: "LayerCacheView",
+        cycle: int,
+    ) -> None:
+        if int(cycle) == int(self.last_cycle):
+            return
+        if int(cycle) < int(self.last_cycle):
+            raise RuntimeError("temporal score memory received a decreasing cycle")
+        for layer in view.layers:
+            fixed = self.fixed.setdefault(int(layer), {})
+            fast = self.fast.setdefault(int(layer), {})
+            slow = self.slow.setdefault(int(layer), {})
+            variance = self.variance.setdefault(int(layer), {})
+            dual = self.dual.setdefault(int(layer), {})
+            rho = self.rho.setdefault(int(layer), {})
+            latest = memory.latest.get(int(layer), {})
+            for position in view.positions_by_layer[int(layer)]:
+                token = int(position)
+                if token not in latest:
+                    continue
+                observation = max(0.0, float(latest[token]))
+                if token not in fixed:
+                    fixed[token] = observation
+                    fast[token] = observation
+                    slow[token] = observation
+                    variance[token] = 0.0
+                    dual[token] = observation
+                    rho[token] = 1.0
+                    continue
+                previous_slow = slow[token]
+                residual = observation - previous_slow
+                variance[token] = (
+                    float(self.variance_rho) * variance[token]
+                    + (1.0 - float(self.variance_rho)) * residual * residual
+                )
+                fast[token] = (
+                    float(self.fast_rho) * fast[token]
+                    + (1.0 - float(self.fast_rho)) * observation
+                )
+                slow[token] = (
+                    float(self.slow_rho) * slow[token]
+                    + (1.0 - float(self.slow_rho)) * observation
+                )
+                drift = abs(fast[token] - slow[token]) / (
+                    math.sqrt(max(variance[token], 0.0)) + float(self.epsilon)
+                )
+                stable_gate = 1.0 / (
+                    1.0
+                    + math.exp(
+                        max(
+                            -60.0,
+                            min(
+                                60.0,
+                                float(self.smooth_alpha)
+                                * (drift - float(self.threshold)),
+                            ),
+                        )
+                    )
+                )
+                dual[token] = stable_gate * slow[token] + (1.0 - stable_gate) * fast[token]
+                rho[token] = stable_gate
+                fixed[token] = (
+                    float(self.fixed_rho) * fixed[token]
+                    + (1.0 - float(self.fixed_rho)) * observation
+                )
+        self.last_cycle = int(cycle)
+
+    @staticmethod
+    def _aligned(
+        state: Mapping[int, float], positions: Sequence[int]
+    ) -> np.ndarray:
+        return np.asarray(
+            [float(state.get(int(position), 0.0)) for position in positions],
+            dtype=np.float64,
+        )
+
+    def score(self, policy: str, layer: int, positions: Sequence[int]) -> np.ndarray:
+        if policy == "fixed_ema":
+            return self._aligned(self.fixed.get(int(layer), {}), positions)
+        if policy == "adaptive_dual":
+            return self._aligned(self.dual.get(int(layer), {}), positions)
+        raise ValueError(f"unknown temporal policy={policy}")
+
+    def gate_values(self, layer: int, positions: Sequence[int]) -> np.ndarray:
+        return self._aligned(self.rho.get(int(layer), {}), positions)
 
 
 def _normalize(values: np.ndarray, rows: np.ndarray) -> np.ndarray:
@@ -197,10 +313,26 @@ class DirectBudgetController:
     static_budgets: Optional[Mapping[int, int]] = None
     shuffle_seed: int = 0
     stale_lag: int = 4
+    temporal_fixed_rho: float = 0.5
+    temporal_fast_rho: float = 0.5
+    temporal_slow_rho: float = 0.95
+    temporal_variance_rho: float = 0.5
+    temporal_threshold: float = 0.25
+    temporal_smooth_alpha: float = 4.0
+    temporal_epsilon: float = 1.0e-8
 
     def __post_init__(self) -> None:
         self._dynamic_history: list[Dict[int, int]] = []
         self._frozen: Optional[FrozenRanking] = None
+        self._temporal = OnlineTemporalScoreMemory(
+            fixed_rho=float(self.temporal_fixed_rho),
+            fast_rho=float(self.temporal_fast_rho),
+            slow_rho=float(self.temporal_slow_rho),
+            variance_rho=float(self.temporal_variance_rho),
+            threshold=float(self.temporal_threshold),
+            smooth_alpha=float(self.temporal_smooth_alpha),
+            epsilon=float(self.temporal_epsilon),
+        )
 
     @staticmethod
     def requires_candidate_panel(_policy: str) -> bool:
@@ -210,11 +342,13 @@ class DirectBudgetController:
         self,
         memory: AttentionPolicyMemory,
         view: LayerCacheView,
+        cycle: int,
     ) -> Tuple[
         Dict[int, Tuple[int, ...]],
         Dict[int, np.ndarray],
         Dict[int, Dict[str, np.ndarray]],
     ]:
+        self._temporal.update(memory, view, cycle)
         eligible: Dict[int, Tuple[int, ...]] = {}
         eligible_rows: Dict[int, np.ndarray] = {}
         signals: Dict[int, Dict[str, np.ndarray]] = {}
@@ -252,6 +386,13 @@ class DirectBudgetController:
                 "volatility": _normalize(volatility, rows),
                 "volatility_raw": np.asarray(volatility, dtype=np.float64),
                 "snapkv": _normalize(snapkv, rows),
+                "fixed_ema": _normalize(
+                    self._temporal.score("fixed_ema", layer, positions), rows
+                ),
+                "adaptive_dual": _normalize(
+                    self._temporal.score("adaptive_dual", layer, positions), rows
+                ),
+                "adaptive_gate": self._temporal.gate_values(layer, positions),
             }
         return eligible, eligible_rows, signals
 
@@ -306,9 +447,13 @@ class DirectBudgetController:
         cycle: int,
         sample_id: str,
     ) -> BudgetDecision:
-        if policy not in set(MECHANISM_POLICIES) | set(PURE_EVICTION_POLICIES):
+        if policy not in (
+            set(MECHANISM_POLICIES)
+            | set(PURE_EVICTION_POLICIES)
+            | set(TEMPORAL_POLICIES)
+        ):
             raise ValueError(f"unknown direct budget policy={policy}")
-        eligible, eligible_rows, signals = self._signals(memory, view)
+        eligible, eligible_rows, signals = self._signals(memory, view, cycle)
         if policy == "a2_temporal_volatility":
             scores = {
                 layer: np.asarray(signals[layer]["volatility"], dtype=np.float64)
@@ -322,6 +467,11 @@ class DirectBudgetController:
         elif policy == "snapkv":
             scores = {
                 layer: np.asarray(signals[layer]["snapkv"], dtype=np.float64)
+                for layer in view.layers
+            }
+        elif policy in TEMPORAL_POLICIES:
+            scores = {
+                layer: np.asarray(signals[layer][policy], dtype=np.float64)
                 for layer in view.layers
             }
         elif policy == "shared_attention":
@@ -470,6 +620,16 @@ class DirectBudgetController:
             ),
             "mean_layer_effective_support": float(
                 np.mean(list(difficulty.values()))
+            ),
+            "mean_temporal_stable_gate": float(
+                np.mean(
+                    [
+                        np.mean(signals[layer]["adaptive_gate"][eligible_rows[layer]])
+                        if eligible_rows[layer].size
+                        else 0.0
+                        for layer in view.layers
+                    ]
+                )
             ),
         }
         return BudgetDecision(

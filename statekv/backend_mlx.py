@@ -307,6 +307,7 @@ class MLXTemporalModel:
     ) -> QueryRecord:
         state = self.runner.attention_state
         queries: Dict[str, torch.Tensor] = {}
+        post_rope_queries: Dict[str, torch.Tensor] = {}
         outputs: Dict[str, torch.Tensor] = {}
         distributions: Dict[str, torch.Tensor] = {}
         oracle: Dict[int, torch.Tensor] = {}
@@ -330,6 +331,7 @@ class MLXTemporalModel:
             if layer not in self.selected_layers:
                 continue
             q = state.get("temporal_queries", {}).get(layer)
+            q_post = state.get("temporal_queries_post_rope", {}).get(layer)
             out = state.get("temporal_attention_outputs", {}).get(layer)
             attention = state.get(
                 "temporal_attention_distributions", {}
@@ -361,6 +363,7 @@ class MLXTemporalModel:
                 value is None
                 for value in (
                     q,
+                    q_post,
                     out,
                     attention,
                     values,
@@ -379,6 +382,7 @@ class MLXTemporalModel:
                     % layer
                 )
             q_t = self._torch(q)
+            q_post_t = self._torch(q_post)
             out_t = self._torch(out)
             attention_t = self._torch(attention, torch.float16)
             values_t = self._torch(values)
@@ -402,6 +406,7 @@ class MLXTemporalModel:
             for local, head in enumerate(self.selected_heads[layer]):
                 key = "%d:%d" % (layer, head)
                 queries[key] = q_t[local]
+                post_rope_queries[key] = q_post_t[local]
                 outputs[key] = out_t[local]
                 distributions[key] = attention_t[local]
             for kv_head in range(int(values_t.shape[0])):
@@ -422,6 +427,7 @@ class MLXTemporalModel:
             residual_inputs=residual_inputs,
             post_attention_residuals=post_attention_residuals,
             layer_outputs=layer_outputs,
+            post_rope_queries=post_rope_queries,
         )
 
     def _query_head_observation(self) -> Dict[int, torch.Tensor]:
