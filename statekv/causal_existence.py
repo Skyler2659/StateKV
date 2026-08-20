@@ -147,8 +147,20 @@ def task_overrides(config: Mapping[str, Any]) -> Dict[str, Dict[str, Any]]:
     )
     if not all_indices:
         raise ValueError("empty existence-study index set")
-    if all_indices != list(range(all_indices[0], all_indices[-1] + 1)):
-        raise ValueError("existence-study indices must form one contiguous range")
+    synthetic_families = {
+        "ruler_niah",
+        "ruler_niah_multikey",
+        "ruler_niah_multiquery",
+        "ruler_variable_tracking",
+    }
+    families = {str(family) for family in config["task_families"]}
+    if families & synthetic_families:
+        # Synthetic panels slice a contiguous offset block; LongBench panels
+        # address rows individually via sample_indices and may be sparse.
+        if all_indices != list(range(all_indices[0], all_indices[-1] + 1)):
+            raise ValueError(
+                "existence-study indices must form one contiguous range"
+            )
     settings_by_task = dict(config.get("task_settings") or {})
     output: Dict[str, Dict[str, Any]] = {}
     for family in config["task_families"]:

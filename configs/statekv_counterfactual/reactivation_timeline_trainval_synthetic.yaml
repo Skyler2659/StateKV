@@ -1,0 +1,40 @@
+experiment_name: statekv_reactivation_timeline_trainval_synthetic
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/statekv_counterfactual/timeline_trainval_synthetic_v1
+data_seed: 20260820
+runtime_run_id: statekv_reactivation_timeline_trainval_synthetic_seed20260820_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+# Preregistered Phase-1 panel (synthetic families, preregistration split
+# table): train 200-219, validation 220-229. Single NIAH is calibration only.
+task_families:
+  - ruler_niah
+  - ruler_niah_multikey
+  - ruler_niah_multiquery
+  - ruler_variable_tracking
+task_settings:
+  ruler_niah:
+    context_length: 768
+  ruler_niah_multikey:
+    context_length: 768
+    n_keys: 4
+  ruler_niah_multiquery:
+    context_length: 768
+    n_queries: 4
+  ruler_variable_tracking:
+    context_length: 768
+split_indices:
+  train: [200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219]
+  validation: [220, 221, 222, 223, 224, 225, 226, 227, 228, 229]
+
+cycles: 64
+prefill_block_size: 64
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
