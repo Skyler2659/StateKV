@@ -1,0 +1,62 @@
+# Counterfactual MVP diagnostic (dev-only, train panel, not a formal gate).
+#
+# Ranks four runtime-causal utilities (current QK, fixed EMA, R2 future
+# attention, first-order counterfactual attention x value) against REALIZED
+# physical removal damage (trajectory KL / delta-NLL on a temporary
+# strict-deletion branch with forced continuation).
+experiment_name: statekv_cf_diagnostic_dev_v1
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/statekv_counterfactual/cf_diagnostic_dev_v1
+data_seed: 20260820
+runtime_run_id: statekv_cf_diagnostic_dev_v1_seed20260820_v1
+
+runtime_overrides:
+  prefill_chunk_size: 512
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+# Read-only inputs.
+source_run: results/statekv_existence/causal_existence_qwen3_8b_v1
+teacher_scores: results/statekv_counterfactual/teacher_scores
+
+task_families:
+  - ruler_niah
+  - govreport_or_qmsum
+  - ruler_niah_multikey
+task_settings:
+  ruler_niah:
+    context_length: 768
+  govreport_or_qmsum:
+    preferred: gov_report
+    max_words: 700
+    sample_strategy: first
+    fallback_paragraphs: 24
+  ruler_niah_multikey:
+    context_length: 768
+    n_keys: 4
+split_indices:
+  train: [165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184]
+
+control_cycles: 64
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+diagnostic_query_heads: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+
+diagnostic:
+  train_indices: [165, 166, 167]
+  boundaries: [8, 16, 24]
+  horizon: 16
+  group_sizes: [4, 8]
+  groups_per_size: 10
+  random_groups_per_size: 1
+  top_fraction: 0.25
