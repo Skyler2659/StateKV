@@ -152,6 +152,121 @@ def _synthetic_niah_multikey(
     return samples
 
 
+def _synthetic_niah_multiquery(
+    seed: int, count: int, context_length: int, n_queries: int
+) -> List[BenchmarkSample]:
+    """Multi-query retrieval: one shared needle value under several keys.
+
+    Implemented semantics (RULER's official "multi-query" variant): the SAME
+    needle value is associated with n_queries distinct keys, and at question
+    time ALL keys are queried, so every requested answer is the shared value.
+    This contrasts with the official "multi-key" variant (distinct key-value
+    needles, one key queried); note this repo's ruler_niah_multikey generator
+    pairs distinct values and queries all of them. Same filler family as
+    _synthetic_niah_multikey, with identical per-index seeding so
+    sample_offset slicing stays deterministic.
+    """
+    samples = []
+    for index in range(count):
+        rng = random.Random(seed + index * 1009)
+        keys = []
+        while len(keys) < n_queries:
+            key = "%s-%s" % (_word(rng), _word(rng, 5))
+            if key not in keys:
+                keys.append(key)
+        value = "".join(rng.choice(string.digits) for _ in range(7))
+        needles = [
+            "The special magic number for %s is %s." % (key, value)
+            for key in keys
+        ]
+        repeats = max(16, int(context_length) // 6)
+        filler = ["The sky is blue and grass is green."] * repeats
+        # Spread needle depths deterministically across the filler with a
+        # per-sample jitter, avoiding adjacent insertions.
+        slots = [
+            min(repeats - 1, int((i + 0.5) * repeats / n_queries) + rng.randrange(-8, 9))
+            for i in range(n_queries)
+        ]
+        for slot, needle in zip(slots, needles):
+            filler.insert(slot, needle)
+        context = " ".join(filler)
+        question_lines = "\n".join(
+            "What is the special magic number for %s?" % key for key in keys
+        )
+        prompt = (
+            context
+            + "\n\n"
+            + question_lines
+            + "\nAnswer with only the numbers, one per line, in the order asked."
+        )
+        samples.append(
+            BenchmarkSample(
+                sample_id="synthetic_niah_multiquery_%d" % index,
+                prompt=prompt,
+                references=[value],
+                task="niah_multiquery",
+                answer_text=value,
+                full_text=prompt + " " + value,
+                metadata={
+                    "dataset_official": False,
+                    "source": "repository_synthetic_ruler_niah_multiquery",
+                    "evidence_texts": needles,
+                    "n_queries": int(n_queries),
+                    "shared_value": value,
+                    "needle_depths": [
+                        float(slot) / max(1, repeats - 1) for slot in slots
+                    ],
+                },
+            )
+        )
+    return samples
+
+
+def _synthetic_variable_tracking(
+    seed: int, count: int, context_length: int, n_variables: int
+) -> List[BenchmarkSample]:
+    """RULER variable tracking via the mlx-side generator, reseeded per index.
+
+    Wraps benchmarks/mlx/src/benchmarks/ruler.py
+    _generate_variable_tracking_sample. That generator draws from a shared
+    rng, so each sample index gets its own seeded rng here; this keeps
+    generation deterministic under sample_offset slicing, matching the other
+    synthetic branches. The import is lazy because the mlx-side `src` package
+    is only importable with benchmarks/mlx on PYTHONPATH.
+    """
+    from src.benchmarks.ruler import _generate_variable_tracking_sample
+
+    samples = []
+    for index in range(count):
+        rng = random.Random(seed + index * 9173)
+        raw = _generate_variable_tracking_sample(
+            rng,
+            seq_words=max(256, int(context_length) // 2),
+            n_variables=int(n_variables),
+        )
+        answer = str(raw["answer"])
+        prompt = str(raw["prompt"])
+        query_variable = str(raw["query_var"])
+        samples.append(
+            BenchmarkSample(
+                sample_id="synthetic_vt_%d" % index,
+                prompt=prompt,
+                references=[answer],
+                task="vt",
+                answer_text=answer,
+                full_text=str(raw["text"]),
+                metadata={
+                    "dataset_official": False,
+                    "source": "repository_synthetic_ruler_variable_tracking",
+                    "evidence_texts": ["[%s = %s]" % (query_variable, answer)],
+                    "query_variable": query_variable,
+                    "n_variables": int(raw["n_variables"]),
+                },
+            )
+        )
+    return samples
+
+
 def _reasoning_samples(
     seed: int, count: int, distractors: int, answer_first: bool = False
 ) -> List[BenchmarkSample]:
@@ -282,6 +397,66 @@ def load_discovery_tasks(
                     "count": len(loaded),
                     "sample_offset": sample_offset,
                     "n_keys": int(settings.get("n_keys", 4)),
+                }
+            )
+        elif task_name == "ruler_niah_multiquery":
+            sample_offset = int(settings.get("sample_offset", 0))
+            if sample_offset < 0:
+                raise ValueError(
+                    "ruler_niah_multiquery sample_offset must be non-negative"
+                )
+            loaded = _synthetic_niah_multiquery(
+                seed,
+                count + sample_offset,
+                int(settings.get("context_length", 3072)),
+                int(settings.get("n_queries", 4)),
+            )[sample_offset : sample_offset + count]
+            loaded = [_extend_retrieval_prompt(sample) for sample in loaded]
+            events.append(
+                {
+                    "task": task_name,
+                    "source": "repository_synthetic_ruler_niah_multiquery",
+                    "dataset_official": False,
+                    "count": len(loaded),
+                    "sample_offset": sample_offset,
+                    "n_queries": int(settings.get("n_queries", 4)),
+                }
+            )
+        elif task_name == "ruler_variable_tracking":
+            sample_offset = int(settings.get("sample_offset", 0))
+            if sample_offset < 0:
+                raise ValueError(
+                    "ruler_variable_tracking sample_offset must be non-negative"
+                )
+            loaded = _synthetic_variable_tracking(
+                seed,
+                count + sample_offset,
+                int(settings.get("context_length", 768)),
+                int(settings.get("n_variables", 8)),
+            )[sample_offset : sample_offset + count]
+            loaded = [_extend_retrieval_prompt(sample) for sample in loaded]
+            events.append(
+                {
+                    "task": task_name,
+                    "source": "repository_synthetic_ruler_variable_tracking",
+                    "dataset_official": False,
+                    "count": len(loaded),
+                    "sample_offset": sample_offset,
+                    "n_variables": int(settings.get("n_variables", 8)),
+                }
+            )
+        elif task_name in {"passage_retrieval_en", "hotpotqa"}:
+            # Official-data-only families: unlike govreport_or_qmsum there is
+            # no synthetic fallback, so a load failure must raise.
+            loaded = LongBenchBenchmark(
+                _longbench_config(task_name, settings), seed
+            ).load()[:count]
+            events.append(
+                {
+                    "task": task_name,
+                    "source": "official_longbench_%s" % task_name,
+                    "dataset_official": True,
+                    "count": len(loaded),
                 }
             )
         elif task_name in {"govreport_or_qmsum", "gov_report", "qmsum"}:

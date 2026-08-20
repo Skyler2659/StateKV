@@ -50,12 +50,31 @@ Previous phase used offsets 151–160 (closed-loop test) and 161–199
 (collection debug/train/validation/fresh_test). This phase uses disjoint
 ranges:
 
+Synthetic families (ruler_niah, ruler_niah_multikey, ruler_niah_multiquery,
+ruler_variable_tracking) are generated with unlimited offsets:
+
 | split | indices | role |
 |---|---|---|
 | train | 200–219 | RI parameter + damage-metric + baseline selection |
 | validation | 220–229 | all frozen choices confirmed; Gate D rehearsal |
 | fresh diagnostic test | 230–249 | Gate D, opened once |
 | fresh closed-loop test | 250–279 | Gate E, opened once |
+
+LongBench families (gov_report, passage_retrieval_en, hotpotqa): the local
+THUDM/LongBench snapshot has exactly 200 rows per task, and rows 24–29,
+61–63, 86–90, 96–105, 118–127, 151–199 were consumed by earlier phases
+(conservative union over all historical configs, any task). The remaining
+rows are allocated as:
+
+| split | LongBench rows | count |
+|---|---|---|
+| train | 0–19 | 20 |
+| validation | 30–39 | 10 |
+| fresh diagnostic test | 40–59 | 20 |
+| fresh closed-loop test | 64–85, 106–113 | 30 |
+
+(Amended 2026-08-20 before any new collection or test opening; the
+200–279 range does not exist for LongBench.)
 
 Gate C test data (151–160) may be read for mechanism development only;
 no confirmatory claim uses it. Each fresh test opening is recorded in a
