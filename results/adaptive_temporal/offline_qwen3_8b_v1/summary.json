@@ -1,0 +1,452 @@
+{
+  "best_fixed_by_horizon": [
+    {
+      "best_fixed_method": "fixed_ema_rho_0.5",
+      "development_future_topk_recall": 0.8046129282240393,
+      "development_mean_step_spearman": 0.8747809193765967,
+      "future_horizon": 1
+    },
+    {
+      "best_fixed_method": "fixed_ema_rho_0.5",
+      "development_future_topk_recall": 0.8052146464646465,
+      "development_mean_step_spearman": 0.8668991697530315,
+      "future_horizon": 4
+    },
+    {
+      "best_fixed_method": "fixed_ema_rho_0.8",
+      "development_future_topk_recall": 0.7911695075757577,
+      "development_mean_step_spearman": 0.8352707736204793,
+      "future_horizon": 16
+    },
+    {
+      "best_fixed_method": "fixed_ema_rho_0.8",
+      "development_future_topk_recall": 0.7763652146464646,
+      "development_mean_step_spearman": 0.8350431122882026,
+      "future_horizon": 32
+    }
+  ],
+  "development_samples": [
+    "gov_report:86",
+    "synthetic_niah_86",
+    "synthetic_niah_87"
+  ],
+  "execution_valid": true,
+  "experiment": "adaptive_temporal_offline_qwen3_8b",
+  "head_diagnostic_rows": 864,
+  "heldout_comparison": [
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7779249410201792,
+      "heldout_future_topk_recall": 0.7779249410201792,
+      "heldout_mean_step_spearman": 0.8596024264386551,
+      "method": "Best Fixed EMA",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 1.0,
+      "heldout_future_topk_recall": 1.0,
+      "heldout_mean_step_spearman": 1.0,
+      "method": "NON_CAUSAL_ORACLE",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.6772148926910831,
+      "heldout_future_topk_recall": 0.6772148926910831,
+      "heldout_mean_step_spearman": 0.7143694559824574,
+      "method": "adaptive_discrete",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.6846331798712751,
+      "heldout_future_topk_recall": 0.6846331798712751,
+      "heldout_mean_step_spearman": 0.7433438420772647,
+      "method": "adaptive_raw",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7082102201149821,
+      "heldout_future_topk_recall": 0.7082102201149821,
+      "heldout_mean_step_spearman": 0.7588659866932568,
+      "method": "adaptive_smooth",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7297882452644358,
+      "heldout_future_topk_recall": 0.7297882452644358,
+      "heldout_mean_step_spearman": 0.805150493154679,
+      "method": "adaptive_surprise",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7255869351107447,
+      "heldout_future_topk_recall": 0.7255869351107447,
+      "heldout_mean_step_spearman": 0.7939390897108588,
+      "method": "cumulative",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7756230101468196,
+      "heldout_future_topk_recall": 0.7756230101468196,
+      "heldout_mean_step_spearman": 0.8601795252018116,
+      "method": "current",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.740748757415424,
+      "heldout_future_topk_recall": 0.740748757415424,
+      "heldout_mean_step_spearman": 0.8178744423970923,
+      "method": "dual_memory",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7811781505531507,
+      "heldout_future_topk_recall": 0.7811781505531507,
+      "heldout_mean_step_spearman": 0.8574695225835368,
+      "method": "Best Fixed EMA",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 1.0,
+      "heldout_future_topk_recall": 1.0,
+      "heldout_mean_step_spearman": 1.0,
+      "method": "NON_CAUSAL_ORACLE",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7018722943722944,
+      "heldout_future_topk_recall": 0.7018722943722944,
+      "heldout_mean_step_spearman": 0.7414121681881736,
+      "method": "adaptive_discrete",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.703679353054353,
+      "heldout_future_topk_recall": 0.703679353054353,
+      "heldout_mean_step_spearman": 0.7664281208206638,
+      "method": "adaptive_raw",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7319549663299663,
+      "heldout_future_topk_recall": 0.7319549663299663,
+      "heldout_mean_step_spearman": 0.7825915024680377,
+      "method": "adaptive_smooth",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7356168831168831,
+      "heldout_future_topk_recall": 0.7356168831168831,
+      "heldout_mean_step_spearman": 0.8087147118656349,
+      "method": "adaptive_surprise",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.752362012987013,
+      "heldout_future_topk_recall": 0.752362012987013,
+      "heldout_mean_step_spearman": 0.8210909169163443,
+      "method": "cumulative",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7610323472823473,
+      "heldout_future_topk_recall": 0.7610323472823473,
+      "heldout_mean_step_spearman": 0.8392467584130663,
+      "method": "current",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7503382034632033,
+      "heldout_future_topk_recall": 0.7503382034632033,
+      "heldout_mean_step_spearman": 0.8256558750499853,
+      "method": "dual_memory",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 0.7786262926887927,
+      "heldout_future_topk_recall": 0.7786262926887927,
+      "heldout_mean_step_spearman": 0.8360680704536805,
+      "method": "Best Fixed EMA",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 1.0,
+      "heldout_future_topk_recall": 1.0,
+      "heldout_mean_step_spearman": 1.0,
+      "method": "NON_CAUSAL_ORACLE",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 0.7249597913660414,
+      "heldout_future_topk_recall": 0.7249597913660414,
+      "heldout_mean_step_spearman": 0.7675478016803282,
+      "method": "adaptive_discrete",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 0.7057592291967292,
+      "heldout_future_topk_recall": 0.7057592291967292,
+      "heldout_mean_step_spearman": 0.7630423666012246,
+      "method": "adaptive_raw",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 0.7493359938672438,
+      "heldout_future_topk_recall": 0.7493359938672438,
+      "heldout_mean_step_spearman": 0.7990171901307703,
+      "method": "adaptive_smooth",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 0.7260503096440597,
+      "heldout_future_topk_recall": 0.7260503096440597,
+      "heldout_mean_step_spearman": 0.7806882616670814,
+      "method": "adaptive_surprise",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 0.7655923069985571,
+      "heldout_future_topk_recall": 0.7655923069985571,
+      "heldout_mean_step_spearman": 0.8265575484270932,
+      "method": "cumulative",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 0.728846124939875,
+      "heldout_future_topk_recall": 0.728846124939875,
+      "heldout_mean_step_spearman": 0.7880251256005021,
+      "method": "current",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 16,
+      "heldout_eviction_decision_precision": 0.7388667177729678,
+      "heldout_future_topk_recall": 0.7388667177729678,
+      "heldout_mean_step_spearman": 0.801239892923557,
+      "method": "dual_memory",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 0.7611347853535353,
+      "heldout_future_topk_recall": 0.7611347853535353,
+      "heldout_mean_step_spearman": 0.8201564896085352,
+      "method": "Best Fixed EMA",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 1.0,
+      "heldout_future_topk_recall": 1.0,
+      "heldout_mean_step_spearman": 1.0,
+      "method": "NON_CAUSAL_ORACLE",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 0.7305905032467532,
+      "heldout_future_topk_recall": 0.7305905032467532,
+      "heldout_mean_step_spearman": 0.7806896917036199,
+      "method": "adaptive_discrete",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 0.6925662878787879,
+      "heldout_future_topk_recall": 0.6925662878787879,
+      "heldout_mean_step_spearman": 0.7460936475887374,
+      "method": "adaptive_raw",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 0.7465847086940838,
+      "heldout_future_topk_recall": 0.7465847086940838,
+      "heldout_mean_step_spearman": 0.8011848966421636,
+      "method": "adaptive_smooth",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 0.7202583874458875,
+      "heldout_future_topk_recall": 0.7202583874458875,
+      "heldout_mean_step_spearman": 0.7743697698401253,
+      "method": "adaptive_surprise",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 0.7571569489538239,
+      "heldout_future_topk_recall": 0.7571569489538239,
+      "heldout_mean_step_spearman": 0.816345855750563,
+      "method": "cumulative",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 0.7144452335858585,
+      "heldout_future_topk_recall": 0.7144452335858585,
+      "heldout_mean_step_spearman": 0.7634908150943981,
+      "method": "current",
+      "sample_layer_rows": 252
+    },
+    {
+      "evaluation_scope": "heldout",
+      "future_horizon": 32,
+      "heldout_eviction_decision_precision": 0.7258438176406927,
+      "heldout_future_topk_recall": 0.7258438176406927,
+      "heldout_mean_step_spearman": 0.7833821043008325,
+      "method": "dual_memory",
+      "sample_layer_rows": 252
+    }
+  ],
+  "heldout_samples": [
+    "gov_report:87",
+    "gov_report:88",
+    "gov_report:89",
+    "gov_report:90",
+    "synthetic_niah_88",
+    "synthetic_niah_89",
+    "synthetic_niah_90"
+  ],
+  "horizon_heterogeneity": [
+    {
+      "distinct_best_horizons": 9,
+      "dominant_horizon_fraction": 0.6502226910454758,
+      "future_horizon": 1,
+      "horizon_entropy_nats": 1.1259004085951083,
+      "task": "gov_report",
+      "tokens": 170640
+    },
+    {
+      "distinct_best_horizons": 9,
+      "dominant_horizon_fraction": 0.4179776601998824,
+      "future_horizon": 4,
+      "horizon_entropy_nats": 1.7806627016572945,
+      "task": "gov_report",
+      "tokens": 170100
+    },
+    {
+      "distinct_best_horizons": 9,
+      "dominant_horizon_fraction": 0.3154538254961623,
+      "future_horizon": 16,
+      "horizon_entropy_nats": 1.9624391856750172,
+      "task": "gov_report",
+      "tokens": 167939
+    },
+    {
+      "distinct_best_horizons": 9,
+      "dominant_horizon_fraction": 0.32321273849845195,
+      "future_horizon": 32,
+      "horizon_entropy_nats": 1.9187649259781698,
+      "task": "gov_report",
+      "tokens": 165043
+    },
+    {
+      "distinct_best_horizons": 9,
+      "dominant_horizon_fraction": 0.7342330469010843,
+      "future_horizon": 1,
+      "horizon_entropy_nats": 0.8695817575416951,
+      "task": "niah_single_1",
+      "tokens": 227628
+    },
+    {
+      "distinct_best_horizons": 9,
+      "dominant_horizon_fraction": 0.6093761008948073,
+      "future_horizon": 4,
+      "horizon_entropy_nats": 1.2862938980009564,
+      "task": "niah_single_1",
+      "tokens": 227088
+    },
+    {
+      "distinct_best_horizons": 9,
+      "dominant_horizon_fraction": 0.47303581590553423,
+      "future_horizon": 16,
+      "horizon_entropy_nats": 1.6737129278077774,
+      "task": "niah_single_1",
+      "tokens": 224928
+    },
+    {
+      "distinct_best_horizons": 9,
+      "dominant_horizon_fraction": 0.36082525299381646,
+      "future_horizon": 32,
+      "horizon_entropy_nats": 1.897224877194382,
+      "task": "niah_single_1",
+      "tokens": 222041
+    }
+  ],
+  "non_causal_oracle_only_for_diagnostics": true,
+  "offline_scope": true,
+  "runtime_seconds": 932.087446834,
+  "samples": [
+    "gov_report:86",
+    "gov_report:87",
+    "gov_report:88",
+    "gov_report:89",
+    "gov_report:90",
+    "synthetic_niah_86",
+    "synthetic_niah_87",
+    "synthetic_niah_88",
+    "synthetic_niah_89",
+    "synthetic_niah_90"
+  ]
+}

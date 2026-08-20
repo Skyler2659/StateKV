@@ -1,0 +1,211 @@
+{
+  "best_fixed_by_horizon": [
+    {
+      "best_fixed_method": "fixed_ema_rho_0",
+      "development_future_topk_recall": 0.7997835497835496,
+      "development_mean_step_spearman": 0.8891170118040681,
+      "future_horizon": 1
+    },
+    {
+      "best_fixed_method": "fixed_ema_rho_0.9",
+      "development_future_topk_recall": 0.8056060606060607,
+      "development_mean_step_spearman": 0.896739905256654,
+      "future_horizon": 4
+    }
+  ],
+  "development_samples": [
+    "synthetic_niah_86"
+  ],
+  "execution_valid": true,
+  "experiment": "adaptive_temporal_smoke_qwen3_8b",
+  "head_diagnostic_rows": 288,
+  "heldout_comparison": [
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7997835497835496,
+      "heldout_future_topk_recall": 0.7997835497835496,
+      "heldout_mean_step_spearman": 0.8891170118040681,
+      "method": "Best Fixed EMA",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 1.0,
+      "heldout_future_topk_recall": 1.0,
+      "heldout_mean_step_spearman": 1.0,
+      "method": "NON_CAUSAL_ORACLE",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7011183261183261,
+      "heldout_future_topk_recall": 0.7011183261183261,
+      "heldout_mean_step_spearman": 0.7992745555219443,
+      "method": "adaptive_discrete",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.716919191919192,
+      "heldout_future_topk_recall": 0.716919191919192,
+      "heldout_mean_step_spearman": 0.7896858980014654,
+      "method": "adaptive_raw",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7544011544011546,
+      "heldout_future_topk_recall": 0.7544011544011546,
+      "heldout_mean_step_spearman": 0.8381782916332267,
+      "method": "adaptive_smooth",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.773989898989899,
+      "heldout_future_topk_recall": 0.773989898989899,
+      "heldout_mean_step_spearman": 0.8332849743285716,
+      "method": "adaptive_surprise",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7641414141414141,
+      "heldout_future_topk_recall": 0.7641414141414141,
+      "heldout_mean_step_spearman": 0.8514230407230948,
+      "method": "cumulative",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7997835497835496,
+      "heldout_future_topk_recall": 0.7997835497835496,
+      "heldout_mean_step_spearman": 0.8891170118040681,
+      "method": "current",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 1,
+      "heldout_eviction_decision_precision": 0.7848124098124097,
+      "heldout_future_topk_recall": 0.7848124098124097,
+      "heldout_mean_step_spearman": 0.8672632829526079,
+      "method": "dual_memory",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.8056060606060607,
+      "heldout_future_topk_recall": 0.8056060606060607,
+      "heldout_mean_step_spearman": 0.896739905256654,
+      "method": "Best Fixed EMA",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 1.0,
+      "heldout_future_topk_recall": 1.0,
+      "heldout_mean_step_spearman": 1.0,
+      "method": "NON_CAUSAL_ORACLE",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7100757575757577,
+      "heldout_future_topk_recall": 0.7100757575757577,
+      "heldout_mean_step_spearman": 0.8204578147270825,
+      "method": "adaptive_discrete",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7340909090909091,
+      "heldout_future_topk_recall": 0.7340909090909091,
+      "heldout_mean_step_spearman": 0.8114680559956229,
+      "method": "adaptive_raw",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7659848484848485,
+      "heldout_future_topk_recall": 0.7659848484848485,
+      "heldout_mean_step_spearman": 0.8590202827677235,
+      "method": "adaptive_smooth",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7851893939393939,
+      "heldout_future_topk_recall": 0.7851893939393939,
+      "heldout_mean_step_spearman": 0.8447630064046667,
+      "method": "adaptive_surprise",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7864772727272729,
+      "heldout_future_topk_recall": 0.7864772727272729,
+      "heldout_mean_step_spearman": 0.8744532630140331,
+      "method": "cumulative",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.8011363636363636,
+      "heldout_future_topk_recall": 0.8011363636363636,
+      "heldout_mean_step_spearman": 0.889236138022832,
+      "method": "current",
+      "sample_layer_rows": 2
+    },
+    {
+      "evaluation_scope": "development_smoke_only",
+      "future_horizon": 4,
+      "heldout_eviction_decision_precision": 0.7939015151515152,
+      "heldout_future_topk_recall": 0.7939015151515152,
+      "heldout_mean_step_spearman": 0.8791802426633544,
+      "method": "dual_memory",
+      "sample_layer_rows": 2
+    }
+  ],
+  "heldout_samples": [],
+  "horizon_heterogeneity": [
+    {
+      "distinct_best_horizons": 4,
+      "dominant_horizon_fraction": 0.7771179730799683,
+      "future_horizon": 1,
+      "horizon_entropy_nats": 0.7347815661667549,
+      "task": "niah_single_1",
+      "tokens": 2526
+    },
+    {
+      "distinct_best_horizons": 4,
+      "dominant_horizon_fraction": 0.7134920634920635,
+      "future_horizon": 4,
+      "horizon_entropy_nats": 0.8931431646174561,
+      "task": "niah_single_1",
+      "tokens": 2520
+    }
+  ],
+  "non_causal_oracle_only_for_diagnostics": true,
+  "offline_scope": true,
+  "runtime_seconds": 4.424852792,
+  "samples": [
+    "synthetic_niah_86"
+  ]
+}

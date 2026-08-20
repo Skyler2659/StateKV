@@ -1,0 +1,56 @@
+{
+  "experiment": "adaptive_temporal_tuning_qwen3_8b",
+  "heldout_comparison": [
+    {
+      "Best Fixed EMA": 0.7779249410201792,
+      "Tuned dual_memory": 0.777175954556907,
+      "adaptive_minus_best_fixed": -0.0007489864632721499,
+      "future_horizon": 1
+    },
+    {
+      "Best Fixed EMA": 0.7811781505531507,
+      "Tuned dual_memory": 0.7848295454545454,
+      "adaptive_minus_best_fixed": 0.0036513949013947666,
+      "future_horizon": 4
+    },
+    {
+      "Best Fixed EMA": 0.7786262926887927,
+      "Tuned dual_memory": 0.7687338413900915,
+      "adaptive_minus_best_fixed": -0.0098924512987012,
+      "future_horizon": 16
+    },
+    {
+      "Best Fixed EMA": 0.7611347853535353,
+      "Tuned dual_memory": 0.7524497204184704,
+      "adaptive_minus_best_fixed": -0.008685064935064934,
+      "future_horizon": 32
+    }
+  ],
+  "runtime_seconds": 81.334841459,
+  "selection": {
+    "config_id": 6,
+    "configuration": {
+      "epsilon": 1e-08,
+      "fast_rho": 0.5,
+      "rho_long": 0.95,
+      "rho_short": 0.5,
+      "slow_rho": 0.95,
+      "smooth_alpha": 4.0,
+      "threshold": 0.25,
+      "variance_rho": 0.5
+    },
+    "development_mean_future_topk_recall": 0.7823092720358346,
+    "grid_configurations": 36,
+    "heldout_opened_after_selection": true,
+    "selected_on": "development samples and six preregistered diagnostic layers",
+    "total_candidates": 144,
+    "variant": "dual_memory",
+    "variants": [
+      "adaptive_discrete",
+      "adaptive_smooth",
+      "dual_memory",
+      "rank_adaptive_smooth"
+    ]
+  },
+  "test_set_retuning": false
+}

@@ -1,0 +1,29 @@
+oracle_config: configs/adaptive_temporal/dynamic_horizon_oracle_qwen3_8b.yaml
+output_run: results/adaptive_temporal/rank_drift_followup_qwen3_8b_v1
+fast_slow_pairs:
+- - 0.25
+  - 0.8
+- - 0.5
+  - 0.9
+- - 0.5
+  - 0.95
+rank_memory_rhos:
+- 0.5
+- 0.8
+jump_thresholds:
+- 0.05
+- 0.1
+- 0.2
+gate_alphas:
+- 10.0
+output_spaces:
+- attention
+- rank
+selection_metric: mean_future_topk_recall_over_horizons
+followup_gate:
+  baseline: per_head_fixed
+  minimum_absolute_gain: 0.005
+  bootstrap_confidence: 0.95
+  bootstrap_repetitions: 20000
+  minimum_sequence_wins: 5
+  random_seed: 20260820

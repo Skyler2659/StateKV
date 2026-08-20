@@ -1,0 +1,41 @@
+{
+  "canonical": {
+    "cvar95_exact_kl": 1.4300719946622849,
+    "maximum_actual_global_kv": 9216,
+    "maximum_layer_capacity": 256,
+    "mean_controller_decode_tokens_per_s": 4.43976416255722,
+    "mean_controller_overhead_fraction": 0.37945734917559615,
+    "mean_decode_tokens_per_s": 7.243696592289095,
+    "mean_end_to_end_tokens_per_s": 1.717602137041642,
+    "mean_exact_kl": 0.09758068291238269,
+    "mean_govreport_rouge_l": 0.054974463333152444,
+    "mean_niah_retrieval": 1.0,
+    "mean_official_score": 52.74871999999999,
+    "p95_exact_kl": 0.544113609194753,
+    "peak_accelerator_bytes": 5676816712,
+    "peak_cpu_rss_bytes": 2174304256,
+    "policy": "attention",
+    "samples": 10,
+    "total_budget": 256
+  },
+  "checks": {
+    "mean_niah_retrieval": true,
+    "mean_official_score": true,
+    "mean_trajectory_exact_kl": true
+  },
+  "reproduced": {
+    "all_budgets_respected": true,
+    "all_irreversible_inclusions_hold": true,
+    "core_budget": 220,
+    "mean_govreport_rouge_l": 0.0549744633331524,
+    "mean_niah_retrieval": 1.0,
+    "mean_official_score": 52.74871999999999,
+    "mean_trajectory_exact_kl": 0.09758068291238263,
+    "method": "attention",
+    "samples": 10,
+    "source_run": "results/temporal_cache_discovery/statekv_pure_eviction_qwen3_8b_p35_v1",
+    "steps": 640,
+    "total_budget": 256
+  },
+  "status": "reproduced"
+}

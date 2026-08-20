@@ -1,0 +1,41 @@
+{
+  "comparisons": [
+    {
+      "ci_high": 0.14536082719467203,
+      "ci_low": 0.1307388715626718,
+      "comparison": "token_time_dynamic_oracle_minus_global_fixed",
+      "mean_gain": 0.13806879850267126,
+      "sequence_losses": 0,
+      "sequence_ties": 0,
+      "sequence_wins": 7,
+      "sequences": 7
+    },
+    {
+      "ci_high": 0.14471520013860975,
+      "ci_low": 0.12828234630934127,
+      "comparison": "token_time_dynamic_oracle_minus_per_head_fixed",
+      "mean_gain": 0.1365455519131579,
+      "sequence_losses": 0,
+      "sequence_ties": 0,
+      "sequence_wins": 7,
+      "sequences": 7
+    }
+  ],
+  "criteria": {
+    "bootstrap_confidence": 0.95,
+    "bootstrap_repetitions": 20000,
+    "minimum_absolute_gain": 0.01,
+    "minimum_sequence_wins": 5,
+    "primary_metric": "future_topk_recall",
+    "random_seed": 20260819,
+    "require_gain_over": [
+      "global_fixed",
+      "per_head_fixed"
+    ]
+  },
+  "decision": "dynamic headroom exists; adaptive-horizon exploration may continue",
+  "gate_passed": true,
+  "heldout_opened_once": true,
+  "inference_unit": "heldout_sequence",
+  "oracle_label": "NON_CAUSAL_TOKEN_TIME_ORACLE"
+}
