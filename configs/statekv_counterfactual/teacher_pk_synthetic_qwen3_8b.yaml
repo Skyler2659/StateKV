@@ -1,0 +1,53 @@
+# Teacher PK: R2 vs SnapKV/H2O/QK under strict pure eviction.
+#
+# Frozen scope (user directive 2026-08-21): multikey + multiquery NIAH,
+# train indices 200-209; policies Full/R2/SnapKV/H2O/QK; budgets 256/512.
+# No student, no EMA, no CF, no mechanism analysis in this run.
+experiment_name: statekv_teacher_pk_synthetic_qwen3_8b
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/statekv_counterfactual/teacher_pk_synthetic_v1
+data_seed: 20260820
+runtime_run_id: statekv_teacher_pk_synthetic_qwen3_8b_seed20260820_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+task_families:
+  - ruler_niah_multikey
+  - ruler_niah_multiquery
+task_settings:
+  ruler_niah_multikey:
+    context_length: 768
+    n_keys: 4
+  ruler_niah_multiquery:
+    context_length: 768
+    n_queries: 4
+split_indices:
+  train: [200, 201, 202, 203, 204, 205, 206, 207, 208, 209]
+
+control_cycles: 64
+total_budget: 512
+sink_size: 4
+recent_size: 32
+core_budget: 476
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+
+closed_loop:
+  budgets: [256, 512]
+  rollout_horizon: 1
+  refresh_frequency: 2
+  validation_refresh_frequencies: [1, 2, 4, 8]
+  policies:
+    - STRICT_CAUSAL_ROLLOUT_R2
+    - STRICT_SNAPKV_OBSWIN
+    - STRICT_H2O_CUMULATIVE
+    - STRICT_QK_CURRENT
+  primary_baseline: STRICT_QK_CURRENT
+  snapkv_window: 32
+  snapkv_pooling_kernel: 63
