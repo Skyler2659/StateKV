@@ -43,7 +43,7 @@ from statekv.causal_existence import (
     _safe_sample_id,
     sample_id_for,
 )
-from statekv.causal_existence_analysis import boundary_metrics
+from statekv.causal_existence_analysis import boundary_metrics, topk_indices
 from statekv.causal_predictors import (
     FixedProjector,
     MultiHorizonMLP,
@@ -723,7 +723,7 @@ def _v2_boundary_targets(
     truth: np.ndarray,
     boundary_ids: np.ndarray,
     cutoff_budgets: Sequence[int],
-) -> Tuple[np.ndarray, Dict[int, Dict[int, np.ndarray]]]:
+) -> Tuple[np.ndarray, Dict[int, Dict[Tuple[int, int], np.ndarray]]]:
     """Percentile targets and cutoff-straddling pairs per boundary.
 
     The v1 objective scores "is this token in the teacher top-220" and pairs
@@ -731,27 +731,23 @@ def _v2_boundary_targets(
     the eviction ordering near the retention cutoff, at core budgets 92
     (budget 128) and 220 (budget 256).  v2 therefore trains channel 0 on the
     within-boundary teacher percentile (a scale-free soft label) and builds
-    pair lists that straddle each deployment cutoff.
+    pair lists that straddle each deployment cutoff.  Pairs are keyed by
+    (horizon column, budget): a pair straddling the H=32 cutoff does not
+    necessarily straddle the H=1 cutoff, so each horizon gets its own lists.
     """
 
     horizons = int(truth.shape[1])
     percentile = np.zeros_like(truth, dtype=np.float32)
-    pairs: Dict[int, Dict[int, np.ndarray]] = {}
+    pairs: Dict[int, Dict[Tuple[int, int], np.ndarray]] = {}
     for boundary_id in np.unique(boundary_ids):
         rows = np.flatnonzero(boundary_ids == boundary_id)
-        boundary_pairs: Dict[int, List[Tuple[int, int]]] = {
-            int(budget): [] for budget in cutoff_budgets
-        }
+        boundary_pairs: Dict[Tuple[int, int], np.ndarray] = {}
         for column in range(horizons):
             values = truth[rows, column]
             order = np.argsort(values, kind="stable")
             ranks = np.empty(len(rows), dtype=np.float32)
             ranks[order] = np.arange(len(rows), dtype=np.float32)
             percentile[rows, column] = ranks / max(float(len(rows) - 1), 1.0)
-            if column != horizons - 1:
-                # Cutoff pairs are built on the deployment horizon only; the
-                # loss is applied to every horizon column of the same rows.
-                continue
             for budget in cutoff_budgets:
                 keep = min(int(budget), max(len(rows) - 1, 1))
                 top_rows = rows[order[-keep:]]
@@ -760,7 +756,8 @@ def _v2_boundary_targets(
                     continue
                 # Every retained token against its nearest evicted neighbours
                 # dominates the eviction decision; cap the pair count so the
-                # per-boundary loss stays cheap.
+                # per-boundary loss stays cheap.  Iterating highs from the
+                # cutoff upward concentrates pairs on the near-cutoff region.
                 closest = bottom_rows[
                     np.argsort(values[order[:-keep]])[ -min(keep, len(bottom_rows)): ]
                 ]
@@ -769,13 +766,11 @@ def _v2_boundary_targets(
                     for high in top_rows
                     for low in closest
                 ]
-                boundary_pairs[int(budget)] = pair_list[
-                    : min(len(pair_list), 4 * int(budget))
-                ]
-        pairs[int(boundary_id)] = {
-            int(budget): np.asarray(pair_list, dtype=np.int64).reshape(-1, 2)
-            for budget, pair_list in boundary_pairs.items()
-        }
+                pair_list = pair_list[: min(len(pair_list), 4 * int(budget))]
+                boundary_pairs[(column, int(budget))] = np.asarray(
+                    pair_list, dtype=np.int64
+                ).reshape(-1, 2)
+        pairs[int(boundary_id)] = boundary_pairs
     return percentile, pairs
 
 
@@ -826,8 +821,10 @@ def _train_student_mlp_v2(
                 int(global_row): local_row
                 for local_row, global_row in enumerate(rows.tolist())
             }
-            for budget in cutoff_budgets:
-                pair_array = pairs.get(boundary_id, {}).get(int(budget))
+            boundary_pairs = pairs.get(boundary_id, {})
+            n_pair_terms = 0
+            pairwise_total = None
+            for (column, budget), pair_array in boundary_pairs.items():
                 if pair_array is None or not len(pair_array):
                     continue
                 local_pairs = np.asarray(
@@ -839,9 +836,16 @@ def _train_student_mlp_v2(
                 )
                 high = torch.from_numpy(local_pairs[:, 0]).to(device_obj)
                 low = torch.from_numpy(local_pairs[:, 1]).to(device_obj)
-                difference = output[high, :, 0] - output[low, :, 0]
-                pairwise = torch.nn.functional.softplus(-difference).mean()
-                loss = loss + float(pairwise_weight) * pairwise
+                difference = output[high, column, 0] - output[low, column, 0]
+                term = torch.nn.functional.softplus(-difference).mean()
+                pairwise_total = (
+                    term if pairwise_total is None else pairwise_total + term
+                )
+                n_pair_terms += 1
+            if pairwise_total is not None:
+                loss = loss + float(pairwise_weight) * pairwise_total / max(
+                    n_pair_terms, 1
+                )
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
@@ -849,6 +853,252 @@ def _train_student_mlp_v2(
             f"[causal-student] mlp-v2 epoch {epoch + 1}/{epochs}", flush=True
         )
     return model.cpu()
+
+
+# --------------------------------------------------------------- v3 ranking
+
+
+def cutoff_metrics(
+    truth: np.ndarray,
+    prediction: np.ndarray,
+    k: int,
+    n_pairs: int = 4096,
+) -> Dict[str, float]:
+    """Selection-fidelity metrics at one retention budget.
+
+    - topk recall / Jaccard between the teacher top-k and student top-k sets
+    - cutoff pair accuracy: fraction of (teacher-retained, teacher-evicted)
+      pairs the student orders correctly
+    - band pair accuracy: ordering agreement inside the near-cutoff band
+      (teacher ranks k±B), where eviction decisions are actually decided
+    """
+
+    truth = np.asarray(truth, dtype=np.float64)
+    prediction = np.asarray(prediction, dtype=np.float64)
+    n = len(truth)
+    k = min(int(k), n - 1)
+    oracle = set(topk_indices(truth, k).tolist())
+    selected = set(topk_indices(prediction, k).tolist())
+    inter = len(oracle & selected)
+    order = np.argsort(truth, kind="stable")
+    cut = n - k
+    rng = np.random.default_rng(0)
+    hi_all = order[cut:]
+    lo_all = order[:cut]
+    take_hi = rng.choice(hi_all, size=min(len(hi_all), 64), replace=False)
+    take_lo = rng.choice(lo_all, size=min(len(lo_all), 64), replace=False)
+    pairs = np.asarray(
+        [(i, j) for i in take_hi for j in take_lo], dtype=np.int64
+    ).reshape(-1, 2)
+    if len(pairs) > n_pairs:
+        pairs = pairs[rng.choice(len(pairs), size=n_pairs, replace=False)]
+    diff = prediction[pairs[:, 0]] - prediction[pairs[:, 1]]
+    cutoff_acc = float((diff > 0).mean() + 0.5 * (diff == 0).mean())
+    band = max(16, k // 8)
+    band_rows = order[max(0, cut - band) : min(n, cut + band)]
+    band_pairs = [
+        (band_rows[a + 1], band_rows[a]) for a in range(len(band_rows) - 1)
+    ]
+    if band_pairs:
+        bp = np.asarray(band_pairs, dtype=np.int64)
+        bd = prediction[bp[:, 0]] - prediction[bp[:, 1]]
+        band_acc = float((bd > 0).mean() + 0.5 * (bd == 0).mean())
+    else:
+        band_acc = 0.0
+    return {
+        "topk_recall": float(inter / max(k, 1)),
+        "jaccard": float(inter / max(2 * k - inter, 1)),
+        "cutoff_pair_accuracy": cutoff_acc,
+        "band_pair_accuracy": band_acc,
+    }
+
+
+def _v3_pairs(
+    values: np.ndarray,
+    k_sub: int,
+    rng: np.random.Generator,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Cutoff-weighted pair set for one boundary/horizon.
+
+    Heavy weight on pairs straddling the retention cutoff (both near and
+    very-near bands), light weight on random pairs with distance-decayed
+    weights so easy pairs cannot drown the cutoff signal.
+    """
+
+    n = len(values)
+    k_sub = min(int(k_sub), n - 1)
+    order = np.argsort(values, kind="stable")
+    cut = n - k_sub
+    pairs: List[Tuple[int, int]] = []
+    weights: List[float] = []
+    for band, weight in ((max(8, k_sub // 8), 5.0), (max(24, k_sub // 3), 3.0)):
+        hi = order[cut : min(n, cut + band)]
+        lo = order[max(0, cut - band) : cut]
+        for i in hi:
+            for j in lo:
+                pairs.append((int(i), int(j)))
+                weights.append(weight)
+    n_random = min(256, n * (n - 1) // 2)
+    if n_random:
+        ri = rng.integers(0, n, size=n_random)
+        rj = rng.integers(0, n, size=n_random)
+        valid = ri != rj
+        for i, j in zip(ri[valid].tolist(), rj[valid].tolist()):
+            if values[i] == values[j]:
+                continue
+            high, low = (i, j) if values[i] > values[j] else (j, i)
+            rank_hi = int(np.flatnonzero(order == high)[0])
+            rank_lo = int(np.flatnonzero(order == low)[0])
+            proximity = np.exp(-min(abs(rank_hi - cut), abs(rank_lo - cut)) / max(k_sub * 0.3, 1.0))
+            straddle = (rank_hi >= cut) != (rank_lo >= cut)
+            pairs.append((high, low))
+            weights.append(float((1.5 if straddle else 0.4) * (0.5 + proximity)))
+    return (
+        np.asarray(pairs, dtype=np.int64).reshape(-1, 2),
+        np.asarray(weights, dtype=np.float32),
+    )
+
+
+def _train_student_mlp_v3(
+    features: np.ndarray,
+    truth: np.ndarray,
+    boundary_ids: np.ndarray,
+    sizes: np.ndarray,
+    horizons: int,
+    seed: int,
+    epochs: int,
+    core_budget: int,
+    device: str = "cpu",
+    init_state: Optional[Mapping[str, Any]] = None,
+    extra_pairs: Optional[Mapping[int, np.ndarray]] = None,
+    extra_weight: float = 5.0,
+) -> MultiHorizonMLP:
+    """Pure ranking distillation: cutoff-weighted pairwise logistic loss.
+
+    Channel 0 is the ranking score (deployment channel).  A small soft
+    percentile BCE keeps the channel globally calibrated; channel 1 keeps a
+    light log-utility regression as a regularizer.  ``extra_pairs`` injects
+    hard-negative-mined pairs (global row indices, deployment horizon H1).
+    """
+
+    torch.manual_seed(int(seed))
+    device_obj = torch.device(str(device))
+    model = MultiHorizonMLP(int(features.shape[1]), int(horizons)).to(device_obj)
+    if init_state is not None:
+        model.load_state_dict(init_state)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=2.0e-3, weight_decay=1.0e-4)
+    bce = torch.nn.BCEWithLogitsLoss()
+    smooth = torch.nn.SmoothL1Loss()
+    regression = np.log1p(truth / np.maximum(truth.mean(axis=0), 1.0e-9))
+    rng = np.random.default_rng(int(seed))
+
+    percentile = np.zeros_like(truth, dtype=np.float32)
+    pair_cache: Dict[int, Dict[int, Tuple[np.ndarray, np.ndarray]]] = {}
+    for boundary_id in np.unique(boundary_ids):
+        rows = np.flatnonzero(boundary_ids == boundary_id)
+        full = int(sizes[rows[0]])
+        k_sub = max(8, int(round(int(core_budget) * len(rows) / max(full, 1))))
+        per_h: Dict[int, Tuple[np.ndarray, np.ndarray]] = {}
+        for column in range(int(horizons)):
+            values = truth[rows, column]
+            order = np.argsort(values, kind="stable")
+            ranks = np.empty(len(rows), dtype=np.float32)
+            ranks[order] = np.arange(len(rows), dtype=np.float32)
+            percentile[rows, column] = ranks / max(float(len(rows) - 1), 1.0)
+            local_pairs, pair_weights = _v3_pairs(values, k_sub, rng)
+            pair_cache.setdefault(int(boundary_id), {})[column] = (
+                rows[local_pairs[:, 0]],
+                rows[local_pairs[:, 1]],
+                pair_weights,
+            )
+    if extra_pairs:
+        for boundary_id, mined in extra_pairs.items():
+            hi = np.asarray([int(p[0]) for p in mined], dtype=np.int64)
+            lo = np.asarray([int(p[1]) for p in mined], dtype=np.int64)
+            w = np.full(len(mined), float(extra_weight), dtype=np.float32)
+            pair_cache[int(boundary_id)][0] = (
+                np.concatenate([pair_cache[int(boundary_id)][0][0], hi]),
+                np.concatenate([pair_cache[int(boundary_id)][0][1], lo]),
+                np.concatenate([pair_cache[int(boundary_id)][0][2], w]),
+            )
+
+    for epoch in range(int(epochs)):
+        groups = [
+            (int(boundary_id), np.flatnonzero(boundary_ids == boundary_id))
+            for boundary_id in rng.permutation(np.unique(boundary_ids))
+        ]
+        for boundary_id, rows in groups:
+            x = torch.from_numpy(features[rows]).to(device_obj)
+            y_soft = torch.from_numpy(percentile[rows]).to(device_obj)
+            y_reg = torch.from_numpy(regression[rows].astype(np.float32)).to(device_obj)
+            output = model(
+                x, torch.zeros((len(rows), 1, 2), dtype=torch.float32, device=device_obj)
+            )
+            loss = 0.10 * bce(output[:, :, 0], y_soft) + 0.05 * smooth(
+                output[:, :, 1], y_reg
+            )
+            row_lookup = {
+                int(global_row): local_row
+                for local_row, global_row in enumerate(rows.tolist())
+            }
+            for column, (hi, lo, w) in pair_cache[boundary_id].items():
+                local_hi = torch.from_numpy(
+                    np.asarray([row_lookup[int(g)] for g in hi.tolist()], dtype=np.int64)
+                ).to(device_obj)
+                local_lo = torch.from_numpy(
+                    np.asarray([row_lookup[int(g)] for g in lo.tolist()], dtype=np.int64)
+                ).to(device_obj)
+                weight_t = torch.from_numpy(w).to(device_obj)
+                diff = output[local_hi, column, 0] - output[local_lo, column, 0]
+                loss = loss + (weight_t * torch.nn.functional.softplus(-diff)).mean()
+            optimizer.zero_grad(set_to_none=True)
+            loss.backward()
+            optimizer.step()
+        print(f"[causal-student] mlp-v3 epoch {epoch + 1}/{epochs}", flush=True)
+    return model.cpu()
+
+
+def mine_cutoff_errors(
+    scorer: "StudentScorer",
+    features: np.ndarray,
+    truth: np.ndarray,
+    boundary_ids: np.ndarray,
+    sizes: np.ndarray,
+    core_budget: int,
+    horizon_column: int = 0,
+) -> Dict[int, np.ndarray]:
+    """Hard-negative mining at the deployment horizon.
+
+    For every boundary: FN = teacher top-k the student evicts, FP = student
+    top-k the teacher evicts.  Returns {boundary_id: (FN x FP) pair array of
+    global row indices} for retraining with elevated weight.
+    """
+
+    mined: Dict[int, List[Tuple[int, int]]] = {}
+    total_fn = 0
+    total_fp = 0
+    for boundary_id in np.unique(boundary_ids):
+        rows = np.flatnonzero(boundary_ids == boundary_id)
+        full = int(sizes[rows[0]])
+        k_sub = max(8, int(round(int(core_budget) * len(rows) / max(full, 1))))
+        prediction = scorer.predict(features[rows])[:, horizon_column]
+        values = truth[rows, horizon_column]
+        teacher_top = set(topk_indices(values, k_sub).tolist())
+        student_top = set(topk_indices(prediction, k_sub).tolist())
+        fn = sorted(teacher_top - student_top)
+        fp = sorted(student_top - teacher_top)
+        total_fn += len(fn)
+        total_fp += len(fp)
+        if fn and fp:
+            mined[int(boundary_id)] = [
+                (int(rows[i]), int(rows[j])) for i in fn for j in fp
+            ]
+    print(
+        f"[causal-student] hard-negative mining: {total_fn} missed-retains, "
+        f"{total_fp} false-retains across {len(np.unique(boundary_ids))} boundaries",
+        flush=True,
+    )
+    return mined
 
 
 def train_students(config_path: Path, repository_root: Path) -> Path:
@@ -1142,6 +1392,118 @@ def evaluate_students(
     return rows
 
 
+def evaluate_students_cutoff(
+    config: Mapping[str, Any],
+    repository_root: Path,
+    scorers: Mapping[str, StudentScorer],
+    ks: Sequence[int] = (220, 476),
+    split: str = "validation",
+    horizon: int = 1,
+) -> List[Dict[str, Any]]:
+    """Selection-fidelity battery at the deployment horizon and budgets.
+
+    Unlike :func:`evaluate_students` (rank-quality metrics at the training
+    budget), this reports top-B recall / Jaccard / cutoff-pair accuracy at
+    the two deployment budgets (k=220 ~ budget 256, k=476 ~ budget 512) on
+    the full eligible sets, aggregated per boundary across layers/heads.
+    """
+
+    repository_root = Path(repository_root)
+    source_run = repository_root / str(config["source_run"])
+    teacher_root = repository_root / str(config["teacher_scores"]) / str(split)
+    artifact_dir = source_run / "artifacts" / str(split)
+    horizons = [int(value) for value in config["future_utility_horizons"]]
+    if int(horizon) not in horizons:
+        raise RuntimeError(f"deployment horizon {horizon} not in {horizons}")
+    horizon_col = horizons.index(int(horizon))
+    projector = FixedProjector(int(config["data_seed"]))
+    rows: List[Dict[str, Any]] = []
+    artifact_paths = sorted(artifact_dir.glob("*.npz"))
+    if not artifact_paths:
+        raise RuntimeError(f"no {split} artifacts in {artifact_dir}")
+    for ordinal, artifact_path in enumerate(artifact_paths, start=1):
+        teacher_path = teacher_root / artifact_path.name
+        if not teacher_path.exists():
+            continue
+        artifact = _load_npz(artifact_path)
+        teacher = _load_npz(teacher_path)
+        teacher_h1 = [int(v) for v in teacher["horizons"]].index(int(horizon))
+        for cycle_index, cycle_value in enumerate(teacher["cycles"]):
+            cycle = int(cycle_value)
+            count = int(teacher["position_lengths"][cycle_index])
+            teacher_positions = [
+                int(value) for value in teacher["position_ids"][cycle_index, :count]
+            ]
+            current_count = int(artifact["position_lengths"][cycle])
+            positions = [
+                int(value)
+                for value in artifact["position_ids"][cycle, :current_count]
+            ]
+            _, _, eligible = mandatory_and_eligible(
+                positions, int(config["sink_size"]), int(config["recent_size"])
+            )
+            if teacher_positions != [int(value) for value in eligible]:
+                raise RuntimeError(
+                    "teacher positions do not match feature positions: "
+                    f"{artifact_path.name} cycle {cycle}"
+                )
+            # mean teacher/student scores across diagnostic layers and KV
+            # heads: this is the aggregation the closed loop actually deploys
+            layer_count = int(artifact["layers"].size)
+            head_count = int(artifact["attention"].shape[2])
+            truth_stack = []
+            pred_stacks = {name: [] for name in scorers}
+            for layer_index in range(layer_count):
+                for head in range(head_count):
+                    boundary = artifact_boundary(
+                        artifact,
+                        cycle,
+                        layer_index,
+                        head,
+                        horizons,
+                        int(config["sink_size"]),
+                        int(config["recent_size"]),
+                        int(config["core_budget"]),
+                        projector,
+                        feature_only=True,
+                    )
+                    truth_stack.append(
+                        teacher["scores"][
+                            cycle_index, teacher_h1, layer_index, head, :count
+                        ]
+                    )
+                    for name, scorer in scorers.items():
+                        pred_stacks[name].append(
+                            scorer.predict(boundary.features)[:, horizon_col]
+                        )
+            truth_mean = np.mean(np.stack(truth_stack), axis=0)
+            for name in scorers:
+                pred_mean = np.mean(np.stack(pred_stacks[name]), axis=0)
+                row = {
+                    "sample_id": str(teacher["sample_id"].item()),
+                    "task": str(teacher["task"].item()),
+                    "split": str(split),
+                    "cycle": cycle,
+                    "method": name,
+                    "horizon": int(horizon),
+                }
+                for k in ks:
+                    row.update(
+                        {
+                            f"{key}@{k}": value
+                            for key, value in cutoff_metrics(
+                                truth_mean, pred_mean, int(k)
+                            ).items()
+                        }
+                    )
+                rows.append(row)
+        print(
+            f"[cutoff-eval] {split} {ordinal}/{len(artifact_paths)} {artifact_path.stem}",
+            flush=True,
+        )
+    return rows
+
+
 __all__ = [
     "FEATURE_SEGMENTS",
     "FEATURE_WIDTH",
@@ -1151,9 +1513,12 @@ __all__ = [
     "RuntimeFeatureHistory",
     "RuntimeStudentScorer",
     "StudentScorer",
+    "cutoff_metrics",
     "dump_teacher_scores",
     "evaluate_students",
+    "evaluate_students_cutoff",
     "load_student_checkpoint",
+    "mine_cutoff_errors",
     "runtime_observation_from_record",
     "save_student_checkpoint",
     "train_students",

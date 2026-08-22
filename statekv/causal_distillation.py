@@ -36,7 +36,8 @@ def _teacher_arrays(
     config: Mapping[str, Any],
     maximum_boundaries: int = 1500,
     tokens_per_boundary: int = 384,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    return_sizes: bool = False,
+):
     rng = np.random.default_rng(int(config["data_seed"]) + 41)
     horizons = [int(value) for value in config["future_utility_horizons"]]
     specs: List[Tuple[Path, Path, int, int, int]] = []
@@ -68,6 +69,7 @@ def _teacher_arrays(
     utilities: List[np.ndarray] = []
     binary: List[np.ndarray] = []
     boundary_ids: List[np.ndarray] = []
+    sizes: List[np.ndarray] = []
     artifact_cache: Dict[Path, Dict[str, np.ndarray]] = {}
     teacher_cache: Dict[Path, Dict[str, np.ndarray]] = {}
     for boundary_id, (
@@ -128,11 +130,22 @@ def _teacher_arrays(
         utilities.append(truth[selected_rows])
         binary.append(labels[selected_rows])
         boundary_ids.append(np.full(take, boundary_id, dtype=np.int32))
+        if return_sizes:
+            sizes.append(np.full(take, len(boundary.features), dtype=np.int32))
         if len(artifact_cache) > 2:
             keep_artifact = artifact_path
             keep_teacher = teacher_path
             artifact_cache = {keep_artifact: artifact_cache[keep_artifact]}
             teacher_cache = {keep_teacher: teacher_cache[keep_teacher]}
+    if return_sizes:
+        return (
+            np.concatenate(features),
+            np.concatenate(histories),
+            np.concatenate(utilities),
+            np.concatenate(binary),
+            np.concatenate(boundary_ids),
+            np.concatenate(sizes),
+        )
     return (
         np.concatenate(features),
         np.concatenate(histories),
