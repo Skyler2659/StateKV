@@ -375,12 +375,28 @@ class StructuredStudentScorer:
         self.model.eval()
 
     def normalize(self, boundary: Mapping[str, np.ndarray]) -> Dict[str, np.ndarray]:
-        n = int(boundary["head_features"].shape[0])
+        head_features = boundary["head_features"]
+        expected = int(self.architecture["head_feature_width"])
+        if head_features.shape[-1] != expected:
+            # Checkpoints trained without the query-trajectory group consume
+            # the same boundary with those columns removed.
+            keep = [
+                index
+                for index in range(head_features.shape[-1])
+                if index not in QUERY_TRAJECTORY_COLUMNS
+            ]
+            head_features = head_features[..., keep]
+            if head_features.shape[-1] != expected:
+                raise RuntimeError(
+                    f"boundary head width {boundary['head_features'].shape[-1]} "
+                    f"does not match checkpoint width {expected}"
+                )
+        n = int(head_features.shape[0])
         head = self.scalers["head"].transform(
-            boundary["head_features"].reshape(-1, boundary["head_features"].shape[-1])
+            head_features.reshape(-1, head_features.shape[-1])
         ).astype(np.float32)
         return {
-            "head_features": head.reshape(boundary["head_features"].shape),
+            "head_features": head.reshape(head_features.shape),
             "state_features": self.scalers["state"]
             .transform(boundary["state_features"])
             .astype(np.float32),
@@ -550,7 +566,7 @@ def _assemble_boundaries(
             per_head = np.asarray(
                 teacher["scores"][cycle_index, teacher_h1, :, :, :count],
                 dtype=np.float32,
-            ).transpose(1, 2, 0)  # (n, L, H)
+            ).transpose(2, 0, 1)  # (L, H, n) -> (n, L, H)
             mean_teacher = per_head.mean(axis=(1, 2))
             boundaries.append(
                 {

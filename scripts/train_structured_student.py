@@ -43,6 +43,11 @@ def main() -> None:
         default="results/statekv_counterfactual/student_models/r2_student_mlp_v2.pt",
     )
     parser.add_argument("--skip-eval", action="store_true")
+    parser.add_argument(
+        "--eval-only",
+        action="store_true",
+        help="load existing structured_student_<ablation>.pt checkpoints",
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     config_path = root / args.config
@@ -52,14 +57,21 @@ def main() -> None:
     cache_dir = root / "tmp" / "structured_student_cache"
 
     checkpoints = {}
-    for ablation in args.ablations:
-        epochs = args.epochs
-        if ablation != "full" and args.ablation_epochs is not None:
-            epochs = args.ablation_epochs
-        checkpoints[ablation] = train_structured_student(
-            config_path, root, ablation=ablation, epochs=epochs,
-            cache_dir=cache_dir,
-        )
+    if args.eval_only:
+        for ablation in args.ablations:
+            path = output_root / f"structured_student_{ablation}.pt"
+            if not path.exists():
+                raise RuntimeError(f"missing checkpoint for {ablation}: {path}")
+            checkpoints[ablation] = path
+    else:
+        for ablation in args.ablations:
+            epochs = args.epochs
+            if ablation != "full" and args.ablation_epochs is not None:
+                epochs = args.ablation_epochs
+            checkpoints[ablation] = train_structured_student(
+                config_path, root, ablation=ablation, epochs=epochs,
+                cache_dir=cache_dir,
+            )
     if args.skip_eval:
         return
 
