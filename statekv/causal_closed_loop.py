@@ -189,6 +189,49 @@ def _prompt_attention_memory(
     return cumulative, rows
 
 
+def hybrid_trigger(
+    mode: str,
+    eligible_scores: Sequence[float],
+    k: int,
+    cycle: int,
+    cfg: Mapping[str, Any],
+) -> Tuple[bool, float]:
+    """Decide whether the hybrid policy pays for an R2 rollout this cycle.
+
+    Returns ``(triggered, trigger_stat)`` where ``trigger_stat`` is the
+    decision statistic (normalized margin or entropy) for post-hoc analysis.
+    """
+
+    scores = np.sort(np.asarray(eligible_scores, dtype=np.float64))[::-1]
+    k = int(k)
+    cycle = int(cycle)
+    margin_threshold = float(cfg.get("margin_threshold", 0.1))
+    entropy_threshold = float(cfg.get("entropy_threshold", 0.95))
+    base_refresh = int(cfg.get("base_refresh", 8))
+    # Without a position beyond the budget there is no boundary to be
+    # uncertain about, so the margin is treated as infinite (never triggers).
+    margin = float("inf")
+    if 0 < k < len(scores):
+        margin = float(
+            (scores[k - 1] - scores[k]) / (float(np.std(scores)) + 1e-12)
+        )
+    mode = str(mode)
+    if mode in {"margin", "periodic_margin"}:
+        triggered = margin < margin_threshold
+        if mode == "periodic_margin":
+            triggered = bool(triggered or (cycle % max(1, base_refresh) == 0))
+        return bool(triggered), margin
+    if mode == "entropy":
+        top = scores[: max(1, min(k + 32, len(scores)))]
+        shifted = top - float(top.max())
+        p = np.exp(shifted)
+        p = p / float(p.sum())
+        entropy = float(-np.sum(p * np.log(p + 1e-12)))
+        normalized = float(entropy / max(float(np.log(k + 32)), 1e-12))
+        return bool(normalized > entropy_threshold), normalized
+    raise ValueError(f"unknown hybrid trigger mode: {mode}")
+
+
 def _strict_policy_run(
     runner: CandidatePullbackRunner,
     reference: Any,
@@ -205,6 +248,7 @@ def _strict_policy_run(
     snapkv_pooling_kernel: int,
     refresh_frequency: int,
     student: Optional[Any] = None,
+    hybrid: Optional[Mapping[str, Any]] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     if policy == "STRICT_STATEKV_STUDENT":
         if student is None:
@@ -329,6 +373,8 @@ def _strict_policy_run(
                 fixed_rows.append(row)
         fixed_shared = np.mean(np.stack(fixed_rows), axis=0)
 
+        hybrid_r2_fired = False
+        trigger_stat = float("nan")
         if policy == "STRICT_QK_CURRENT":
             shared_scores = current_shared
             teacher_s = 0.0
@@ -391,6 +437,58 @@ def _strict_policy_run(
                     shared_scores[index] = float(
                         cached_rollout_scores.get(int(position), current_shared[index])
                     )
+        elif policy == "STRICT_HYBRID_QK_R2":
+            hybrid_cfg = dict(hybrid or {})
+            eligible_set = {int(value) for value in eligible}
+            eligible_scores = np.asarray(
+                [
+                    float(current_shared[index])
+                    for index, position in enumerate(positions)
+                    if int(position) in eligible_set
+                ],
+                dtype=np.float64,
+            )
+            hybrid_r2_fired, trigger_stat = hybrid_trigger(
+                str(hybrid_cfg.get("trigger", "margin")),
+                eligible_scores,
+                core_budget,
+                int(cycle),
+                hybrid_cfg,
+            )
+            if hybrid_r2_fired:
+                # Same rollout mechanics as STRICT_CAUSAL_ROLLOUT_R2, but the
+                # scores are used only for this cycle (no cross-cycle cache).
+                recompute_started = time.perf_counter()
+                branch = _prefix_recompute_state(
+                    runner, processed_tokens, int(rollout_horizon) + 2
+                )
+                recompute_s = time.perf_counter() - recompute_started
+                rollout = _causal_self_rollout(
+                    runner,
+                    branch,
+                    current_token,
+                    eligible,
+                    [int(layer) for layer in score_layers],
+                    [int(rollout_horizon)],
+                )
+                predicted_shared = np.asarray(
+                    rollout["scores"][int(rollout_horizon)], dtype=np.float64
+                ).mean(axis=(0, 1))
+                rollout_scores = {
+                    int(position): float(value)
+                    for position, value in zip(eligible, predicted_shared)
+                }
+                teacher_s = float(recompute_s + rollout["wall_time_s"])
+                teacher_refreshes += 1
+                shared_scores = np.full(len(positions), -np.inf, dtype=np.float64)
+                for index, position in enumerate(positions):
+                    if int(position) in eligible_set:
+                        shared_scores[index] = float(
+                            rollout_scores.get(int(position), current_shared[index])
+                        )
+            else:
+                shared_scores = current_shared
+                teacher_s = 0.0
         elif policy == "STRICT_STATEKV_STUDENT":
             student_started = time.perf_counter()
             observation = runtime_observation_from_record(
@@ -458,8 +556,12 @@ def _strict_policy_run(
                 "pool_scoring_time_s": float(scoring_s),
                 "causal_teacher_time_s": teacher_s,
                 "causal_teacher_refreshed": bool(
-                    policy == "STRICT_CAUSAL_ROLLOUT_R2" and teacher_s > 0.0
+                    policy
+                    in {"STRICT_CAUSAL_ROLLOUT_R2", "STRICT_HYBRID_QK_R2"}
+                    and teacher_s > 0.0
                 ),
+                "hybrid_r2_fired": bool(hybrid_r2_fired),
+                "trigger_stat": float(trigger_stat),
                 "recoverable_cold_tokens": 0,
                 **metrics,
             }
@@ -481,6 +583,7 @@ def _strict_policy_run(
         "peak_active_cache_tokens": peak_active,
         "causal_teacher_time_s": total_teacher_s,
         "causal_teacher_refreshes": int(teacher_refreshes),
+        "r2_invocation_rate": float(teacher_refreshes) / max(1, int(cycles)),
         "refresh_frequency": int(refresh_frequency),
         "wall_time_s": float(time.perf_counter() - started),
         "strict_pure_eviction": True,
@@ -781,6 +884,7 @@ def run_strict_causal_closed_loop(
                             int(config["closed_loop"]["snapkv_pooling_kernel"]),
                             run_refresh_frequency,
                             student=student_scorer,
+                            hybrid=config["closed_loop"].get("hybrid"),
                         )
                         all_rows.extend(rows)
                         summaries.append(summary)
@@ -975,6 +1079,7 @@ def merge_closed_loop_shards(
 
 
 __all__ = [
+    "hybrid_trigger",
     "merge_closed_loop_shards",
     "run_strict_causal_closed_loop",
     "select_validation_refresh_frequency",
