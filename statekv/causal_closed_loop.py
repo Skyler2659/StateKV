@@ -204,7 +204,7 @@ def _strict_policy_run(
     snapkv_window: int,
     snapkv_pooling_kernel: int,
     refresh_frequency: int,
-    student: Optional[RuntimeStudentScorer] = None,
+    student: Optional[Any] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     if policy == "STRICT_STATEKV_STUDENT":
         if student is None:
@@ -718,9 +718,15 @@ def run_strict_causal_closed_loop(
     all_rows: List[Dict[str, Any]] = []
     summaries: List[Dict[str, Any]] = []
     runner.model.load()
-    student_scorer: Optional[RuntimeStudentScorer] = None
+    student_scorer: Optional[Any] = None
     if student_checkpoint is not None:
-        student_scorer = RuntimeStudentScorer(
+        if str(student_checkpoint.get("kind")) == "structured_mlp":
+            from statekv.structured_student import RuntimeStructuredScorer
+
+            student_cls: Any = RuntimeStructuredScorer
+        else:
+            student_cls = RuntimeStudentScorer
+        student_scorer = student_cls(
             student_checkpoint,
             score_layers=score_layers,
             kv_heads=int(runner.model.model_info["num_key_value_heads"]),

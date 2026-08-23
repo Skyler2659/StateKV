@@ -210,7 +210,7 @@ def save_student_checkpoint(
     score_channel: int = 1,
     metadata: Optional[Mapping[str, Any]] = None,
 ) -> Path:
-    if kind not in {"hist_gbdt", "mlp"}:
+    if kind not in {"hist_gbdt", "mlp", "structured_mlp"}:
         raise ValueError(f"unknown student kind: {kind}")
     payload = {
         "format": STUDENT_FORMAT,
@@ -218,7 +218,11 @@ def save_student_checkpoint(
         "models": models,
         "scaler": scaler,
         "horizons": [int(value) for value in horizons],
-        "feature_width": FEATURE_WIDTH,
+        # Structured students consume feature blocks, not the flat 120-dim
+        # vector; their real per-block dims live in metadata["architecture"].
+        "feature_width": (
+            FEATURE_WIDTH if kind != "structured_mlp" else 0
+        ),
         "projector_seed": int(projector_seed),
         "score_channel": int(score_channel),
         "metadata": dict(metadata or {}),
@@ -242,6 +246,8 @@ def load_student_checkpoint(path: Path) -> Dict[str, Any]:
         payload = joblib.load(path)
     if not isinstance(payload, dict) or payload.get("format") != STUDENT_FORMAT:
         raise RuntimeError(f"unrecognized student checkpoint format: {path}")
+    if str(payload.get("kind")) == "structured_mlp":
+        return payload
     if int(payload["feature_width"]) != FEATURE_WIDTH:
         raise RuntimeError(
             f"student checkpoint feature width {payload['feature_width']} "
