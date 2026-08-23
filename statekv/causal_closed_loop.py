@@ -456,8 +456,8 @@ def _strict_policy_run(
                 hybrid_cfg,
             )
             if hybrid_r2_fired:
-                # Same rollout mechanics as STRICT_CAUSAL_ROLLOUT_R2, but the
-                # scores are used only for this cycle (no cross-cycle cache).
+                # Same rollout mechanics as STRICT_CAUSAL_ROLLOUT_R2; the
+                # scores are cached and reused until the next trigger fires.
                 recompute_started = time.perf_counter()
                 branch = _prefix_recompute_state(
                     runner, processed_tokens, int(rollout_horizon) + 2
@@ -474,21 +474,22 @@ def _strict_policy_run(
                 predicted_shared = np.asarray(
                     rollout["scores"][int(rollout_horizon)], dtype=np.float64
                 ).mean(axis=(0, 1))
-                rollout_scores = {
+                cached_rollout_scores = {
                     int(position): float(value)
                     for position, value in zip(eligible, predicted_shared)
                 }
                 teacher_s = float(recompute_s + rollout["wall_time_s"])
                 teacher_refreshes += 1
-                shared_scores = np.full(len(positions), -np.inf, dtype=np.float64)
-                for index, position in enumerate(positions):
-                    if int(position) in eligible_set:
-                        shared_scores[index] = float(
-                            rollout_scores.get(int(position), current_shared[index])
-                        )
             else:
-                shared_scores = current_shared
                 teacher_s = 0.0
+            shared_scores = np.full(len(positions), -np.inf, dtype=np.float64)
+            for index, position in enumerate(positions):
+                if int(position) in eligible_set:
+                    # Cached R2 ranking where available (post-first-trigger);
+                    # QK otherwise, including before the first trigger fires.
+                    shared_scores[index] = float(
+                        cached_rollout_scores.get(int(position), current_shared[index])
+                    )
         elif policy == "STRICT_STATEKV_STUDENT":
             student_started = time.perf_counter()
             observation = runtime_observation_from_record(
