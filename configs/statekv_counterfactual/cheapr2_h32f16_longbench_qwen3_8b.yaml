@@ -1,0 +1,54 @@
+# Cheap-R2 winner validation: H=32 + refresh=16 on secondary/control tasks.
+# Same panel as the frozen teacher PK longbench (2wikimqa + govreport, train 0-9)
+# plus multiquery is covered by the sibling synthetic config.
+experiment_name: statekv_cheapr2_h32f16_longbench_qwen3_8b
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/statekv_counterfactual/cheapr2_h32f16_longbench_v1
+data_seed: 20260820
+runtime_run_id: statekv_cheapr2_h32f16_longbench_qwen3_8b_seed20260820_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+runtime_overrides:
+  max_prompt_tokens: 8192
+
+task_families:
+  - 2wikimqa
+  - govreport_or_qmsum
+task_settings:
+  2wikimqa:
+    max_words: 2000
+    sample_strategy: first
+    data_path: /Users/wangsikai/.cache/huggingface/datasets/downloads/extracted/a8b1946a87d94505d02163b08366e33c363e627eb7f42d9b6b6b647acd60f098/data/2wikimqa.jsonl
+  govreport_or_qmsum:
+    preferred: gov_report
+    max_words: 700
+    sample_strategy: first
+    fallback_paragraphs: 24
+split_indices:
+  train: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+control_cycles: 64
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+
+closed_loop:
+  budgets: [256]
+  rollout_horizon: 32
+  refresh_frequency: 16
+  validation_refresh_frequencies: [1, 2, 4, 8, 16]
+  policies:
+    - STRICT_CAUSAL_ROLLOUT_R2
+  primary_baseline: STRICT_QK_CURRENT
+  snapkv_window: 32
+  snapkv_pooling_kernel: 63
