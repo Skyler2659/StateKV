@@ -14,6 +14,8 @@ import yaml
 
 from statekv.candidate_pullback import CandidatePullbackRunner
 from statekv.causal_existence import (
+    _atomic_npz,
+    _safe_sample_id,
     _scoring_forward,
     causal_prefix_reference,
     expand_split_ids,
@@ -37,6 +39,7 @@ from statekv.oracle_policy_freegen import (
     _metric_row,
 )
 from statekv.qkv_decomposition import _scoring_forward_per_head, rank_and_margin
+from statekv.reactivation_timeline import _needle_token_spans
 from statekv.selectors import mandatory_and_eligible
 from statekv.storage import atomic_frame, atomic_json
 from statekv.tasks import load_discovery_tasks
@@ -249,6 +252,7 @@ def _strict_policy_run(
     refresh_frequency: int,
     student: Optional[Any] = None,
     hybrid: Optional[Mapping[str, Any]] = None,
+    diagnostic_sink: Optional[Any] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     if policy == "STRICT_STATEKV_STUDENT":
         if student is None:
@@ -298,6 +302,9 @@ def _strict_policy_run(
     teacher_refreshes = 0
     started = time.perf_counter()
     for cycle in range(int(cycles)):
+        cycle_refreshed = False
+        cycle_rollout_per_step: Optional[np.ndarray] = None
+        cycle_rollout_generated: Optional[np.ndarray] = None
         # A new one-cycle backing store contains only physically active KV.
         # Dropped positions never survive to the next decision boundary.
         active_backing = KVBackingStore()
@@ -419,7 +426,18 @@ def _strict_policy_run(
                     eligible,
                     [int(layer) for layer in score_layers],
                     [int(rollout_horizon)],
+                    return_per_step=diagnostic_sink is not None,
                 )
+                if diagnostic_sink is not None:
+                    cycle_rollout_per_step = (
+                        rollout["per_step_attention"]
+                        .mean(axis=(1, 2))
+                        .astype(np.float32)
+                    )
+                    cycle_rollout_generated = np.asarray(
+                        rollout["generated"], dtype=np.int32
+                    )
+                cycle_refreshed = True
                 predicted_shared = np.asarray(
                     rollout["scores"][int(rollout_horizon)], dtype=np.float64
                 ).mean(axis=(0, 1))
@@ -470,7 +488,18 @@ def _strict_policy_run(
                     eligible,
                     [int(layer) for layer in score_layers],
                     [int(rollout_horizon)],
+                    return_per_step=diagnostic_sink is not None,
                 )
+                if diagnostic_sink is not None:
+                    cycle_rollout_per_step = (
+                        rollout["per_step_attention"]
+                        .mean(axis=(1, 2))
+                        .astype(np.float32)
+                    )
+                    cycle_rollout_generated = np.asarray(
+                        rollout["generated"], dtype=np.int32
+                    )
+                cycle_refreshed = True
                 predicted_shared = np.asarray(
                     rollout["scores"][int(rollout_horizon)], dtype=np.float64
                 ).mean(axis=(0, 1))
@@ -567,6 +596,22 @@ def _strict_policy_run(
                 **metrics,
             }
         )
+        if diagnostic_sink is not None:
+            # Read-only instrumentation: the sink observes per-cycle rank
+            # inputs but can never influence any decision.
+            record = {
+                "cycle": int(cycle),
+                "positions": np.asarray(positions, dtype=np.int32),
+                "eligible": np.asarray(eligible, dtype=np.int32),
+                "current_shared": np.asarray(current_shared, dtype=np.float32),
+                "selected_core": np.asarray(shared_core, dtype=np.int32),
+                "generated_token_id": int(new_tokens[0]),
+                "refreshed": bool(cycle_refreshed),
+            }
+            if cycle_refreshed and cycle_rollout_per_step is not None:
+                record["rollout_per_step"] = cycle_rollout_per_step
+                record["rollout_generated"] = cycle_rollout_generated
+            diagnostic_sink(record)
         processed_tokens.append(int(current_token))
         runner.model.release(state)
         state = rollout_state.state
@@ -668,6 +713,81 @@ def _full_cache_reference_run(
     return rows, summary
 
 
+def _rank_migration_path(
+    root: Path, split: str, sample_id: str, policy: str, budget: int
+) -> Path:
+    name = "%s__%s__b%d.npz" % (_safe_sample_id(sample_id), policy, int(budget))
+    return root / str(split) / name
+
+
+def _rank_migration_payload(
+    records: Sequence[Mapping[str, Any]],
+    *,
+    sample_id: str,
+    task: str,
+    policy: str,
+    budget: int,
+    sink_size: int,
+    recent_size: int,
+    refresh_frequency: int,
+    rollout_horizon: int,
+    needle_spans: np.ndarray,
+    summary: Mapping[str, Any],
+) -> Dict[str, np.ndarray]:
+    """Pack per-cycle diagnostic records into one npz payload.
+
+    Per-cycle keys are ``cycle_%04d_<field>`` with fields ``positions``
+    (int32), ``eligible`` (int32), ``current_shared`` (float32, aligned
+    with ``positions``), ``selected_core`` (int32), ``generated_token_id``
+    (int32 scalar) and ``refreshed`` (bool scalar). Cycles whose
+    ``refreshed`` is true additionally carry ``rollout_per_step``
+    (rollout_horizon x n_eligible float32, aligned with that cycle's
+    ``eligible``) and ``rollout_generated`` (int32). ``needle_spans`` is an
+    (n, 2) int32 array of [start, end) prompt-token spans ((0, 2) when the
+    sample carries no evidence texts). Arm-level scalars (``official_score``,
+    ``mean_trajectory_exact_kl``) duplicate the closed-loop summary row so
+    the diagnostic mode can skip CSV writes entirely.
+    """
+
+    payload: Dict[str, np.ndarray] = {}
+    for record in records:
+        prefix = "cycle_%04d_" % int(record["cycle"])
+        payload[prefix + "positions"] = record["positions"]
+        payload[prefix + "eligible"] = record["eligible"]
+        payload[prefix + "current_shared"] = record["current_shared"]
+        payload[prefix + "selected_core"] = record["selected_core"]
+        payload[prefix + "generated_token_id"] = np.asarray(
+            int(record["generated_token_id"]), dtype=np.int32
+        )
+        payload[prefix + "refreshed"] = np.asarray(bool(record["refreshed"]))
+        if "rollout_per_step" in record:
+            payload[prefix + "rollout_per_step"] = record["rollout_per_step"]
+            payload[prefix + "rollout_generated"] = record["rollout_generated"]
+    payload["sample_id"] = np.asarray(str(sample_id))
+    payload["task"] = np.asarray(str(task))
+    payload["policy"] = np.asarray(str(policy))
+    payload["budget"] = np.asarray(int(budget), dtype=np.int32)
+    payload["sink_size"] = np.asarray(int(sink_size), dtype=np.int32)
+    payload["recent_size"] = np.asarray(int(recent_size), dtype=np.int32)
+    payload["core_budget"] = np.asarray(
+        int(budget) - int(sink_size) - int(recent_size), dtype=np.int32
+    )
+    payload["refresh_frequency"] = np.asarray(int(refresh_frequency), dtype=np.int32)
+    payload["rollout_horizon"] = np.asarray(int(rollout_horizon), dtype=np.int32)
+    payload["needle_spans"] = np.asarray(needle_spans, dtype=np.int32)
+    payload["official_score"] = np.asarray(
+        float(summary.get("official_score", float("nan"))), dtype=np.float64
+    )
+    payload["mean_trajectory_exact_kl"] = np.asarray(
+        float(summary.get("mean_trajectory_exact_kl", float("nan"))),
+        dtype=np.float64,
+    )
+    payload["causal_teacher_refreshes"] = np.asarray(
+        int(summary.get("causal_teacher_refreshes", 0)), dtype=np.int32
+    )
+    return payload
+
+
 def run_strict_causal_closed_loop(
     config_path: Path,
     repository_root: Path,
@@ -679,6 +799,7 @@ def run_strict_causal_closed_loop(
     sample_ids: Optional[Sequence[str]] = None,
     policies: Optional[Sequence[str]] = None,
     output_tag: Optional[str] = None,
+    rank_migration_dir: Optional[str] = None,
 ) -> Path:
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     cfg = load_discovery_config(str(repository_root / str(config["base_config"])))
@@ -722,7 +843,10 @@ def run_strict_causal_closed_loop(
     if not policies or unknown_policies:
         raise ValueError(f"unknown or empty closed-loop policies: {sorted(unknown_policies)}")
     if cycle_limit is None and policies != configured_policies:
-        raise RuntimeError("publication closed loop must run every configured policy")
+        if rank_migration_dir is None:
+            raise RuntimeError(
+                "publication closed loop must run every configured policy"
+            )
     run_refresh_frequency = int(
         config["closed_loop"]["refresh_frequency"]
         if refresh_frequency is None
@@ -785,7 +909,14 @@ def run_strict_causal_closed_loop(
         if not re.fullmatch(r"[A-Za-z0-9_-]+", str(output_tag)):
             raise ValueError("closed-loop output tag must be a simple name")
         output_root = output_root / "_shards" / str(output_tag)
-    output_root.mkdir(parents=True, exist_ok=True)
+    rank_migration_root: Optional[Path] = None
+    if rank_migration_dir is not None:
+        # Diagnostic mode: per-cycle rank-migration npz files only; nothing
+        # under the closed_loop result tree is created or overwritten.
+        rank_migration_root = Path(rank_migration_dir)
+        rank_migration_root.mkdir(parents=True, exist_ok=True)
+    else:
+        output_root.mkdir(parents=True, exist_ok=True)
     if str(split) == "closed_loop_test":
         if not (
             repository_root
@@ -844,8 +975,32 @@ def run_strict_causal_closed_loop(
         ordinal = 0
         for sample_id in selected_sample_ids:
             sample = by_id[sample_id]
+            if rank_migration_root is not None:
+                pending_arms = [
+                    (int(budget), str(policy))
+                    for budget in run_budgets
+                    for policy in policies
+                    if not _rank_migration_path(
+                        rank_migration_root, split, sample_id, str(policy), int(budget)
+                    ).exists()
+                ]
+                if not pending_arms:
+                    print(
+                        f"[rank-migration] resume skip {sample_id} (all arms done)",
+                        flush=True,
+                    )
+                    continue
             reference = causal_prefix_reference(runner, sample)
             _check_prompt_truncation(reference, sample_id, False)
+            needle_spans = np.zeros((0, 2), dtype=np.int32)
+            if rank_migration_root is not None:
+                evidence_texts = list(sample.metadata.get("evidence_texts") or [])
+                if evidence_texts:
+                    needle_spans = _needle_token_spans(
+                        runner.model.runner.hf_tokenizer,
+                        reference.prompt_token_ids,
+                        evidence_texts,
+                    )
             try:
                 full_rows, full_summary = _full_cache_reference_run(
                     runner,
@@ -862,6 +1017,23 @@ def run_strict_causal_closed_loop(
                 for budget in run_budgets:
                     for policy in policies:
                         ordinal += 1
+                        sink_records: Optional[List[Dict[str, Any]]] = None
+                        arm_path: Optional[Path] = None
+                        if rank_migration_root is not None:
+                            arm_path = _rank_migration_path(
+                                rank_migration_root,
+                                split,
+                                sample_id,
+                                str(policy),
+                                int(budget),
+                            )
+                            if arm_path.exists():
+                                print(
+                                    f"[rank-migration] resume skip {arm_path.name}",
+                                    flush=True,
+                                )
+                                continue
+                            sink_records = []
                         rows, summary = _strict_policy_run(
                             runner,
                             reference,
@@ -886,7 +1058,41 @@ def run_strict_causal_closed_loop(
                             run_refresh_frequency,
                             student=student_scorer,
                             hybrid=config["closed_loop"].get("hybrid"),
+                            diagnostic_sink=(
+                                sink_records.append
+                                if sink_records is not None
+                                else None
+                            ),
                         )
+                        if (
+                            rank_migration_root is not None
+                            and arm_path is not None
+                            and sink_records is not None
+                        ):
+                            _atomic_npz(
+                                arm_path,
+                                **_rank_migration_payload(
+                                    sink_records,
+                                    sample_id=sample_id,
+                                    task=str(sample.task),
+                                    policy=str(policy),
+                                    budget=int(budget),
+                                    sink_size=int(config["sink_size"]),
+                                    recent_size=int(config["recent_size"]),
+                                    refresh_frequency=run_refresh_frequency,
+                                    rollout_horizon=int(
+                                        config["closed_loop"]["rollout_horizon"]
+                                    ),
+                                    needle_spans=needle_spans,
+                                    summary=summary,
+                                ),
+                            )
+                            print(
+                                f"[rank-migration] {ordinal}/{total} {sample_id} "
+                                f"budget={budget} policy={policy} -> {arm_path}",
+                                flush=True,
+                            )
+                            continue
                         all_rows.extend(rows)
                         summaries.append(summary)
                         atomic_frame(
@@ -905,6 +1111,10 @@ def run_strict_causal_closed_loop(
                 runner.model.release(reference)
     finally:
         runner.model.close()
+    if rank_migration_root is not None:
+        # Diagnostic mode wrote one npz per arm; no closed_loop CSV/parquet
+        # artifacts are produced.
+        return rank_migration_root
     steps = pd.DataFrame(all_rows)
     summary = pd.DataFrame(summaries)
     atomic_frame(steps, output_root / "step_rows.parquet")

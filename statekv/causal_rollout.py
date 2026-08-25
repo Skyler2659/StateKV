@@ -126,8 +126,14 @@ def _causal_self_rollout(
     candidate_positions: Sequence[int],
     layers: Sequence[int],
     horizons: Sequence[int],
+    return_per_step: bool = False,
 ) -> Dict[str, Any]:
-    """Generate the model's own future and never read a saved continuation."""
+    """Generate the model's own future and never read a saved continuation.
+
+    With ``return_per_step=True`` the per-simulated-step attention tensor
+    (steps x layers x heads x candidates) is included as
+    ``per_step_attention``; otherwise only cumulative scores are returned.
+    """
 
     import mlx.core as mx
 
@@ -166,7 +172,7 @@ def _causal_self_rollout(
             int(horizon): stacked[: int(horizon)].sum(axis=0)
             for horizon in horizons
         }
-        return {
+        result: Dict[str, Any] = {
             "scores": scores,
             "generated": generated,
             "logits": logits_rows,
@@ -182,6 +188,9 @@ def _causal_self_rollout(
             "peak_memory_bytes": int(mx.get_peak_memory()),
             "forwards": int(maximum + 1),
         }
+        if return_per_step:
+            result["per_step_attention"] = stacked.astype(np.float32)
+        return result
     finally:
         runner.model.release(state)
 
