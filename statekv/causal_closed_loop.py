@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 import time
 from pathlib import Path
@@ -23,7 +24,11 @@ from statekv.causal_existence import (
     task_overrides,
 )
 from statekv.causal_predictors import _rho_key
-from statekv.causal_rollout import _causal_self_rollout, _prefix_recompute_state
+from statekv.causal_rollout import (
+    _causal_self_rollout,
+    _delete_positions,
+    _prefix_recompute_state,
+)
 from statekv.causal_student import (
     RuntimeStudentScorer,
     load_student_checkpoint,
@@ -235,6 +240,236 @@ def hybrid_trigger(
     raise ValueError(f"unknown hybrid trigger mode: {mode}")
 
 
+# LAQ / LAQ++ (Lookahead Q-Cache, EMNLP 2025, arXiv:2505.20334) hyperparameters;
+# values are the paper / official-repo defaults (run_longbench_LAQ.py).
+LAQ_LOOKAHEAD_SIZE = 8  # max_lookahead_size: pseudo response tokens in Q-Cache
+LAQ_STAGE2_WINDOW = 8  # stage2_window_size: LAQ++ local observation window
+
+
+def _laq_lookahead_scores(
+    runner: CandidatePullbackRunner,
+    processed_tokens: Sequence[int],
+    current_token: int,
+    positions: Sequence[int],
+    eligible: Sequence[int],
+    score_layers: Sequence[int],
+    snapkv_rows: Sequence[Mapping[int, float]],
+    core_budget: int,
+    snapkv_pooling_kernel: int,
+    lookahead_size: int,
+    stage2_window: int,
+) -> Tuple[Dict[int, float], List[int], float]:
+    """One-shot LAQ/LAQ++ scoring (arXiv:2505.20334) on a temporary branch.
+
+    Rebuilds a full-KV branch from the processed prefix (same recompute path
+    as the R2 causal teacher), captures the post-RoPE queries of the last
+    ``stage2_window`` prompt positions under full KV (the LAQ++ observation
+    window W; empty for plain LAQ), evicts the branch to the target budget
+    with the strict SnapKV observation-window scores (the LAQ lookahead
+    stage), greedily generates ``lookahead_size`` pseudo response tokens on
+    the evicted branch while capturing their per-layer post-RoPE queries (the
+    Q-Cache), then scores every original prompt position by the summed raw
+    pre-softmax q·k logits over the observation queries (W ∪ Q-Cache for
+    LAQ++, Q-Cache alone for LAQ), averaged over query heads and score layers.
+
+    Returns ``({position: score}, lookahead_token_ids, wall_seconds)``; the
+    branch state is released before returning. The entire wall time (prefix
+    recompute, query capture, eviction, lookahead generation, scoring) is
+    reported so the caller can charge it to the causal-teacher budget.
+    """
+
+    import mlx.core as mx
+
+    from src.runners.mlx_runner import snapkv_pool_scores_numpy
+    from statekv.backend_mlx import MLXReplayState
+
+    started = time.perf_counter()
+    tokens = [int(value) for value in processed_tokens]
+    score_layers = [int(layer) for layer in score_layers]
+    stage2_window = int(stage2_window)
+    lookahead_size = int(lookahead_size)
+    if stage2_window < 0 or lookahead_size < 1:
+        raise ValueError("LAQ requires lookahead_size >= 1 and stage2_window >= 0")
+    if len(tokens) <= max(0, stage2_window - 1):
+        raise ValueError("LAQ lookahead requires a prompt longer than its window")
+    heads_by_layer = {
+        int(layer): [int(head) for head in runner.model.selected_heads[int(layer)]]
+        for layer in score_layers
+    }
+
+    def _captured_queries(record: Any) -> Dict[int, np.ndarray]:
+        return {
+            int(layer): np.stack(
+                [
+                    record.post_rope_queries["%d:%d" % (int(layer), int(head))]
+                    .detach()
+                    .float()
+                    .cpu()
+                    .numpy()
+                    for head in heads_by_layer[int(layer)]
+                ],
+                axis=0,
+            ).astype(np.float32)
+            for layer in score_layers
+        }
+
+    # Full-KV prefix branch; identical recompute mechanics to
+    # _prefix_recompute_state, except the window tail is replayed token by
+    # token so the diagnostic hook captures those positions' queries.
+    runner.model.runner.reset_attention_state()
+    runner.model._configure_attention("prefill")
+    runner.model.runner.attention_state["record_all_queries"] = False
+    prefix = tokens[: len(tokens) - max(0, stage2_window - 1)]
+    cache = runner.model.runner.make_cache(
+        "full", len(tokens) + lookahead_size + 4
+    )
+    chunk_size = max(1, int(runner.cfg.runtime.prefill_chunk_size))
+    for offset in range(0, len(prefix), chunk_size):
+        logits = runner.model.runner.model(
+            mx.array([prefix[offset : offset + chunk_size]]), cache=cache
+        )
+        mx.eval(logits)
+    runner.model.runner.attention_state["phase"] = "decode"
+    branch = MLXReplayState(
+        cache=cache,
+        position_maps={
+            layer: torch.arange(len(prefix), dtype=torch.long)
+            for layer in range(len(cache))
+        },
+        logical_next_position=len(prefix),
+    )
+    try:
+        # LAQ++ local observation window: queries of the last stage2_window
+        # prompt positions (the final prompt token is the current token),
+        # captured under the full-KV branch as in the reference prefill.
+        window_queries: Dict[int, List[np.ndarray]] = {
+            int(layer): [] for layer in score_layers
+        }
+        for token in tokens[len(prefix) :]:
+            _, record, _ = runner.model.forward_one(
+                branch, int(token), capture_attention=True
+            )
+            captured = _captured_queries(record)
+            for layer in score_layers:
+                window_queries[int(layer)].append(captured[int(layer)])
+        # The first pseudo response token comes from the full-KV branch
+        # logits of the current query, as in the reference implementation.
+        logits, record, _ = runner.model.forward_one(
+            branch, int(current_token), capture_attention=True
+        )
+        captured = _captured_queries(record)
+        for layer in score_layers:
+            if stage2_window > 0:
+                window_queries[int(layer)].append(captured[int(layer)])
+        # Snapshot the original (pre-re-eviction) prompt keys for scoring;
+        # the reference also scores against the full prefill KV.
+        full_keys: Dict[int, torch.Tensor] = {}
+        key_rows: Dict[int, List[int]] = {}
+        for layer in score_layers:
+            maps = [
+                int(value) for value in branch.position_maps[int(layer)].tolist()
+            ]
+            row_by_position = {
+                position: row for row, position in enumerate(maps)
+            }
+            key_rows[int(layer)] = [
+                row_by_position[int(position)] for position in positions
+            ]
+            full_keys[int(layer)] = runner.model._torch(
+                branch.cache[int(layer)].keys[
+                    :, :, : int(branch.cache[int(layer)].offset), :
+                ],
+                torch.float16,
+            )[0]
+        # LAQ lookahead stage: SnapKV-evict the branch to the target budget
+        # (same sink/recent protection and rank_and_margin top-core selection
+        # as the strict loop; pooled observation-window attention scores).
+        raw = np.asarray(
+            [
+                sum(row.get(int(position), 0.0) for row in snapkv_rows)
+                for position in positions
+            ],
+            dtype=np.float64,
+        )
+        pooled = np.asarray(
+            snapkv_pool_scores_numpy(raw, int(snapkv_pooling_kernel), "max"),
+            dtype=np.float64,
+        )
+        _, _, lookahead_core = rank_and_margin(
+            pooled, positions, eligible, int(core_budget)
+        )
+        eligible_set = {int(value) for value in eligible}
+        keep = {
+            int(position) for position in positions if int(position) not in eligible_set
+        } | set(int(value) for value in lookahead_core)
+        _delete_positions(
+            branch,
+            [int(position) for position in positions if int(position) not in keep],
+        )
+        # Lookahead generation on the degraded cache; the per-layer post-RoPE
+        # queries of these tokens form the Q-Cache.
+        lookahead_queries: Dict[int, List[np.ndarray]] = {
+            int(layer): [] for layer in score_layers
+        }
+        generated: List[int] = []
+        token = int(torch.argmax(logits.float()).item())
+        for _ in range(lookahead_size):
+            generated.append(int(token))
+            logits, record, _ = runner.model.forward_one(
+                branch, int(token), capture_attention=True
+            )
+            captured = _captured_queries(record)
+            for layer in score_layers:
+                lookahead_queries[int(layer)].append(captured[int(layer)])
+            token = int(torch.argmax(logits.float()).item())
+        # Re-eviction scoring: summed raw pre-softmax q·k over the observation
+        # queries per (layer, query head), then averaged over heads and
+        # layers. Observation queries are causally masked by absolute
+        # position (a window query cannot score keys after its own position;
+        # Q-Cache queries postdate the prompt, so their mask is a no-op).
+        group = int(runner.model.model_info["gqa_query_heads_per_kv_head"])
+        position_array = np.asarray(
+            [int(value) for value in positions], dtype=np.int64
+        )
+        shared = np.zeros(len(positions), dtype=np.float64)
+        for layer in score_layers:
+            keys = full_keys[int(layer)][:, key_rows[int(layer)], :].float()
+            scale = 1.0 / math.sqrt(int(keys.shape[-1]))
+            queries: List[np.ndarray] = []
+            query_positions: List[int] = []
+            if stage2_window > 0:
+                for offset, value in enumerate(window_queries[int(layer)]):
+                    queries.append(value)
+                    query_positions.append(len(prefix) + offset)
+            for offset, value in enumerate(lookahead_queries[int(layer)]):
+                queries.append(value)
+                query_positions.append(len(tokens) + 1 + offset)
+            observation = torch.from_numpy(np.stack(queries, axis=0)).float()
+            masked = torch.from_numpy(
+                position_array[None, :]
+                > np.asarray(query_positions, dtype=np.int64)[:, None]
+            )
+            heads = heads_by_layer[int(layer)]
+            layer_scores = torch.zeros(len(positions), dtype=torch.float32)
+            for local, head in enumerate(heads):
+                kv_head = int(head) // int(group)
+                logits_h = (
+                    observation[:, local, :] @ keys[int(kv_head)].T
+                ) * scale
+                layer_scores += logits_h.masked_fill(masked, 0.0).sum(dim=0)
+            layer_scores /= float(len(heads))
+            shared += layer_scores.numpy().astype(np.float64)
+        shared /= float(len(score_layers))
+        scores = {
+            int(position): float(shared[index])
+            for index, position in enumerate(positions)
+            if int(position) in eligible_set
+        }
+        return scores, generated, float(time.perf_counter() - started)
+    finally:
+        runner.model.release(branch)
+
+
 def _strict_policy_run(
     runner: CandidatePullbackRunner,
     reference: Any,
@@ -411,6 +646,37 @@ def _strict_policy_run(
         elif policy == "STRICT_BEST_PER_HEAD_FIXED_EMA":
             shared_scores = fixed_shared
             teacher_s = 0.0
+        elif policy in {"STRICT_LAQ", "STRICT_LAQPP"}:
+            # Lookahead Q-Cache (arXiv:2505.20334): one-shot selection at the
+            # decode-onset cycle from pseudo-response queries; cycles 1+ reuse
+            # the frozen cycle-0 scores exactly like R2 between refreshes.
+            if cycle == 0:
+                laq_scores, _, teacher_s = _laq_lookahead_scores(
+                    runner,
+                    processed_tokens,
+                    current_token,
+                    positions,
+                    eligible,
+                    [int(layer) for layer in score_layers],
+                    snapkv_rows,
+                    core_budget,
+                    int(snapkv_pooling_kernel),
+                    lookahead_size=LAQ_LOOKAHEAD_SIZE,
+                    stage2_window=(
+                        LAQ_STAGE2_WINDOW if policy == "STRICT_LAQPP" else 0
+                    ),
+                )
+                cached_rollout_scores = laq_scores
+                cycle_refreshed = True
+                teacher_refreshes += 1
+            else:
+                teacher_s = 0.0
+            shared_scores = np.full(len(positions), -np.inf, dtype=np.float64)
+            for index, position in enumerate(positions):
+                if int(position) in set(eligible):
+                    shared_scores[index] = float(
+                        cached_rollout_scores.get(int(position), current_shared[index])
+                    )
         elif policy == "STRICT_CAUSAL_ROLLOUT_R2":
             refresh = cycle % int(refresh_frequency) == 0 or not cached_rollout_scores
             if refresh:
@@ -587,7 +853,12 @@ def _strict_policy_run(
                 "causal_teacher_time_s": teacher_s,
                 "causal_teacher_refreshed": bool(
                     policy
-                    in {"STRICT_CAUSAL_ROLLOUT_R2", "STRICT_HYBRID_QK_R2"}
+                    in {
+                        "STRICT_CAUSAL_ROLLOUT_R2",
+                        "STRICT_HYBRID_QK_R2",
+                        "STRICT_LAQ",
+                        "STRICT_LAQPP",
+                    }
                     and teacher_s > 0.0
                 ),
                 "hybrid_r2_fired": bool(hybrid_r2_fired),
@@ -604,6 +875,7 @@ def _strict_policy_run(
                 "positions": np.asarray(positions, dtype=np.int32),
                 "eligible": np.asarray(eligible, dtype=np.int32),
                 "current_shared": np.asarray(current_shared, dtype=np.float32),
+                "shared_scores": np.asarray(shared_scores, dtype=np.float32),
                 "selected_core": np.asarray(shared_core, dtype=np.int32),
                 "generated_token_id": int(new_tokens[0]),
                 "refreshed": bool(cycle_refreshed),
@@ -738,8 +1010,10 @@ def _rank_migration_payload(
 
     Per-cycle keys are ``cycle_%04d_<field>`` with fields ``positions``
     (int32), ``eligible`` (int32), ``current_shared`` (float32, aligned
-    with ``positions``), ``selected_core`` (int32), ``generated_token_id``
-    (int32 scalar) and ``refreshed`` (bool scalar). Cycles whose
+    with ``positions``), ``shared_scores`` (float32 policy selection scores
+    aligned with ``positions``, -inf for non-eligible), ``selected_core``
+    (int32), ``generated_token_id`` (int32 scalar) and ``refreshed`` (bool
+    scalar). Cycles whose
     ``refreshed`` is true additionally carry ``rollout_per_step``
     (rollout_horizon x n_eligible float32, aligned with that cycle's
     ``eligible``) and ``rollout_generated`` (int32). ``needle_spans`` is an
@@ -755,6 +1029,7 @@ def _rank_migration_payload(
         payload[prefix + "positions"] = record["positions"]
         payload[prefix + "eligible"] = record["eligible"]
         payload[prefix + "current_shared"] = record["current_shared"]
+        payload[prefix + "shared_scores"] = record["shared_scores"]
         payload[prefix + "selected_core"] = record["selected_core"]
         payload[prefix + "generated_token_id"] = np.asarray(
             int(record["generated_token_id"]), dtype=np.int32
@@ -872,6 +1147,15 @@ def run_strict_causal_closed_loop(
         )
         # The student rebuilds artifact_boundary features at runtime and needs
         # per-head post-RoPE queries plus hidden states on every score layer.
+        cfg.diagnostics.explicit_layers = [
+            int(value) for value in config["diagnostic_layers"]
+        ]
+        cfg.diagnostics.explicit_heads = [
+            int(value) for value in config["diagnostic_query_heads"]
+        ]
+    if {"STRICT_LAQ", "STRICT_LAQPP"} & set(policies):
+        # LAQ/LAQ++ aggregate raw q·k over every query head of each score
+        # layer, so the diagnostic hook must capture all query heads there.
         cfg.diagnostics.explicit_layers = [
             int(value) for value in config["diagnostic_layers"]
         ]

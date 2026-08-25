@@ -1,0 +1,67 @@
+# Cheap-R2 cycle0-only ablation on fresh LongBench (hotpotqa/2wikimqa/gov_report
+# 40-59, budget 256). Same samples as cheapr2_fresh_longbench_v1; only the
+# refresh schedule differs (single rollout at cycle 0). Boundary-validation arm:
+# confirms whether simplifying to one-shot lookahead changes the LongBench
+# conclusions. Reference arms come from cheapr2_fresh_longbench_v1.
+experiment_name: statekv_cheapr2_cycle0_longbench_qwen3_8b
+base_config: configs/stages/direct_policy_independent_base.yaml
+output_run: results/statekv_counterfactual/cheapr2_cycle0_longbench_v1
+data_seed: 20260820
+runtime_run_id: statekv_cheapr2_cycle0_longbench_qwen3_8b_seed20260820_v1
+
+model_overrides:
+  name: mlx-community/Qwen3-8B-4bit
+  dtype: 4bit
+  quant_bits: 4
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  prompt_format: chat_template
+  chat_template_kwargs:
+    enable_thinking: false
+
+runtime_overrides:
+  max_prompt_tokens: 8192
+
+task_families:
+  - hotpotqa
+  - 2wikimqa
+  - govreport_or_qmsum
+task_settings:
+  hotpotqa:
+    max_words: 2000
+    sample_strategy: first
+    data_path: /Users/wangsikai/.cache/huggingface/datasets/downloads/extracted/a8b1946a87d94505d02163b08366e33c363e627eb7f42d9b6b6b647acd60f098/data/hotpotqa.jsonl
+  2wikimqa:
+    max_words: 2000
+    sample_strategy: first
+    data_path: /Users/wangsikai/.cache/huggingface/datasets/downloads/extracted/a8b1946a87d94505d02163b08366e33c363e627eb7f42d9b6b6b647acd60f098/data/2wikimqa.jsonl
+  govreport_or_qmsum:
+    preferred: gov_report
+    max_words: 700
+    sample_strategy: first
+    fallback_paragraphs: 24
+split_indices:
+  train: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+          50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
+
+control_cycles: 64
+total_budget: 256
+sink_size: 4
+recent_size: 32
+core_budget: 220
+diagnostic_layers: [0, 7, 14, 15, 21, 27]
+
+closed_loop:
+  budgets: [256]
+  rollout_horizon: 32
+  refresh_frequency: 64
+  validation_refresh_frequencies: [64]
+  policies:
+    - STRICT_CAUSAL_ROLLOUT_R2
+  primary_baseline: STRICT_QK_CURRENT
+  snapkv_window: 32
+  snapkv_pooling_kernel: 63
+
+# Required by the runner's paired-comparison bootstrap step.
+gate_a:
+  bootstrap_repetitions: 20000
+  random_seed: 20260820
