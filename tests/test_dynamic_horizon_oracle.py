@@ -1,6 +1,6 @@
 import numpy as np
 
-from scripts.analyze_dynamic_horizon_oracle import (
+from statekv.dynamic_horizon_metrics import (
     _fixed_metrics,
     _token_time_oracle_metrics,
 )
@@ -24,4 +24,3 @@ def test_fixed_metrics_has_per_step_decisions() -> None:
     result = _fixed_metrics(values, values, np.ones_like(values, dtype=bool), 2)
     assert result["decisions"] == 2
     assert result["future_topk_recall"] == 1.0
-

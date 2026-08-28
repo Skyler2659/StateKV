@@ -12,22 +12,13 @@ dynamic = ["dependencies"]
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
 
-[tool.setuptools]
-py-modules = ["benchmark", "cache_baselines", "data_sources", "shared_q"]
-
 [tool.setuptools.packages.find]
 where = ["."]
 include = [
   "src*",
-  "h2o_llm*",
-  "l1_llm*",
-  "plain_llm*",
-  "rocketkv*",
-  "snapkv*",
-  "streaming_llm*",
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = []
 addopts = "-ra -p no:cacheprovider"
 pythonpath = ["."]

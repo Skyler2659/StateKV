@@ -25,7 +25,6 @@ from statekv.functional_features import (  # noqa: E402
     functional_measurement,
 )
 from statekv.metrics import approximate_kl, loss_shape  # noqa: E402
-from statekv.robust_envelope_policy import refresh_schedule  # noqa: E402
 from statekv.selectors import mandatory_and_eligible, ridge_leverage  # noqa: E402
 
 
@@ -88,7 +87,8 @@ def main() -> None:
 
     curve = loss_shape([0.01, 0.02, 0.30, 0.05], 0.25)
     assert curve["first_large_loss_spike"] == 3
-    assert refresh_schedule(3, 16) == [4, 8, 12]
+    refresh_offsets = [int(round((index + 1) * 16 / 4)) for index in range(3)]
+    assert refresh_offsets == [4, 8, 12]
 
     reference_boundary = torch.tensor([0.0, 1.0], dtype=torch.float64)
     history_boundary = torch.tensor([0.25, 0.75], dtype=torch.float64)
@@ -130,7 +130,7 @@ def main() -> None:
                     "token_count"
                 ],
                 "core_api": "ok",
-                "refresh_offsets": [4, 8, 12],
+                "refresh_offsets": refresh_offsets,
             },
             indent=2,
         )

@@ -10,6 +10,7 @@ from statekv.storage import (
     atomic_json,
     atomic_npz,
     atomic_text,
+    safe_path_component,
 )
 
 
@@ -40,3 +41,16 @@ def test_atomic_writers_commit_complete_artifacts(tmp_path) -> None:
         "value.parquet",
         "value.npz",
     }
+
+
+def test_npz_keywords_and_artifact_path_components_are_stable(tmp_path) -> None:
+    path = tmp_path / "artifact.npz"
+    atomic_npz(path, values=np.asarray([1, 2, 3]))
+    uncompressed_path = tmp_path / "fragment.npz"
+    atomic_npz(uncompressed_path, {"value": np.asarray([4])}, compressed=False)
+
+    with np.load(path) as arrays:
+        assert arrays["values"].tolist() == [1, 2, 3]
+    with np.load(uncompressed_path) as arrays:
+        assert arrays["value"].tolist() == [4]
+    assert safe_path_component("gov_report:192/example") == "gov_report__192_example"

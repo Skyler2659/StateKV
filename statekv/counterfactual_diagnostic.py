@@ -34,7 +34,6 @@ from scipy.stats import spearmanr
 
 from statekv.candidate_pullback import CandidatePullbackRunner
 from statekv.causal_existence import (
-    _safe_sample_id,
     causal_prefix_reference,
     sample_id_for,
     task_overrides,
@@ -55,9 +54,9 @@ from statekv.oracle_policy_comparison import _selection_from_scores
 from statekv.oracle_policy_freegen import _check_prompt_truncation, _free_rollout
 from statekv.qkv_decomposition import _scoring_forward_per_head, rank_and_margin
 from statekv.selectors import mandatory_and_eligible
-from statekv.storage import atomic_frame, atomic_json
+from statekv.storage import atomic_frame, atomic_json, safe_path_component
 from statekv.tasks import load_discovery_tasks
-from statekv.trajectory_model import exact_distribution_metrics
+from statekv.output_metrics import exact_distribution_metrics
 
 
 UTILITIES = ("A_current_qk", "B_fixed_ema", "C_r2_future_attention", "D_cf_attention_value")
@@ -385,9 +384,9 @@ def run_counterfactual_diagnostic(
         for ordinal, sample_id in enumerate(panel_ids, start=1):
             sample = by_id[sample_id]
             artifact = _load_npz(
-                source_run / "artifacts" / "train" / f"{_safe_sample_id(sample_id)}.npz"
+                source_run / "artifacts" / "train" / f"{safe_path_component(sample_id)}.npz"
             )
-            teacher = _load_npz(teacher_root / f"{_safe_sample_id(sample_id)}.npz")
+            teacher = _load_npz(teacher_root / f"{safe_path_component(sample_id)}.npz")
             reference = causal_prefix_reference(runner, sample)
             _check_prompt_truncation(reference, sample_id, False)
             try:

@@ -15,8 +15,6 @@ import yaml
 
 from statekv.candidate_pullback import CandidatePullbackRunner
 from statekv.causal_existence import (
-    _atomic_npz,
-    _safe_sample_id,
     _scoring_forward,
     causal_prefix_reference,
     expand_split_ids,
@@ -46,9 +44,9 @@ from statekv.oracle_policy_freegen import (
 from statekv.qkv_decomposition import _scoring_forward_per_head, rank_and_margin
 from statekv.reactivation_timeline import _needle_token_spans
 from statekv.selectors import mandatory_and_eligible
-from statekv.storage import atomic_frame, atomic_json
+from statekv.storage import atomic_frame, atomic_json, atomic_npz, safe_path_component
 from statekv.tasks import load_discovery_tasks
-from statekv.trajectory_analysis import cluster_bootstrap_interval
+from statekv.summary_statistics import cluster_bootstrap_interval
 
 
 def _paired_comparison_frame(
@@ -988,7 +986,7 @@ def _full_cache_reference_run(
 def _rank_migration_path(
     root: Path, split: str, sample_id: str, policy: str, budget: int
 ) -> Path:
-    name = "%s__%s__b%d.npz" % (_safe_sample_id(sample_id), policy, int(budget))
+    name = "%s__%s__b%d.npz" % (safe_path_component(sample_id), policy, int(budget))
     return root / str(split) / name
 
 
@@ -1353,7 +1351,7 @@ def run_strict_causal_closed_loop(
                             and arm_path is not None
                             and sink_records is not None
                         ):
-                            _atomic_npz(
+                            atomic_npz(
                                 arm_path,
                                 **_rank_migration_payload(
                                     sink_records,

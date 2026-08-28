@@ -19,10 +19,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from statekv.reactivation_timeline import load_artifact, timeline_importance
-
-
-def _safe_sample_id(sample_id: str) -> str:
-    return str(sample_id).replace(":", "__").replace("/", "_")
+from statekv.storage import safe_path_component
 
 
 def _rank_fractions(importance: np.ndarray, lengths: np.ndarray) -> np.ndarray:
@@ -148,7 +145,7 @@ def plot_artifact(
     figure.tight_layout()
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    output = out_dir / f"{_safe_sample_id(sample_id)}_trajectory.png"
+    output = out_dir / f"{safe_path_component(sample_id)}_trajectory.png"
     figure.savefig(output, dpi=150)
     plt.close(figure)
     return output

@@ -17,7 +17,7 @@ import numpy as np
 import yaml
 from scipy.stats import spearmanr
 
-from statekv.causal_existence import _safe_sample_id, sample_id_for
+from statekv.causal_existence import sample_id_for
 from statekv.causal_predictors import FixedProjector, _load_npz, artifact_boundary
 from statekv.selectors import mandatory_and_eligible
 

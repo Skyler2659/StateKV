@@ -30,8 +30,6 @@ compressed-policy output is read.
 from __future__ import annotations
 
 import json
-import os
-import tempfile
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -48,28 +46,8 @@ from statekv.causal_existence import (
     task_overrides,
 )
 from statekv.config import apply_named_overrides, load_discovery_config
-from statekv.storage import atomic_frame, atomic_json
+from statekv.storage import atomic_frame, atomic_json, atomic_npz, safe_path_component
 from statekv.tasks import load_discovery_tasks
-
-
-def _safe_sample_id(sample_id: str) -> str:
-    return str(sample_id).replace(":", "__").replace("/", "_")
-
-
-def _atomic_npz(path: Path, **arrays: np.ndarray) -> None:
-    """Write one compressed trajectory without exposing a partial artifact."""
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    handle, temporary = tempfile.mkstemp(
-        prefix=f".{path.stem}.", suffix=".tmp", dir=path.parent
-    )
-    try:
-        with os.fdopen(handle, "wb") as stream:
-            np.savez_compressed(stream, **arrays)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
 
 
 # ---------------------------------------------------------------------------
@@ -362,7 +340,7 @@ def collect_reactivation_timeline_dataset(
     try:
         for ordinal, sample_id in enumerate(selected_ids, start=1):
             split = split_by_id[sample_id]
-            artifact = artifact_root / split / f"{_safe_sample_id(sample_id)}.npz"
+            artifact = artifact_root / split / f"{safe_path_component(sample_id)}.npz"
             if artifact.exists():
                 print(f"[reactivation-timeline] reuse {sample_id}", flush=True)
                 continue
@@ -372,7 +350,7 @@ def collect_reactivation_timeline_dataset(
                 runner.model, sample, layers, cycles, block_size
             )
             elapsed = time.perf_counter() - sample_started
-            _atomic_npz(artifact, **arrays, split=np.asarray(split))
+            atomic_npz(artifact, **arrays, split=np.asarray(split))
             timings.append(
                 {
                     "sample_id": str(sample_id),

@@ -26,12 +26,6 @@ dependencies = [
   "matplotlib>=3.7",
 ]
 
-[project.scripts]
-kvbench-run = "kvbench.cli.run:main"
-kvbench-aggregate = "kvbench.analysis.aggregate:main"
-kvbench-validate = "kvbench.analysis.validate:main"
-kvbench-plot = "kvbench.analysis.plot:main"
-
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["kvbench*"]

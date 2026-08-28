@@ -13,9 +13,8 @@ import yaml
 from scipy.stats import spearmanr
 
 from statekv.candidate_pullback import CandidatePullbackRunner
+from statekv.cache_state import clone_mlx_state
 from statekv.causal_existence import (
-    _atomic_npz,
-    _safe_sample_id,
     causal_prefix_reference,
     expand_split_ids,
     task_overrides,
@@ -34,11 +33,10 @@ from statekv.oracle_policy_freegen import (
     _free_rollout,
 )
 from statekv.qkv_decomposition import _scoring_forward_per_head, rank_and_margin
-from statekv.robust_envelope_policy import _clone_state
 from statekv.selectors import mandatory_and_eligible
-from statekv.storage import atomic_frame, atomic_json
+from statekv.storage import atomic_frame, atomic_json, atomic_npz, safe_path_component
 from statekv.tasks import load_discovery_tasks
-from statekv.trajectory_model import exact_distribution_metrics
+from statekv.output_metrics import exact_distribution_metrics
 
 
 def _load_artifact(path: Path) -> Dict[str, np.ndarray]:
@@ -222,7 +220,7 @@ def _counterfactual_group_scores(
 ) -> List[Dict[str, float]]:
     rows: List[Dict[str, float]] = []
     for group_id, group in enumerate(groups):
-        branch = _clone_state(full_state)
+        branch = clone_mlx_state(full_state)
         _delete_positions(branch, group)
         kl = 0.0
         delta_nll = 0.0
@@ -432,7 +430,7 @@ def run_causal_rollout_study(
                     if cycle in requested_cycle_set:
                         rollout_results: List[Tuple[str, Dict[str, Any], float, int, int]] = []
                         if "full_shadow" in run_implementations:
-                            r1_state = _clone_state(full_state)
+                            r1_state = clone_mlx_state(full_state)
                             r1_kv_bytes = _state_kv_bytes(r1_state)
                             r1 = _causal_self_rollout(
                                 runner,
@@ -669,10 +667,10 @@ def run_causal_rollout_study(
                         positions_row, dtype=np.int32
                     )
                     packed_scores[index, :, :, :, :count] = scores_row
-                _atomic_npz(
+                atomic_npz(
                     result_root
                     / "teacher_scores"
-                    / f"{_safe_sample_id(sample_id)}.npz",
+                    / f"{safe_path_component(sample_id)}.npz",
                     cycles=np.asarray(teacher_cycles, dtype=np.int16),
                     horizons=np.asarray(horizons, dtype=np.int16),
                     position_ids=packed_positions,

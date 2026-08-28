@@ -35,11 +35,11 @@ from statekv.oracle_policy_comparison import (
     _mean_attention,
     _physical_candidate_panel,
 )
-from statekv.output_sensitivity_freegen import _ngram_f1, _repetition_rate
+from statekv.text_metrics import ngram_f1, repetition_4gram_rate
 from statekv.selectors import CoreSelection, LayerSelection
 from statekv.storage import atomic_frame, atomic_json, atomic_text
 from statekv.tasks import load_discovery_tasks
-from statekv.trajectory_model import exact_distribution_metrics
+from statekv.output_metrics import exact_distribution_metrics
 
 
 _POOL_SCORED_CANDIDATES = frozenset({"qk_pool", "quest_like", "qk_obswin"})
@@ -393,7 +393,7 @@ def _metric_row(
         "policy": str(policy),
         "generation_text": text,
         "generation_length_tokens": len(token_ids),
-        "repetition_4gram_rate": _repetition_rate(text),
+        "repetition_4gram_rate": repetition_4gram_rate(text),
         "mean_trajectory_exact_kl": float(mean_trajectory_kl),
     }
     if "gov" in sample.task.lower():
@@ -402,10 +402,10 @@ def _metric_row(
             {
                 "rouge_l": float(rouge_l),
                 "rouge_1": float(
-                    max(_ngram_f1(text, reference, 1) for reference in references)
+                    max(ngram_f1(text, reference, 1) for reference in references)
                 ),
                 "rouge_2": float(
-                    max(_ngram_f1(text, reference, 2) for reference in references)
+                    max(ngram_f1(text, reference, 2) for reference in references)
                 ),
                 "official_score": float(
                     longbench_score("gov_report", text, references) or 0.0

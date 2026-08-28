@@ -14,7 +14,7 @@ import pandas as pd
 import yaml
 
 from statekv.causal_distillation import _teacher_arrays
-from statekv.causal_existence import _safe_sample_id, sample_id_for
+from statekv.causal_existence import sample_id_for
 from statekv.causal_student import (
     R2_TEACHER,
     StudentScorer,
@@ -23,6 +23,7 @@ from statekv.causal_student import (
     load_student_checkpoint,
     save_student_checkpoint,
 )
+from statekv.storage import safe_path_component
 from sklearn.preprocessing import StandardScaler
 
 
@@ -49,7 +50,7 @@ def main() -> None:
         for index in config["distillation"]["train_indices"]
     ]
     artifact_paths = [
-        source_run / "artifacts" / "train" / f"{_safe_sample_id(sample_id)}.npz"
+        source_run / "artifacts" / "train" / f"{safe_path_component(sample_id)}.npz"
         for sample_id in train_ids
     ]
     started = time.perf_counter()

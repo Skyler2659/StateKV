@@ -1,124 +1,94 @@
 # StateKV
 
-**An experimental research codebase documenting an investigation into
-state-conditioned KV-cache compression — including both positive and
-negative results.**
+**StateKV is a research codebase for KV-cache compression under changing
+generation state.** It studies how a cache should retain information that is
+not important now but will become important to an upcoming query, and
+introduces **Cheap-R2**, a one-shot full-cache foresight policy for this
+setting.
 
-> **Research status (2026-08-10).** The original StateKV method line — a
-> deployable controller driven by state-conditioned physical retained-set
-> risk — is **closed as a negative result** under preregistered
-> deployment-faithful gates and should not be cited as a validated method.
-> What survives is the mechanism-level evaluator, a strong oracle baseline
-> (exact per-query full-pool QK routing), a mapped coverage × cadence
-> failure frontier, a systematically falsified search space (41 rejected
-> strategies with verified numbers), and a reusable evaluation
-> infrastructure. Read [`docs/RESEARCH_HISTORY.md`](docs/RESEARCH_HISTORY.md)
-> first, then [`docs/FINDINGS.md`](docs/FINDINGS.md).
+The repository includes the active evaluation runtime, frozen experiment
+artifacts, and a compact record of the research path from physical risk
+modeling to future-utility control.
 
-## What was investigated
+## Highlights
 
-Repeated KV-cache compression is state-dependent: the consequence of a
-retained set depends on the compressed trajectory that produced the current
-model state. StateKV treated each candidate retained set as a physical
-intervention at that state, propagated the deletion-and-renormalization
-response to output logits, and used the resulting risk for both selection
-and refresh. Its supported identity was a same-state physical evaluator:
-an expensive, candidate-specific teacher that rolls out a
-legal action panel at every boundary, with the intention that a deployable
-online policy would eventually replace the teacher's candidate rollouts
-with one cheap observable. L1/L2 leverage, attention, recency, value norm,
-SnapKV, and H2O appear as baselines, proposal mechanisms, or diagnostics —
-not as StateKV itself.
+- **Cheap-R2.** At query onset, the target model rolls out 32 future tokens on
+  the full prefix, accumulates each historical token's future attention
+  utility, and performs one strict physical eviction. The selected ranking is
+  reused for the rest of decoding.
+- **Strong tight-budget retrieval result.** On fresh multikey retrieval with
+  Qwen3-8B-4bit, Cheap-R2 reaches 48.5 / 70.0 / 81.0 at KV budgets
+  128 / 256 / 512. Current-QK reaches 1.0 / 21.0 / 25.5; LAQ reaches
+  0.0 / 29.5 / 84.5.
+- **A precise operating point.** At budget 256, Cheap-R2 improves multikey
+  accuracy from 21.0 to 70.0 over current-QK at 1.41x its wall time. The gain
+  is specific to retrieval-heavy, tight-memory workloads; it does not
+  translate into a stable advantage on the evaluated LongBench QA slices.
+- **A reusable research platform.** The active code supports recoverable and
+  strict-eviction evaluation, exact output metrics, paired bootstrap
+  statistics, QK routing, Cheap-R2, and causal student experiments.
 
-The investigation ran through: frozen mechanism validation (P0–P3PR),
-training-free cheap estimators (TF-P0–P5), teacher-forced direct policies
-(P6–P24), a physical-oracle closed loop and cheap controllers (P25–P35),
-deployment-faithful headroom gates (Gate 0–2, R0), a QK–V mechanism
-battery, a selective-refresh trigger line (R1–R2), an open-ended search
-(HF1–HF6), an external-validity challenge at longer context, and a final
-no-gate retest of every marginally rejected policy.
+## Research question
 
-## What survived current evidence
+Most KV-cache policies rank tokens from the current query. That is sufficient
+when today's attention predicts tomorrow's demand, but it can discard evidence
+before a delayed query activates it. StateKV asks whether future token utility
+can be estimated causally and whether that estimate improves memory-limited
+generation.
 
-- The state-conditioned physical risk **evaluator** is exact and accurate
-  (identity error 2.26e-11; state-conditioned cosine 0.99974; frozen-pool
-  ranking Spearman 1.0). It remains a sound research instrument.
-- **Exact per-query full-pool QK routing (qk_pool)** was never beaten by
-  any cheap or expensive alternative at any quality-valid operating point,
-  across two model families and coverage down to 1.4%.
-- The **coverage × cadence cliff**: at tight budgets, slow refresh is
-  catastrophic (NIAH 1.0 → 0.0 from h1 to h16 at 8% coverage) and no
-  refresh-time scoring rescues it. The controlling variable is the absolute
-  core budget.
-- **Cold-V 4-bit tiering under QK routing is near-lossless** at matched
-  budget (KL within 6% of qk_pool, identical task scores).
-- Full graded list: [`docs/FINDINGS.md`](docs/FINDINGS.md).
+The project explored three successive ideas:
 
-## What failed
+1. **State-conditioned physical risk.** An exact same-state evaluator can
+   measure the effect of a candidate cache action, but its computational cost
+   prevents it from becoming a practical online controller.
+2. **Cheap observable policies.** Attention, contribution, geometry, and
+   refresh-based signals establish strong working-set baselines, especially
+   exact per-query QK routing.
+3. **Causal future utility.** R2 uses a target-model rollout to estimate which
+   historical tokens an imminent query will need. Cheap-R2 preserves this
+   information with a single query-onset action rather than repeated refresh.
 
-- The deployable distillation of the physical-risk teacher: one-step risk
-  is a plateau (61.6% of cycles tied) and long-run risk is a cliff carried
-  by future-queried tokens, visible only 2–4 steps ahead — no cheap signal
-  exists to distill, and the expensive teacher's apparent headroom was a
-  forbidden-information artifact.
-- Every training-free cheap estimator tested (sketches, metric repair,
-  Fisher pullbacks, VJP routes), dynamic layer budgets, selective refresh
-  triggers on high-coverage substrates, page-granular approximations, and
-  observation-window scoring.
-- Full falsified list: [`docs/FINDINGS.md`](docs/FINDINGS.md) §D and the
-  verified 41-entry catalog
-  [`docs/evidence/statekv_gate_retrospective_catalog.md`](docs/evidence/statekv_gate_retrospective_catalog.md).
-- Why the early experiments looked successful while the final policy had no
-  advantage: [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md).
+## Main results
 
-## Why the repository is still useful
+The current benchmark uses Qwen3-8B-4bit, strict physical eviction, 64 decode
+cycles, and fresh multikey sequences. Scores are percentage accuracy.
 
-- A validated exact-KL closed-loop evaluation stack (recoverable CPU
-  backing store, cold recovery, per-cycle telemetry, paired bootstrap).
-- A one-config-key policy panel: attention, SnapKV, H2O, uniform, qk_pool,
-  quest_like, qk_obswin, qk_tiered_v, token_rarity, and the A1–B3 cheap
-  controllers.
-- A 79-method eviction baseline library (`benchmarks/mlx`).
-- Frozen mechanistic phases with registries and tests (`experiments/`).
-- A curated negative-result archive: every rejected strategy, its veto
-  numbers, and its retest outcome.
-- Where to start next: [`docs/NEXT_RESEARCH_DIRECTIONS.md`](docs/NEXT_RESEARCH_DIRECTIONS.md).
+| Multikey budget | Full cache | Current-QK | LAQ | Cheap-R2 |
+|---:|---:|---:|---:|---:|
+| 128 | 82.0 | 1.0 | 0.0 | **48.5** |
+| 256 | 82.0 | 21.0 | 29.5 | **70.0** |
+| 512 | 82.0 | 25.5 | **84.5** | 81.0 |
 
-## Documentation map
+Cheap-R2 is most useful when a query depends on several dispersed pieces of
+evidence that current attention has not yet activated. On the tested HotpotQA
+and 2WikiMQA slices it is statistically indistinguishable from the cheaper
+current-QK policy. The 64-token GovReport setup is retained as an artifact but
+is not used to rank methods because it evaluates only an opening fragment.
 
-| Document | Content |
-|---|---|
-| [`docs/README.md`](docs/README.md) | Documentation index and reading order |
-| [`docs/RESEARCH_HISTORY.md`](docs/RESEARCH_HISTORY.md) | Phase-by-phase history, believed-then vs known-now |
-| [`docs/FINDINGS.md`](docs/FINDINGS.md) | Graded findings (strong / conditional / observations / negative / open) |
-| [`docs/FAILURE_ANALYSIS.md`](docs/FAILURE_ANALYSIS.md) | Evidence-graded explanation of the main line's failure |
-| [`docs/EXPERIMENT_REGISTRY.md`](docs/EXPERIMENT_REGISTRY.md) | Every experiment: question, substrate, config, result, status |
-| [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) | Finding → config → script → raw-result chain audit |
-| [`docs/CODE_AUDIT.md`](docs/CODE_AUDIT.md) | Module classification, defensive-code risks, duplicates |
-| [`docs/NEXT_RESEARCH_DIRECTIONS.md`](docs/NEXT_RESEARCH_DIRECTIONS.md) | Empirical gaps worth building on |
-| [`docs/evidence/`](docs/evidence/) | Raw experiment protocols, logs, closure reports, gate verdicts |
-| [`docs/proposals/`](docs/proposals/) | Architecture/design notes |
-| [`experiments/frozen_registry.yaml`](experiments/frozen_registry.yaml) | Frozen phase protocols, manifests, result links |
-| [`configs/ccfa.yaml`](configs/ccfa.yaml) | Claims registry with per-claim evidence paths |
-| [`analysis/`](analysis/) | Analysis code and derived CSV/parquet tables |
+See the [benchmark report](docs/experiments/08_benchmark_results.md) for the
+full protocol, paired comparisons, and cost breakdown.
 
-## Repository map
+## Method: Cheap-R2
 
-| Path | Role |
-|---|---|
-| [`statekv/core/`](statekv/core/) | Stable backend-independent state/action/risk/decision contracts |
-| [`statekv/`](statekv/) | Model-aware probes, policies, runners (core vs legacy split in `docs/CODE_AUDIT.md`) |
-| [`experiments/`](experiments/) | Frozen mechanistic phases with manifests and tests |
-| [`benchmarks/`](benchmarks/) | MLX and torch harnesses; 79-method eviction baseline registry |
-| [`configs/`](configs/) | Discovery, staged, and frozen experiment configurations |
-| [`analysis/`](analysis/) | Closure documents, derived tables, figures |
-| [`results/`](results/) | Run artifacts (canonical summaries tracked; raw tensors local) |
-| [`tests/`](tests/) | Contract, invariant, protocol, and frozen-evidence tests |
-| [`docs/archive/queues/`](docs/archive/queues/) | Archived run queues and smoke traces |
+```text
+full prefix KV ──> target-model H=32 rollout ──> future attention utility
+                                                          │
+new query ───────────────────────────────────────────────┘
+                                                          ↓
+                                             one strict eviction
+                                                          ↓
+                                            fixed cache for decoding
+```
 
-## Reproduce
+Unlike degraded-cache lookahead methods, the rollout happens before eviction,
+so evidence that is weak under the current query can still influence the
+future ranking. [The Cheap-R2 report](docs/experiments/07_cheap_r2.md)
+describes the horizon, refresh, and baseline ablations.
 
-Environment (Python 3.9+, Apple-silicon MLX for model runs):
+## Getting started
+
+StateKV requires Python 3.9+; model-scale runs use Apple-silicon MLX and local
+model/dataset caches.
 
 ```bash
 python3 -m venv .venv
@@ -126,74 +96,58 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -e .
 .venv/bin/python -m pip install -e benchmarks/torch
 .venv/bin/python -m pip install -e benchmarks/mlx
-PYTHONPATH=benchmarks/mlx .venv/bin/python -m pytest
-PYTHONPATH=benchmarks/mlx PYTHONPYCACHEPREFIX=/tmp/statekv-pycache \
-  .venv/bin/python scripts/smoke_test.py
+
+PYTHONPATH=benchmarks/mlx .venv/bin/python -m pytest -q
+PYTHONPATH=benchmarks/mlx .venv/bin/python scripts/smoke_test.py
 ```
 
-Representative canonical commands (full chain audit:
-[`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md); model runs need local
-HF caches and are compute-heavy):
+Representative model runs:
 
 ```bash
-# Era-1 direct-policy replay re-screen (no gates, 24 sequences)
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_direct_policy_replay.py \
-  --config configs/stages/retest_replay_era1_n24_protocol.yaml
-
-# Era-2 no-gate multi-policy recoverable freegen panel
+# Recoverable free-generation policy panel
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_retest_freegen.py \
   --config configs/stages/retest_freegen_qwen3_8b_n20_protocol.yaml
 
-# qk_tiered_v matched-budget arm
+# QK routing and value-tier comparison
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_oracle_policy_freegen.py \
   --config configs/stages/statekv_qkvtier_gate_256t.yaml
 
-# P31 exact-risk teacher (expensive; per-decision candidate rollouts)
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_oracle_policy_freegen.py \
-  --config configs/stages/oracle_policy_freegen_qwen3_8b_n10_protocol.yaml
-
-# P32 cheap controllers
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_cheap_policy_freegen.py \
-  --config configs/stages/cheap_policy_freegen_qwen3_8b_n10_protocol.yaml
-
-# Retrospective training-free gates (no model run needed)
-.venv/bin/python scripts/analyze_training_free_sketch.py \
-  --config configs/stages/training_free_sketch_config.yaml
-.venv/bin/python scripts/analyze_metric_repair.py \
-  --config configs/stages/training_free_metric_repair_config.yaml
+# R2 causal rollout study
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_causal_rollout_study.py \
+  --config configs/statekv_counterfactual/r2_student_qwen3_8b.yaml
 ```
 
-Earlier-phase reproduction commands (P4–P28) are unchanged from the
-previous README revision (git history) and are catalogued with their
-configs and result paths in `docs/EXPERIMENT_REGISTRY.md`.
+## Documentation
 
-## Core Python API
+| Start here | What it covers |
+|---|---|
+| [Project guide](docs/README.md) | A concise map of the public documentation |
+| [Experiment reports](docs/experiments/README.md) | The complete research story in eight reports |
+| [Cheap-R2](docs/experiments/07_cheap_r2.md) | Final method, ablations, and mechanism |
+| [Benchmark results](docs/experiments/08_benchmark_results.md) | Main results, statistics, cost, and task scope |
+| [Research results](docs/FINDINGS.md) | Cross-experiment findings and design lessons |
+| [Architecture](docs/CODE_AUDIT.md) | Active modules and execution paths |
+| [Running experiments](docs/REPRODUCIBILITY.md) | Environment and active experiment entry points |
 
-Backend-independent contracts (stable, tested in `tests/core/`):
+Historical protocols, run summaries, and supporting tables remain under
+[`docs/evidence/`](docs/evidence/) and `results/`. They provide technical
+background for readers who want to trace a particular result.
 
-```python
-from statekv import (
-    functional_history_state,
-    select_lowest_risk,
-    set_level_attention_delta,
-    state_conditioned_quadratic_risk,
-)
+## Repository layout
 
-state = functional_history_state(history_boundary, reference_boundary)
-boundary_delta = set_level_attention_delta(
-    attention, values, retained_positions
-)
-risk = state_conditioned_quadratic_risk(
-    reference_logits, state_logits, candidate_delta_logits
-)
-decision = select_lowest_risk(
-    {"candidate-a": float(risk_a), "candidate-b": float(risk_b)}
-)
-```
+| Path | Purpose |
+|---|---|
+| [`statekv/`](statekv/) | Active cache-control, R2, and evaluation runtime |
+| [`statekv/core/`](statekv/core/) | Backend-independent state, action, risk, and decision contracts |
+| [`benchmarks/`](benchmarks/) | MLX runner and small torch compatibility layer |
+| [`configs/`](configs/) | Active and frozen experiment configurations |
+| [`docs/`](docs/) | Project guide, reports, and technical appendices |
+| [`experiments/`](experiments/) | Frozen manifests and completed experiment artifacts |
+| [`results/`](results/) | Canonical run summaries and local raw artifacts |
+| [`tests/`](tests/) | Contract and active-runtime tests |
 
 ## Citation and license
 
-StateKV has no archival citation identifier. Cite the repository commit and
-the relevant frozen experiment manifest or run summary. See
-[LICENSE](LICENSE) (note: the copyright line predates this project — see
-`docs/CODE_AUDIT.md` §7).
+StateKV does not yet have an archival citation identifier. Please cite the
+repository revision together with the relevant experiment configuration and
+report. See [LICENSE](LICENSE) for licensing information.

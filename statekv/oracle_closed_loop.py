@@ -27,7 +27,7 @@ from statekv.core.risk import state_conditioned_quadratic_risk
 from statekv.selectors import CoreSelection, LayerSelection, mandatory_and_eligible
 from statekv.storage import atomic_frame, atomic_json, atomic_text
 from statekv.tasks import load_discovery_tasks
-from statekv.trajectory_model import exact_distribution_metrics
+from statekv.output_metrics import exact_distribution_metrics
 
 
 @dataclass

@@ -41,9 +41,10 @@ import torch.nn as nn
 import yaml
 from sklearn.preprocessing import StandardScaler
 
-from statekv.causal_existence import _safe_sample_id, sample_id_for
+from statekv.causal_existence import sample_id_for
 from statekv.causal_existence_analysis import topk_indices
 from statekv.causal_predictors import FixedProjector, _history_features, _load_npz
+from statekv.storage import safe_path_component
 from statekv.causal_student import (
     R2_TEACHER,
     RuntimeFeatureHistory,
@@ -760,7 +761,7 @@ def train_structured_student(
         for index in config["distillation"]["train_indices"]
     ]
     artifact_paths = [
-        source_run / "artifacts" / "train" / f"{_safe_sample_id(sample_id)}.npz"
+        source_run / "artifacts" / "train" / f"{safe_path_component(sample_id)}.npz"
         for sample_id in train_ids
     ]
     missing = [path.name for path in artifact_paths if not path.exists()]

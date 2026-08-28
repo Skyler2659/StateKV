@@ -8,8 +8,6 @@ analysis choices are frozen.
 from __future__ import annotations
 
 import json
-import os
-import tempfile
 import time
 from pathlib import Path
 from types import SimpleNamespace
@@ -33,7 +31,12 @@ from statekv.oracle_policy_freegen import (
 )
 from statekv.qkv_decomposition import rank_and_margin
 from statekv.selectors import mandatory_and_eligible
-from statekv.storage import atomic_frame, atomic_json
+from statekv.storage import (
+    atomic_frame,
+    atomic_json,
+    atomic_npz as _atomic_npz,
+    safe_path_component as _safe_sample_id,
+)
 from statekv.tasks import load_discovery_tasks
 
 
@@ -81,22 +84,8 @@ def causal_prefix_reference(runner: CandidatePullbackRunner, sample: Any) -> Any
     )
 
 
-def _safe_sample_id(sample_id: str) -> str:
-    return str(sample_id).replace(":", "__").replace("/", "_")
-
-
-def _atomic_npz(path: Path, **arrays: np.ndarray) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    handle, temporary = tempfile.mkstemp(
-        prefix=f".{path.stem}.", suffix=".tmp", dir=path.parent
-    )
-    try:
-        with os.fdopen(handle, "wb") as stream:
-            np.savez_compressed(stream, **arrays)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
+# Compatibility exports for older scripts and saved entry points.  New code
+# imports these stable utilities directly from ``statekv.storage``.
 
 
 def sample_id_for(task_family: str, index: int) -> str:

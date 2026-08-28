@@ -82,10 +82,48 @@ def atomic_frame(frame: pd.DataFrame, path: Path) -> None:
             temporary.unlink()
 
 
-def atomic_npz(path: Path, arrays: Mapping[str, Any]) -> None:
-    temporary = _temporary_path(path)
+def safe_path_component(value: Any) -> str:
+    """Return the stable filesystem spelling used for logical artifact IDs.
+
+    Artifact IDs such as ``gov_report:192`` are meaningful to analysis code,
+    but ``:`` and ``/`` are unsuitable in a portable path component.  Keep
+    the historical encoding in one place so writers and readers cannot drift.
+    """
+
+    return str(value).replace(":", "__").replace("/", "_")
+
+
+def atomic_npz(
+    path: Path,
+    arrays: Optional[Mapping[str, Any]] = None,
+    *,
+    compressed: bool = True,
+    **named_arrays: Any,
+) -> None:
+    """Atomically publish a compressed NumPy archive.
+
+    ``arrays`` accepts the mapping form used by data collectors. Keyword
+    arrays are supported for concise single-artifact writes. Set
+    ``compressed=False`` only where an existing artifact contract requires an
+    uncompressed archive. The two payload forms are deliberately exclusive to
+    make accidental partial payload assembly obvious at the call site.
+    """
+
+    if arrays is not None and named_arrays:
+        raise ValueError("pass NPZ arrays as either a mapping or keyword arrays, not both")
+    payload = dict(named_arrays if arrays is None else arrays)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=path.name + ".", suffix=".tmp", dir=str(path.parent)
+    )
+    temporary = Path(temporary_name)
     try:
-        np.savez_compressed(temporary, **dict(arrays))
+        # Writing through the descriptor prevents NumPy from appending its
+        # own ``.npz`` suffix.  The temporary file therefore never matches a
+        # collector's ``*.npz`` publication glob.
+        with os.fdopen(descriptor, "wb") as handle:
+            writer = np.savez_compressed if compressed else np.savez
+            writer(handle, **payload)
         os.replace(temporary, path)
     finally:
         if temporary.exists():

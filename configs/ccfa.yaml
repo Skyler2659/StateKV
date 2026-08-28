@@ -8,9 +8,9 @@ target_venue:
   year: ""
   mode: "draft"
 stage:
-  current: "closed-negative-external-validity-final-close-plus-gate-retest-complete-no-verdicts-continuous-report"
-  gate: "closed-negative"
-  updated_at: "2026-08-10"
+  current: "original-line-closed-negative-cheap-r2-retrieval-positive"
+  gate: "reported-with-benchmark-boundaries"
+  updated_at: "2026-08-28"
 artifacts:
   manuscript: "local:draftv2.pdf"
   architecture: "assets/statekv-architecture.pdf"
@@ -18,6 +18,9 @@ artifacts:
   reusable_core: "statekv/core/"
   experiments: "experiments/"
   analysis: "analysis/"
+  final_experiment_reports: "docs/experiments/"
+  cheap_r2_report: "docs/experiments/07_cheap_r2.md"
+  benchmark_report: "docs/experiments/08_benchmark_results.md"
   novelty_audit: "analysis/literature/statekv_novelty_audit_2026-08-08.json"
   novelty_matrix: "analysis/literature/statekv_novelty_matrix_2026-08-08.csv"
 claims:

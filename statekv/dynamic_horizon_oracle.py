@@ -8,8 +8,6 @@ used only by the separate offline oracle analysis.
 from __future__ import annotations
 
 import json
-import os
-import tempfile
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Sequence
@@ -30,26 +28,14 @@ from statekv.oracle_policy_freegen import (
 )
 from statekv.qkv_decomposition import _scoring_forward_per_head, rank_and_margin
 from statekv.selectors import mandatory_and_eligible
-from statekv.storage import atomic_frame, atomic_json, atomic_text
+from statekv.storage import (
+    atomic_frame,
+    atomic_json,
+    atomic_npz,
+    atomic_text,
+    safe_path_component,
+)
 from statekv.tasks import load_discovery_tasks
-
-
-def _safe_sample_id(sample_id: str) -> str:
-    return str(sample_id).replace(":", "__").replace("/", "_")
-
-
-def _atomic_npz(path: Path, **arrays: np.ndarray) -> None:
-    """Write one compressed trajectory without exposing a partial artifact."""
-
-    path.parent.mkdir(parents=True, exist_ok=True)
-    handle, temporary = tempfile.mkstemp(prefix=path.name, suffix=".npz", dir=path.parent)
-    os.close(handle)
-    try:
-        np.savez_compressed(temporary, **arrays)
-        os.replace(temporary, path)
-    finally:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
 
 
 def _pack_trajectory(
@@ -110,7 +96,7 @@ def collect_dynamic_horizon_trajectories(config_path: Path, repository_root: Pat
 
     try:
         for sample_index, sample in enumerate(selected, start=1):
-            artifact = trajectory_root / f"{_safe_sample_id(sample.sample_id)}.npz"
+            artifact = trajectory_root / f"{safe_path_component(sample.sample_id)}.npz"
             if artifact.exists():
                 print(f"[dynamic-oracle] reuse {sample.sample_id}", flush=True)
                 continue
@@ -207,7 +193,7 @@ def collect_dynamic_horizon_trajectories(config_path: Path, repository_root: Pat
                     generated.extend(int(value) for value in new_tokens)
 
                 packed = _pack_trajectory(attention_steps, position_steps)
-                _atomic_npz(
+                atomic_npz(
                     artifact,
                     **packed,
                     layers=np.asarray(layers, dtype=np.int16),
@@ -270,4 +256,3 @@ def collect_dynamic_horizon_trajectories(config_path: Path, repository_root: Pat
     )
     atomic_text(output_root / "config.yaml", yaml.safe_dump(config, sort_keys=False))
     return output_root
-

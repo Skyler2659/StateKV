@@ -12,7 +12,7 @@ import pandas as pd
 import yaml
 
 from statekv.storage import atomic_frame, atomic_json
-from statekv.trajectory_analysis import cluster_bootstrap_interval
+from statekv.summary_statistics import cluster_bootstrap_interval
 
 
 def register_fresh_test_component(output_root: Path, component: str) -> None:

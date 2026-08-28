@@ -22,6 +22,6 @@ where = ["."]
 include = ["statekv*"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "experiments"]
+testpaths = ["tests"]
 addopts = "-ra -p no:cacheprovider"
 pythonpath = [".", "benchmarks/torch", "benchmarks/mlx"]

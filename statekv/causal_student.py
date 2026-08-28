@@ -38,9 +38,7 @@ from sklearn.preprocessing import StandardScaler
 
 from statekv.causal_distillation import _teacher_arrays
 from statekv.causal_existence import (
-    _atomic_npz,
     _global_logit_features,
-    _safe_sample_id,
     sample_id_for,
 )
 from statekv.causal_existence_analysis import boundary_metrics, topk_indices
@@ -51,7 +49,7 @@ from statekv.causal_predictors import (
     artifact_boundary,
 )
 from statekv.selectors import mandatory_and_eligible
-from statekv.storage import atomic_frame, atomic_json
+from statekv.storage import atomic_frame, atomic_json, atomic_npz, safe_path_component
 
 
 STUDENT_FORMAT = "statekv_r2_student/v1"
@@ -153,7 +151,7 @@ def dump_teacher_scores(
             artifact_path = artifact_dir / path.name
             if not artifact_path.exists():
                 raise RuntimeError(f"{path.name} lacks a feature artifact: {artifact_path}")
-            _atomic_npz(
+            atomic_npz(
                 dest_dir / path.name,
                 **teacher,
                 join_keys=np.asarray(list(JOIN_KEYS)),
@@ -1125,7 +1123,7 @@ def train_students(config_path: Path, repository_root: Path) -> Path:
         for index in config["distillation"]["train_indices"]
     ]
     artifact_paths = [
-        source_run / "artifacts" / "train" / f"{_safe_sample_id(sample_id)}.npz"
+        source_run / "artifacts" / "train" / f"{safe_path_component(sample_id)}.npz"
         for sample_id in train_ids
     ]
     expected = int(config["distillation"]["expected_train_sequences"])

@@ -12,7 +12,7 @@ import pandas as pd
 import torch
 import yaml
 
-from statekv.causal_existence import _safe_sample_id, sample_id_for
+from statekv.causal_existence import sample_id_for
 from statekv.causal_existence_analysis import aggregate_sequence_metrics, boundary_metrics, topk_indices
 from statekv.causal_predictors import (
     FixedProjector,
@@ -23,7 +23,7 @@ from statekv.causal_predictors import (
     artifact_boundary,
 )
 from statekv.selectors import mandatory_and_eligible
-from statekv.storage import atomic_frame, atomic_json
+from statekv.storage import atomic_frame, atomic_json, safe_path_component
 
 
 def _teacher_path(teacher_root: Path, artifact_path: Path) -> Path:
@@ -166,7 +166,7 @@ def train_rollout_distilled_predictor(
         for index in config["distillation"]["train_indices"]
     ]
     artifact_paths = [
-        output_root / "artifacts" / "train" / f"{_safe_sample_id(sample_id)}.npz"
+        output_root / "artifacts" / "train" / f"{safe_path_component(sample_id)}.npz"
         for sample_id in train_ids
     ]
     expected = int(config["distillation"]["expected_train_sequences"])

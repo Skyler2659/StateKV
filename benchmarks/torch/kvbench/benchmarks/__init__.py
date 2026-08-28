@@ -1,6 +1,1 @@
-"""Benchmark adapters."""
-
-from kvbench.benchmarks.factory import load_benchmark
-
-__all__ = ["load_benchmark"]
-
+"""LongBench and RULER adapters retained by the StateKV task loader."""
