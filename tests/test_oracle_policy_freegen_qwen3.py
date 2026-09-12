@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import pytest
 import yaml
 
 from src.config import ModelConfig
@@ -70,7 +71,7 @@ def test_chat_template_forwards_qwen3_non_thinking_switch() -> None:
 
 
 def test_mlx_bfloat16_diagnostic_export_uses_fp32_bridge() -> None:
-    import mlx.core as mx
+    mx = pytest.importorskip("mlx.core")
     import torch
 
     value = mx.array([1.25, -0.5], dtype=mx.bfloat16)

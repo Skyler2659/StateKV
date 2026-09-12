@@ -9,14 +9,20 @@ def test_readme_first_screen_establishes_statekv_identity() -> None:
     lines = text.splitlines()
     assert lines[0] == "# StateKV"
     first_screen = "\n".join(lines[:24]).lower()
-    # The repository is positioned as a research codebase documenting both
-    # positive and negative results; the original method line is closed.
-    assert "negative result" in first_screen
     assert "research" in first_screen
-    assert "docs/RESEARCH_HISTORY.md" in text
-    assert "docs/FINDINGS.md".lower() in text.lower()
+    assert "kv-cache" in first_screen
+    assert "cheap-r2" in first_screen
 
 
-def test_statekv_machine_sources_of_truth_are_linked_from_readme() -> None:
+def test_statekv_public_reports_are_linked_from_readme() -> None:
     text = (ROOT / "README.md").read_text(encoding="utf-8")
-    assert "experiments/frozen_registry.yaml" in text
+    for path in (
+        "docs/README.md",
+        "docs/experiments/README.md",
+        "docs/experiments/07_cheap_r2.md",
+        "docs/experiments/08_benchmark_results.md",
+        "docs/FINDINGS.md",
+        "docs/REPRODUCIBILITY.md",
+    ):
+        assert path in text
+        assert (ROOT / path).is_file()
