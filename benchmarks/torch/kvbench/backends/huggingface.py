@@ -205,6 +205,7 @@ class HuggingFaceBackend(BackendAdapter):
             "num_attention_heads": num_heads,
             "num_key_value_heads": num_kv_heads,
             "hidden_size": int(getattr(config, "hidden_size")),
+            "head_dim": int(getattr(config, "head_dim", int(config.hidden_size) // num_heads)),
             "attn_implementation": self.cfg.model.attn_implementation,
             "checkpoint_commit_hash": getattr(config, "_commit_hash", None),
             "model_name_or_path": getattr(config, "_name_or_path", None),
@@ -244,7 +245,7 @@ class HuggingFaceBackend(BackendAdapter):
             raise RuntimeError("model must be loaded before cache size accounting")
         num_heads = int(self.model_info["num_attention_heads"])
         num_kv_heads = int(self.model_info["num_key_value_heads"])
-        head_dim = int(self.model_info["hidden_size"]) // num_heads
+        head_dim = int(self.model_info.get("head_dim", int(self.model_info["hidden_size"]) // num_heads))
         dtype = {
             "float16": torch.float16,
             "bfloat16": torch.bfloat16,
@@ -274,7 +275,8 @@ class HuggingFaceBackend(BackendAdapter):
                 messages.append({"role": "system", "content": self.cfg.model.system_prompt})
             messages.append({"role": "user", "content": prompt})
             text = self.tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True
+                messages, tokenize=False, add_generation_prompt=True,
+                **dict(getattr(self.cfg.model, "chat_template_kwargs", {}) or {}),
             )
         return [int(value) for value in self.tokenizer.encode(text, add_special_tokens=True)]
 
@@ -315,6 +317,12 @@ class HuggingFaceBackend(BackendAdapter):
         }
         if "cache_position" in self._forward_params:
             kwargs["cache_position"] = positions
+            if isinstance(past_key_values, tuple):
+                from transformers import DynamicCache
+
+                kwargs["past_key_values"] = DynamicCache.from_legacy_cache(
+                    past_key_values
+                )
         return self.model(**kwargs)
 
     @torch.no_grad()

@@ -76,6 +76,16 @@ LONGBENCH_METRIC_NAMES: Dict[str, str] = {
     "musique": "qa_f1",
     "gov_report": "rouge_l",
     "qmsum": "rouge_l",
+    "qasper": "qa_f1",
+    "2wikimqa": "qa_f1",
+    "triviaqa": "qa_f1",
+    "multi_news": "rouge_l",
+    "samsum": "rouge_l",
+    "trec": "classification",
+    "passage_count": "count",
+    "passage_retrieval_en": "retrieval",
+    "lcc": "code_similarity",
+    "repobench-p": "code_similarity",
 }
 
 
@@ -165,7 +175,10 @@ def longbench_metric_name(task: Optional[str]) -> Optional[str]:
     return LONGBENCH_METRIC_NAMES.get((task or "").lower())
 
 
-def longbench_score(task: str, prediction: str, references: Iterable[str]) -> Optional[float]:
+def longbench_score(
+    task: str, prediction: str, references: Iterable[str], *,
+    official: bool = False, all_classes: Optional[List[str]] = None,
+) -> Optional[float]:
     """Return the official-style LongBench score in 0-100 scale."""
     task_key = (task or "").lower()
     metric_name = longbench_metric_name(task_key)
@@ -174,8 +187,37 @@ def longbench_score(task: str, prediction: str, references: Iterable[str]) -> Op
         return None
     if task_key in {"trec", "triviaqa", "samsum", "lsht"}:
         prediction = prediction.lstrip("\n").split("\n")[0]
-    scorer = rouge_l_score if metric_name == "rouge_l" else qa_f1_score
-    return round(100.0 * max(scorer(prediction, ref) for ref in refs), 4)
+    def score(reference: str) -> float:
+        if metric_name == "qa_f1":
+            return qa_f1_score(prediction, reference)
+        if metric_name == "rouge_l":
+            if not official:
+                return rouge_l_score(prediction, reference)
+            from rouge import Rouge
+
+            try:
+                return float(Rouge().get_scores(prediction, reference)[0]["rouge-l"]["f"])
+            except ValueError:
+                return 0.0
+        if metric_name == "code_similarity":
+            from fuzzywuzzy import fuzz
+
+            line = next((line for line in prediction.lstrip("\n").split("\n")
+                         if not any(marker in line for marker in ("`", "#", "//"))), "")
+            return float(fuzz.ratio(line, reference)) / 100.0
+        if metric_name == "classification":
+            if all_classes is None:
+                raise ValueError("classification requires LongBench all_classes")
+            matches = [label for label in all_classes if label in prediction]
+            matches = [label for label in matches if label == reference or label not in reference]
+            return 1.0 / len(matches) if reference in matches else 0.0
+        numbers = re.findall(r"\d+", prediction)
+        target = reference
+        if metric_name == "retrieval":
+            target = re.search(r"Paragraph (\d+)", reference).group(1)
+        return sum(number == str(target) for number in numbers) / max(1, len(numbers))
+
+    return round(100.0 * max(score(ref) for ref in refs), 4)
 
 
 def ruler_task_family(task: Optional[str]) -> str:

@@ -87,8 +87,8 @@ describes the horizon, refresh, and baseline ablations.
 
 ## Getting started
 
-StateKV requires Python 3.9+; model-scale runs use Apple-silicon MLX and local
-model/dataset caches.
+StateKV requires Python 3.9+. The historical runs use Apple-silicon MLX;
+the CUDA runtime supports NVIDIA GPUs with Hugging Face checkpoints.
 
 ```bash
 python3 -m venv .venv
@@ -116,6 +116,25 @@ HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_oracle_policy_freegen.py \
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/run_causal_rollout_study.py \
   --config configs/statekv_counterfactual/r2_student_qwen3_8b.yaml
 ```
+
+For NVIDIA experiments, install the CUDA dependencies with
+`pip install -e '.[cuda]' -e benchmarks/torch`. The resumable execution queue is
+configured in [`configs/cuda/validation.yaml`](configs/cuda/validation.yaml):
+
+```bash
+python scripts/prepare_cuda_inputs.py --root /path/to/statekv
+python scripts/run_cuda_experiments.py build --root /path/to/statekv
+python scripts/run_cuda_experiments.py worker --root /path/to/statekv \
+  --run /path/to/statekv/runs/cuda_validation_20260913 --gpu 3
+```
+
+The deployment layout places this checkout at `/path/to/statekv/code`, with
+environments, cached inputs, and run outputs alongside it. Workers use physical
+GPU indices 3–6, wait for an idle GPU, and save each completed method/sample
+pair separately. `scripts/sync_remote_runs.py` pulls outputs into a local
+folder every 15 seconds and refreshes `metrics.csv` and `summary.json`.
+CUDA experiments use BF16 checkpoints; existing MLX 4-bit results retain their
+original configurations.
 
 ## Documentation
 

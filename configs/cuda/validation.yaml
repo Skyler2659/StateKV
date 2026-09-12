@@ -1,0 +1,42 @@
+run_name: cuda_validation_20260913
+seed: 20260913
+models:
+  - Qwen/Qwen3-1.7B
+  - Qwen/Qwen3-4B
+  - Qwen/Qwen3-8B
+dtype: bfloat16
+policies: [FULL, CURRENT_QK, SNAPKV, H2O, LAQ, LAQPP, CHEAP_R2]
+budgets: [128, 256, 512]
+context_lengths: [4096, 8192, 16384]
+synthetic_tasks: [multikey_4, multikey_8, multiquery, variable_tracking]
+sample_offset: 600
+num_samples: 50
+shard_size: 10
+control_cycles: 64
+rollout_horizon: 32
+sink_size: 4
+recent_size: 32
+snapkv_window: 32
+snapkv_pooling_kernel: 63
+prefill_chunk_size: 64
+longbench_model: Qwen/Qwen3-8B
+longbench_max_context: 16384
+longbench_tasks:
+  - narrativeqa
+  - qasper
+  - multifieldqa_en
+  - hotpotqa
+  - 2wikimqa
+  - musique
+  - gov_report
+  - qmsum
+  - multi_news
+  - trec
+  - triviaqa
+  - samsum
+  - passage_count
+  - passage_retrieval_en
+  - lcc
+  - repobench-p
+robustness_seeds: [20260914, 20260915]
+horizon_ablations: [8, 16, 64]
