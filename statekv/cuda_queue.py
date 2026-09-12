@@ -28,6 +28,8 @@ def build_queue(plan_path: Path, root: Path) -> Path:
                 seed=seed, policies=policies or plan["policies"], budgets=budgets or plan["budgets"],
                 sample_indices=list(range(start + offset,
                     start + min(plan["num_samples"], offset + plan["shard_size"]))))
+            if benchmark == "synthetic":
+                job["synthetic_prompt_version"] = plan.get("synthetic_prompt_version", "legacy_retrieval_trace")
             if horizon is not None:
                 job["rollout_horizon"] = horizon
             if model.endswith("Qwen3-8B"):

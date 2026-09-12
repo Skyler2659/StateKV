@@ -7,7 +7,23 @@ import torch
 
 from kvbench.backends.huggingface import HuggingFaceBackend
 from statekv.cuda_runtime import CudaRuntime, retained_rows
+from statekv.cuda_experiments import synthetic_sample
 from src.evaluation.official_metrics import longbench_score
+
+
+@pytest.mark.parametrize("task", ["multikey_4", "multikey_8", "multiquery", "variable_tracking"])
+def test_synthetic_prompt_answers_all_values_before_explanation(task):
+    backend = SimpleNamespace(encode_prompt=lambda prompt: list(range(4096)))
+    job = dict(task=task, context_length=4096, seed=20260913,
+               synthetic_prompt_version="answer_all_then_trace_v2")
+    sample, ids, truncated = synthetic_sample(SimpleNamespace(backend=backend), job, 600)
+    assert "First answer ALL requested values" in sample.prompt
+    assert "answered every question" in sample.prompt
+    assert "without introducing a different number" not in sample.prompt
+    assert "Answer with only the numbers" not in sample.prompt
+    assert all(needle in sample.prompt for needle in sample.metadata["evidence_texts"])
+    assert sample.metadata["discovery_generation_instruction"] == job["synthetic_prompt_version"]
+    assert len(ids) == 4096 and not truncated
 
 
 def test_retention_reserves_pending_query_and_breaks_ties_by_position():

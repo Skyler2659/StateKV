@@ -1,4 +1,5 @@
-run_name: cuda_validation_20260913
+run_name: cuda_validation_20260913_v2
+synthetic_prompt_version: answer_all_then_trace_v2
 seed: 20260913
 models:
   - Qwen/Qwen3-1.7B

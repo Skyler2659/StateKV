@@ -27,7 +27,23 @@ def synthetic_sample(runtime: CudaRuntime, job: dict[str, Any], index: int):
     seed = job["seed"] + index * (9173 if task == "variable_tracking" else 1009)
     parameter = int(task.rsplit("_", 1)[1]) if task.startswith("multikey") else (4 if task == "multiquery" else 8)
     for _ in range(8):
-        sample = _extend_retrieval_prompt(factory(seed, 1, hint, parameter)[0])
+        sample = factory(seed, 1, hint, parameter)[0]
+        version = job.get("synthetic_prompt_version", "legacy_retrieval_trace")
+        if version == "legacy_retrieval_trace":
+            sample = _extend_retrieval_prompt(sample)
+        elif version == "answer_all_then_trace_v2":
+            sample.prompt = sample.prompt.replace(
+                "\nAnswer with only the numbers, one per line, in the order asked.", "")
+            sample.prompt += (
+                "\nFirst answer ALL requested values, one per line, in the order asked. "
+                "Do not explain until you have answered every question. "
+                "Then explain how you located each requested statement and distinguished "
+                "it from the filler. Keep the explanation after the complete answer list."
+            )
+            sample.full_text = sample.prompt + " " + (sample.answer_text or "")
+            sample.metadata["discovery_generation_instruction"] = version
+        else:
+            raise ValueError(f"unknown synthetic prompt version: {version}")
         sample.sample_id = f"{task}:{index}"
         ids = runtime.backend.encode_prompt(sample.prompt)
         if target * .95 <= len(ids) <= target:

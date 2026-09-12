@@ -125,7 +125,7 @@ configured in [`configs/cuda/validation.yaml`](configs/cuda/validation.yaml):
 python scripts/prepare_cuda_inputs.py --root /path/to/statekv
 python scripts/run_cuda_experiments.py build --root /path/to/statekv
 python scripts/run_cuda_experiments.py worker --root /path/to/statekv \
-  --run /path/to/statekv/runs/cuda_validation_20260913 --gpu 3
+  --run /path/to/statekv/runs/cuda_validation_20260913_v2 --gpu 3
 ```
 
 The deployment layout places this checkout at `/path/to/statekv/code`, with
