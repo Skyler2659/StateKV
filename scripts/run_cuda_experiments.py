@@ -13,7 +13,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "benchmarks/torch"), str(ROOT / "benchmark
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=("build", "worker", "job"))
+    parser.add_argument("mode", choices=("build", "worker", "job", "status"))
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--plan", type=Path, default=ROOT / "configs/cuda/validation.yaml")
     parser.add_argument("--run", type=Path)
@@ -25,10 +25,14 @@ def main() -> None:
 
         run_job(args.root, json.loads((args.output / "config.json").read_text()), args.output)
     else:
-        from statekv.cuda_queue import build_queue, worker
+        from statekv.cuda_queue import build_queue, status, worker
 
         if args.mode == "build":
             print(build_queue(args.plan, args.root))
+        elif args.mode == "status":
+            if args.run is None:
+                parser.error("status needs --run")
+            print(json.dumps(status(args.run, json.loads((args.run / "queue.json").read_text())["jobs"])))
         else:
             if args.gpu is None or args.run is None:
                 parser.error("worker needs --gpu and --run")

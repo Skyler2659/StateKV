@@ -71,13 +71,13 @@ def status(run: Path, jobs: list[dict]) -> dict:
         output = run / "jobs" / job["id"]
         if (output / "complete.json").exists():
             complete += 1
-        elif (output / "failure.json").exists():
-            failed += 1
         else:
             active = output / "active.json"
-            if active.exists():
-                item = json.loads(active.read_text())
-                running += int(Path(f"/proc/{item['pid']}").exists())
+            live = active.exists() and Path(f"/proc/{json.loads(active.read_text())['pid']}").exists()
+            if live:
+                running += 1
+            elif (output / "failure.json").exists():
+                failed += 1
     value = dict(total_jobs=len(jobs), complete_jobs=complete, failed_jobs=failed,
                  running_jobs=running, updated_at=time.time(),
                  status="complete" if complete == len(jobs) else "running")
@@ -129,7 +129,13 @@ def worker(root: Path, run: Path, gpu: int) -> None:
                     process = subprocess.Popen(command, env=env, stdout=log, stderr=subprocess.STDOUT)
                     atomic_json(active, {"pid": process.pid, "gpu": gpu, "uuid": uuid, "started_at": time.time()})
                     atomic_json(run / f"worker_gpu{gpu}.json", {"status": "running", "job_id": job["id"], "pid": process.pid})
-                    code = process.wait()
+                    status(run, jobs)
+                    while True:
+                        try:
+                            code = process.wait(timeout=15)
+                            break
+                        except subprocess.TimeoutExpired:
+                            status(run, jobs)
                 if code != 0:
                     atomic_json(failure, {"attempts": attempts + 1, "exit_code": code, "updated_at": time.time()})
                 elif failure.exists():
